@@ -46,7 +46,7 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: FloatingActionButton(
           onPressed: () {
@@ -57,7 +57,7 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
               ),
             );
           },
-          backgroundColor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+          backgroundColor:Theme.of(context).primaryColor,
           shape: CircleBorder(),
           child: Icon(
             Icons.add,
@@ -100,16 +100,12 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
             return CustomScrollView(
               slivers: [
                 SliverAppBar(
-                  shadowColor: isDark ? DarkColor.color1 : LightColor.color3.withOpacity(.1),
-                  backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-                  elevation: 5,
+                  
                   leading: IconButton(
                     icon: Icon(
                       Icons.arrow_back_ios,
-                      color: isDark
-                          ? DarkColor.color1
-                          : LightColor.color3,
-                      size: 24.sp,
+                     
+                    
                     ),
                     padding: EdgeInsets.only(left: 20.w),
                     onPressed: () {
@@ -118,11 +114,7 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
                   ),
                   title: InterMedium(
                     text: 'Visitors',
-                       fontsize: 18.sp,
-                    color: isDark
-                        ? DarkColor.color1
-                        : LightColor.color3,
-                    letterSpacing: -0.3,
+                  
                   ),
                   centerTitle: true,
                   floating: true,
@@ -151,9 +143,7 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
                                 InterBold(
                                   text: isToday ? 'Today' : date,
                                   fontsize: 20.sp,
-                                  color:  isDark
-                                      ? DarkColor.Primarycolor
-                                      : LightColor.color3,
+                                  color:Theme.of(context).textTheme.bodySmall!.color,
                                 ),
                                 SizedBox(
                                   height: 30.h,
@@ -207,9 +197,7 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
                                   margin: EdgeInsets.only(bottom: 16.h),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10.r),
-                                    color:  isDark
-                                        ? DarkColor.WidgetColor
-                                        : LightColor.WidgetColor,
+                                    color:  Theme.of(context).cardColor,
                                   ),
                                   child: Column(
                                     children: [
@@ -238,12 +226,10 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
                                                           .circular(
                                                           10.r),
                                                       color:
-                                                       isDark
-                                                          ? DarkColor.Primarycolorlight
-                                                          : LightColor.Primarycolorlight,
+                                                       Theme.of(context).primaryColorLight,
                                                     ),
                                                     child: Center(
-                                                      child: SvgPicture.asset(isDark?
+                                                      child: SvgPicture.asset(Theme.of(context).brightness==Brightness.dark?
                                                         'assets/images/man.svg': 'assets/images/man_light.svg',
                                                         height: 20.h,
                                                       ),
@@ -256,9 +242,7 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
                                                     width: 120.w,
                                                     child: InterMedium(
                                                       text: visitorName,
-                                                      color:  isDark
-                                                          ? DarkColor.color1
-                                                          : LightColor.color3,
+                                                      color:  Theme.of(context).textTheme.bodyMedium!.color,
                                                       fontsize: 16.sp,
                                                       maxLines: 1,
                                                     ),
@@ -277,17 +261,13 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
                                                       InterBold(
                                                         text: 'in time',
                                                         fontsize: 10.sp,
-                                                        color:  isDark
-                                                            ? DarkColor.color4
-                                                            : LightColor.color3,
+                                                        color: Theme.of(context).textTheme.headlineLarge!.color,
                                                       ),
                                                       SizedBox(width: 6.w),
                                                       InterMedium(
                                                         text: inTime,
                                                         fontsize: 12.sp,
-                                                        color:  isDark
-                                                            ? DarkColor.color3
-                                                            : LightColor.color3,
+                                                        color:  Theme.of(context).textTheme.headlineSmall!.color,
                                                       )
                                                     ],
                                                   ),
@@ -296,17 +276,13 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
                                                       InterBold(
                                                         text: 'out time',
                                                         fontsize: 10.sp,
-                                                        color:  isDark
-                                                            ? DarkColor.color4
-                                                            : LightColor.color3,
+                                                        color: Theme.of(context).textTheme.headlineLarge!.color,
                                                       ),
                                                       SizedBox(width: 6.w),
                                                       InterMedium(
                                                         text: outTime,
                                                         fontsize: 12.sp,
-                                                        color:  isDark
-                                                            ? DarkColor.color3
-                                                            : LightColor.color3,
+                                                        color: Theme.of(context).textTheme.headlineSmall!.color,
                                                       )
                                                     ],
                                                   ),
@@ -322,7 +298,7 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
                                           padding: EdgeInsets.symmetric(
                                               horizontal: 10.w),
                                           decoration: BoxDecoration(
-                                            color:  isDark
+                                            color:  Theme.of(context).brightness==Brightness.dark
                                                 ? DarkColor.colorRed
                                                 : LightColor.colorRed,
                                             borderRadius: BorderRadius.only(
@@ -341,9 +317,7 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
                                             children: [
                                               InterSemibold(
                                                 text: 'Location',
-                                                color:  isDark
-                                                    ? DarkColor.color1
-                                                    : LightColor.color3,
+                                                color: Theme.of(context).textTheme.bodyMedium!.color,
                                                 fontsize: 14.sp,
                                               ),
                                               SizedBox(
@@ -351,9 +325,7 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
                                                 child: InterRegular(
                                                   text: location,
                                                   fontsize: 12.sp,
-                                                  color:  isDark
-                                                      ? DarkColor.color2
-                                                      : LightColor.color3,
+                                                  color:  Theme.of(context).textTheme.bodyLarge!.color,
                                                 ),
                                               )
                                             ],

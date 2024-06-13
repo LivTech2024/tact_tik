@@ -14,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 import 'package:tact_tik/common/widgets/dialogList.dart';
 import 'package:tact_tik/main.dart';
+import 'package:tact_tik/screens/client%20screens/patrol/unchecked_patrolss.dart';
 import 'package:tact_tik/screens/feature%20screens/petroling/end_checkpoint_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
 import 'package:tact_tik/screens/feature%20screens/petroling/report_checkpoint_screen.dart';
@@ -65,6 +66,7 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
   bool buttonClicked1 = false;
   TextEditingController CommentController = TextEditingController();
   Timestamp? StatusPatrolTime;
+
   @override
   void initState() {
     super.initState();
@@ -365,20 +367,15 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         body: RefreshIndicator(
           onRefresh: _refreshData,
           child: CustomScrollView(
             // physics: const PageScrollPhysics(),
             slivers: [
               SliverAppBar(
-                backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-                elevation: 0,
                 leading: IconButton(
                   icon: Icon(
                     Icons.arrow_back_ios,
-                    color: isDark ? DarkColor.color1 : LightColor.color3,
-                    size: width / width24,
                   ),
                   padding: EdgeInsets.only(left: width / width20),
                   onPressed: () {
@@ -389,9 +386,6 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
                 ),
                 title: InterMedium(
                   text: 'Patrolling',
-                  fontsize: width / width18,
-                  color: isDark ? DarkColor.color1 : LightColor.color3,
-                  letterSpacing: -.3,
                 ),
                 centerTitle: true,
                 floating: true, // Makes the app bar float above the content
@@ -489,6 +483,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
       _expand = prefs.getBool('expand') ?? false;
     });
   }
+
   // void _loadShiftStartedState() async {
   //   SharedPreferences prefs = await SharedPreferences.getInstance();
   //   if (widget.p.CurrentStatus == "started") {
@@ -557,8 +552,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
   }
 
   Future<void> _addGallery() async {
-    List<XFile>? pickedFiles =
-        await ImagePicker().pickMultiImage(imageQuality: 30);
+    List<XFile>? pickedFiles = await ImagePicker()
+        .pickMultiImage(imageQuality: 30); // image quality 30
     if (pickedFiles != null) {
       for (var pickedFile in pickedFiles) {
         try {
@@ -681,7 +676,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
       return Container(
         constraints: BoxConstraints(minHeight: 90.h),
         decoration: BoxDecoration(
-          color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+          color: Theme.of(context).cardColor,
         ),
         padding: EdgeInsets.all(16.sp),
         child: Column(
@@ -692,7 +687,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
               'Add Image/Comment',
               style: TextStyle(
                 fontSize: 14.sp,
-                color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                color: Theme.of(context).textTheme.bodySmall!.color,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -823,7 +818,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                 ),
                 uploadingLoading
                     ? CircularProgressIndicator(
-                        color: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+                        color: Theme.of(context).primaryColor,
                       )
                     : Button1(
                         height: 30.h,
@@ -867,8 +862,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                         },
                         text: 'Submit',
                         fontsize: 14.sp,
-                        backgroundcolor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
-                        color: isDark ? DarkColor.color1 : LightColor.color3,
+                        backgroundcolor: Theme.of(context).primaryColor,
+                        color: Theme.of(context).textTheme.bodyMedium!.color,
                       ),
               ],
             ),
@@ -887,14 +882,22 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
               InterBold(
                 text: "Today",
                 fontsize: 18.sp,
-                color: isDark ? DarkColor.color1 : LightColor.color3,
+                color: Theme.of(context).textTheme.bodyMedium!.color,
               ),
               SizedBox(height: 30.h),
               AnimatedContainer(
                 margin: EdgeInsets.only(bottom: 30.h),
                 duration: const Duration(milliseconds: 300),
                 decoration: BoxDecoration(
-                  color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Theme.of(context).shadowColor,
+                      blurRadius: 5,
+                      spreadRadius: 2,
+                      offset: Offset(0, 3),
+                    )
+                  ],
+                  color: Theme.of(context).cardColor,
                   borderRadius: BorderRadius.circular(10.r),
                 ),
                 constraints: widget.p.CurrentStatus == "started"
@@ -918,9 +921,10 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                 width: 120.w,
                                 child: InterBold(
                                   text: 'Patrol   ${widget.p.title}',
-                                  color: isDark
-                                      ? DarkColor.Primarycolor
-                                      : LightColor.color3,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall!
+                                      .color,
                                   fontsize: 14.sp,
                                   maxLine: 1,
                                 ),
@@ -929,9 +933,10 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                 radius: 10.r,
                                 lineWidth: 3,
                                 percent: completionPercentage.clamp(0.0, 1.0),
-                                progressColor: isDark
-                                    ? DarkColor.Primarycolor
-                                    : LightColor.color3,
+                                progressColor: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall!
+                                    .color,
                               ),
                             ],
                           ),
@@ -941,11 +946,18 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                             icon: Icons.location_on,
                             text: widget.p.title,
                             useBold: false,
-                            color: isDark ? DarkColor.color13 : LightColor.color3,
+                            color: Theme.of(context)
+                                .textTheme
+                                .headlineMedium!
+                                .color as Color,
+                            Iconcolor: Theme.of(context).primaryColor,
                           ),
                           SizedBox(height: 16.h),
                           Divider(
-                            color: isDark ? DarkColor.color14 : LightColor.color3,
+                            color: Theme.of(context)
+                                .textTheme
+                                .headlineLarge!
+                                .color as Color,
                           ),
                           SizedBox(height: 5.h),
                           IconTextWidget(
@@ -953,11 +965,18 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                             icon: Icons.description,
                             text: widget.p.description,
                             useBold: false,
-                            color: isDark ? DarkColor.color13 : LightColor.color3,
+                            color: Theme.of(context)
+                                .textTheme
+                                .headlineMedium!
+                                .color as Color,
+                            Iconcolor: Theme.of(context).primaryColor,
                           ),
                           SizedBox(height: 16.h),
                           Divider(
-                            color: isDark ? DarkColor.color14 : LightColor.color3,
+                            color: Theme.of(context)
+                                .textTheme
+                                .headlineLarge!
+                                .color as Color,
                           ),
                           SizedBox(height: 5.h),
                           IconTextWidget(
@@ -966,7 +985,11 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                             text:
                                 'Total  ${widget.p.PatrolRequiredCount}  Completed ${widget.p.CompletedCount}',
                             useBold: false,
-                            color: isDark ? DarkColor.color13 : LightColor.color3,
+                            color: Theme.of(context)
+                                .textTheme
+                                .headlineMedium!
+                                .color as Color,
+                            Iconcolor: Theme.of(context).primaryColor,
                           ),
                           SizedBox(height: 20.h),
                         ],
@@ -974,8 +997,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                     ),
                     Button1(
                       text: 'START',
-                      backgroundcolor: isDark ? DarkColor.colorgreen : LightColor.WidgetColor,
-                      color: Colors.green,
+                      backgroundcolor: Theme.of(context).primaryColor,
+                      color: DarkColor.color5,
                       borderRadius: 10.r,
                       onPressed: buttonClicked
                           ? () async {
@@ -1041,7 +1064,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                             },
                     ),
                     Visibility(
-                        visible: widget.p.CurrentStatus == "started" && _expand,
+                        visible: widget.p.CurrentStatus == "started",
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: widget.p.categories.map((category) {
@@ -1075,9 +1098,10 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                     ),
                                     margin: EdgeInsets.only(top: 10.h),
                                     decoration: BoxDecoration(
-                                      color: isDark
-                                          ? DarkColor.color15
-                                          : LightColor.color3,
+                                      color: Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? DarkColor.color27
+                                          : LightColor.WidgetColor,
                                       borderRadius: BorderRadius.circular(10.r),
                                     ),
                                     child: Row(
@@ -1090,18 +1114,20 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                               height: 48.h,
                                               width: 48.w,
                                               decoration: BoxDecoration(
-                                                color: isDark
-                                                    ? DarkColor.color16
-                                                    : LightColor.color3,
+                                                color: Theme.of(context)
+                                                            .brightness ==
+                                                        Brightness.dark
+                                                    ? DarkColor.WidgetColor
+                                                    : LightColor
+                                                        .Primarycolorlight,
                                                 borderRadius:
                                                     BorderRadius.circular(10.r),
                                               ),
                                               child: Icon(
                                                 Icons.home_sharp,
                                                 size: 24.sp,
-                                                color: isDark
-                                                    ? DarkColor.Primarycolor
-                                                    : LightColor.color3,
+                                                color: Theme.of(context)
+                                                    .primaryColor,
                                               ),
                                             ),
                                             SizedBox(
@@ -1111,45 +1137,34 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                               width: 190.w,
                                               child: InterRegular(
                                                 text: category.title,
-                                                color: isDark
-                                                    ? DarkColor.color17
-                                                    : LightColor.color2,
+                                                color: Theme.of(context)
+                                                    .textTheme
+                                                    .displayMedium!
+                                                    .color as Color,
                                                 fontsize: 18.sp,
                                               ),
                                             ),
                                           ],
                                         ),
-                                        IconButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              if (_expandCategoryMap[
-                                                      category.title] !=
-                                                  null) {
-                                                _expandCategoryMap[
-                                                        category.title] =
-                                                    !_expandCategoryMap[
-                                                        category.title]!;
-                                              }
-                                              // _expand2 = !_expand2;
-                                            });
-                                          },
-                                          icon: Icon(
-                                            expand
-                                                ? Icons.arrow_circle_up_outlined
-                                                : Icons
-                                                    .arrow_circle_down_outlined,
-                                            size: 24.sp,
-                                            color: isDark
-                                                ? DarkColor.Primarycolor
-                                                : LightColor.color3,
-                                          ),
+                                        Icon(
+                                          expand
+                                              ? Icons.arrow_circle_up_outlined
+                                              : Icons
+                                                  .arrow_circle_down_outlined,
+                                          size: 24.sp,
+                                          color: Theme.of(context)
+                                              .textTheme
+                                              .bodySmall!
+                                              .color as Color,
                                         )
                                       ],
                                     ),
                                   ),
                                 ),
                                 Visibility(
-                                  visible: widget.p.CurrentStatus == 'started',
+                                  visible:
+                                      widget.p.CurrentStatus == 'started' &&
+                                          expand,
                                   child: Column(
                                     children:
                                         category.checkpoints.map((checkpoint) {
@@ -1230,9 +1245,11 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                             top: 10.h,
                                           ),
                                           decoration: BoxDecoration(
-                                            color: isDark
-                                                ? DarkColor.color15
-                                                : LightColor.color1,
+                                            color:
+                                                Theme.of(context).brightness ==
+                                                        Brightness.dark
+                                                    ? DarkColor.color15
+                                                    : LightColor.color1,
                                             borderRadius:
                                                 BorderRadius.circular(10.r),
                                           ),
@@ -1246,9 +1263,11 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                     height: 48.h,
                                                     width: 48.w,
                                                     decoration: BoxDecoration(
-                                                      color: isDark
+                                                      color: Theme.of(context)
+                                                                  .brightness ==
+                                                              Brightness.dark
                                                           ? DarkColor.color16
-                                                          : LightColor.color1,
+                                                          : LightColor.Primarycolorlight,
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                         10.r,
@@ -1257,12 +1276,23 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                     child: Container(
                                                       height: 30.h,
                                                       width: 30.w,
-                                                      decoration:
-                                                           BoxDecoration(
+                                                      decoration: BoxDecoration(
                                                         shape: BoxShape.circle,
-                                                        color: isDark
-                                                            ? DarkColor.color2
-                                                            : LightColor.color2,
+                                                        color: checkpoint.getFirstStatus(
+                                                                    widget.p
+                                                                        .EmpId,
+                                                                    widget.p
+                                                                        .ShiftId) !=
+                                                                'checked'
+                                                            ? Theme.of(context)
+                                                                        .brightness ==
+                                                                    Brightness
+                                                                        .dark
+                                                                ? DarkColor
+                                                                    .color16
+                                                                : Colors.transparent
+                                                            : Colors
+                                                                .lightGreenAccent,
                                                       ),
                                                       child: Icon(
                                                         checkpoint.getFirstStatus(
@@ -1280,11 +1310,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                         .ShiftId) ==
                                                                 'checked'
                                                             ? Colors.green
-                                                            : (isDark
-                                                                ? DarkColor
-                                                                    .Primarycolor
-                                                                : LightColor
-                                                                    .color3),
+                                                            : (Theme.of(context)
+                                                                .primaryColor),
                                                       ),
                                                     ),
                                                   ),
@@ -1299,10 +1326,11 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                           text:
                                                               checkpoint.title,
                                                           //Subcheckpoint
-                                                          color: isDark
-                                                              ? DarkColor.color17
-                                                              : LightColor
-                                                                  .color3,
+                                                          color: Theme.of(
+                                                                  context)
+                                                              .textTheme
+                                                              .displayMedium!
+                                                              .color as Color,
                                                           fontsize: 18.sp,
                                                         ),
                                                         SizedBox(
@@ -1316,8 +1344,11 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                             ? InterRegular(
                                                                 text: checkpoint
                                                                     .timestamp,
-                                                                color:
-                                                                    isDark ? DarkColor.Primarycolor : LightColor.color3,
+                                                                color: Theme.of(
+                                                                        context)
+                                                                    .textTheme
+                                                                    .bodySmall!
+                                                                    .color as Color,
                                                                 fontsize: 12.sp,
                                                               )
                                                             : SizedBox()
@@ -1335,12 +1366,13 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                     child: Container(
                                                       height: 34.h,
                                                       width: 34.w,
-                                                      decoration:
-                                                           BoxDecoration(
+                                                      decoration: BoxDecoration(
                                                         shape: BoxShape.circle,
-                                                        color: isDark
+                                                        color: Theme.of(context)
+                                                                    .brightness ==
+                                                                Brightness.dark
                                                             ? DarkColor.color16
-                                                            : LightColor.color1,
+                                                            : LightColor.Primarycolorlight,
                                                       ),
                                                       child: Center(
                                                         child: IconButton(
@@ -1364,14 +1396,6 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                             .white),
                                                                   ),
                                                                   actions: [
-                                                                    TextButton(
-                                                                        onPressed:
-                                                                            () {
-                                                                          Navigator.of(context)
-                                                                              .pop();
-                                                                        },
-                                                                        child: Text(
-                                                                            "Cancel")),
                                                                     TextButton(
                                                                       onPressed:
                                                                           () {
@@ -1402,11 +1426,21 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                                       ShiftId: widget.p.ShiftId,
                                                                                       SearchId: '',
                                                                                     )));
-                                                                        ;
+                                                                      },
+                                                                      child: InterRegular(
+                                                                          text:
+                                                                              "Report"),
+                                                                    ),
+                                                                    TextButton(
+                                                                      onPressed:
+                                                                          () {
+                                                                        Navigator.of(context)
+                                                                            .pop();
                                                                       },
                                                                       child:
-                                                                          Text(
-                                                                        'Submit',
+                                                                          InterRegular(
+                                                                        text:
+                                                                            'Done',
                                                                       ),
                                                                     ),
                                                                   ],
@@ -1418,11 +1452,9 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                           },
                                                           icon: Icon(
                                                             Icons.info,
-                                                            color: isDark
-                                                                ? DarkColor
-                                                                    .color18
-                                                                : LightColor
-                                                                    .color3,
+                                                            color: Theme.of(context)
+                                                                .brightness ==
+                                                                Brightness.dark ? DarkColor.color5 : LightColor.Primarycolor,
                                                             size: 24.sp,
                                                           ),
                                                           padding:
@@ -1438,10 +1470,11 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                     child: Container(
                                                       height: 34.h,
                                                       width: 34.w,
-                                                      decoration:
-                                                           BoxDecoration(
+                                                      decoration: BoxDecoration(
                                                         shape: BoxShape.circle,
-                                                        color: isDark
+                                                        color: Theme.of(context)
+                                                                    .brightness ==
+                                                                Brightness.dark
                                                             ? DarkColor.color16
                                                             : LightColor.color1,
                                                       ),
@@ -1476,11 +1509,9 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                           },
                                                           icon: Icon(
                                                             Icons.add_circle,
-                                                            color: isDark
-                                                                ? DarkColor
-                                                                    .Primarycolor
-                                                                : LightColor
-                                                                    .Primarycolor,
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .primaryColor,
                                                             size: 24.sp,
                                                           ),
                                                           padding:
@@ -1508,7 +1539,10 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                     widget.p.CurrentStatus == 'started'
                         ? Button1(
                             text: 'END',
-                            backgroundcolor: isDark ? DarkColor.colorRed2 : LightColor.colorRed,
+                            backgroundcolor:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? DarkColor.colorRed2
+                                    : LightColor.colorRed,
                             color: Colors.redAccent,
                             borderRadius: 10,
                             onPressed: () async {
@@ -1518,8 +1552,44 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                     "This Patrol has not being Started");
                                 return;
                               }
+                              if (widget.p.Allchecked == false) {
+                                showErrorToast(context,
+                                    "Complete all the checkpoints ${widget.p.PatrolId}");
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            UncheckedPatrolScreen(
+                                              ShiftId: widget.p.ShiftId,
+                                              EmployeeID: widget.p.EmpId,
+                                              PatrolID: widget.p.PatrolId,
+                                              EmployeeName:
+                                                  widget.p.EmployeeName,
+                                              CompletedCount:
+                                                  widget.p.CompletedCount,
+                                              PatrolRequiredCount:
+                                                  widget.p.PatrolRequiredCount,
+                                              PatrolCompanyID:
+                                                  widget.p.PatrolCompanyID,
+                                              PatrolClientID:
+                                                  widget.p.PatrolClientID,
+                                              LocationId: widget.p.LocationId,
+                                              description: widget.p.description,
+                                              ShiftDate: widget.p.ShiftDate,
+                                              PatrolStartedTIme:
+                                                  widget.p.PatrolStartedTIme,
+                                              ShiftName: widget.p.ShiftName,
+                                            )));
+                                // showCustomDialog(
+                                //     context,
+                                //     "Incomplete Checkpoints, Do you want to ",
+                                //     "Incomplete Checkpoints, Do you want to ");
+                                return;
+                              }
+                              //check for the checkpoint status if any one is unchecked then dailog box display checked
+                              // StatusFailureReason
                               _refresh();
-
+                              print("Patrol Data ${widget.p.Allchecked}");
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -1558,7 +1628,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
             alignment: Alignment.center,
             margin: EdgeInsets.only(top: 10),
             child: CircularProgressIndicator(
-              color: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+              color: Theme.of(context).primaryColor,
             ),
           ),
         ),

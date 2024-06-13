@@ -35,7 +35,7 @@ class CustomBottomSheetWidget extends StatelessWidget {
       builder: (context, scrollController) {
         return Container(
           decoration: BoxDecoration(
-            color:  isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+            color: Theme.of(context).canvasColor,
             borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(16.0),
               topRight: Radius.circular(16.0),
@@ -205,9 +205,14 @@ class CustomBottomSheetWidget extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(0),
                                 ),
                                 clipBehavior: Clip.none,
-                                color:isDark?( isSelected
-                                    ? const Color(0xff252525)
-                                    : Colors.black):(isSelected?Color(0xffeaeaea):LightColor.WidgetColor),
+                                color: Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? (isSelected
+                                        ? const Color(0xff252525)
+                                        : Colors.black)
+                                    : (isSelected
+                                        ? Color(0xffeaeaea)
+                                        : LightColor.WidgetColor),
                                 child: Padding(
                                   padding: isSelected
                                       ? const EdgeInsets.only(right: 10.0)
@@ -243,8 +248,12 @@ class CustomBottomSheetWidget extends StatelessWidget {
                                                   ),
                                                 ),
                                                 child: CircleAvatar(
-                                                  backgroundColor:isDark?
-                                                      const Color(0xff252525):LightColor.color3,
+                                                  backgroundColor: Theme.of(
+                                                                  context)
+                                                              .brightness ==
+                                                          Brightness.dark
+                                                      ? const Color(0xff252525)
+                                                      : LightColor.color3,
                                                   radius: 32,
                                                   child: ClipOval(
                                                     child: CachedNetworkImage(
@@ -323,8 +332,12 @@ class CustomBottomSheetWidget extends StatelessWidget {
                                                   style: GoogleFonts.inter(
                                                     fontWeight: FontWeight.w800,
                                                     fontSize: 16,
-                                                    color:isDark?
-                                                        const Color(0xffD9D9D9):LightColor.color3,
+                                                    color: Theme.of(context)
+                                                                .brightness ==
+                                                            Brightness.dark
+                                                        ? const Color(
+                                                            0xffD9D9D9)
+                                                        : LightColor.color3,
                                                   ),
                                                 ),
                                                 Text(
@@ -332,8 +345,12 @@ class CustomBottomSheetWidget extends StatelessWidget {
                                                   style: GoogleFonts.inter(
                                                     fontWeight: FontWeight.w500,
                                                     fontSize: 14,
-                                                    color:isDark?
-                                                        const Color(0xffD9D9D9):LightColor.color3,
+                                                    color: Theme.of(context)
+                                                                .brightness ==
+                                                            Brightness.dark
+                                                        ? const Color(
+                                                            0xffD9D9D9)
+                                                        : LightColor.color3,
                                                     letterSpacing: -0.2,
                                                   ),
                                                 ),
@@ -344,8 +361,12 @@ class CustomBottomSheetWidget extends StatelessWidget {
                                                       fontWeight:
                                                           FontWeight.w500,
                                                       fontSize: 14,
-                                                      color:isDark? const Color(
-                                                          0xffD9D9D9):LightColor.color3,
+                                                      color: Theme.of(context)
+                                                                  .brightness ==
+                                                              Brightness.dark
+                                                          ? const Color(
+                                                              0xffD9D9D9)
+                                                          : LightColor.color3,
                                                     ),
                                                     maxLines: 1,
                                                     overflow:
@@ -370,7 +391,10 @@ class CustomBottomSheetWidget extends StatelessWidget {
                                                         fontWeight:
                                                             FontWeight.w800,
                                                         fontSize: 16,
-                                                        color: isDark?DarkColor.color1:LightColor.color3,
+                                                        color: Theme.of(context)
+                                                            .textTheme
+                                                            .bodyMedium!
+                                                            .color,
                                                       ),
                                                     ),
                                                     Text(
@@ -379,9 +403,10 @@ class CustomBottomSheetWidget extends StatelessWidget {
                                                         fontWeight:
                                                             FontWeight.w600,
                                                         fontSize: 14,
-                                                        color: isDark
-                                                            ? DarkColor.color1
-                                                            : LightColor.color3,
+                                                        color: Theme.of(context)
+                                                            .textTheme
+                                                            .bodyMedium!
+                                                            .color,
                                                       ),
                                                     ),
                                                   ],
@@ -396,9 +421,10 @@ class CustomBottomSheetWidget extends StatelessWidget {
                                                         fontWeight:
                                                             FontWeight.w800,
                                                         fontSize: 16,
-                                                        color: isDark
-                                                            ? DarkColor.color1
-                                                            : LightColor.color3,
+                                                        color: Theme.of(context)
+                                                            .textTheme
+                                                            .bodyMedium!
+                                                            .color,
                                                       ),
                                                     ),
                                                     Text(
@@ -407,9 +433,10 @@ class CustomBottomSheetWidget extends StatelessWidget {
                                                         fontWeight:
                                                             FontWeight.w500,
                                                         fontSize: 14,
-                                                        color: isDark
-                                                            ? DarkColor.color1
-                                                            : LightColor.color3,
+                                                        color: Theme.of(context)
+                                                            .textTheme
+                                                            .bodyMedium!
+                                                            .color,
                                                       ),
                                                     ),
                                                   ],
@@ -426,9 +453,10 @@ class CustomBottomSheetWidget extends StatelessWidget {
                             );
                           },
                           separatorBuilder: (BuildContext context, int index) {
-                            return  Divider(
+                            return Divider(
                               thickness: 0.5,
-                              color: isDark ? DarkColor.color1 : LightColor.color3,
+                              color:
+                                  Theme.of(context).textTheme.bodyMedium!.color,
                             );
                           },
                         );

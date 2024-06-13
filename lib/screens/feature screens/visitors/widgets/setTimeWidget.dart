@@ -43,16 +43,14 @@ class SetTimeWidget extends StatelessWidget {
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
-              color: isDark
-                  ? Colors.transparent
-                  : LightColor.color3.withOpacity(.05),
+              color: Theme.of(context).shadowColor,
               blurRadius: 5,
               spreadRadius: 2,
               offset: Offset(0, 3),
             )
           ],
           borderRadius: BorderRadius.circular(width / width10),
-          color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+          color: Theme.of(context).cardColor,
         ),
         child: Center(
           child: IgnorePointer(
@@ -62,7 +60,7 @@ class SetTimeWidget extends StatelessWidget {
               child: InterMedium(
                 text: hintText,
                 fontsize: width / width18,
-                color: isDark ? DarkColor.color25 : LightColor.color3,
+                color:Theme.of(context).textTheme.labelSmall!.color,
               ),
             ),
           ),

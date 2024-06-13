@@ -82,16 +82,13 @@ class _SelectGuardsScreenState extends State<SelectHistoryGuardsScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        
         appBar: AppBar(
-          shadowColor: isDark ? Colors.transparent : LightColor.WidgetColor.withOpacity(.1),
-          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-          elevation: 5,
+         
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: isDark ? DarkColor.color1 : LightColor.color3,
-              size: 24.sp,
+              
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -100,9 +97,7 @@ class _SelectGuardsScreenState extends State<SelectHistoryGuardsScreen> {
           ),
           title: InterMedium(
             text: 'History Guards',
-            fontsize: 18.sp,
-            color: isDark ? DarkColor.color1 : LightColor.color3,
-            letterSpacing: -.3,
+            
           ),
           centerTitle: true,
         ),
@@ -180,11 +175,8 @@ class _SelectGuardsScreenState extends State<SelectHistoryGuardsScreen> {
                                                       )
                                                     : BoxDecoration(
                                                         shape: BoxShape.circle,
-                                                        color: isDark
-                                                            ? DarkColor
-                                                                .Primarycolor
-                                                            : LightColor
-                                                                .Primarycolor,
+                                                        color: Theme.of(context)
+                                                            .primaryColor,
                                                         image: DecorationImage(
                                                           image: AssetImage(
                                                               'assets/images/default.png'),
@@ -199,9 +191,10 @@ class _SelectGuardsScreenState extends State<SelectHistoryGuardsScreen> {
                                               InterBold(
                                                 text: name,
                                                 letterSpacing: -.3,
-                                                color: isDark
-                                                    ? DarkColor.color1
-                                                    : LightColor.color3,
+                                                color:  Theme.of(context)
+                                                    .textTheme
+                                                    .bodyMedium!
+                                                    .color,
                                               ),
                                             ],
                                           ),
@@ -225,9 +218,7 @@ class _SelectGuardsScreenState extends State<SelectHistoryGuardsScreen> {
                       : Center(
                           child: PoppinsBold(
                             text: 'No Guards Found',
-                            color: isDark
-                                ? DarkColor.color2
-                                : LightColor.color3,
+                            color:  Theme.of(context).textTheme.bodyLarge!.color,
                             fontsize: 16.sp,
                           ),
                         )

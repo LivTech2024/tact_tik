@@ -87,16 +87,10 @@ class _PostOrderState extends State<PostOrder> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         appBar: AppBar(
-          shadowColor: isDark? Colors.transparent : LightColor.color3.withOpacity(.1),
-          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-          elevation: 5,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: isDark ? DarkColor.color1 : LightColor.color3,
-              size: 24.sp,
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -105,9 +99,6 @@ class _PostOrderState extends State<PostOrder> {
           ),
           title: InterMedium(
             text: 'Post Orders',
-            fontsize: 18.sp,
-            color: isDark ? DarkColor.color1 : LightColor.color3,
-            letterSpacing: -.3,
           ),
           centerTitle: true,
         ),
@@ -171,9 +162,8 @@ class _PostOrderState extends State<PostOrder> {
                             child: InterSemibold(
                               text: date,
                               fontsize: 20.sp,
-                              color: isDark
-                                  ? DarkColor.Primarycolor
-                                  : LightColor.color3,
+                              color:
+                                  Theme.of(context).textTheme.bodySmall!.color,
                             ),
                           ),
                           ...posts.map((postOrder) {
@@ -223,11 +213,9 @@ class _PostOrderState extends State<PostOrder> {
                                       width: double.maxFinite,
                                       margin: EdgeInsets.only(bottom: 10.h),
                                       decoration: BoxDecoration(
-                                         borderRadius:
+                                        borderRadius:
                                             BorderRadius.circular(10.r),
-                                        color: isDark
-                                            ? DarkColor.WidgetColor
-                                            : LightColor.WidgetColor,
+                                        color: Theme.of(context).cardColor,
                                       ),
                                       child: Column(
                                         crossAxisAlignment:
@@ -235,9 +223,10 @@ class _PostOrderState extends State<PostOrder> {
                                         children: [
                                           InterBold(
                                             text: postOrderTitle,
-                                            color: isDark
-                                                ? DarkColor.color2
-                                                : LightColor.color3,
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .bodyLarge!
+                                                .color,
                                             fontsize: 14.sp,
                                           ),
                                           SizedBox(
@@ -250,9 +239,10 @@ class _PostOrderState extends State<PostOrder> {
                                             decoration: BoxDecoration(
                                               borderRadius:
                                                   BorderRadius.circular(10.r),
-                                              color: isDark
-                                                  ? DarkColor.color1
-                                                  : LightColor.color3,
+                                              color: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium!
+                                                  .color,
                                             ),
                                             child: Row(
                                               children: [
@@ -271,15 +261,19 @@ class _PostOrderState extends State<PostOrder> {
                                                   children: [
                                                     PoppinsMedium(
                                                       text: fileName,
-                                                      color: isDark
-                                                          ? DarkColor.color15
-                                                          : LightColor.color3,fontsize: 12.sp,
+                                                      color: Theme.of(context)
+                                                          .textTheme
+                                                          .titleLarge!
+                                                          .color,
+                                                      fontsize: 12.sp,
                                                     ),
                                                     PoppinsRegular(
                                                       text: fileSize,
-                                                      color: isDark
-                                                          ? DarkColor.color15
-                                                          : LightColor.color3,fontsize: 12.sp,
+                                                      color: Theme.of(context)
+                                                          .textTheme
+                                                          .titleMedium!
+                                                          .color,
+                                                      fontsize: 12.sp,
                                                     )
                                                   ],
                                                 )
@@ -300,7 +294,9 @@ class _PostOrderState extends State<PostOrder> {
                                               mainAxisSpacing: 10.0,
                                             ),
                                             itemCount:
-                                                postOrderOtherData.length > 3 ? 3 : postOrderOtherData.length,
+                                                postOrderOtherData.length > 3
+                                                    ? 3
+                                                    : postOrderOtherData.length,
                                             itemBuilder: (context, index) {
                                               String url =
                                                   postOrderOtherData[index];
@@ -331,10 +327,11 @@ class _PostOrderState extends State<PostOrder> {
                                                       decoration: BoxDecoration(
                                                         borderRadius:
                                                             BorderRadius
-                                                                  .circular(10.r),
-                                                        color: isDark
-                                                            ? DarkColor.color1
-                                                            : LightColor.color3,
+                                                                .circular(10.r),
+                                                        color: Theme.of(context)
+                                                            .textTheme
+                                                            .bodyMedium!
+                                                            .color,
                                                       ),
                                                       child: Row(
                                                         children: [
@@ -360,20 +357,20 @@ class _PostOrderState extends State<PostOrder> {
                                                               PoppinsMedium(
                                                                 text:
                                                                     otherFileName,
-                                                                color: isDark
-                                                                    ? DarkColor
-                                                                        .color16
-                                                                    : LightColor
-                                                                        .color3, fontsize: 12.sp,
+                                                                color:Theme.of(context)
+                                                                    .textTheme
+                                                                    .titleLarge!
+                                                                    .color,
+                                                                fontsize: 12.sp,
                                                               ),
                                                               PoppinsRegular(
                                                                 text:
                                                                     otherFileSize,
-                                                                color: isDark
-                                                                    ? DarkColor
-                                                                        .color16
-                                                                    : LightColor
-                                                                        .color3, fontsize: 10.sp,
+                                                                color: Theme.of(context)
+                                                                    .textTheme
+                                                                    .titleLarge!
+                                                                    .color,
+                                                                fontsize: 10.sp,
                                                               )
                                                             ],
                                                           )

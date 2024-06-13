@@ -167,19 +167,12 @@ class _CreateDiscrepancyScreenState extends State<CreateDiscrepancyScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor:
-            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         appBar: AppBar(
-          shadowColor:
-              isDark ? DarkColor.color1 : LightColor.color3.withOpacity(.1),
-          backgroundColor:
-              isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-          elevation: 5,
+          
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: isDark ? DarkColor.color1 : LightColor.color3,
-              size: width / width24,
+              
             ),
             padding: EdgeInsets.only(left: width / width20),
             onPressed: () {
@@ -188,9 +181,7 @@ class _CreateDiscrepancyScreenState extends State<CreateDiscrepancyScreen> {
           ),
           title: InterMedium(
             text: 'Create Discrepancy',
-            fontsize: width / width18,
-            color: isDark ? DarkColor.color1 : LightColor.color3,
-            letterSpacing: -.3,
+           
           ),
           centerTitle: true,
         ),
@@ -199,12 +190,13 @@ class _CreateDiscrepancyScreenState extends State<CreateDiscrepancyScreen> {
             horizontal: 20,
             vertical:10,
           ),
-          color: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor  ,
+          color: Theme.of(context).canvasColor  ,
           child: Button1(
                         text: 'Done',
                         onPressed: (){},
-                        backgroundcolor: isDark? DarkColor.Primarycolor:LightColor.Primarycolor,
-                        borderRadius: width / width10,
+                        backgroundcolor: Theme.of(context).primaryColor,
+                        borderRadius: 10.r,
+            color: Theme.of(context).textTheme.headlineMedium!.color,
                       ),
         ),
         body: Stack(
@@ -220,7 +212,7 @@ class _CreateDiscrepancyScreenState extends State<CreateDiscrepancyScreen> {
                       text: '11/02/2024',
                       fontsize: width / width20,
                       color:
-                          isDark ? DarkColor.Primarycolor : LightColor.color3,
+                           Theme.of(context).textTheme.bodySmall!.color,
                       letterSpacing: -.3,
                     ),
                     SizedBox(height: height / height30),
@@ -238,9 +230,7 @@ class _CreateDiscrepancyScreenState extends State<CreateDiscrepancyScreen> {
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
-                            color: isDark
-                                ? Colors.transparent
-                                : LightColor.color3.withOpacity(.05),
+                            color:  Theme.of(context).shadowColor,
                             blurRadius: 5,
                             spreadRadius: 2,
                             offset: Offset(0, 3),
@@ -275,9 +265,7 @@ class _CreateDiscrepancyScreenState extends State<CreateDiscrepancyScreen> {
                                     height: height / height66,
                                     width: width / width66,
                                     decoration: BoxDecoration(
-                                      color: isDark
-                                          ? DarkColor.WidgetColor
-                                          : LightColor.WidgetColor,
+                                      color: Theme.of(context).cardColor,
                                       borderRadius: BorderRadius.circular(
                                         width / width10,
                                       ),
@@ -353,7 +341,7 @@ class _CreateDiscrepancyScreenState extends State<CreateDiscrepancyScreen> {
                               height: 66.w,
                               width: 66.w,
                               decoration: BoxDecoration(
-                                color: isDark
+                                color: Theme.of(context).brightness == Brightness.dark
                                     ? DarkColor.WidgetColor
                                     : LightColor.Primarycolor,
                                 borderRadius:
@@ -361,9 +349,10 @@ class _CreateDiscrepancyScreenState extends State<CreateDiscrepancyScreen> {
                               ),
                               child: Center(
                                 child: Icon(
-                                  color: isDark
-                                      ? DarkColor.color1
-                                      : LightColor.color3,
+                                  color:  Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .color,
                                   Icons.add,
                                   size: width / width20,
                                 ),
@@ -423,10 +412,9 @@ class _CreateDiscrepancyScreenState extends State<CreateDiscrepancyScreen> {
                             
                            
                         },
-                        backgroundcolor: isDark
-                            ? DarkColor.Primarycolor
-                            : LightColor.Primarycolor,
-                        borderRadius: width / width10,
+                        color: Theme.of(context).textTheme.headlineMedium!.color,
+                        backgroundcolor: Theme.of(context).primaryColor,
+                        borderRadius: 10.r,
                       ),
                     ),
                   ],

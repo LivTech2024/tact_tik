@@ -58,16 +58,13 @@ class _SelectGuardsScreenState extends State<SelectKeysGuardsScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+      
         appBar: AppBar(
-          shadowColor: isDark ? Colors.transparent : LightColor.color3.withOpacity(.1),
-          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-          elevation: 5,
+         
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: isDark ? DarkColor.color1 : LightColor.color3,
-              size: 24.w,
+             
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -76,9 +73,7 @@ class _SelectGuardsScreenState extends State<SelectKeysGuardsScreen> {
           ),
           title: InterMedium(
             text: 'Keys Guards',
-            fontsize: 18.sp,
-            color: isDark ? DarkColor.color1 : LightColor.color3,
-            letterSpacing: -.3,
+           
           ),
           centerTitle: true,
         ),
@@ -105,27 +100,25 @@ class _SelectGuardsScreenState extends State<SelectKeysGuardsScreen> {
                       print(guardInfo);
                       return GestureDetector(
                         onTap: () {
-                          Navigator.push(
+                         /* Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => SKeyManagementViewScreen(
                                      companyId: '',
-                                  )));
+                                  )));*/
                         },
                         child: Container(
                           height: 60.h,
                           decoration: BoxDecoration(
                             boxShadow: [
                               BoxShadow(
-                                color: isDark
-                                    ? Colors.transparent
-                                    : LightColor.color3.withOpacity(.05),
+                                color:Theme.of(context).shadowColor,
                                 blurRadius: 5,
                                 spreadRadius: 2,
                                 offset: Offset(0, 3),
                               )
                             ],
-                            color: isDark
+                            color:  Theme.of(context).brightness == Brightness.dark
                                       ? DarkColor.color19
                                       : LightColor.WidgetColor,
                             borderRadius:
@@ -163,9 +156,8 @@ class _SelectGuardsScreenState extends State<SelectKeysGuardsScreen> {
                                           )
                                               : BoxDecoration(
                                             shape: BoxShape.circle,
-                                            color: isDark
-                                                            ? DarkColor.Primarycolor
-                                                            : LightColor.Primarycolor,
+                                            color: Theme.of(context)
+                                                            .primaryColor,
                                             image: DecorationImage(
                                               image:  AssetImage(
                                                   'assets/images/default.png'),
@@ -178,9 +170,10 @@ class _SelectGuardsScreenState extends State<SelectKeysGuardsScreen> {
                                         InterBold(
                                           text: name,
                                           letterSpacing: -.3,
-                                          color: isDark
-                                                    ? DarkColor.color1
-                                                    : LightColor.color3,
+                                          color: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyMedium!
+                                                    .color,
                                         ),
                                       ],
                                     ),
@@ -204,7 +197,7 @@ class _SelectGuardsScreenState extends State<SelectKeysGuardsScreen> {
                       : Center(
                     child: PoppinsBold(
                       text: 'No Guards Found',
-                      color: isDark ? DarkColor.color2 : LightColor.color3,
+                      color:  Theme.of(context).textTheme.bodyMedium!.color,
                       fontsize: 16.sp,
                     ),
                   )

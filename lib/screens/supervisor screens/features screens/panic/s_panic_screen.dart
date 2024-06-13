@@ -23,21 +23,15 @@ class _SPanicScreenState extends State<SPanicScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: isDark? DarkColor.Secondarycolor:LightColor.Secondarycolor,
+       
         body: CustomScrollView(
           slivers: [
             SliverAppBar(
-              shadowColor: isDark ? Colors.transparent : LightColor.WidgetColor.withOpacity(.1),
-              backgroundColor:
-                  isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-              elevation: 5,
+              
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back_ios,
-                  color: isDark
-                      ? DarkColor.color1
-                      : LightColor.color3,
-                  size: 24.w,
+                
                 ),
                 padding: EdgeInsets.only(left: 20.w),
                 onPressed: () {
@@ -46,11 +40,7 @@ class _SPanicScreenState extends State<SPanicScreen> {
               ),
               title: InterMedium(
                 text: 'Panic',
-                fontsize: 18.w,
-                color: isDark
-                    ? DarkColor.color1
-                    : LightColor.color3,
-                letterSpacing: -.3,
+               
               ),
               centerTitle: true,
               floating: true,
@@ -110,9 +100,10 @@ class _SPanicScreenState extends State<SPanicScreen> {
                               child: InterBold(
                                 text: date,
                                 fontsize: 18.sp,
-                                color: isDark
-                                    ? DarkColor.color21
-                                    : LightColor.color3,
+                                color:  Theme.of(context)
+                                    .textTheme
+                                    .displayMedium!
+                                    .color,
                               ),
                             ),
                             SizedBox(height: 10.h),
@@ -128,18 +119,13 @@ class _SPanicScreenState extends State<SPanicScreen> {
                                   decoration: BoxDecoration(
                                     boxShadow: [
                                       BoxShadow(
-                                        color: isDark
-                                            ? Colors.transparent
-                                            : LightColor.color3
-                                                .withOpacity(.05),
+                                        color:Theme.of(context).shadowColor,
                                         blurRadius: 5,
                                         spreadRadius: 2,
                                         offset: Offset(0, 3),
                                       )
                                     ],
-                                    color: isDark
-                                        ? DarkColor.WidgetColor
-                                        : LightColor.WidgetColor,
+                                    color: Theme.of(context).cardColor,
                                     borderRadius: BorderRadius.circular(12.r),
                                   ),
                                   padding: EdgeInsets.all(20.w),
@@ -153,26 +139,27 @@ class _SPanicScreenState extends State<SPanicScreen> {
                                             backgroundImage: NetworkImage('url'), // Replace with actual image URL if available
                                             foregroundImage: AssetImage('assets/images/default.png'),
                                             radius: 20.r,
-                                            backgroundColor: isDark
-                                                ? DarkColor.Primarycolor
-                                                : LightColor.Primarycolor,
+                                            backgroundColor:
+                                                Theme.of(context).primaryColor,
                                           ),
                                           SizedBox(width: 20.w),
                                           InterBold(
                                             text: createdBy,
                                             letterSpacing: -.3,
-                                            color: isDark
-                                                ? DarkColor.color1
-                                                : LightColor.color3,
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium!
+                                                .color,
                                           ),
                                         ],
                                       ),
                                       InterMedium(
                                         text: formattedTime,
                                         fontsize: 16.sp,
-                                        color: isDark
-                                            ? DarkColor.color1
-                                            : LightColor.color3,
+                                        color:  Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .color,
                                       ),
                                     ],
                                   ),

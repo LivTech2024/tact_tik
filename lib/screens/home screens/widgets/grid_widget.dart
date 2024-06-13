@@ -27,15 +27,13 @@ class gridWidget extends StatelessWidget {
           decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
-                color: isDark
-                    ? Colors.transparent
-                    : LightColor.color3.withOpacity(.05),
+                color: Theme.of(context).shadowColor,
                 blurRadius: 5,
                 spreadRadius: 2,
                 offset: Offset(0, 3),
               )
             ],
-            color:  isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+            color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(18.r),
           ),
           child: Center(
@@ -49,7 +47,7 @@ class gridWidget extends StatelessWidget {
         SizedBox(height: 10.h),
         InterBold(
           text: tittle,
-          color: isDark? DarkColor.color25:LightColor.color3,
+          color: Theme.of(context).textTheme.headlineSmall!.color,
           fontsize: 16.sp,
           letterSpacing: -0.3,
         ),

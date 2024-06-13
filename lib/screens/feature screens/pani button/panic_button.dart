@@ -50,7 +50,7 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
           margin: EdgeInsets.only(bottom: 30.w),
           padding: EdgeInsets.all(16.sp),
           decoration: BoxDecoration(
-            color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+            color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(16.r),
             boxShadow: [
               BoxShadow(
@@ -72,9 +72,11 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
               SizedBox(height: 8.h),
               PoppinsRegular(
                 text:
-                'If yes, then your supervisor and admin will get notified!',
+                    'If yes, then your supervisor and admin will get notified!',
                 textAlign: TextAlign.center,
-                color: isDark ? DarkColor.color1 : LightColor.color4,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? DarkColor.color1
+                    : LightColor.color4,
                 fontsize: 18.sp,
               ),
               SizedBox(height: 16.h),
@@ -87,7 +89,9 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
                     },
                     child: RobotoMedium(
                       text: 'No',
-                      color: isDark ? DarkColor.color3 : LightColor.color4,
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? DarkColor.color3
+                          : LightColor.color4,
                       fontsize: 18.sp,
                     ),
                   ),
@@ -97,9 +101,9 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
                       //fetch supervisor admins
                       List<String> receiversId = [];
                       String? adminId =
-                      await fireStoreService.getAdminID(widget.CompanyId);
+                          await fireStoreService.getAdminID(widget.CompanyId);
                       List<String>? supervisorID =
-                      await fireStoreService.getSupervisorIDs(widget.EmpId);
+                          await fireStoreService.getSupervisorIDs(widget.EmpId);
 
                       if (adminId != null) {
                         receiversId.add(adminId);
@@ -129,7 +133,7 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
                     },
                     child: RobotoMedium(
                       text: 'Yes',
-                      color: isDark ? DarkColor.color1 : LightColor.color3,
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
                       fontsize: 18.sp,
                     ),
                   ),
@@ -165,7 +169,7 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
               margin: EdgeInsets.only(bottom: 30.h),
               padding: EdgeInsets.all(16.sp),
               decoration: BoxDecoration(
-                color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                color: Theme.of(context).cardColor,
                 borderRadius: BorderRadius.circular(16.r),
                 boxShadow: [
                   BoxShadow(
@@ -181,7 +185,7 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   PoppinsMedium(
-                    color: isDark ? DarkColor.color1 : LightColor.color3,
+                    color: Theme.of(context).textTheme.bodyMedium!.color,
                     text: 'Supervisors & Admin Informed',
                     fontsize: 16.sp,
                   ),
@@ -200,9 +204,7 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
                           TextButton(
                             onPressed: () {
                               showModalBottomSheet(
-                                backgroundColor: isDark
-                                    ? DarkColor.WidgetColor
-                                    : LightColor.WidgetColor,
+                                backgroundColor: Theme.of(context).cardColor,
                                 context: context,
                                 builder: (context) => Column(
                                   mainAxisSize: MainAxisSize.min,
@@ -215,21 +217,21 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
                                             .keys
                                             .toList()[index];
                                         final phoneNumber =
-                                        emergencyContacts[contactName];
+                                            emergencyContacts[contactName];
                                         return ListTile(
                                           leading: Icon(
                                             Icons.call,
-                                            color: isDark
-                                                ? DarkColor.Primarycolor
-                                                : LightColor.Primarycolor,
+                                            color:
+                                                Theme.of(context).primaryColor,
                                             size: 20.sp,
                                           ),
                                           title: InterMedium(
                                             text: contactName,
                                             fontsize: 12.sp,
-                                            color: isDark
-                                                ? DarkColor.color1
-                                                : LightColor.color3,
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium!
+                                                .color,
                                           ),
                                           onTap: () async {
                                             final url = 'tel://$phoneNumber';
@@ -268,7 +270,7 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
                               text: 'OK',
                               fontsize: 18.sp,
                               color:
-                              isDark ? DarkColor.color1 : LightColor.color3,
+                                  Theme.of(context).textTheme.bodyMedium!.color,
                             ),
                           ),
                         ],
@@ -283,5 +285,4 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
       },
     );
   }
-
 }

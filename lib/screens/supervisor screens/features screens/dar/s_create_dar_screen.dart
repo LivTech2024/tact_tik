@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
@@ -309,15 +310,13 @@ class _CreateDarScreenState extends State<SCreateDarScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: DarkColor. Secondarycolor,
+        
         appBar: AppBar(
-          backgroundColor: DarkColor. AppBarcolor,
-          elevation: 0,
+          
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.white,
-              size: 24.sp,
+              
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -326,9 +325,7 @@ class _CreateDarScreenState extends State<SCreateDarScreen> {
           ),
           title: InterMedium(
             text: 'DAR',
-            fontsize: 18.sp,
-            color: Colors.white,
-            letterSpacing: -.3,
+           
           ),
           centerTitle: true,
         ),
@@ -359,110 +356,113 @@ class _CreateDarScreenState extends State<SCreateDarScreen> {
                       isExpanded: true,
                     ),
                     SizedBox(height: 20.h),
-                    Row(
-                      children: [
-                        Row(
-                          children: uploads.asMap().entries.map(
-                            (entry) {
-                              final index = entry.key;
-                              final upload = entry.value;
-                              return Stack(
-                                clipBehavior: Clip.none,
-                                children: [
-                                  Container(
-                                    height: 66.h,
-                                    width: 66.w,
-                                    decoration: BoxDecoration(
-                                      color: DarkColor. WidgetColor,
-                                      borderRadius: BorderRadius.circular(
-                                        10.r,
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          Row(
+                            children: uploads.asMap().entries.map(
+                              (entry) {
+                                final index = entry.key;
+                                final upload = entry.value;
+                                return Stack(
+                                  clipBehavior: Clip.none,
+                                  children: [
+                                    Container(
+                                      height: 66.h,
+                                      width: 66.w,
+                                      decoration: BoxDecoration(
+                                        color: Theme.of(context).cardColor,
+                                        borderRadius: BorderRadius.circular(
+                                          10.r,
+                                        ),
+                                      ),
+                                      margin: EdgeInsets.all(8.r),
+                                      child: upload['type'] == 'image'
+                                          ? Image.file(
+                                              upload['file'],
+                                              fit: BoxFit.cover,
+                                            )
+                                          : Icon(
+                                              Icons.videocam,
+                                              size: 20.sp,
+                                            ),
+                                    ),
+                                    Positioned(
+                                      top: -5,
+                                      right: -5,
+                                      child: IconButton(
+                                        onPressed: () => _deleteItem(index),
+                                        icon: Icon(
+                                          Icons.delete,
+                                          color: Colors.black,
+                                          size: 20.w,
+                                        ),
+                                        padding: EdgeInsets.zero,
                                       ),
                                     ),
-                                    margin: EdgeInsets.all(8.r),
-                                    child: upload['type'] == 'image'
-                                        ? Image.file(
-                                            upload['file'],
-                                            fit: BoxFit.cover,
-                                          )
-                                        : Icon(
-                                            Icons.videocam,
-                                            size: 20.sp,
-                                          ),
-                                  ),
-                                  Positioned(
-                                    top: -5,
-                                    right: -5,
-                                    child: IconButton(
-                                      onPressed: () => _deleteItem(index),
-                                      icon: Icon(
-                                        Icons.delete,
-                                        color: Colors.black,
-                                        size: 20.w,
+                                  ],
+                                );
+                              },
+                            ).toList(),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              showModalBottomSheet(
+                                context: context,
+                                builder: (context) => Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    ListTile(
+                                      leading: Icon(
+                                        Icons.photo,
+                                        size: 20.sp,
                                       ),
-                                      padding: EdgeInsets.zero,
+                                      title: InterRegular(
+                                        text: 'Add Image',
+                                        fontsize: 14.sp,
+                                      ),
+                                      onTap: () {
+                                        Navigator.pop(context);
+                                        _addImage();
+                                      },
                                     ),
-                                  ),
-                                ],
+                                    ListTile(
+                                      leading: Icon(
+                                        Icons.image,
+                                        size: 20.sp,
+                                      ),
+                                      title: InterRegular(
+                                        text: 'Add from Gallery',
+                                        fontsize: 14.sp,
+                                      ),
+                                      onTap: () {
+                                        Navigator.pop(context);
+                                        _addGallery();
+                                      },
+                                    ),
+                                  ],
+                                ),
                               );
                             },
-                          ).toList(),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            showModalBottomSheet(
-                              context: context,
-                              builder: (context) => Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  ListTile(
-                                    leading: Icon(
-                                      Icons.photo,
-                                      size: 20.sp,
-                                    ),
-                                    title: InterRegular(
-                                      text: 'Add Image',
-                                      fontsize: 14.sp,
-                                    ),
-                                    onTap: () {
-                                      Navigator.pop(context);
-                                      _addImage();
-                                    },
-                                  ),
-                                  ListTile(
-                                    leading: Icon(
-                                      Icons.image,
-                                      size: 20.sp,
-                                    ),
-                                    title: InterRegular(
-                                      text: 'Add from Gallery',
-                                      fontsize: 14.sp,
-                                    ),
-                                    onTap: () {
-                                      Navigator.pop(context);
-                                      _addGallery();
-                                    },
-                                  ),
-                                ],
+                            child: Container(
+                              height: 66.h,
+                              width: 66.w,
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).cardColor,
+                                borderRadius:
+                                    BorderRadius.circular(8.r),
                               ),
-                            );
-                          },
-                          child: Container(
-                            height: 66.h,
-                            width: 66.w,
-                            decoration: BoxDecoration(
-                              color: DarkColor. WidgetColor,
-                              borderRadius:
-                                  BorderRadius.circular(8.r),
-                            ),
-                            child: Center(
-                              child: Icon(
-                                Icons.add,
-                                size: 20.sp,
+                              child: Center(
+                                child: Icon(
+                                  Icons.add,
+                                  size: 20.sp,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                     if (imageUrls.isNotEmpty)
                       GridView.builder(
@@ -507,8 +507,9 @@ class _CreateDarScreenState extends State<SCreateDarScreen> {
                     Button1(
                       text: _isSubmitting ? 'Submitting...' : 'Submit',
                       onPressed: submitDarTileData,
-                      backgroundcolor: DarkColor. Primarycolor,
-                      borderRadius: 20,
+                      backgroundcolor: Theme.of(context).primaryColor,
+                      borderRadius: 20.r,
+                      color: Theme.of(context).textTheme.headlineMedium!.color,
                     ),
                   ],
                 ),

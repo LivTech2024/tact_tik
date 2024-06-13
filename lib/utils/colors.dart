@@ -46,10 +46,10 @@ class DarkColor {
 
 class LightColor {
   static const Color Primarycolor = Color(0xFF8336FE);
-  static const Color Primarycolorlight = Color(0x808336FE);
+  static const Color Primarycolorlight = Color(0x388336FE);
   static const Color Secondarycolor = Color(0xFFF9F9F9);
   static const Color WidgetColor = Color(0xFFFFFFFF);
-  static const Color AppBarcolor = Color(0xEEFFFFFF);
+  static const Color AppBarcolor = Color(0xFFFFFFFF);
   static const Color color1 = Colors.white;
   static const Color color2 = Color(0x2D151515);
   static const Color color3 = Color(0xFF151515);

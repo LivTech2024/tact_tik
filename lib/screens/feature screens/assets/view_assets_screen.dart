@@ -77,15 +77,13 @@ class ViewAssetsScreen extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        
         appBar: AppBar(
-          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-          elevation: 0,
+         
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: isDark ? Colors.white : LightColor.color3,
-              size: 24.sp,
+              
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -94,8 +92,7 @@ class ViewAssetsScreen extends StatelessWidget {
           ),
           title: InterMedium(
             text: 'View Assets',
-            fontsize: 18.sp,
-            color: isDark ? Colors.white : LightColor.color3,
+           
             letterSpacing: -.3,
           ),
           centerTitle: true,
@@ -108,7 +105,7 @@ class ViewAssetsScreen extends StatelessWidget {
               SizedBox(height: 30.h),
               InterBold(
                 text: 'Allocation Date',
-                color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                color: Theme.of(context).textTheme.bodySmall!.color,
                 fontsize: 20.sp,
               ),
               SizedBox(height: 30.h),
@@ -119,7 +116,7 @@ class ViewAssetsScreen extends StatelessWidget {
                       height: 60.h,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10.r),
-                        color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                        color: Theme.of(context).cardColor,
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -127,7 +124,7 @@ class ViewAssetsScreen extends StatelessWidget {
                           InterMedium(
                             text: startDate,
                             fontsize: 16.sp,
-                            color: isDark ? DarkColor.color2 : LightColor.color3,
+                            color: Theme.of(context).textTheme.bodyLarge!.color,
                           ),
                           SvgPicture.asset(
                             'assets/images/calendar_clock.svg',
@@ -143,7 +140,7 @@ class ViewAssetsScreen extends StatelessWidget {
                       height: 60.h,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10.r),
-                        color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                        color: Theme.of(context).cardColor,
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -151,7 +148,7 @@ class ViewAssetsScreen extends StatelessWidget {
                           InterMedium(
                             text: endDate,
                             fontsize: 16.sp,
-                            color: isDark ? DarkColor.color2 : LightColor.color3,
+                            color: Theme.of(context).textTheme.bodyLarge!.color,
                           ),
                           SvgPicture.asset(
                             'assets/images/calendar_clock.svg',
@@ -166,7 +163,7 @@ class ViewAssetsScreen extends StatelessWidget {
               SizedBox(height: 30.h),
               InterBold(
                 text: 'Equipment',
-                color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                color: Theme.of(context).textTheme.bodySmall!.color,
                 fontsize: 16.sp,
               ),
               SizedBox(height: 20.h),
@@ -189,7 +186,7 @@ class ViewAssetsScreen extends StatelessWidget {
                       padding: EdgeInsets.symmetric(horizontal: 20.w),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10.r),
-                        color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                        color: Theme.of(context).cardColor,
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -198,12 +195,13 @@ class ViewAssetsScreen extends StatelessWidget {
 
                           InterMedium(
                             text: equipmentName,
-                            color: isDark ? DarkColor.color2 : LightColor.color3,
+                            color:
+                                Theme.of(context).textTheme.bodyMedium!.color,
                             fontsize: 16.sp,
                           ),
                           InterMedium(
                             text: "Quantity: $equipmentQty",
-                            color: isDark ? DarkColor.color2 : LightColor.color3,
+                            color: Theme.of(context).textTheme.bodyMedium!.color,
                             fontsize: 16.sp,
                           ),
                         ],

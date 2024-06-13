@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/main.dart';
@@ -77,17 +78,13 @@ class _TaskFeatureCreateScreenState extends State<TaskFeatureCreateScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        
         appBar: AppBar(
-          shadowColor: isDark ? DarkColor.color3 : LightColor.color3.withOpacity(0.1),
-          
-          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.WidgetColor,
-          elevation: 5,
+         
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: isDark ? DarkColor.color1 : LightColor.color3,
-              size: width / width24,
+              
             ),
             padding: EdgeInsets.only(left: width / width20),
             onPressed: () {
@@ -96,9 +93,7 @@ class _TaskFeatureCreateScreenState extends State<TaskFeatureCreateScreen> {
           ),
           title: InterMedium(
             text: 'Task',
-            fontsize: width / width18,
-            color: isDark ? DarkColor.color1 : LightColor.color3,
-            letterSpacing: -.3,
+           
           ),
           centerTitle: true,
         ),
@@ -106,26 +101,27 @@ class _TaskFeatureCreateScreenState extends State<TaskFeatureCreateScreen> {
           children: [
             SingleChildScrollView(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: width / width30),
+                padding: EdgeInsets.symmetric(horizontal: 30.w),
                 child: Column(
                   children: [
-                    SizedBox(height: height / height30),
+                    SizedBox(height: 30.h),
                     CustomeTextField(
                       hint: 'Tittle',
                       controller: _tittleController,
                     ),
-                    SizedBox(height: height / height20),
+                    SizedBox(height: 20.h),
                     CustomeTextField(
                       hint: 'Explain',
                       isExpanded: true,
                       controller: _explainController,
                     ),
-                    SizedBox(height: height / height20),
+                    SizedBox(height: 20.h),
                     Button1(
                       text: 'Done',
+                      color: Theme.of(context).textTheme.headlineMedium!.color,
                       onPressed: saveTaskToFirestore,
-                      backgroundcolor: isDark? DarkColor.Primarycolor:LightColor.Primarycolor,
-                      borderRadius: width / width10,
+                      backgroundcolor: Theme.of(context).primaryColor,
+                      borderRadius: 10.r,
                     ),
                   ],
                 ),

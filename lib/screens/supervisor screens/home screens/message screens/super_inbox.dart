@@ -24,9 +24,6 @@ class SuperInboxScreen extends StatefulWidget {
 }
 
 class _SuperInboxScreenState extends State<SuperInboxScreen> {
-  List colors = [isDark?DarkColor.Primarycolor:LightColor.color3, isDark ? DarkColor.color25 : LightColor.color2
-  ];
-
   bool showGuards = true;
 
   List<DocumentSnapshot<Object?>> _guardsInfo = [];
@@ -69,20 +66,17 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
 
   @override
   Widget build(BuildContext context) {
- 
+    List colors = [
+      Theme.of(context).textTheme.bodyLarge!.color,
+      Theme.of(context).highlightColor
+    ];
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         appBar: AppBar(
-          shadowColor: isDark ? Colors.transparent : LightColor.color3.withOpacity(.1),
-          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.WidgetColor,
-          elevation: 5,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: isDark ? DarkColor.color1 : LightColor.color3,
-              size: 24.w,
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -91,9 +85,6 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
           ),
           title: InterMedium(
             text: 'Inbox',
-            fontsize: 18.sp,
-            color:  isDark ? DarkColor.color1 : LightColor.color3,
-            letterSpacing: -.3,
           ),
           centerTitle: true,
         ),
@@ -106,17 +97,14 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
               decoration: BoxDecoration(
                 boxShadow: [
                   BoxShadow(
-                    color: isDark
-                        ? Colors.transparent
-                        : LightColor.color3.withOpacity(.05),
+                    color: Theme.of(context).shadowColor,
                     blurRadius: 5,
                     spreadRadius: 2,
                     offset: Offset(0, 3),
                   )
                 ],
-                color: isDark ? DarkColor.color24 : LightColor.WidgetColor,
+                color: Theme.of(context).textTheme.bodyMedium!.color,
               ),
-             
               padding: EdgeInsets.symmetric(vertical: 16.h),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -127,8 +115,8 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                         setState(() {
                           showGuards = true;
                           colors[0] =
-                              isDark ? DarkColor.Primarycolor : LightColor.color3;
-                          colors[1] =  isDark ? DarkColor.Primarycolorlight : LightColor.color2;
+                              Theme.of(context).textTheme.bodySmall!.color;
+                          colors[1] = Theme.of(context).highlightColor ;
                         });
                       },
                       child: SizedBox(
@@ -142,20 +130,17 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                       ),
                     ),
                   ),
-                   VerticalDivider(
-                    color:  isDark ? DarkColor.Primarycolor : LightColor.color3,
+                  VerticalDivider(
+                    color: Theme.of(context).textTheme.bodyMedium!.color,
                   ),
                   Expanded(
                     child: GestureDetector(
                       onTap: () {
                         setState(() {
                           showGuards = false;
-                          colors[0] = isDark
-                              ? DarkColor.Primarycolorlight
-                              : LightColor.color2;
-                          colors[1] = isDark
-                              ? DarkColor.Primarycolor
-                              : LightColor.color3;
+                          colors[0] = Theme.of(context).highlightColor;
+                          colors[1] =
+                              Theme.of(context).textTheme.bodySmall!.color;
                         });
                       },
                       child: SizedBox(
@@ -182,15 +167,14 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                         DropdownButtonHideUnderline(
                           child: DropdownButton<String>(
                             iconSize: 24.w,
-                            dropdownColor: isDark
-                                ? DarkColor.WidgetColor
-                                : LightColor.WidgetColor,
+                            dropdownColor: Theme.of(context).cardColor,
                             style: TextStyle(
-                                color: isDark
-                                    ? DarkColor.color2
-                                    : LightColor.color3, fontSize: 14.sp),
-                            borderRadius:
-                                BorderRadius.circular(10.r),
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge!
+                                    .color,
+                                fontSize: 14.sp),
+                            borderRadius: BorderRadius.circular(10.r),
                             value: dropdownValue,
                             onChanged: (String? newValue) {
                               setState(() {
@@ -239,22 +223,18 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                                 decoration: BoxDecoration(
                                   boxShadow: [
                                     BoxShadow(
-                                      color: isDark
-                                          ? Colors.transparent
-                                          : LightColor.color3.withOpacity(.05),
+                                      color: Theme.of(context).shadowColor,
                                       blurRadius: 5,
                                       spreadRadius: 2,
                                       offset: Offset(0, 3),
                                     )
                                   ],
-                                  color: isDark
+                                  color: Theme.of(context).brightness == Brightness.dark
                                       ? DarkColor.color19
                                       : LightColor.WidgetColor,
-                                  borderRadius:
-                                      BorderRadius.circular(12.r),
+                                  borderRadius: BorderRadius.circular(12.r),
                                 ),
-                                margin:
-                                    EdgeInsets.only(bottom: 10.h),
+                                margin: EdgeInsets.only(bottom: 10.h),
                                 width: double.maxFinite,
                                 child: Container(
                                   height: 48.h,
@@ -272,7 +252,7 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                                             width: 50.w,
                                             decoration: BoxDecoration(
                                               shape: BoxShape.circle,
-                                              color:DarkColor.Primarycolor ,
+                                              color: DarkColor.Primarycolor,
                                               // image: DecorationImage(
                                               //   image: NetworkImage(
                                               //     'url',
@@ -289,9 +269,10 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                                           InterBold(
                                             text: 'name',
                                             letterSpacing: -.3,
-                                            color: isDark
-                                                ? DarkColor.color1
-                                                : LightColor.color3,
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium!
+                                                .color,
                                           ),
                                         ],
                                       ),
@@ -299,44 +280,43 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                                         clipBehavior: Clip.none,
                                         children: [
                                           Stack(
-                                            clipBehavior: Clip.none,
-                                            children: [
-                                              SvgPicture.asset(
-                                                  'assets/images/chat_bubble.svg'),
-                                              Positioned(
-                                                top: -4,
-                                                left: -8,
-                                                child: Container(
-                                                  padding: EdgeInsets.symmetric(
-                                                    horizontal: 4.w,
-                                                  ),
-                                                  height: 14.h,
-                                                  // width: width / width20,
-                                                  constraints: BoxConstraints(
-                                                    minWidth: 20.w,
-                                                  ),
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.red,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                      50.r,
+                                              clipBehavior: Clip.none,
+                                              children: [
+                                                SvgPicture.asset(
+                                                    'assets/images/chat_bubble.svg'),
+                                                Positioned(
+                                                  top: -4,
+                                                  left: -8,
+                                                  child: Container(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                      horizontal: 4.w,
                                                     ),
-                                                  ),
-                                                  child: Center(
-                                                    child: InterBold(
-                                                      text: '2',
-                                                      fontsize: 8.sp,
-                                                      color: isDark
-                                                          ? DarkColor
-                                                              .color1
-                                                          : LightColor
-                                                              .color3,
+                                                    height: 14.h,
+                                                    // width: width / width20,
+                                                    constraints: BoxConstraints(
+                                                      minWidth: 20.w,
+                                                    ),
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.red,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                        50.r,
+                                                      ),
+                                                    ),
+                                                    child: Center(
+                                                      child: InterBold(
+                                                        text: '2',
+                                                        fontsize: 8.sp,
+                                                        color: Theme.of(context)
+                                                            .textTheme
+                                                            .bodyMedium!
+                                                            .color,
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
-                                              ),
-                                            ]
-                                          ),
+                                              ]),
                                         ],
                                       )
                                     ],

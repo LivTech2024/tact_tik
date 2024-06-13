@@ -38,7 +38,7 @@ class PageType1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+      color: Theme.of(context).canvasColor,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -47,7 +47,7 @@ class PageType1 extends StatelessWidget {
             height: 470.h,
             width: double.maxFinite,
             decoration: BoxDecoration(
-              color: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+              color: Theme.of(context).primaryColor,
               borderRadius: BorderRadius.only(
                 bottomRight: Radius.circular(40.r),
                 bottomLeft: Radius.circular(40.r),
@@ -74,7 +74,7 @@ class PageType1 extends StatelessWidget {
           PoppinsSemibold(
             text: tittls[index],
             fontsize: 32.sp,
-            color: isDark ? DarkColor.color1 : LightColor.color3,
+            color: Theme.of(context).textTheme.bodyMedium!.color,
           ),
           SizedBox(height: 27.h),
           SizedBox(
@@ -87,7 +87,7 @@ class PageType1 extends StatelessWidget {
           PoppinsRegular(
             text: description[index],
           fontsize: 14.sp,
-            color: isDark ? DarkColor.color2 : LightColor.color3,
+            color: Theme.of(context).textTheme.bodyLarge!.color,
             textAlign: TextAlign.center,
           ),
         ],

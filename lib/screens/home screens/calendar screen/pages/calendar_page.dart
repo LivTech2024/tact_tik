@@ -327,6 +327,7 @@ class _CalendarPageState extends State<CalendarPage> {
         isScrollControlled: true,
         context: context,
         builder: (context) => DayEventsBottomSheet(
+              currentUserId: currentUserId,
               empId: widget.employeeId,
               events: events,
               day: day,

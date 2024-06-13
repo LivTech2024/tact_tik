@@ -48,7 +48,7 @@ class _SelectGuardsScreenState extends State<SelectLoogBookGuardsScreen> {
         String EmployeeId = userInfo['EmployeeId'] ?? "";
         String CompanyId = userInfo['EmployeeCompanyId'] ?? "";
         var guardsInfo =
-            await fireStoreService.getGuardForSupervisor(widget.companyId);
+            await fireStoreService.getGuardForSupervisor(EmployeeId);
         var patrolInfo = await fireStoreService
             .getPatrolsByEmployeeIdFromUserInfo(EmployeeId);
         for (var doc in guardsInfo) {
@@ -77,23 +77,12 @@ class _SelectGuardsScreenState extends State<SelectLoogBookGuardsScreen> {
 
   @override
   Widget build(BuildContext context) {
-   
-
     return SafeArea(
       child: Scaffold(
-        backgroundColor:
-            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         appBar: AppBar(
-          shadowColor: isDark
-              ? Colors.transparent
-              : LightColor.WidgetColor.withOpacity(.1),
-          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-          elevation: 5,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: isDark ? DarkColor.color1 : LightColor.color3,
-              size: 24.sp,
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -102,9 +91,6 @@ class _SelectGuardsScreenState extends State<SelectLoogBookGuardsScreen> {
           ),
           title: InterMedium(
             text: 'LogBook Guards',
-            fontsize: 18.w,
-            color: isDark ? DarkColor.color1 : LightColor.color3,
-            letterSpacing: -.3,
           ),
           centerTitle: true,
         ),
@@ -128,7 +114,6 @@ class _SelectGuardsScreenState extends State<SelectLoogBookGuardsScreen> {
                             String id = guardInfo['EmployeeId'] ?? "";
                             String url = guardInfo['EmployeeImg'] ?? "";
 
-
                             print(guardInfo);
                             return GestureDetector(
                               onTap: () {
@@ -145,22 +130,16 @@ class _SelectGuardsScreenState extends State<SelectLoogBookGuardsScreen> {
                                 decoration: BoxDecoration(
                                   boxShadow: [
                                     BoxShadow(
-                                      color: isDark
-                                          ? Colors.transparent
-                                          : LightColor.color3.withOpacity(.05),
+                                      color: Theme.of(context).shadowColor,
                                       blurRadius: 5,
                                       spreadRadius: 2,
                                       offset: Offset(0, 3),
                                     )
                                   ],
-                                  color: isDark
-                                      ? DarkColor.WidgetColor
-                                      : LightColor.WidgetColor,
-                                  borderRadius:
-                                      BorderRadius.circular(12.r),
+                                  color: Theme.of(context).cardColor,
+                                  borderRadius: BorderRadius.circular(12.r),
                                 ),
-                                margin:
-                                    EdgeInsets.only(bottom: 10.h),
+                                margin: EdgeInsets.only(bottom: 10.h),
                                 width: double.maxFinite,
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -178,39 +157,43 @@ class _SelectGuardsScreenState extends State<SelectLoogBookGuardsScreen> {
                                               Container(
                                                 height: 50.h,
                                                 width: 50.w,
-                                                decoration: guardInfo['EmployeeImg'] != null
+                                                decoration: guardInfo[
+                                                            'EmployeeImg'] !=
+                                                        null
                                                     ? BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  // color: Primarycolor,
-                                                  image: DecorationImage(
-                                                    image: NetworkImage(
-                                                        url) ,
-                                                    filterQuality: FilterQuality.high,
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                )
+                                                        shape: BoxShape.circle,
+                                                        // color: Primarycolor,
+                                                        image: DecorationImage(
+                                                          image:
+                                                              NetworkImage(url),
+                                                          filterQuality:
+                                                              FilterQuality
+                                                                  .high,
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                      )
                                                     : BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  color: isDark
-                                                            ? DarkColor
-                                                                .Primarycolor
-                                                            : LightColor
-                                                                .Primarycolor,
-                                                  image: DecorationImage(
-                                                    image:  AssetImage(
-                                                        'assets/images/default.png'),
-                                                    filterQuality: FilterQuality.high,
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                ),
+                                                        shape: BoxShape.circle,
+                                                        color: Theme.of(context)
+                                                            .primaryColor,
+                                                        image: DecorationImage(
+                                                          image: AssetImage(
+                                                              'assets/images/default.png'),
+                                                          filterQuality:
+                                                              FilterQuality
+                                                                  .high,
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                      ),
                                               ),
                                               SizedBox(width: 20.w),
                                               InterBold(
                                                 text: name,
                                                 letterSpacing: -.3,
-                                                color: isDark
-                                                    ? DarkColor.color1
-                                                    : LightColor.color3,
+                                                color: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyMedium!
+                                                    .color,
                                               ),
                                             ],
                                           ),
@@ -234,9 +217,8 @@ class _SelectGuardsScreenState extends State<SelectLoogBookGuardsScreen> {
                       : Center(
                           child: PoppinsBold(
                             text: 'No Guards Found',
-                            color: isDark
-                                ? DarkColor.color2
-                                : LightColor.color3,
+                            color:
+                                Theme.of(context).textTheme.bodyMedium!.color,
                             fontsize: 16.sp,
                           ),
                         )

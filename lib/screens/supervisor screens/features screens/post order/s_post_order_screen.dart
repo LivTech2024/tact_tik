@@ -84,7 +84,7 @@ class _SPostOrderState extends State<SPostOrder> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor:  isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+       
         body: FutureBuilder<Map<String, List<Map<String, dynamic>>>>(
           future: _locationDataFuture,
           builder: (context, snapshot) {
@@ -105,20 +105,11 @@ class _SPostOrderState extends State<SPostOrder> {
             return CustomScrollView(
               slivers: [
                 SliverAppBar(
-                  shadowColor:  isDark
-                      ? Colors.transparent
-                      : LightColor.color3.withOpacity(.1),
-                  backgroundColor:  isDark
-                      ? DarkColor.AppBarcolor
-                      : LightColor.AppBarcolor,
-                  elevation: 5,
+                  
                   leading: IconButton(
                     icon: Icon(
                       Icons.arrow_back_ios,
-                      color: isDark
-                          ? DarkColor.color1
-                          : LightColor.color3,
-                      size: 24.sp,
+                   
                     ),
                     padding: EdgeInsets.only(left: 20.w),
                     onPressed: () {
@@ -128,9 +119,7 @@ class _SPostOrderState extends State<SPostOrder> {
                   ),
                   title: InterMedium(
                     text: 'Post Orders',
-                    fontsize: 18.sp,
-                    color: isDark ? DarkColor.color1 : LightColor.color3,
-                    letterSpacing: -.3,
+                   
                   ),
                   centerTitle: true,
                   floating: true,
@@ -149,9 +138,8 @@ class _SPostOrderState extends State<SPostOrder> {
                             child: InterSemibold(
                               text: date,
                               fontsize: 20.sp,
-                              color: isDark
-                                  ? DarkColor.Primarycolor
-                                  : LightColor.color3,
+                              color:
+                                  Theme.of(context).textTheme.bodySmall!.color,
                             ),
                           ),
                           ...posts.map((postOrder) {
@@ -198,18 +186,14 @@ class _SPostOrderState extends State<SPostOrder> {
                                       margin: EdgeInsets.only(bottom: 10.h),
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(10.r),
-                                        color: isDark
-                                            ? DarkColor.WidgetColor
-                                            : LightColor.WidgetColor,
+                                        color: Theme.of(context).cardColor,
                                       ),
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           InterBold(
                                             text: postOrderTitle,
-                                            color: isDark
-                                                ? DarkColor.color2
-                                                : LightColor.color2,
+                                            color: Theme.of(context).textTheme.bodyLarge!.color,
                                             fontsize: 14.sp,
                                           ),
                                           SizedBox(
@@ -220,9 +204,7 @@ class _SPostOrderState extends State<SPostOrder> {
                                             height: 46.h,
                                             decoration: BoxDecoration(
                                               borderRadius: BorderRadius.circular(10.r),
-                                              color: isDark
-                                                  ? DarkColor.color1
-                                                  : LightColor.color1,
+                                              color:Colors.white,
                                             ),
                                             child: Row(
                                               children: [
@@ -238,19 +220,11 @@ class _SPostOrderState extends State<SPostOrder> {
                                                   children: [
                                                     PoppinsMedium(
                                                       text: fileName,
-                                                      color: isDark
-                                                          ? DarkColor
-                                                              .color15
-                                                          : LightColor
-                                                              .color3,
+                                                      color: Theme.of(context).textTheme.titleMedium!.color,
                                                     ),
                                                     PoppinsRegular(
                                                       text: fileSize,
-                                                      color: isDark
-                                                          ? DarkColor
-                                                              .color16
-                                                          : LightColor
-                                                              .color3,
+                                                      color: Theme.of(context).textTheme.titleLarge!.color,
                                                     )
                                                   ],
                                                 )

@@ -59,15 +59,13 @@ class _SelectGuardsScreenState extends State<SelectVisitorsGuardsScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        
         appBar: AppBar(
-          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-          elevation: 0,
+          
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: isDark ? DarkColor.color1 : LightColor.color3,
-              size: 24.w,
+              
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -76,9 +74,7 @@ class _SelectGuardsScreenState extends State<SelectVisitorsGuardsScreen> {
           ),
           title: InterMedium(
             text: 'Visitors Guards',
-            fontsize: 18.sp,
-            color: isDark ? DarkColor.color1 : LightColor.color3,
-            letterSpacing: -.3,
+            
           ),
           centerTitle: true,
         ),
@@ -116,15 +112,13 @@ class _SelectGuardsScreenState extends State<SelectVisitorsGuardsScreen> {
                                 decoration: BoxDecoration(
                                   boxShadow: [
                                     BoxShadow(
-                                      color: isDark
-                                          ? Colors.transparent
-                                          : LightColor.color3.withOpacity(.1),
+                                      color:Theme.of(context).shadowColor,
                                       blurRadius: 5,
                                       spreadRadius: 2,
                                       offset: Offset(0, 3),
                                     )
                                   ],
-                                  color: isDark
+                                  color:  Theme.of(context).brightness == Brightness.dark
                                       ? DarkColor.color19
                                       : LightColor.color1,
                                   borderRadius:
@@ -167,11 +161,8 @@ class _SelectGuardsScreenState extends State<SelectVisitorsGuardsScreen> {
                                                       )
                                                     : BoxDecoration(
                                                         shape: BoxShape.circle,
-                                                        color: isDark
-                                                            ? DarkColor
-                                                                .Primarycolor
-                                                            : LightColor
-                                                                .Primarycolor,
+                                                        color: Theme.of(context)
+                                                            .primaryColor,
                                                         image: DecorationImage(
                                                           image: AssetImage(
                                                               'assets/images/default.png'),
@@ -186,9 +177,10 @@ class _SelectGuardsScreenState extends State<SelectVisitorsGuardsScreen> {
                                               InterBold(
                                                 text: name,
                                                 letterSpacing: -.3,
-                                                color: isDark
-                                                    ? DarkColor.color1
-                                                    : LightColor.color3,
+                                                color:  Theme.of(context)
+                                                    .textTheme
+                                                    .bodyMedium!
+                                                    .color,
                                               ),
                                             ],
                                           ),

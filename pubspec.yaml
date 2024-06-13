@@ -71,11 +71,14 @@ dependencies:
   image: ^4.1.7
   image_picker: ^1.0.7
   intl: ^0.18.1
+  intl_phone_number_input: ^0.7.4
   localstorage: ^4.0.0+1
   lottie: ^3.1.1
   mapbox_maps_flutter: ^2.0.0-rc.1
   multi_dropdown: ^2.1.4
+  multi_select_flutter: ^4.1.3
   number_editing_controller: ^1.2.1
+  omni_datetime_picker: ^1.1.0
   open_file: ^3.2.1
   path_provider: ^2.1.3
   pdf: ^3.10.8

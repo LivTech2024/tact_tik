@@ -226,13 +226,11 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
       child: Scaffold(
         
         appBar: AppBar(
-          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-          elevation: 0,
+          
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: isDark ? DarkColor.color1 : LightColor.color3,
-              size: 24.w,
+             
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -241,13 +239,11 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
           ),
           title: InterMedium(
             text: 'Post Order',
-            fontsize: 18.sp,
-            color: isDark ? DarkColor.color1 : LightColor.color3,
-            letterSpacing: -.3,
+           
           ),
           centerTitle: true,
         ),
-        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        
         body: Container(
           height: MediaQuery.of(context).size.height - kToolbarHeight,
           padding: EdgeInsets.symmetric(horizontal: 30.w),
@@ -257,7 +253,7 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
               InterSemibold(
                 text: widget.date,
                 fontsize: 20.sp,
-                color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                color: Theme.of(context).textTheme.bodySmall!.color,
               ),
               SizedBox(height: 30.h),
               CustomeTextField(
@@ -288,7 +284,7 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
                               height: 66.h,
                               width: 66.w,
                               decoration: BoxDecoration(
-                                  color: DarkColor. WidgetColor,
+                                  color: Theme.of(context).cardColor,
                                   borderRadius: BorderRadius.circular(
                                     10.r,
                                   )),
@@ -365,7 +361,7 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
                         height: 66.h,
                         width: 66.w,
                         decoration: BoxDecoration(
-                            color:DarkColor. WidgetColor,
+                            color: Theme.of(context).cardColor,
                             borderRadius: BorderRadius.circular(8.r)),
                         child: Center(
                           child: Icon(Icons.add),
@@ -431,11 +427,17 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
                                           children: [
                                             PoppinsMedium(
                                               text: otherFileName,
-                                              color: isDark? DarkColor.color15 : LightColor.color3,
+                                              color:  Theme.of(context)
+                                                  .textTheme
+                                                  .titleMedium!
+                                                  .color,
                                             ),
                                             PoppinsRegular(
                                               text: otherFileSize,
-                                              color: isDark? DarkColor.color16 : LightColor.color3,
+                                              color:  Theme.of(context)
+                                                  .textTheme
+                                                  .titleLarge!
+                                                  .color,
                                             ),
                                           ],
                                         ),
@@ -480,7 +482,8 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
               Button1(
                 text: 'Done',
                 onPressed: _uploadFiles,
-                backgroundcolor: DarkColor.Primarycolor,
+                backgroundcolor: Theme.of(context).primaryColor,
+                color: Theme.of(context).textTheme.headlineMedium!.color,
                 borderRadius: 10.r,
               ),
             ],

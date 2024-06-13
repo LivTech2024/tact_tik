@@ -12,6 +12,7 @@ import '../../../fonts/inter_medium.dart';
 import '../../../fonts/inter_regular.dart';
 import '../../../fonts/inter_semibold.dart';
 import '../../../utils/colors.dart';
+import '../select_client_guards_screen.dart';
 
 class ClientOpenPatrolScreen extends StatefulWidget {
   final String guardName;
@@ -100,16 +101,10 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         appBar: AppBar(
-          shadowColor: isDark ? Colors.transparent : LightColor.color3.withOpacity(.1),
-          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-          elevation: 5,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: isDark ? DarkColor.color1 : LightColor.color3,
-              size: 24.sp,
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -118,9 +113,6 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
           ),
           title: InterRegular(
             text: "${widget.guardName}",
-            fontsize: 18.sp,
-            color: isDark ? DarkColor.color1 : LightColor.color3,
-            letterSpacing: -.3,
           ),
           centerTitle: true,
         ),
@@ -139,7 +131,13 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                     SizedBox(
                       width: 140.w,
                       child: GestureDetector(
-                        // onTap: () => _selectDate(context),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      SelectClientGuardsScreen(companyId: '',)));
+                        },
                         child: IconTextWidget(
                           space: 6.w,
                           icon: Icons.add,
@@ -147,8 +145,12 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                           text: 'Select Guard',
                           useBold: true,
                           fontsize: 14.sp,
-                          color: isDark ? DarkColor.Primarycolor : LightColor.color3,
-                          Iconcolor: isDark ? DarkColor.color1 : LightColor.color3,
+                          color: Theme.of(context).textTheme.bodySmall!.color
+                              as Color,
+                          Iconcolor: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .color as Color,
                         ),
                       ),
                     ),
@@ -162,7 +164,8 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                               ? "${selectedDate!.toLocal()}".split(' ')[0]
                               : 'Display shift Date',
                           fontsize: 14.sp,
-                          color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                          color: Theme.of(context).textTheme.bodySmall!.color
+                              as Color,
                         ),
                       ),
                     ),
@@ -182,15 +185,13 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                     decoration: BoxDecoration(
                       boxShadow: [
                         BoxShadow(
-                          color: isDark
-                              ? Colors.transparent
-                              : LightColor.color3.withOpacity(.05),
+                          color: Theme.of(context).shadowColor,
                           blurRadius: 5,
                           spreadRadius: 2,
                           offset: Offset(0, 3),
                         )
                       ],
-                      color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                      color: Theme.of(context).cardColor,
                       borderRadius: BorderRadius.circular(14.r),
                     ),
                     padding: EdgeInsets.symmetric(vertical: 20.h),
@@ -211,9 +212,7 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                                       topRight: Radius.circular(10.r),
                                       bottomRight: Radius.circular(10.r),
                                     ),
-                                    color: isDark
-                                        ? DarkColor.Primarycolor
-                                        : LightColor.Primarycolor,
+                                    color:Theme.of(context).primaryColor,
                                   ),
                                 ),
                               ],
@@ -227,9 +226,10 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                                 children: [
                                   InterSemibold(
                                     text: widget.guardName,
-                                     color: isDark
-                                        ? DarkColor.color1
-                                        : LightColor.color3,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .color,
                                     fontsize: 18.sp,
                                   ),
                                   // SizedBox(height: height / height5),
@@ -255,18 +255,20 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                                   children: [
                                     InterRegular(
                                       text: 'Started at',
-                                   fontsize: 14.sp,
-                                      color: isDark
-                                          ? DarkColor.color21
-                                          : LightColor.color2,
+                                      fontsize: 14.sp,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .displaySmall!
+                                          .color!,
                                     ),
                                     SizedBox(height: 12.h),
                                     InterMedium(
-                                       text: widget.startTime,
+                                      text: widget.startTime,
                                       fontsize: 14.sp,
-                                      color: isDark
-                                          ? DarkColor.color1
-                                          : LightColor.color3,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .color,
                                     ),
                                   ],
                                 ),
@@ -278,18 +280,20 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                                   children: [
                                     InterRegular(
                                       text: 'Ended at',
-                               fontsize: 14.sp,
-                                      color: isDark
-                                          ? DarkColor.color21
-                                          : LightColor.color2,
+                                      fontsize: 14.sp,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .displaySmall!
+                                          .color!,
                                     ),
                                     SizedBox(height: 12.h),
                                     InterMedium(
-                            text: widget.endTime,
+                                      text: widget.endTime,
                                       fontsize: 14.sp,
-                                      color: isDark
-                                          ? DarkColor.color1
-                                          : LightColor.color3,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .color,
                                     ),
                                   ],
                                 ),
@@ -301,18 +305,20 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                                   children: [
                                     InterRegular(
                                       text: 'Count',
-                                     fontsize: 14.sp,
-                                      color: isDark
-                                          ? DarkColor.color21
-                                          : LightColor.color2,
+                                      fontsize: 14.sp,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .displaySmall!
+                                          .color!,
                                     ),
                                     SizedBox(height: 12.sp),
                                     InterMedium(
-                                   text: '${widget.patrolLogCount}',
+                                      text: '${widget.patrolLogCount}',
                                       fontsize: 14.sp,
-                                      color: isDark
-                                          ? DarkColor.color1
-                                          : LightColor.color3,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .color,
                                     ),
                                   ],
                                 ),
@@ -324,10 +330,11 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                                   children: [
                                     InterRegular(
                                       text: 'Status',
-                                       fontsize: 14.sp,
-                                      color: isDark
-                                          ? DarkColor.color21
-                                          : LightColor.color2,
+                                      fontsize: 14.sp,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .displaySmall!
+                                          .color!,
                                     ),
                                     SizedBox(height: 12.h),
                                     InterBold(
@@ -349,18 +356,20 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                             children: [
                               InterRegular(
                                 text: 'Feedback :',
-                                color: isDark
-                                    ? DarkColor.color21
-                                    : LightColor.color2,
-                              fontsize: 14.sp,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .displaySmall!
+                                    .color!,
+                                fontsize: 14.sp,
                               ),
                               SizedBox(width: 4.w),
                               Flexible(
                                   child: InterRegular(
                                 text: widget.feedback,
-                               color: isDark
-                                    ? DarkColor.color10
-                                    : LightColor.color3,
+                               color: Theme.of(context)
+                                    .textTheme
+                                    .labelMedium!
+                                    .color,
                                 fontsize: 14.sp,
                                 maxLines: 3,
                               )),
@@ -375,7 +384,7 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                 InterBold(
                   text: 'Checkpoints',
                  fontsize: 18.sp,
-                  color: isDark ? DarkColor.color21 : LightColor.color3,
+                  color: Theme.of(context).textTheme.displaySmall!.color as Color,
                 ),
                 SizedBox(height: 20.h),
                 ListView.builder(
@@ -419,16 +428,14 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                         decoration: BoxDecoration(
                           boxShadow: [
                             BoxShadow(
-                              color: isDark
-                                  ? Colors.transparent
-                                  : LightColor.color3.withOpacity(.05),
+                              color: Theme.of(context).shadowColor,
                               blurRadius: 5,
                               spreadRadius: 2,
                               offset: Offset(0, 3),
                             )
                           ],
-                          color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
-                            borderRadius: BorderRadius.circular(10.r),
+                          color: Theme.of(context).cardColor,
+                          borderRadius: BorderRadius.circular(10.r),
                         ),
                         padding: EdgeInsets.symmetric(horizontal: 20.w),
                         child: Row(
@@ -451,9 +458,10 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                                   width: 120.w,
                                   child: InterMedium(
                                     // text: 'Checkpoint name Checkpoint name..',
-                                    color: isDark
-                                        ? DarkColor.color21
-                                        : LightColor.color3,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .displaySmall!
+                                        .color,
                                     text: checkpointName,
                                     // color: color21,
                                     fontsize: 16.sp,
@@ -464,7 +472,7 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                             Icon(
                               Icons.arrow_forward_ios_outlined,
                             size: 24.sp,
-                              color:  isDark ? DarkColor.color17 : LightColor.color3 ,
+                              color: Theme.of(context).textTheme.displayMedium!.color as Color,
                             )
                           ],
                         ),

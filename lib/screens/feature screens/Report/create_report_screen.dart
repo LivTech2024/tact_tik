@@ -162,7 +162,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
 
   Future<void> _addImage() async {
     List<XFile>? pickedFiles =
-        await ImagePicker().pickMultiImage(imageQuality: 30);
+        await ImagePicker().pickMultiImage(imageQuality: 30); //quality was 30
     if (pickedFiles != null) {
       for (var pickedFile in pickedFiles) {
         try {
@@ -185,8 +185,8 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
   }
 
   Future<void> _addImageFromCamera() async {
-    XFile? pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.camera);
+    XFile? pickedFile = await ImagePicker()
+        .pickImage(source: ImageSource.camera, imageQuality: 30);
     if (pickedFile != null) {
       try {
         File file = File(pickedFile.path);
@@ -252,18 +252,10 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor:
-            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         appBar: AppBar(
-          shadowColor: isDark ? DarkColor.color1 : LightColor.color3.withOpacity(.1),
-          backgroundColor:
-              isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-          elevation: 5,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: isDark ? DarkColor.color1 : LightColor.color3,
-             size: 24.sp,
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -275,9 +267,6 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                     reportData['ReportIsFollowUpRequired'] == true
                 ? 'FollowUp for ${reportData['ReportName']} '
                 : 'Report',
-            fontsize: 18.sp,
-            color: isDark ? DarkColor.color1 : LightColor.color3,
-            letterSpacing: -.3,
           ),
           centerTitle: true,
         ),
@@ -292,8 +281,8 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                     SizedBox(height: 30.h),
                     InterBold(
                       text: 'New Report',
-                    fontsize: 20.sp,
-                      color:  isDark ? DarkColor.Primarycolor : LightColor.color3,
+                      fontsize: 20.sp,
+                      color: Theme.of(context).textTheme.bodySmall!.color,
                       letterSpacing: -.3,
                     ),
                     SizedBox(height: 30.h),
@@ -308,8 +297,8 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                     SizedBox(height: 30.h),
                     InterBold(
                       text: 'Category',
-                    fontsize: 20.sp,
-                      color:  isDark ? DarkColor.Primarycolor : LightColor.color3,
+                      fontsize: 20.sp,
+                      color: Theme.of(context).textTheme.bodySmall!.color,
                       letterSpacing: -.3,
                     ),
                     SizedBox(height: 20.h),
@@ -319,25 +308,23 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
-                            color: isDark
-                                ? Colors.transparent
-                                : LightColor.color3.withOpacity(.05),
+                            color: Theme.of(context).shadowColor,
                             blurRadius: 5,
                             spreadRadius: 2,
                             offset: Offset(0, 3),
                           )
                         ],
-                        color:  isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
-                         borderRadius: BorderRadius.circular(10.r),
+                        color: Theme.of(context).cardColor,
+                        borderRadius: BorderRadius.circular(10.r),
                       ),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
                           isExpanded: true,
                           iconSize: 24.sp,
-                          dropdownColor:  isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
-                          style: TextStyle(color:  isDark
-                                  ? DarkColor.color2
-                                  : LightColor.color3),
+                          dropdownColor: Theme.of(context).cardColor,
+                          style: TextStyle(
+                              color:
+                                  Theme.of(context).textTheme.bodyLarge!.color),
                           borderRadius: BorderRadius.circular(10),
                           value: dropdownValue,
                           onChanged: (String? newValue) {
@@ -367,7 +354,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                         decoration: BoxDecoration(
                           boxShadow: [
                             BoxShadow(
-                              color: LightColor.color3.withOpacity(.2),
+                              color: Theme.of(context).shadowColor,
                               blurRadius: 10,
                               offset: Offset(0, 5),
                             ),
@@ -380,20 +367,17 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                           controller: newCategoryController,
                         ),
                       ),
-                      SizedBox(height: 20.h),
+                    SizedBox(height: 20.h),
                     Container(
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
-                            color: isDark
-                                ? Colors.transparent
-                                : LightColor.color3.withOpacity(.05),
+                            color: Theme.of(context).shadowColor,
                             blurRadius: 5,
                             spreadRadius: 2,
                             offset: Offset(0, 3),
                           )
                         ],
-                       
                       ),
                       child: CustomeTextField(
                         hint: 'Explain',
@@ -412,15 +396,13 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
-                            color: isDark
-                                ? Colors.transparent
-                                : LightColor.color3.withOpacity(.05),
+                            color: Theme.of(context).shadowColor,
                             blurRadius: 5,
                             spreadRadius: 2,
                             offset: Offset(0, 3),
                           )
                         ],
-                        color:  isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                        color: Theme.of(context).cardColor,
                         borderRadius: BorderRadius.circular(10.r),
                       ),
                       child: Row(
@@ -430,18 +412,20 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                             children: [
                               Icon(
                                 Icons.follow_the_signs,
-                                color:  isDark
-                                    ? DarkColor.color1
-                                    : LightColor.color3,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color,
                                 size: 24.sp,
                               ),
                               SizedBox(width: 6.w),
                               InterMedium(
                                 text: 'Follow-Up Required ?',
-                                color:  isDark
-                                    ? DarkColor.color8
-                                    : LightColor.color3,
-                                fontsize:16.sp,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .labelSmall!
+                                    .color,
+                                fontsize: 16.sp,
                                 letterSpacing: -.3,
                               )
                             ],
@@ -475,7 +459,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                                     height: 66.h,
                                     width: 66.w,
                                     decoration: BoxDecoration(
-                                      color: isDark? DarkColor.WidgetColor : LightColor.WidgetColor,
+                                      color: Theme.of(context).cardColor,
                                       borderRadius: BorderRadius.circular(10.r),
                                     ),
                                     margin: EdgeInsets.all(8.sp),
@@ -549,14 +533,18 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                               height: 66.h,
                               width: 66.w,
                               decoration: BoxDecoration(
-                                color: isDark? DarkColor.WidgetColor : LightColor.Primarycolor,
-                              borderRadius: BorderRadius.circular(8.r),
+                                color: Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? DarkColor.WidgetColor
+                                    : LightColor.Primarycolor,
+                                borderRadius: BorderRadius.circular(8.r),
                               ),
                               child: Center(
                                 child: Icon(
-                                  color: isDark
-                                      ? DarkColor.color1
-                                      : LightColor.color3,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .color,
                                   Icons.add,
                                   size: 20.sp,
                                 ),
@@ -594,6 +582,8 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                       child: Button1(
                         height: 50.h,
                         text: 'Submit',
+                        color:
+                            Theme.of(context).textTheme.headlineMedium!.color,
                         onPressed: () async {
                           setState(() {
                             _isLoading = true;
@@ -761,10 +751,8 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                             _isLoading = false; // Set loading state
                           });
                         },
-                        backgroundcolor: isDark
-                            ? DarkColor.Primarycolor
-                            : LightColor.Primarycolor,
-                         borderRadius: 10.r,
+                        backgroundcolor: Theme.of(context).primaryColor,
+                        borderRadius: 10.r,
                       ),
                     ),
                   ],

@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -94,56 +95,46 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
-
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          shadowColor: isDark? Colors.transparent :LightColor.color3.withOpacity(.1),
-          backgroundColor:isDark? DarkColor. AppBarcolor:LightColor.AppBarcolor,
-          elevation: 5,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: isDark ? DarkColor.color1 : LightColor.color3,
-              size: width / width24,
             ),
-            padding: EdgeInsets.only(left: width / width20),
+            padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
               Navigator.pop(context);
             },
           ),
           title: InterMedium(
             text: 'End Patrol',
-            fontsize: width / width18,
-            color: isDark ? DarkColor.color1 : LightColor.color3,
-            letterSpacing: -.3,
           ),
           centerTitle: true,
         ),
         body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: width / width30),
+          padding: EdgeInsets.symmetric(horizontal: 30.w),
           child: Stack(
             children: [
               SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: height / height30),
+                    SizedBox(height: 30.h),
                     Text(
                       'Add Note',
                       style: TextStyle(
-                        fontSize: width / width14,
-                        color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                        fontSize: 14.sp,
+                        color: Theme.of(context).textTheme.bodySmall!.color,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: height / height10),
+                    SizedBox(height: 10.h),
                     Row(
                       children: [
                         Radio(
-                          activeColor: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                          activeColor:
+                              Theme.of(context).textTheme.bodySmall!.color,
                           value: 'Emergency',
                           groupValue: selectedOption,
                           onChanged: (value) {
@@ -154,15 +145,15 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                         ),
                         InterRegular(
                           text: 'Emergency',
-                          fontsize: width / width16,
-                          color: isDark ? DarkColor.color1 : LightColor.color3,
+                          fontsize: 16.sp,
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
                         )
                       ],
                     ),
                     Row(
                       children: [
                         Radio(
-                          activeColor: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                          activeColor: Theme.of(context).primaryColor,
                           value: 'Normal',
                           groupValue: selectedOption,
                           onChanged: (value) {
@@ -173,20 +164,21 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                         ),
                         InterRegular(
                           text: 'Normal',
-                          fontsize: width / width16,
-                          color: isDark ? DarkColor.color1 : LightColor.color3,
+                          fontsize: 16.sp,
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
                         )
                       ],
                     ),
-                    SizedBox(height: height / height10),
+                    SizedBox(height: 10.h),
                     TextField(
                       controller: Controller,
                       decoration: InputDecoration(
                         hintText: 'Add Comment',
                       ),
-                      style: TextStyle(color: isDark ? DarkColor.color1 : LightColor.color3),
+                      style: TextStyle(
+                          color: Theme.of(context).textTheme.bodyMedium!.color),
                     ),
-                    SizedBox(height: height / height100)
+                    SizedBox(height: 100.h)
                   ],
                 ),
               ),
@@ -195,7 +187,7 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                   color: Colors.black.withOpacity(0.5),
                   child: Center(
                     child: CircularProgressIndicator(
-                      color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                      color: Theme.of(context).primaryColor,
                     ),
                   ),
                 ),
@@ -360,7 +352,7 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                         String? InTime = prefs.getString("StartTime");
                         DateTime now = DateTime.now();
                         DateTime inTime =
-                            DateFormat("HH:mm").parse(InTime ?? "");
+                            DateFormat("HH:mm").parse(InTime ?? "00:00");
                         DateTime combinedDateTime = DateTime(
                             now.year,
                             now.month,
@@ -501,12 +493,12 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                                 builder: (context) => HomeScreen()));
                         // }
                       },
-                      color: isDark ? DarkColor.color1 : LightColor.color1,
-                      borderRadius: width / width20,
-                      backgroundcolor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+                      color: Theme.of(context).textTheme.headlineMedium!.color,
+                      borderRadius: 20.r,
+                      backgroundcolor: Theme.of(context).primaryColor,
                     ),
                     SizedBox(
-                      height: height / height20,
+                      height: 20.h,
                     ),
                   ],
                 ),

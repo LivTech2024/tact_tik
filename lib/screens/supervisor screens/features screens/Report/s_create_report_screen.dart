@@ -200,20 +200,12 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
   // Initialize default value
   @override
   Widget build(BuildContext context) {
-    
-
     return SafeArea(
       child: Scaffold(
-        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         appBar: AppBar(
-          shadowColor: isDark ? Colors.transparent : LightColor.color3.withOpacity(.1),
-          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-          elevation: 0,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: isDark ? DarkColor.color1 : LightColor.color3,
-              size: 24.w,
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -225,9 +217,6 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
                     reportData['ReportIsFollowUpRequired'] == true
                 ? 'FollowUp for ${reportData['ReportName']} '
                 : 'Report',
-            fontsize: 18.sp,
-            color: isDark ? DarkColor.color1 : LightColor.color3,
-            letterSpacing: -.3,
           ),
           centerTitle: true,
         ),
@@ -243,7 +232,7 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
                     InterBold(
                       text: 'New Report',
                       fontsize: 20.sp,
-                      color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                      color: Theme.of(context).textTheme.bodySmall!.color,
                       letterSpacing: -.3,
                     ),
                     SizedBox(height: 30.h),
@@ -259,36 +248,35 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
                     InterBold(
                       text: 'Category',
                       fontsize: 20.sp,
-                      color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                      color: Theme.of(context).textTheme.bodySmall!.color,
                       letterSpacing: -.3,
                     ),
                     SizedBox(height: 20.h),
                     Container(
                       height: 60.h,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 20.w),
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
-                            color: isDark
-                                ? Colors.transparent
-                                : LightColor.color3.withOpacity(.05),
+                            color: Theme.of(context).shadowColor,
                             blurRadius: 5,
                             spreadRadius: 2,
                             offset: Offset(0, 3),
                           )
                         ],
-                        color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                        color: Theme.of(context).cardColor,
                         borderRadius: BorderRadius.circular(10.w),
                       ),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
                           isExpanded: true,
                           iconSize: 24.w,
-                          dropdownColor: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
-                          style: TextStyle(color: isDark
-                                  ? DarkColor.color1
-                                  : LightColor.color3),
+                          dropdownColor: Theme.of(context).cardColor,
+                          style: TextStyle(
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .color),
                           borderRadius: BorderRadius.circular(10),
                           value: dropdownValue,
                           onChanged: (String? newValue) {
@@ -333,20 +321,17 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
                     SizedBox(height: 20.h),
                     Container(
                       height: 60.h,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 20.w),
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
-                            color: isDark
-                                ? Colors.transparent
-                                : LightColor.color3.withOpacity(.05),
+                            color: Theme.of(context).shadowColor,
                             blurRadius: 5,
                             spreadRadius: 2,
                             offset: Offset(0, 3),
                           )
                         ],
-                        color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                        color: Theme.of(context).cardColor,
                         borderRadius: BorderRadius.circular(10.r),
                       ),
                       child: Row(
@@ -356,23 +341,25 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
                             children: [
                               Icon(
                                 Icons.follow_the_signs,
-                                color: isDark
-                                    ? DarkColor.color1
-                                    : LightColor.color3,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color,
                                 size: 24.w,
                               ),
                               SizedBox(width: 6.w),
                               InterMedium(
                                 text: 'Follow-Up Required ?',
-                                color: DarkColor. color8,
+                                color: DarkColor.color8,
                                 fontsize: 16.sp,
                                 letterSpacing: -.3,
                               )
                             ],
                           ),
                           Checkbox(
-                            activeColor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
-                            checkColor: isDark ? DarkColor.color1 : LightColor.color1,
+                            activeColor: Theme.of(context).primaryColor,
+                            checkColor:
+                                Colors.white,
                             value: isChecked,
                             onChanged: (bool? value) {
                               setState(() {
@@ -401,18 +388,13 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
                                     decoration: BoxDecoration(
                                       boxShadow: [
                                         BoxShadow(
-                                          color: isDark
-                                              ? Colors.transparent
-                                              : LightColor.color3
-                                                  .withOpacity(.05),
+                                          color: Theme.of(context).shadowColor,
                                           blurRadius: 5,
                                           spreadRadius: 2,
                                           offset: Offset(0, 3),
                                         )
                                       ],
-                                      color: isDark
-                                          ? DarkColor.WidgetColor
-                                          : LightColor.WidgetColor,
+                                      color: Theme.of(context).cardColor,
                                       borderRadius: BorderRadius.circular(
                                         10.w,
                                       ),
@@ -490,19 +472,14 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
                               decoration: BoxDecoration(
                                 boxShadow: [
                                   BoxShadow(
-                                    color: isDark
-                                        ? Colors.transparent
-                                        : LightColor.color3.withOpacity(.05),
+                                    color: Theme.of(context).shadowColor,
                                     blurRadius: 5,
                                     spreadRadius: 2,
                                     offset: Offset(0, 3),
                                   )
                                 ],
-                                color: isDark
-                                    ? DarkColor.WidgetColor
-                                    : LightColor.WidgetColor,
-                                borderRadius:
-                                    BorderRadius.circular(8.r),
+                                color: Theme.of(context).cardColor,
+                                borderRadius: BorderRadius.circular(8.r),
                               ),
                               child: Center(
                                 child: Icon(
@@ -726,7 +703,8 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
                             _isLoading = false; // Set loading state
                           });
                         },
-                        backgroundcolor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+                        color: Theme.of(context).textTheme.headlineMedium!.color,
+                        backgroundcolor:  Theme.of(context).primaryColor,
                         borderRadius: 10.h,
                       ),
                     ),

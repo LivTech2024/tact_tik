@@ -15,8 +15,12 @@ import '../../supervisor screens/features screens/key management/s_key_manag_cre
 class KeysScreen extends StatefulWidget {
   final String keyId;
   final String companyId;
-
-  const KeysScreen({super.key, required this.keyId, required this.companyId});
+  final String branchId;
+  const KeysScreen(
+      {super.key,
+      required this.keyId,
+      required this.companyId,
+      required this.branchId});
 
   @override
   State<KeysScreen> createState() => _KeysScreenState();
@@ -62,8 +66,6 @@ class _KeysScreenState extends State<KeysScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor:
-            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             // TODO Pass Values
@@ -72,12 +74,13 @@ class _KeysScreenState extends State<KeysScreen> {
                 MaterialPageRoute(
                   builder: (context) => SCreateKeyManagScreen(
                     keyId: widget.keyId,
-                    companyId: '',
+                    companyId: widget.companyId,
+                    branchId: widget.branchId,
+                    AllocationKeyId: '',
                   ),
                 ));
           },
-          backgroundColor:
-              isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+          backgroundColor: Theme.of(context).primaryColor,
           shape: CircleBorder(),
           child: Icon(
             Icons.add,
@@ -87,14 +90,9 @@ class _KeysScreenState extends State<KeysScreen> {
         body: CustomScrollView(
           slivers: [
             SliverAppBar(
-              backgroundColor:
-                  isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-              elevation: 0,
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back_ios,
-                  color: isDark ? DarkColor.color1 : LightColor.color3,
-                  size: 24.sp,
                 ),
                 padding: EdgeInsets.only(left: 20.w),
                 onPressed: () {
@@ -104,8 +102,6 @@ class _KeysScreenState extends State<KeysScreen> {
               ),
               title: InterMedium(
                 text: 'Keys',
-                fontsize: 18.sp,
-                color: isDark ? DarkColor.color1 : LightColor.color3,
                 letterSpacing: -0.3,
               ),
               centerTitle: true,
@@ -129,6 +125,21 @@ class _KeysScreenState extends State<KeysScreen> {
                 }
 
                 final documents = snapshot.data?.docs;
+                if (documents == null || documents.isEmpty) {
+                  return SliverToBoxAdapter(
+                    child: Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 20.h),
+                        child: InterMedium(
+                          text: 'No Keys Assigned',
+                          fontsize: 20.sp,
+                          color: Theme.of(context).textTheme.bodySmall!.color,
+                        ),
+                      ),
+                    ),
+                  );
+                }
+
                 final groupedDocuments = groupDocumentsByDate(documents);
 
                 return SliverList(
@@ -154,9 +165,8 @@ class _KeysScreenState extends State<KeysScreen> {
                                   ? 'Today'
                                   : DateFormat.yMMMd().format(date),
                               fontsize: 20.sp,
-                              color: isDark
-                                  ? DarkColor.Primarycolor
-                                  : LightColor.color3,
+                              color:
+                                  Theme.of(context).textTheme.bodySmall!.color,
                             ),
                           ),
                           SizedBox(
@@ -212,9 +222,7 @@ class _KeysScreenState extends State<KeysScreen> {
                                     ),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10.r),
-                                      color: isDark
-                                          ? DarkColor.WidgetColor
-                                          : LightColor.WidgetColor,
+                                      color: Theme.of(context).cardColor,
                                     ),
                                     child: Row(
                                       mainAxisAlignment:
@@ -232,18 +240,14 @@ class _KeysScreenState extends State<KeysScreen> {
                                               decoration: BoxDecoration(
                                                 borderRadius:
                                                     BorderRadius.circular(10.r),
-                                                color: isDark
-                                                    ? DarkColor
-                                                        .Primarycolorlight
-                                                    : LightColor
-                                                        .Primarycolorlight,
+                                                color: Theme.of(context)
+                                                    .primaryColorLight,
                                               ),
                                               child: Center(
                                                 child: Icon(
                                                   Icons.home_repair_service,
-                                                  color: isDark
-                                                      ? DarkColor.Primarycolor
-                                                      : LightColor.Primarycolor,
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
                                                   size: 24.sp,
                                                 ),
                                               ),
@@ -272,9 +276,10 @@ class _KeysScreenState extends State<KeysScreen> {
                                                 return InterMedium(
                                                   text: keyName,
                                                   fontsize: 16.sp,
-                                                  color: isDark
-                                                      ? DarkColor.color1
-                                                      : LightColor.color3,
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyMedium!
+                                                      .color,
                                                 );
                                               },
                                             ),
@@ -282,9 +287,10 @@ class _KeysScreenState extends State<KeysScreen> {
                                         ),
                                         InterMedium(
                                           text: time,
-                                          color: isDark
-                                              ? DarkColor.color17
-                                              : LightColor.color2,
+                                          color: Theme.of(context)
+                                              .textTheme
+                                              .displayMedium!
+                                              .color,
                                           fontsize: 16.sp,
                                         ),
                                         SizedBox(width: 20.w),

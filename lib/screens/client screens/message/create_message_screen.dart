@@ -30,16 +30,13 @@ class _CreateMessageScreenState extends State<CreateMessageScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: isDark?DarkColor.Secondarycolor:LightColor.Secondarycolor,
+        
          appBar: AppBar(
-          shadowColor: isDark ? Colors.transparent : LightColor.color3.withOpacity(.1),
-              backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-              elevation: 5,
+       
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back_ios,
-                  color:
-                  isDark ? DarkColor.color1 : LightColor.color3,
+                 
                   size: 24.w,
                 ),
                 padding: EdgeInsets.only(left: 20.w),
@@ -49,8 +46,7 @@ class _CreateMessageScreenState extends State<CreateMessageScreen> {
               ),
               title: InterMedium(
                 text: 'Write Message',
-                fontsize: 18.sp,
-                color: isDark ? DarkColor.color1 : LightColor.color3,
+                
                 letterSpacing: -0.3,
               ),
               centerTitle: true,
@@ -67,7 +63,7 @@ class _CreateMessageScreenState extends State<CreateMessageScreen> {
                     InterBold(
                       text: 'Employee',
                       fontsize: width / width18,
-                      color: isDark ? DarkColor.color1 : LightColor.color3,
+                      color: Theme.of(context).textTheme.bodyMedium!.color ,
                     ),
                     SizedBox(height: 20.h),
                     // TODO : Comment out this
@@ -102,7 +98,7 @@ class _CreateMessageScreenState extends State<CreateMessageScreen> {
                       height: 60.h,
                       padding: EdgeInsets.symmetric(horizontal: 20.w),
                       decoration: BoxDecoration(
-                        color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                        color: Theme.of(context).cardColor,
                         borderRadius: BorderRadius.circular(10.r),
                       ),
                       child: Row(
@@ -112,17 +108,15 @@ class _CreateMessageScreenState extends State<CreateMessageScreen> {
                             children: [
                               InterMedium(
                                 text: 'Send To Admin',
-                                color: isDark
-                                    ? DarkColor.color8
-                                    : LightColor.color3,
+                                color:Theme.of(context).textTheme.labelSmall!.color,
                                 fontsize: 16.sp,
                                 letterSpacing: -.3,
                               )
                             ],
                           ),
                           Checkbox(
-                            activeColor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
-                            checkColor: isDark ? DarkColor.color1 : LightColor.color3,
+                            activeColor: Theme.of(context).primaryColor,
+                            checkColor: Theme.of(context).textTheme.bodyMedium!.color,
                             value: isChecked,
                             onChanged: (bool? value) {
                               setState(() {
@@ -151,15 +145,15 @@ class _CreateMessageScreenState extends State<CreateMessageScreen> {
                   children: [
                     Button1(
                       height: 60.h,
-                      backgroundcolor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+                      backgroundcolor: Theme.of(context).primaryColor,
                       borderRadius: 10.r,
                       fontsize: 18.sp,
-                      color: DarkColor. color1,
+                      color: Theme.of(context).textTheme.headlineMedium!.color,
                       text: 'Send',
                       onPressed: () {},
                     ),
                     SizedBox(
-                      height: height / height60,
+                      height: 60.h,
                     )
                   ],
                 ),

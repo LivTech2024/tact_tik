@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tact_tik/common/enums/shift_task_enums.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
@@ -93,16 +94,12 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: isDark?DarkColor.Secondarycolor:LightColor.Secondarycolor,
         appBar: AppBar(
-          shadowColor: isDark ? Colors.transparent : LightColor.color3.withOpacity(.1),
-          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-          elevation: 5,
+          
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: isDark ? DarkColor.color1 : LightColor.color3,
-              size: width / width24,
+              
             ),
             padding: EdgeInsets.only(left: width / width20),
             onPressed: () {
@@ -112,9 +109,7 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
           ),
           title: InterMedium(
             text: "${widget.Name}",
-            fontsize: width / width18,
-            color: isDark ? DarkColor.color1 : LightColor.color3,
-            letterSpacing: -.3,
+            
           ),
           centerTitle: true,
         ),
@@ -129,19 +124,19 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
               slivers: [
                 SliverToBoxAdapter(
                   child: SizedBox(
-                    height: height / height60,
+                    height: 60.h,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         InterBold(
                           text: '',
-                          fontsize: width / width18,
-                          color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                          fontsize: 18.sp,
+                          color:  Theme.of(context).textTheme.bodySmall!.color,
                         ),
                         InterBold(
                           text: '$completedTaskCount/$totalTaskCount',
-                          fontsize: width / width18,
-                          color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                          fontsize: 18.sp,
+                          color:  Theme.of(context).textTheme.bodySmall!.color,
                         ),
                       ],
                     ),

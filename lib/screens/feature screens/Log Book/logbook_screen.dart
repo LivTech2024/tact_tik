@@ -42,6 +42,7 @@ class _LogBookScreenState extends State<LogBookScreen> {
     super.initState();
     _logBookStream = FirebaseFirestore.instance
         .collection('LogBook')
+        .orderBy('LogBookDate', descending: true)
         .where('LogBookEmpId', isEqualTo: widget.EmpId)
         .snapshots();
     // getempID().then((empID) {
@@ -57,18 +58,15 @@ class _LogBookScreenState extends State<LogBookScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        
         body: CustomScrollView(
           slivers: [
             SliverAppBar(
-              shadowColor: isDark ? Colors.transparent : LightColor.color3.withOpacity(.1),
-              backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-              elevation: 0,
+              
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back_ios,
-                  color: isDark ? DarkColor.color1 : LightColor.color3,
-                   size: 24.sp,
+                  
                 ),
                 padding: EdgeInsets.only(left: 20.w),
                 onPressed: () {
@@ -78,9 +76,8 @@ class _LogBookScreenState extends State<LogBookScreen> {
               ),
               title: InterMedium(
                 text: 'LogBook',
-                fontsize: 18.sp,
-                color: isDark ? DarkColor.color1 : LightColor.color3,
-                letterSpacing: -.3,
+               
+             
               ),
               centerTitle: true,
               floating: true, // Makes the app bar float above the content
@@ -144,12 +141,6 @@ class _LogBookScreenState extends State<LogBookScreen> {
       List<QueryDocumentSnapshot> documents) {
     final groups = <String, Map<String, List<Map<String, dynamic>>>>{};
 
-    documents.sort((a, b) {
-      final timestampA = a['LogBookDate'] as Timestamp;
-      final timestampB = b['LogBookDate'] as Timestamp;
-      return timestampB.compareTo(timestampA);
-    });
-
     for (int i = 0; i < documents.length; i++) {
       final document = documents[i];
       final data = document.data() as Map<String, dynamic>;
@@ -186,6 +177,10 @@ class _LogBookScreenState extends State<LogBookScreen> {
           ];
         }
       }
+
+      logsByDate.forEach((date, logs) {
+        logs.sort((a, b) => b['LOGREPORTTIME'].compareTo(a['LOGREPORTTIME']));
+      });
 
       groups[shiftName] = logsByDate;
     }
@@ -236,25 +231,21 @@ class _LogBookWidgetState extends State<LogBookWidget> {
               decoration: BoxDecoration(
                 boxShadow: [
                   BoxShadow(
-                    color: isDark
-                        ? Colors.transparent
-                        : LightColor.color3.withOpacity(.05),
+                    color: Theme.of(context).shadowColor,
                     blurRadius: 5,
                     spreadRadius: 2,
                     offset: Offset(0, 3),
                   )
                 ],
                 borderRadius: BorderRadius.circular(10.r),
-                color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                color: Theme.of(context).cardColor,
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   InterBold(
                     text: widget.date,
-                    color: isDark
-                        ? DarkColor.color21
-                        : LightColor.color3,
+                    color: Theme.of(context).textTheme.bodyMedium!.color,
                     fontsize: 18.sp,
                   ),
                   Icon(
@@ -262,9 +253,7 @@ class _LogBookWidgetState extends State<LogBookWidget> {
                         ? Icons.arrow_circle_up_outlined
                         : Icons.arrow_circle_down_outlined,
                       size: 24.sp,
-                    color:  isDark
-                        ? DarkColor.color21
-                        : LightColor.color3,
+                    color: Theme.of(context).textTheme.bodyMedium!.color,
                   )
                 ],
               ),
@@ -277,7 +266,7 @@ class _LogBookWidgetState extends State<LogBookWidget> {
               child: InterBold(
                 text: widget.shiftName,
                 fontsize: 18.sp,
-                 color:  isDark ? DarkColor.Primarycolor : LightColor.color3,
+                 color:  Theme.of(context).textTheme.bodySmall!.color,
               ),
             ),
           // ),

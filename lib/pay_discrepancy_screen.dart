@@ -26,8 +26,6 @@ class _PayDiscrepancyScreenState extends State<PayDiscrepancyScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-          backgroundColor:
-              isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerFloat,
           floatingActionButton: FloatingActionButton(
@@ -35,7 +33,7 @@ class _PayDiscrepancyScreenState extends State<PayDiscrepancyScreen> {
               
             },
             backgroundColor:
-                isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+                Theme.of(context).primaryColor,
             shape: CircleBorder(),
             child: Icon(
               Icons.add,
@@ -45,14 +43,11 @@ class _PayDiscrepancyScreenState extends State<PayDiscrepancyScreen> {
           body: CustomScrollView(
             slivers: [
               SliverAppBar(
-                backgroundColor:
-                    isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-                elevation: 0,
+                
                 leading: IconButton(
                   icon: Icon(
                     Icons.arrow_back_ios,
-                    color: isDark ? DarkColor.color1 : LightColor.color3,
-                    size: 24.sp,
+                 
                   ),
                   padding: EdgeInsets.only(left: 20.w),
                   onPressed: () {
@@ -63,9 +58,7 @@ class _PayDiscrepancyScreenState extends State<PayDiscrepancyScreen> {
                 ),
                 title: InterMedium(
                   text: 'Pay Discrepancy',
-                  fontsize: 18.sp,
-                  color: isDark ? DarkColor.color1 : LightColor.color3,
-                  letterSpacing: -0.3,
+                  
                 ),
                 centerTitle: true,
                 floating: true,
@@ -97,9 +90,7 @@ class _PayDiscrepancyScreenState extends State<PayDiscrepancyScreen> {
                           child: InterBold(
                             text: '11/02/2024',
                             fontsize: 20.sp,
-                            color: isDark
-                                ? DarkColor.Primarycolor
-                                : LightColor.color3,
+                            color:  Theme.of(context).textTheme.bodyMedium!.color,
                           ),
                         ),
                         SizedBox(height: 30.h),
@@ -114,9 +105,7 @@ class _PayDiscrepancyScreenState extends State<PayDiscrepancyScreen> {
                               margin: EdgeInsets.only(bottom: 10.h),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10.r),
-                                color: isDark
-                                    ? DarkColor.WidgetColor
-                                    : LightColor.WidgetColor,
+                                color: Theme.of(context).cardColor,
                               ),
                               child: Row(
                                 mainAxisAlignment:
@@ -126,15 +115,17 @@ class _PayDiscrepancyScreenState extends State<PayDiscrepancyScreen> {
                                   InterMedium(
                                         text: 'Discrepancy Title',
                                         fontsize: 16.sp,
-                                        color: isDark
-                                            ? DarkColor.color1
-                                            : LightColor.color3,
+                                        color:  Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .color,
                                       ),
                                   InterMedium(
                                     text: '11:36 pm',
-                                    color: isDark
-                                        ? DarkColor.color17
-                                        : LightColor.color2,
+                                    color:  Theme.of(context)
+                                        .textTheme
+                                        .displayMedium!
+                                        .color,
                                     fontsize: 16.sp,
                                   ),
                                 ],

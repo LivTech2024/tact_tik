@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
@@ -19,13 +21,13 @@ class ShiftInformation extends StatefulWidget {
       required this.shiftId,
       required this.startTime,
       required this.endTime,
-      this.otherEmpId});
+      required this.currentUserId});
   final bool toRequest;
   final String empId;
   final String shiftId;
   final String startTime;
   final String endTime;
-  final String? otherEmpId;
+  final String currentUserId;
 
   @override
   State<ShiftInformation> createState() => _ShiftInformationState();
@@ -98,24 +100,19 @@ class _ShiftInformationState extends State<ShiftInformation> {
 
     return SafeArea(
       child: isLoading
-          ?  Scaffold(
-              backgroundColor:  isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+          ? Scaffold(
+              backgroundColor: Theme.of(context).canvasColor,
               body: Center(
                 child: CircularProgressIndicator(
-                  color:  isDark ? DarkColor.color1 : LightColor.color3,
+                  color: Theme.of(context).primaryColor,
                 ),
               ),
             )
           : Scaffold(
-              backgroundColor:  isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
               appBar: AppBar(
-                backgroundColor:  isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-                elevation: 0,
                 leading: IconButton(
                   icon: Icon(
                     Icons.arrow_back_ios,
-                    color: Colors.white,
-                    size: width / width24,
                   ),
                   padding: EdgeInsets.only(left: width / width20),
                   onPressed: () {
@@ -124,9 +121,6 @@ class _ShiftInformationState extends State<ShiftInformation> {
                 ),
                 title: InterMedium(
                   text: widget.toRequest ? 'Shift' : 'Shift- $guardName',
-                  fontsize: width / width18,
-                  color: Colors.white,
-                  letterSpacing: -.3,
                 ),
                 centerTitle: widget.toRequest,
               ),
@@ -142,25 +136,28 @@ class _ShiftInformationState extends State<ShiftInformation> {
                           InterBold(
                             text: "Guard Name : $guardName",
                             fontsize: width / width18,
-                            color: isDark ? DarkColor.color1 : LightColor.color3,
+                            color:
+                                Theme.of(context).textTheme.bodyMedium!.color,
                           ),
                           SizedBox(height: height / height30),
                           InterBold(
                             text: 'Shift Name : $shiftName',
                             fontsize: width / width18,
-                            color:  isDark ? DarkColor.color1 : LightColor.color3,
+                            color:
+                                Theme.of(context).textTheme.bodyMedium!.color,
                           ),
                           SizedBox(height: height / height30),
                           InterBold(
                             text: 'Details',
                             fontsize: width / width16,
-                            color:  isDark ? DarkColor.color1 : LightColor.color3,
+                            color:
+                                Theme.of(context).textTheme.bodyMedium!.color,
                           ),
                           SizedBox(height: height / height14),
                           InterRegular(
                             text: shiftDetails,
                             fontsize: width / width14,
-                            color:  isDark ? DarkColor.color2 : LightColor.color2,
+                            color: Theme.of(context).textTheme.bodyLarge!.color,
                             maxLines: 3,
                           ),
                           SizedBox(height: height / height30),
@@ -170,17 +167,19 @@ class _ShiftInformationState extends State<ShiftInformation> {
                               InterBold(
                                 text: 'Supervisor :',
                                 fontsize: width / width16,
-                                color: isDark
-                                    ? DarkColor.color1
-                                    : LightColor.color3,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color,
                               ),
                               SizedBox(width: width / width4),
                               InterRegular(
                                 text: supervisorName,
                                 fontsize: width / width14,
-                                color:  isDark
-                                    ? DarkColor.color2
-                                    : LightColor.color2,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge!
+                                    .color,
                               )
                             ],
                           ),
@@ -191,17 +190,19 @@ class _ShiftInformationState extends State<ShiftInformation> {
                               InterBold(
                                 text: 'Time :',
                                 fontsize: width / width16,
-                                color:  isDark
-                                    ? DarkColor.color1
-                                    : LightColor.color3,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color,
                               ),
                               SizedBox(width: width / width4),
                               InterRegular(
                                 text: '${widget.startTime}-${widget.endTime}',
                                 fontsize: width / width14,
-                                color: isDark
-                                    ? DarkColor.color2
-                                    : LightColor.color2,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge!
+                                    .color,
                               ),
                             ],
                           ),
@@ -212,17 +213,19 @@ class _ShiftInformationState extends State<ShiftInformation> {
                               Icon(
                                 Icons.location_on,
                                 size: width / width24,
-                                color:  isDark
-                                    ? DarkColor.color1
-                                    : LightColor.color3,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color,
                               ),
                               SizedBox(width: width / width4),
                               InterRegular(
                                 text: location,
                                 fontsize: width / width14,
-                                color:  isDark
-                                    ? DarkColor.color2
-                                    : LightColor.color2,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge!
+                                    .color,
                               ),
                             ],
                           ),
@@ -234,9 +237,10 @@ class _ShiftInformationState extends State<ShiftInformation> {
                                 InterBold(
                                   text: '*Shift already taken',
                                   fontsize: width / width18,
-                                  color:  isDark
-                                      ? DarkColor.color1
-                                      : LightColor.color3,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .color,
                                 ),
                                 SizedBox(height: height / height30),
                                 Row(
@@ -245,18 +249,20 @@ class _ShiftInformationState extends State<ShiftInformation> {
                                     InterBold(
                                       text: 'Time:',
                                       fontsize: width / width16,
-                                      color:  isDark
-                                          ? DarkColor.color1
-                                          : LightColor.color3,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .color,
                                     ),
                                     SizedBox(width: width / width4),
                                     InterRegular(
                                       text:
                                           '${widget.startTime}-${widget.endTime}',
                                       fontsize: width / width14,
-                                      color:  isDark
-                                          ? DarkColor.color2
-                                          : LightColor.color2,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge!
+                                          .color,
                                     ),
                                   ],
                                 ),
@@ -272,22 +278,15 @@ class _ShiftInformationState extends State<ShiftInformation> {
                           text: widget.toRequest ? 'Exchange' : 'Accept',
                           onPressed: () {
                             if (widget.toRequest) {
-                              print("Exchange Shift");
-                              print("Employee Id: ${widget.empId}");
-                              print("Shift Id: ${widget.shiftId}");
-                              print("Other Employee Id: ${widget.otherEmpId}");
-                              onExchangeShift(widget.empId, widget.otherEmpId!,
-                                  widget.shiftId);
+                              onExchangeShift(widget.empId, widget.shiftId);
                             } else {
                               onAcceptShift(widget.empId, widget.shiftId);
                             }
                           },
-                          backgroundcolor: isDark? DarkColor.Primarycolor:LightColor.Primarycolor,
-                          borderRadius: width / width10,
-                          fontsize: width / width18,
-                          color: isDark
-                              ? DarkColor.color1
-                              : LightColor.color3,
+                          backgroundcolor: Theme.of(context).primaryColor,
+                          borderRadius: 10.r,
+                          fontsize: 18.sp,
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
                         ),
                         SizedBox(height: height / height100),
                       ],
@@ -329,29 +328,39 @@ class _ShiftInformationState extends State<ShiftInformation> {
     }
   }
 
-  Future<void> onExchangeShift(
-      String empId, String otherEmpId, String shiftId) async {
-    // Reference to the Firestore instance
-    final FirebaseFirestore firestore = FirebaseFirestore.instance;
-
-    // Creating a new document in the shiftExchange collection
+  Future<void> onExchangeShift(String empId, String shiftId) async {
     try {
-      DocumentReference docRef =
-          await firestore.collection('shiftExchange').add({
-        'shiftExchangeReceiverId': otherEmpId,
-        'shiftExchangeSenderId': empId,
-        'shiftExchangeStatus': 'waiting',
-        'shiftId': shiftId,
+      final shiftsCollection = FirebaseFirestore.instance.collection('Shifts');
+      final exchangeCollection =
+          FirebaseFirestore.instance.collection('ShiftExchange');
+
+      final shiftDoc = shiftsCollection.doc(shiftId);
+
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
+        final snapshot = await transaction.get(shiftDoc);
+
+        if (!snapshot.exists) {
+          throw Exception("Shift does not exist!");
+        }
+
+        final exchangeDoc = exchangeCollection.doc();
+        Map<String, dynamic> dataJson = snapshot.data() ?? {};
+        transaction.set(exchangeDoc, {
+          'ShiftExchReqId': exchangeDoc.id,
+          'ShiftExchReqSenderId': widget.currentUserId,
+          'ShiftExchReqReceiverId': (dataJson['ShiftAssignedUserId'] ?? []).first,
+          'ShiftExchReqShiftId': shiftId,
+          'ShiftExchReqStatus': 'pending',
+          'ShiftExchReqCreatedAt': DateTime.now(),
+          'ShiftExchReqModifiedAt': DateTime.now(),
+        });
       });
 
-      // Update the document with the generated ID as shiftExchangeId
-      await docRef.update({
-        'shiftExchangeId': docRef.id,
-      });
+      showSuccessToast(context, "Shift exchange request sent successfully");
 
-      print('Shift exchange request sent successfully');
+      print("Shift exchange request successfully by $empId");
     } catch (e) {
-      print('Error sending shift exchange request: $e');
+      print("Failed to shift exchange request: $e");
     }
   }
 }

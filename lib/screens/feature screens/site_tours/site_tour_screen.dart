@@ -78,7 +78,7 @@ class SiteTourScreen extends StatelessWidget {
                     height: 470.h,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(40.r),
-                      color: isDark?DarkColor.Secondarycolor:LightColor.Secondarycolor
+                      color: Theme.of(context).canvasColor
                     ),
                     child: Stack(
                       children: [
@@ -116,7 +116,9 @@ class SiteTourScreen extends StatelessWidget {
                                 gradient: LinearGradient(
                                   begin: Alignment(0, -1.5),
                                   end: Alignment.bottomCenter,
-                                  colors:isDark? [Colors.black, Colors.transparent]:[ Colors.transparent],
+                                  colors: Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? [Colors.black, Colors.transparent]:[ Colors.transparent],
                                 ),
                               ),
                             ),
@@ -146,7 +148,7 @@ class SiteTourScreen extends StatelessWidget {
                                 InterBold(
                                   text: 'Site Tours',
                                   fontsize: 18.sp,
-                                  color: isDark?DarkColor.color1:LightColor.color3,
+                                  color: Theme.of(context).textTheme.bodyMedium!.color,
                                 ),
                                 IconButton(
                                   onPressed: () {
@@ -155,9 +157,7 @@ class SiteTourScreen extends StatelessWidget {
                                   icon: Icon(
                                     Icons.cancel_outlined,
                                     size: 30.sp,
-                                    color: isDark
-                                        ? DarkColor.color1
-                                        : LightColor.color3,
+                                    color: Theme.of(context).textTheme.bodyMedium!.color,
                                   ),
                                   padding: EdgeInsets.zero,
                                 )
@@ -194,9 +194,7 @@ class SiteTourScreen extends StatelessWidget {
                                     horizontal: 15.w,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: isDark
-                                        ? DarkColor.Secondarycolor
-                                        : LightColor.Secondarycolor,
+                                    color: Theme.of(context).canvasColor,
                                     borderRadius: BorderRadius.circular(
                                       20.r,
                                     ),
@@ -215,9 +213,7 @@ class SiteTourScreen extends StatelessWidget {
                                                     BorderRadius.circular(
                                                   12.r,
                                                 ),
-                                                color: isDark
-                                                    ? DarkColor.color9
-                                                    : LightColor.color3,
+                                                color: Theme.of(context).textTheme.bodyMedium!.color,
                                               ),
                                               height: 55.h,
                                               width: 55.w,
@@ -230,13 +226,9 @@ class SiteTourScreen extends StatelessWidget {
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             4.r),
-                                                    color: isDark
-                                                        ? DarkColor.color1
-                                                        : LightColor.color3,
+                                                    color: Theme.of(context).textTheme.bodyMedium!.color,
                                                     border: Border.all(
-                                                      color: isDark
-                                                          ? DarkColor.Primarycolor
-                                                          : LightColor.color3,
+                                                      color: Theme.of(context).textTheme.bodySmall!.color as Color,
                                                       width: 1,
                                                     ),
                                                   ),
@@ -260,9 +252,7 @@ class SiteTourScreen extends StatelessWidget {
                                                       'No Name',
                                                   // Example name, replace with your data
 
-                                                  color: isDark
-                                                      ? DarkColor.color1
-                                                      : LightColor.color3,
+                                                  color: Theme.of(context).textTheme.bodyMedium!.color,
                                                   fontsize: 16.sp,
                                                 ),
                                                 SizedBox(
@@ -271,9 +261,7 @@ class SiteTourScreen extends StatelessWidget {
                                                     text: schedule[
                                                             'ShiftLocationAddress'] ??
                                                         'No Address',
-                                                    color: isDark
-                                                        ? DarkColor.color10
-                                                        : LightColor.color2,
+                                                    color: Theme.of(context).textTheme.labelMedium!.color,
                                                     fontsize: 16.sp,
                                                     maxLines: 1,
                                                   ),
@@ -305,9 +293,7 @@ class SiteTourScreen extends StatelessWidget {
                                             horizontal: 16.w,
                                           ),
                                           decoration: BoxDecoration(
-                                            color: isDark
-                                                ? DarkColor.Primarycolor
-                                                : LightColor.Primarycolor,
+                                            color: Theme.of(context).primaryColor,
                                             borderRadius: BorderRadius.circular(
                                               16.r,
                                             ),
@@ -318,14 +304,12 @@ class SiteTourScreen extends StatelessWidget {
                                             children: [
                                               RobotoBold(
                                                 text: 'Get Direction',
-                                                color: isDark ? DarkColor.color1 : LightColor.color1,
+                                                color: Colors.white,
                                                 fontsize: 16.sp,
                                               ),
                                               Icon(
                                                 Icons.arrow_forward_sharp,
-                                                color: isDark
-                                                    ? DarkColor.color1
-                                                    : LightColor.color1,
+                                                color:Colors.white,
                                                 size: 24.sp,
                                               )
                                             ],
@@ -353,7 +337,7 @@ class SiteTourScreen extends StatelessWidget {
                     ),
                     height: 60.h,
                     decoration: BoxDecoration(
-                      color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                      color: Theme.of(context).cardColor,
                       borderRadius: BorderRadius.circular(
                         16.r,
                       ),
@@ -373,7 +357,7 @@ class SiteTourScreen extends StatelessWidget {
                           icon: Icon(
                             Icons.keyboard_arrow_left,
                             size: 24.sp,
-                            color: isDark ? DarkColor.color1 : LightColor.color3,
+                            color:Theme.of(context).textTheme.bodyMedium!.color,
                           ),
                         ),
                         Bounce(
@@ -383,7 +367,7 @@ class SiteTourScreen extends StatelessWidget {
                           },
                           child: InterBold(
                             text: 'Go to shift',
-                            color: isDark ? DarkColor.color1 : LightColor.color3,
+                            color: Theme.of(context).textTheme.bodyMedium!.color,
                             fontsize: 18.sp,
                           ),
                         ),
@@ -397,7 +381,7 @@ class SiteTourScreen extends StatelessWidget {
                           icon: Icon(
                             Icons.keyboard_arrow_right,
                             size: 24.sp,
-                            color: isDark ? DarkColor.color1 : LightColor.color3,
+                            color: Theme.of(context).textTheme.bodyMedium!.color,
                           ),
                         ),
                       ],

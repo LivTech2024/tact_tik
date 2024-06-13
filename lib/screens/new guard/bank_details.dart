@@ -11,6 +11,13 @@ import 'package:tact_tik/main.dart';
 import 'package:tact_tik/utils/colors.dart';
 
 class BankDetails extends StatefulWidget {
+  final TextEditingController AccountNumberController ;
+  final TextEditingController TransitNumberController ;
+  final TextEditingController InstitutionNumberController
+     ;
+  final TextEditingController SINNumberController ;
+
+  const BankDetails({super.key, required this.AccountNumberController, required this.TransitNumberController, required this.InstitutionNumberController, required this.SINNumberController});
   @override
   State<BankDetails> createState() => _BankDetailsState();
 }
@@ -21,13 +28,7 @@ class _BankDetailsState extends State<BankDetails> {
     List<Map<String, dynamic>> uploads = [];
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-    final TextEditingController AccountNumberController =
-        TextEditingController();
-    final TextEditingController TransitNumberController =
-        TextEditingController();
-    final TextEditingController InstitutionNumberController =
-        TextEditingController();
-    final TextEditingController SINNumberController = TextEditingController();
+    
 
     Future<void> _addImage() async {
       final pickedFile =
@@ -76,7 +77,7 @@ class _BankDetailsState extends State<BankDetails> {
         children: [
           InterBold(
             text: 'Add Bank Details',
-            color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+            color: Theme.of(context).textTheme.bodySmall!.color,
             fontsize: width / width20,
           ),
 
@@ -124,20 +125,18 @@ class _BankDetailsState extends State<BankDetails> {
               decoration: BoxDecoration(
                 boxShadow: [
                     BoxShadow(
-                      color: isDark
-                          ? Colors.transparent
-                          : LightColor.color3.withOpacity(.05),
+                      color:Theme.of(context).shadowColor,
                       blurRadius: 5,
                       spreadRadius: 2,
                       offset: Offset(0, 3),
                     )
                   ],
-                  color:isDark? DarkColor.WidgetColor:LightColor.WidgetColor,
+                  color: Theme.of(context).cardColor,
                   borderRadius: BorderRadius.circular(width / width8)),
               child: Center(
                 child: InterBold(
                             text: 'Upload Void Check',
-                            color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                            color:  Theme.of(context).textTheme.bodySmall!.color,
                             fontsize: width / width20,
                           ),
               ),
@@ -145,7 +144,7 @@ class _BankDetailsState extends State<BankDetails> {
           ),
           SetTextfieldWidget(
             hintText: 'Account Number',
-            controller: AccountNumberController,
+            controller:widget. AccountNumberController,
             enabled: !isEditMode,
             isEditMode: isEditMode,
           ),
@@ -154,7 +153,7 @@ class _BankDetailsState extends State<BankDetails> {
           ),
           SetTextfieldWidget(
             hintText: 'Transit Number',
-            controller: TransitNumberController,
+            controller:widget. TransitNumberController,
             enabled: !isEditMode,
             isEditMode: isEditMode,
           ),
@@ -163,7 +162,7 @@ class _BankDetailsState extends State<BankDetails> {
           ),
           SetTextfieldWidget(
             hintText: 'Institution Number',
-            controller: InstitutionNumberController,
+            controller: widget.InstitutionNumberController,
             enabled: !isEditMode,
             isEditMode: isEditMode,
           ),
@@ -172,12 +171,12 @@ class _BankDetailsState extends State<BankDetails> {
           ),
           InterBold(
             text: 'Add SIN Number',
-            color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+            color: Theme.of(context).textTheme.bodySmall!.color,
             fontsize: width / width20,
           ),
           SetTextfieldWidget(
             hintText: 'SIN Number',
-            controller: SINNumberController,
+            controller:widget. SINNumberController,
             enabled: !isEditMode,
             isEditMode: isEditMode,
           ),

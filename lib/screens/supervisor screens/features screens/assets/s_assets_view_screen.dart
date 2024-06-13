@@ -67,7 +67,7 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.push(
@@ -77,21 +77,18 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                       SCreateAssignAssetScreen(companyId: widget.companyId, empId: '', OnlyView: false, equipemtAllocId: '',),
                 ));
           },
-          backgroundColor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+          backgroundColor: Theme.of(context).primaryColor,
           shape: CircleBorder(),
           child: Icon(Icons.add),
         ),
         body: CustomScrollView(
           slivers: [
             SliverAppBar(
-              shadowColor: isDark ? Colors.transparent : LightColor.WidgetColor.withOpacity(.1),
-              backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-              elevation: 5,
+          
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back_ios,
-                  color: Colors.white,
-                  size: 24.w,
+                
                 ),
                 padding: EdgeInsets.only(left: 20.w),
                 onPressed: () {
@@ -101,9 +98,7 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
               ),
               title: InterMedium(
                 text: 'Assets',
-                fontsize: 18.sp,
-                color: isDark ? DarkColor.color1 : LightColor.color3,
-                letterSpacing: -0.3,
+               
               ),
               centerTitle: true,
               floating: true,
@@ -117,11 +112,7 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                     SizedBox(
                       height: 30.h,
                     ),
-                    // InterBold(
-                    //   text: 'Today',
-                    //   fontsize: 20.w,
-                    //   color: isDark ? DarkColor.Primarycolor : LightColor.color3,
-                    // ),
+                   
                     SizedBox(
                       height: 30.h,
                     ),
@@ -144,7 +135,7 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                         child: InterBold(
                           text: getDateHeader(date),
                           fontsize: 20.sp,
-                          color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                          color: Theme.of(context).textTheme.bodySmall!.color,
                         ),
                       );
                     }
@@ -177,9 +168,7 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                           decoration: BoxDecoration(
                             boxShadow: [
                               BoxShadow(
-                                color: isDark
-                                    ? Colors.transparent
-                                    : LightColor.color3.withOpacity(.05),
+                                color:Theme.of(context).shadowColor,
                                 blurRadius: 5,
                                 spreadRadius: 2,
                                 offset: Offset(0, 3),
@@ -188,7 +177,7 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                             borderRadius:
                                 BorderRadius.circular(10.w),
                             color:
-                                isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                                Theme.of(context).cardColor,
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -207,16 +196,12 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(
                                             10.w),
-                                        color: isDark
-                                            ? DarkColor.Primarycolorlight
-                                            : LightColor.Primarycolorlight,
+                                        color: Theme.of(context).primaryColorLight,
                                       ),
                                       child: Center(
                                         child: Icon(
                                           Icons.home_repair_service,
-                                          color: isDark
-                                              ? DarkColor.Primarycolor
-                                              : LightColor.Primarycolor,
+                                          color: Theme.of(context).primaryColor,
                                           size: 24.w,
                                         ),
                                       ),
@@ -235,17 +220,19 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                                           return InterMedium(
                                             text: 'Error: ${snapshot.error}',
                                             fontsize: 16.sp,
-                                            color: isDark
-                                                ? DarkColor.color1
-                                                : LightColor.color3,
+                                            color:  Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium!
+                                                .color,
                                           );
                                         } else {
                                           return InterMedium(
                                             text: snapshot.data ?? 'Unknown Equipment',
                                             fontsize: 16.sp,
-                                            color: isDark
-                                                ? DarkColor.color1
-                                                : LightColor.color3,
+                                            color:  Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium!
+                                                .color,
                                           );
                                         }
                                       },
@@ -255,9 +242,10 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                               ),
                               InterMedium(
                                 text: formattedTime,
-                                color: isDark
-                                    ? DarkColor.color17
-                                    : LightColor.color3,
+                                color:  Theme.of(context)
+                                    .textTheme
+                                    .displayMedium!
+                                    .color,
                                 fontsize: 16.sp,
                               ),
                               SizedBox(width:20.w),

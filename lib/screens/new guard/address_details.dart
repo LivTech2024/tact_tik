@@ -10,6 +10,12 @@ import 'package:tact_tik/main.dart';
 import 'package:tact_tik/utils/colors.dart';
 
 class AddressDetails extends StatefulWidget {
+  final TextEditingController AddressController ;
+    final TextEditingController cityController ;
+    final TextEditingController PostalCodeController ;
+    final TextEditingController ProvinceController ;
+
+  const AddressDetails({super.key, required this.AddressController, required this.cityController, required this.PostalCodeController, required this.ProvinceController});
   @override
   State<AddressDetails> createState() => _AddressDetailsState();
 }
@@ -20,10 +26,7 @@ class _AddressDetailsState extends State<AddressDetails> {
     List<Map<String, dynamic>> uploads = [];
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-    final TextEditingController AddressController = TextEditingController();
-    final TextEditingController cityController = TextEditingController();
-    final TextEditingController PostalCodeController = TextEditingController();
-    final TextEditingController ProvinceController = TextEditingController();
+    
 
     Future<void> _addImage() async {
       final pickedFile =
@@ -55,12 +58,12 @@ class _AddressDetailsState extends State<AddressDetails> {
         children: [
           InterBold(
             text: 'Add Address Details',
-            color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+            color:  Theme.of(context).textTheme.bodySmall!.color,
             fontsize: width / width20,
           ),
           SetTextfieldWidget(
             hintText: 'Address',
-            controller: AddressController,
+            controller: widget.AddressController,
             enabled: !isEditMode,
             isEditMode: isEditMode,
           ),
@@ -69,7 +72,7 @@ class _AddressDetailsState extends State<AddressDetails> {
           ),
           SetTextfieldWidget(
             hintText: 'Postal Code',
-            controller: PostalCodeController,
+            controller:widget. PostalCodeController,
             enabled: !isEditMode,
             isEditMode: isEditMode,
           ),
@@ -78,7 +81,7 @@ class _AddressDetailsState extends State<AddressDetails> {
           ),
           SetTextfieldWidget(
             hintText: 'City',
-            controller: cityController,
+            controller:widget. cityController,
             enabled: !isEditMode,
             isEditMode: isEditMode,
           ),
@@ -87,7 +90,7 @@ class _AddressDetailsState extends State<AddressDetails> {
           ),
           SetTextfieldWidget(
             hintText: 'Province',
-            controller: ProvinceController,
+            controller:widget. ProvinceController,
             enabled: !isEditMode,
             isEditMode: isEditMode,
           ),
@@ -96,7 +99,7 @@ class _AddressDetailsState extends State<AddressDetails> {
           ),
           InterBold(
             text: 'Add Profile Photo',
-            color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+            color:  Theme.of(context).textTheme.bodySmall!.color,
             fontsize: width / width20,
           ),
           GestureDetector(
@@ -132,21 +135,19 @@ class _AddressDetailsState extends State<AddressDetails> {
               decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
-                      color: isDark
-                          ? Colors.transparent
-                          : LightColor.color3.withOpacity(.05),
+                      color:Theme.of(context).shadowColor,
                       blurRadius: 5,
                       spreadRadius: 2,
                       offset: Offset(0, 3),
                     )
                   ],
                   color:
-                      isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                      Theme.of(context).cardColor,
                   borderRadius: BorderRadius.circular(width / width8)),
               child: Center(
                 child: InterBold(
                   text: 'Upload Profile Photo',
-                  color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                  color:  Theme.of(context).textTheme.bodySmall!.color,
                   fontsize: width / width20,
                 ),
               ),

@@ -18,9 +18,11 @@ import '../../../utils/colors.dart';
 import 'client_open_patrol_screen.dart';
 
 class ClientCheckPatrolScreen extends StatefulWidget {
+  final String ScreenName;
   final String PatrolIdl;
 
-  ClientCheckPatrolScreen({super.key, required this.PatrolIdl});
+  ClientCheckPatrolScreen(
+      {super.key, required this.PatrolIdl, required this.ScreenName});
 
   @override
   State<ClientCheckPatrolScreen> createState() =>
@@ -72,20 +74,14 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark =
+    Theme.of(context).brightness == Brightness.dark ? true : false;
     return SafeArea(
       child: Scaffold(
-        backgroundColor:
-            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         appBar: AppBar(
-          shadowColor:
-              isDark ? Colors.transparent : LightColor.color3.withOpacity(.1),
-          backgroundColor:
-              isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-          elevation: 0,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: isDark ? DarkColor.color1 : LightColor.color3,
               size: 24.sp,
             ),
             padding: EdgeInsets.only(left: 20.w),
@@ -94,9 +90,7 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
             },
           ),
           title: InterRegular(
-            text: 'Guards',
-            fontsize: 18.sp,
-            color: isDark ? DarkColor.color1 : LightColor.color3,
+            text: widget.ScreenName,
             letterSpacing: -.3,
           ),
           centerTitle: true,
@@ -107,7 +101,7 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
             child: Column(
               children: [
                 SizedBox(height: 30.h),
-                Row(
+                /*Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     GestureDetector(
@@ -116,16 +110,16 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                         width: 190.w,
                         child: IconTextWidget(
                           icon: Icons.calendar_today,
-                          Iconcolor: isDark
-                              ? DarkColor.Primarycolor
-                              : LightColor.color3,
+                          Iconcolor: Theme.of(context)
+                              .textTheme
+                              .bodySmall!
+                              .color as Color,
                           text: selectedDate != null
                               ? DateFormat('dd/MM/yyyy').format(selectedDate!)
                               : 'display shift date',
                           fontsize: 14.sp,
-                          color: isDark
-                              ? DarkColor.Primarycolor
-                              : LightColor.color3,
+                          color: Theme.of(context).textTheme.bodySmall!.color
+                              as Color,
                         ),
                       ),
                     ),
@@ -134,21 +128,20 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                       child: IconTextWidget(
                         space: 6.w,
                         icon: Icons.add,
-                          Iconcolor:
-                            isDark ? DarkColor.Primarycolor : LightColor.color3,
+                        Iconcolor: Theme.of(context).textTheme.bodySmall!.color
+                            as Color,
                         iconSize: 20.sp,
                         text: 'Select Guard',
                         useBold: true,
                         fontsize: 14.sp,
-                        color: isDark
-                            ? DarkColor.Primarycolor
-                            : LightColor.color3,
+                        color: Theme.of(context).textTheme.bodyMedium!.color
+                            as Color,
                         // Iconcolor: DarkColor.color1,
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: 20.h),
+                SizedBox(height: 20.h),*/
                 patrolsList.isEmpty ||
                         (selectedDate != null &&
                             patrolsList.every((patrol) {
@@ -168,9 +161,8 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                           style: TextStyle(
                             fontSize: 18.0,
                             fontWeight: FontWeight.bold,
-                            color: isDark
-                                ? DarkColor.Primarycolor
-                                : LightColor.color3,
+                            color:
+                                Theme.of(context).textTheme.bodyMedium!.color,
                           ),
                         ),
                       )
@@ -231,17 +223,13 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                 decoration: BoxDecoration(
                                   boxShadow: [
                                     BoxShadow(
-                                      color: isDark
-                                          ? Colors.transparent
-                                          : LightColor.color3.withOpacity(.05),
+                                      color: Theme.of(context).shadowColor,
                                       blurRadius: 5,
                                       spreadRadius: 2,
                                       offset: Offset(0, 3),
                                     )
                                   ],
-                                  color: isDark
-                                      ? DarkColor.WidgetColor
-                                      : LightColor.WidgetColor,
+                                  color: Theme.of(context).cardColor,
                                   borderRadius: BorderRadius.circular(14.r),
                                 ),
                                 padding: EdgeInsets.symmetric(vertical: 20.h),
@@ -286,9 +274,10 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                                 text: patrol[
                                                         'PatrolLogGuardName'] ??
                                                     "",
-                                                color: isDark
-                                                    ? DarkColor.color21
-                                                    : LightColor.color3,
+                                                color: Theme.of(context)
+                                                    .textTheme
+                                                    .displaySmall!
+                                                    .color as Color,
                                                 fontsize: 18.sp,
                                               ),
                                             ],
@@ -314,9 +303,10 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                                 InterRegular(
                                                   text: 'Started at',
                                                   fontsize: 12.sp,
-                                                  color: isDark
-                                                      ? DarkColor.color21
-                                                      : LightColor.color3,
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .displaySmall!
+                                                      .color as Color,
                                                 ),
                                                 SizedBox(height: 12.h),
                                                 InterMedium(
@@ -329,9 +319,10 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                                     ),
                                                   ),
                                                   fontsize: 12.sp,
-                                                  color: isDark
-                                                      ? DarkColor.color21
-                                                      : LightColor.color3,
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .displaySmall!
+                                                      .color as Color,
                                                 ),
                                               ],
                                             ),
@@ -345,9 +336,10 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                                 InterRegular(
                                                   text: 'Ended at',
                                                   fontsize: 12.sp,
-                                                  color: isDark
-                                                      ? DarkColor.color21
-                                                      : LightColor.color3,
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .displaySmall!
+                                                      .color as Color,
                                                 ),
                                                 SizedBox(height: 12.h),
                                                 InterMedium(
@@ -360,9 +352,10 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                                     ),
                                                   ),
                                                   fontsize: 12.sp,
-                                                  color: isDark
-                                                      ? DarkColor.color21
-                                                      : LightColor.color3,
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .displaySmall!
+                                                      .color as Color,
                                                 ),
                                               ],
                                             ),
@@ -376,34 +369,21 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                                 InterRegular(
                                                   text: 'Status',
                                                   fontsize: 12.sp,
-                                                  color: isDark
-                                                      ? DarkColor.color21
-                                                      : LightColor.color3,
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .displaySmall!
+                                                      .color as Color,
                                                 ),
                                                 SizedBox(height: 12.h),
-                                                Container(
-                                                  padding: EdgeInsets.symmetric(
-                                                    vertical: 2.h,
-                                                    horizontal: 10.w,
-                                                  ),
-                                                  decoration: BoxDecoration(
-                                                    // color: isDark
-                                                    //     ? DarkColor.color21
-                                                    //     : LightColor.color3,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5.r),
-                                                  ),
-                                                  child: InterBold(
-                                                    text: patrol[
-                                                            'PatrolLogStatus'] ??
-                                                        '',
-                                                    fontsize: 12.sp,
-                                                    color: isDark
-                                                        ? DarkColor.Primarycolor
-                                                        : LightColor
-                                                            .Primarycolor,
-                                                  ),
+                                                InterMedium(
+                                                  text: patrol[
+                                                          'PatrolLogStatus'] ??
+                                                      'incomplete',
+                                                  fontsize: 12.sp,
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .displaySmall!
+                                                      .color as Color,
                                                 ),
                                               ],
                                             ),

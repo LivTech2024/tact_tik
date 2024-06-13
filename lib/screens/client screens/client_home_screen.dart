@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:bounce/bounce.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,6 +10,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/main.dart';
 import 'package:tact_tik/login_screen.dart';
+import 'package:tact_tik/screens/client%20screens/DAR/client_dar.dart';
 import 'package:tact_tik/screens/client%20screens/patrol/client_check_patrol_screen.dart';
 import 'package:tact_tik/screens/client%20screens/patrol/client_open_patrol_screen.dart';
 import '../../fonts/inter_bold.dart';
@@ -24,9 +26,11 @@ import '../../utils/colors.dart';
 import '../SideBar Screens/employment_letter.dart';
 import '../SideBar Screens/history_screen.dart';
 import '../SideBar Screens/profile_screen.dart';
+import '../home screens/widgets/grid_widget.dart';
 import '../home screens/widgets/home_screen_part1.dart';
 import '../home screens/widgets/homescreen_custom_navigation.dart';
 import 'Reports/client_oprn_report.dart';
+import 'Reports/client_report_screen.dart';
 
 class ClientHomeScreen extends StatefulWidget {
   const ClientHomeScreen({super.key});
@@ -75,12 +79,6 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
   bool issShift = false;
   int _shiftRestrictedRadius = 0;
   int scheduleCount = 0;
-  List IconColors = [
-    isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
-    isDark ? DarkColor.color4 : LightColor.color3,
-    isDark ? DarkColor.color4 : LightColor.color3,
-    isDark ? DarkColor.color4 : LightColor.color3
-  ];
 
   int ScreenIndex = 0;
   final GlobalKey<ScaffoldState> _scaffoldKeyClient = GlobalKey();
@@ -88,61 +86,12 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
   bool _showWish = true;
   bool NewMessage = false;
 
-  void ChangeScreenIndex(int index) {
-    setState(() {
-      ScreenIndex = index;
-      ChangeIconColor(index);
-      print(ScreenIndex);
-      if (index == 1) {
-        _showWish = false;
-      } else
-        _showWish = true;
-    });
-  }
-
   void NavigateScreen(Widget screen, BuildContext context) {
     void NavigateScreen(Widget screen, BuildContext context) {
       // Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
       Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
       Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
     }
-  }
-
-  void ChangeIconColor(int index) {
-    setState(() {
-      switch (index) {
-        case 0:
-          IconColors[0] =
-              isDark ? DarkColor.Primarycolor : LightColor.Primarycolor;
-          IconColors[1] = isDark ? DarkColor.color4 : LightColor.color3;
-          IconColors[2] = isDark ? DarkColor.color4 : LightColor.color3;
-          IconColors[3] = isDark ? DarkColor.color4 : LightColor.color3;
-          break;
-        case 1:
-          IconColors[0] = isDark ? DarkColor.color4 : LightColor.color3;
-          IconColors[1] =
-              isDark ? DarkColor.Primarycolor : LightColor.Primarycolor;
-          IconColors[2] = isDark ? DarkColor.color4 : LightColor.color3;
-          IconColors[3] = isDark ? DarkColor.color4 : LightColor.color3;
-          break;
-        case 2:
-          IconColors[0] = isDark ? DarkColor.color4 : LightColor.color3;
-          IconColors[1] = isDark ? DarkColor.color4 : LightColor.color3;
-          IconColors[2] =
-              isDark ? DarkColor.Primarycolor : LightColor.Primarycolor;
-          IconColors[3] = isDark ? DarkColor.color4 : LightColor.color3;
-
-          break;
-        case 3:
-          IconColors[0] = isDark ? DarkColor.color4 : LightColor.color3;
-          IconColors[1] = isDark ? DarkColor.color4 : LightColor.color3;
-          IconColors[2] = isDark ? DarkColor.color4 : LightColor.color3;
-          IconColors[3] =
-              isDark ? DarkColor.Primarycolor : LightColor.Primarycolor;
-
-          break;
-      }
-    });
   }
 
   FireStoreService fireStoreService = FireStoreService();
@@ -160,7 +109,11 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
   @override
   void initState() {
     super.initState();
-    _getUserInfo();
+    _initializeData();
+  }
+
+  Future<void> _initializeData() async {
+    await _getUserInfo();
     fetchShifts();
     fetchReports();
   }
@@ -169,98 +122,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
   List<Map<String, dynamic>> reports = [];
   bool isLoading = true;
 
-  Future<void> fetchShifts() async {
-    try {
-      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-          .collection('Shifts')
-          .where('ShiftClientId', isEqualTo: "POt8iM9gm5RUCW8UkrSf")
-          .get();
-      print('Snapshot ${querySnapshot}');
-      List<Map<String, dynamic>> fetchedShifts = querySnapshot.docs.map((doc) {
-        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-        return {
-          'ShiftDate': data['ShiftDate'].toDate(),
-          'ShiftName': data['ShiftName'],
-          'ShiftLocationAddress': data['ShiftLocationAddress'],
-          'ShiftStartTime': data['ShiftStartTime'],
-          'ShiftEndTime': data['ShiftEndTime'],
-          // 'members': data['members'],
-        };
-      }).toList();
-
-      setState(() {
-        shifts = fetchedShifts;
-        isLoading = false;
-      });
-    } catch (e) {
-      print("Error fetching shifts: $e");
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
-
-  Future<void> fetchReports() async {
-    try {
-      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-          .collection('Reports')
-          .where('ReportClientId', isEqualTo: _employeeId)
-          .get();
-      print('Snapshot ${querySnapshot}');
-      List<Map<String, dynamic>> fetchedReports = querySnapshot.docs.map((doc) {
-        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-        return {
-          'ReportDate': (data['ReportCreatedAt'] != null)
-              ? data['ReportCreatedAt'].toDate()
-              : DateTime.now(), // default to now if missing or null
-          'ReportName': (data['ReportName'] != null &&
-                  data['ReportName'].toString().isNotEmpty)
-              ? data['ReportName']
-              : 'Not Found',
-          'ReportGuardName': (data['ReportEmployeeName'] != null &&
-                  data['ReportEmployeeName'].toString().isNotEmpty)
-              ? data['ReportEmployeeName']
-              : 'Not Found',
-          'ReportEmployeeName': (data['ReportEmployeeName'] != null &&
-                  data['ReportEmployeeName'].toString().isNotEmpty)
-              ? data['ReportEmployeeName']
-              : 'Not Found',
-          'ReportStatus': (data['ReportStatus'] != null &&
-                  data['ReportStatus'].toString().isNotEmpty)
-              ? data['ReportStatus']
-              : 'Not Found',
-          'ReportCategory': (data['ReportCategoryName'] != null &&
-                  data['ReportCategoryName'].toString().isNotEmpty)
-              ? data['ReportCategoryName']
-              : 'Not Found',
-          'ReportFollowUpRequire': data['ReportIsFollowUpRequired'] ?? false,
-          'ReportData': (data['ReportData'] != null &&
-                  data['ReportData'].toString().isNotEmpty)
-              ? data['ReportData']
-              : 'Not Found',
-          'ReportLocation': (data['ReportLocationName'] != null &&
-                  data['ReportLocationName'].toString().isNotEmpty)
-              ? data['ReportLocationName']
-              : 'Not Found',
-        };
-      }).toList();
-
-      setState(() {
-        reports = fetchedReports;
-        isLoading = false;
-      });
-      print("REPORT DATA HERE IT'S  :$reports");
-    } catch (e) {
-      print("Error fetching reports: $e");
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
-
-  // 12 datani mall shift start id A local stoarage
-  // 2 capital mall
-  void _getUserInfo() async {
+  Future<void> _getUserInfo() async {
     print("Fetching user info");
     var userInfo = await fireStoreService.getClientInfoByCurrentUserEmail();
     if (mounted) {
@@ -319,111 +181,218 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
           //   });
         }
 
-        if (shiftInfo != null) {
-          String shiftDateStr =
-              DateFormat.yMMMMd().format(shiftInfo['ShiftDate'].toDate());
-          String shiftEndTimeStr = shiftInfo['ShiftEndTime'] ?? " ";
-          String shiftStartTimeStr = shiftInfo['ShiftStartTime'] ?? " ";
-          String shiftLocation = shiftInfo['ShiftLocationAddress'] ?? " ";
-          String shiftLocationId = shiftInfo['ShiftLocationId'] ?? " ";
-          String shiftLocationName = shiftInfo['ShiftLocationName'] ?? " ";
+        // if (shiftInfo != null) {
+        //   String shiftDateStr =
+        //       DateFormat.yMMMMd().format(shiftInfo['ShiftDate'].toDate());
+        //   String shiftEndTimeStr = shiftInfo['ShiftEndTime'] ?? " ";
+        //   String shiftStartTimeStr = shiftInfo['ShiftStartTime'] ?? " ";
+        //   String shiftLocation = shiftInfo['ShiftLocationAddress'] ?? " ";
+        //   String shiftLocationId = shiftInfo['ShiftLocationId'] ?? " ";
+        //   String shiftLocationName = shiftInfo['ShiftLocationName'] ?? " ";
 
-          String shiftName = shiftInfo['ShiftName'] ?? " ";
-          String shiftId = shiftInfo['ShiftId'] ?? " ";
-          GeoPoint shiftGeolocation = shiftInfo['ShiftLocation'] ?? 0;
-          double shiftLocationLatitude = shiftGeolocation.latitude;
-          double shiftLocationLongitude = shiftGeolocation.longitude;
-          String companyBranchId = shiftInfo["ShiftCompanyBranchId"] ?? " ";
-          String shiftCompanyId = shiftInfo["ShiftCompanyId"] ?? " ";
-          String shiftClientId = shiftInfo["ShiftClientId"] ?? " ";
+        //   String shiftName = shiftInfo['ShiftName'] ?? " ";
+        //   String shiftId = shiftInfo['ShiftId'] ?? " ";
+        //   GeoPoint shiftGeolocation = shiftInfo['ShiftLocation'] ?? 0;
+        //   double shiftLocationLatitude = shiftGeolocation.latitude;
+        //   double shiftLocationLongitude = shiftGeolocation.longitude;
+        //   String companyBranchId = shiftInfo["ShiftCompanyBranchId"] ?? " ";
+        //   String shiftCompanyId = shiftInfo["ShiftCompanyId"] ?? " ";
+        //   String shiftClientId = shiftInfo["ShiftClientId"] ?? " ";
 
-          int ShiftRestrictedRadius = shiftInfo["ShiftRestrictedRadius"] ?? 0;
-          bool shiftKeepUserInRadius = shiftInfo["ShiftEnableRestrictedRadius"];
-          // String ShiftClientId = shiftInfo['ShiftClientId'];
-          // EmpEmail: _empEmail,
-          //                     Branchid: _branchId,
-          //                     cmpId: _cmpId,
-          // String employeeImg = shiftInfo['EmployeeImg'];
-          setState(() {
-            _ShiftDate = shiftDateStr;
-            _ShiftEndTime = shiftEndTimeStr;
-            _ShiftStartTime = shiftStartTimeStr;
-            _ShiftLocation = shiftLocation;
-            _ShiftLocationName = shiftLocationName;
-            _ShiftName = shiftName;
-            _shiftLatitude = shiftLocationLatitude;
-            _shiftLongitude = shiftLocationLongitude;
-            _shiftId = shiftId;
-            _shiftRestrictedRadius = ShiftRestrictedRadius;
-            _ShiftCompanyId = shiftCompanyId;
-            _ShiftBranchId = companyBranchId;
-            _shiftKeepGuardInRadiusOfLocation = shiftKeepUserInRadius;
-            _shiftLocationId = shiftLocationId;
-            _shiftCLientId = shiftClientId;
-            // _shiftCLientId = ShiftClientId;
-            // print("Date time parse: ${DateTime.parse(shiftDateStr)}");
-            DateTime shiftDateTime = DateFormat.yMMMMd().parse(shiftDateStr);
-            if (!selectedDates
-                .contains(DateFormat.yMMMMd().parse(shiftDateStr))) {
-              setState(() {
-                selectedDates.add(DateFormat.yMMMMd().parse(shiftDateStr));
-              });
-            }
-            if (!selectedDates.any((date) =>
-                date!.year == shiftDateTime.year &&
-                date.month == shiftDateTime.month &&
-                date.day == shiftDateTime.day)) {
-              setState(() {
-                selectedDates.add(shiftDateTime);
-              });
-            }
-            // storage.setItem("shiftId", shiftId);
-            // storage.setItem("EmpId", EmployeeId);
+        //   int ShiftRestrictedRadius = shiftInfo["ShiftRestrictedRadius"] ?? 0;
+        //   bool shiftKeepUserInRadius = shiftInfo["ShiftEnableRestrictedRadius"];
+        //   // String ShiftClientId = shiftInfo['ShiftClientId'];
+        //   // EmpEmail: _empEmail,
+        //   //                     Branchid: _branchId,
+        //   //                     cmpId: _cmpId,
+        //   // String employeeImg = shiftInfo['EmployeeImg'];
+        //   setState(() {
+        //     _ShiftDate = shiftDateStr;
+        //     _ShiftEndTime = shiftEndTimeStr;
+        //     _ShiftStartTime = shiftStartTimeStr;
+        //     _ShiftLocation = shiftLocation;
+        //     _ShiftLocationName = shiftLocationName;
+        //     _ShiftName = shiftName;
+        //     _shiftLatitude = shiftLocationLatitude;
+        //     _shiftLongitude = shiftLocationLongitude;
+        //     _shiftId = shiftId;
+        //     _shiftRestrictedRadius = ShiftRestrictedRadius;
+        //     _ShiftCompanyId = shiftCompanyId;
+        //     _ShiftBranchId = companyBranchId;
+        //     _shiftKeepGuardInRadiusOfLocation = shiftKeepUserInRadius;
+        //     _shiftLocationId = shiftLocationId;
+        //     _shiftCLientId = shiftClientId;
+        //     // _shiftCLientId = ShiftClientId;
+        //     // print("Date time parse: ${DateTime.parse(shiftDateStr)}");
+        //     DateTime shiftDateTime = DateFormat.yMMMMd().parse(shiftDateStr);
+        //     if (!selectedDates
+        //         .contains(DateFormat.yMMMMd().parse(shiftDateStr))) {
+        //       setState(() {
+        //         selectedDates.add(DateFormat.yMMMMd().parse(shiftDateStr));
+        //       });
+        //     }
+        //     if (!selectedDates.any((date) =>
+        //         date!.year == shiftDateTime.year &&
+        //         date.month == shiftDateTime.month &&
+        //         date.day == shiftDateTime.day)) {
+        //       setState(() {
+        //         selectedDates.add(shiftDateTime);
+        //       });
+        //     }
+        //     // storage.setItem("shiftId", shiftId);
+        //     // storage.setItem("EmpId", EmployeeId);
 
-            // _employeeImg = employeeImg;
-          });
-          print('Shift Info: ${shiftInfo.data()}');
+        //     // _employeeImg = employeeImg;
+        //   });
+        //   print('Shift Info: ${shiftInfo.data()}');
 
-          Future<void> printAllSchedules(String empId) async {
-            var getAllSchedules = await fireStoreService.getAllSchedules(empId);
-            if (getAllSchedules.isNotEmpty) {
-              getAllSchedules.forEach((doc) {
-                var data = doc.data() as Map<String, dynamic>?;
-                if (data != null && data['ShiftDate'] != null) {
-                  var shiftDate = data['ShiftDate'] as Timestamp;
-                  var date = DateTime.fromMillisecondsSinceEpoch(
-                      shiftDate.seconds * 1000);
-                  var formattedDate = DateFormat('yyyy-MM-dd').format(date);
-                  if (!selectedDates.contains(DateTime.parse(formattedDate))) {
-                    setState(() {
-                      selectedDates.add(DateTime.parse(formattedDate));
-                    });
-                  }
-                  // Format the date
-                  print("ShiftDate: $formattedDate");
-                }
+        //   Future<void> printAllSchedules(String empId) async {
+        //     var getAllSchedules = await fireStoreService.getAllSchedules(empId);
+        //     if (getAllSchedules.isNotEmpty) {
+        //       getAllSchedules.forEach((doc) {
+        //         var data = doc.data() as Map<String, dynamic>?;
+        //         if (data != null && data['ShiftDate'] != null) {
+        //           var shiftDate = data['ShiftDate'] as Timestamp;
+        //           var date = DateTime.fromMillisecondsSinceEpoch(
+        //               shiftDate.seconds * 1000);
+        //           var formattedDate = DateFormat('yyyy-MM-dd').format(date);
+        //           if (!selectedDates.contains(DateTime.parse(formattedDate))) {
+        //             setState(() {
+        //               selectedDates.add(DateTime.parse(formattedDate));
+        //             });
+        //           }
+        //           // Format the date
+        //           print("ShiftDate: $formattedDate");
+        //         }
 
-                print(
-                    "All Schedule date : ${doc.data()}"); // Print data of each document
-              });
-            } else {
-              print("No schedules found.");
-            }
-          }
+        //         print(
+        //             "All Schedule date : ${doc.data()}"); // Print data of each document
+        //       });
+        //     } else {
+        //       print("No schedules found.");
+        //     }
+        //   }
 
-          printAllSchedules(EmployeeId);
-        } else {
-          setState(() {
-            issShift = true; //To validate that shift exists for the user.
-          });
-          print('Shift info not found');
-        }
+        //   printAllSchedules(EmployeeId);
+        // } else {
+        //   setState(() {
+        //     issShift = true; //To validate that shift exists for the user.
+        //   });
+        //   print('Shift info not found');
+        // }
         // getAndPrintAllSchedules();
       } else {
         print('User info not found');
       }
     }
   }
+
+  Future<void> fetchShifts() async {
+    try {
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('Shifts')
+          .where('ShiftClientId', isEqualTo: _employeeId)
+          .get();
+      List<Map<String, dynamic>> fetchedShifts = querySnapshot.docs.map((doc) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        return {
+          'ShiftDate': data['ShiftDate'].toDate(),
+          'ShiftName': data['ShiftName'],
+          'ShiftLocationAddress': data['ShiftLocationAddress'],
+          'ShiftStartTime': data['ShiftStartTime'],
+          'ShiftEndTime': data['ShiftEndTime'],
+          'members': data['members'],
+        };
+      }).toList();
+      print("SHIFTS: ${fetchedShifts}");
+      print("EMPLOYEE ID: ${_employeeId}");
+      setState(() {
+        shifts = fetchedShifts;
+        isLoading = false;
+      });
+    } catch (e) {
+      print("Error fetching shifts: $e");
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  Future<void> fetchReports() async {
+    try {
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('Reports')
+          .orderBy('ReportCreatedAt', descending: true)
+          .where('ReportClientId', isEqualTo: _employeeId)
+          .get();
+      List<Map<String, dynamic>> fetchedReports = querySnapshot.docs.map((doc) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        return {
+          'ReportDate': (data['ReportCreatedAt'] != null)
+              ? data['ReportCreatedAt'].toDate()
+              : DateTime.now(), // default to now if missing or null
+          'ReportName': (data['ReportName'] != null &&
+                  data['ReportName'].toString().isNotEmpty)
+              ? data['ReportName']
+              : 'Not Found',
+          'ReportGuardName': (data['ReportEmployeeName'] != null &&
+                  data['ReportEmployeeName'].toString().isNotEmpty)
+              ? data['ReportEmployeeName']
+              : 'Not Found',
+          'ReportEmployeeName': (data['ReportEmployeeName'] != null &&
+                  data['ReportEmployeeName'].toString().isNotEmpty)
+              ? data['ReportEmployeeName']
+              : 'Not Found',
+          'ReportStatus': (data['ReportStatus'] != null &&
+                  data['ReportStatus'].toString().isNotEmpty)
+              ? data['ReportStatus']
+              : 'Not Found',
+          'ReportCategory': (data['ReportCategoryName'] != null &&
+                  data['ReportCategoryName'].toString().isNotEmpty)
+              ? data['ReportCategoryName']
+              : 'Not Found',
+          'ReportFollowUpRequire': data['ReportIsFollowUpRequired'] ?? false,
+          'ReportData': (data['ReportData'] != null &&
+                  data['ReportData'].toString().isNotEmpty)
+              ? data['ReportData']
+              : 'Not Found',
+          'ReportLocation': (data['ReportLocationName'] != null &&
+                  data['ReportLocationName'].toString().isNotEmpty)
+              ? data['ReportLocationName']
+              : 'Not Found',
+        };
+      }).toList();
+
+      setState(() {
+        reports = fetchedReports;
+        isLoading = false;
+      });
+      print("REPORT DATA HERE IT'S  :$reports");
+    } catch (e) {
+      print("Error fetching reports: $e");
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  List IconColors = [
+    ThemeMode.dark == themeManager.themeMode
+        ? DarkColor.color1
+        : LightColor.Primarycolor,
+    ThemeMode.dark == themeManager.themeMode
+        ? DarkColor.color3
+        : LightColor.color2,
+    ThemeMode.dark == themeManager.themeMode
+        ? DarkColor.color3
+        : LightColor.color2,
+    ThemeMode.dark == themeManager.themeMode
+        ? DarkColor.color3
+        : LightColor.color2,
+  ];
+
+  // 12 datani mall shift start id A local stoarage
+  // 2 capital mall
 
 /*  void getAndPrintAllSchedules() async {
     List<DocumentSnapshot> schedules =
@@ -481,8 +450,80 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
+    void ChangeIconColor(int index) {
+      setState(() {
+        switch (index) {
+          case 0:
+            IconColors[0] = ThemeMode.dark == themeManager.themeMode
+                ? DarkColor.color1
+                : LightColor.Primarycolor;
+            IconColors[1] = ThemeMode.dark == themeManager.themeMode
+                ? DarkColor.color3
+                : LightColor.color2;
+            IconColors[2] = ThemeMode.dark == themeManager.themeMode
+                ? DarkColor.color3
+                : LightColor.color2;
+            IconColors[3] = ThemeMode.dark == themeManager.themeMode
+                ? DarkColor.color3
+                : LightColor.color2;
+            break;
+          case 1:
+            IconColors[0] = ThemeMode.dark == themeManager.themeMode
+                ? DarkColor.color3
+                : LightColor.color2;
+            IconColors[1] = ThemeMode.dark == themeManager.themeMode
+                ? DarkColor.color1
+                : LightColor.Primarycolor;
+            IconColors[2] = ThemeMode.dark == themeManager.themeMode
+                ? DarkColor.color3
+                : LightColor.color2;
+            IconColors[3] = ThemeMode.dark == themeManager.themeMode
+                ? DarkColor.color3
+                : LightColor.color2;
+            break;
+          case 2:
+            IconColors[0] = ThemeMode.dark == themeManager.themeMode
+                ? DarkColor.color3
+                : LightColor.color2;
+            IconColors[1] = ThemeMode.dark == themeManager.themeMode
+                ? DarkColor.color3
+                : LightColor.color2;
+            IconColors[2] = ThemeMode.dark == themeManager.themeMode
+                ? DarkColor.color1
+                : LightColor.Primarycolor;
+            IconColors[3] = ThemeMode.dark == themeManager.themeMode
+                ? DarkColor.color3
+                : LightColor.color2;
+            break;
+          case 3:
+            IconColors[0] = ThemeMode.dark == themeManager.themeMode
+                ? DarkColor.color3
+                : LightColor.color2;
+            IconColors[1] = ThemeMode.dark == themeManager.themeMode
+                ? DarkColor.color3
+                : LightColor.color2;
+            IconColors[2] = ThemeMode.dark == themeManager.themeMode
+                ? DarkColor.color3
+                : LightColor.color2;
+            IconColors[3] = ThemeMode.dark == themeManager.themeMode
+                ? DarkColor.color1
+                : LightColor.Primarycolor;
+            break;
+        }
+      });
+    }
+
+    void ChangeScreenIndex(int index) {
+      setState(() {
+        ScreenIndex = index;
+        ChangeIconColor(index);
+        print(ScreenIndex);
+        // if (index == 1) {
+        //   _showWish = false;
+        // } else
+        //   _showWish = true;
+      });
+    }
 
     ListTile buildListTile(
         IconData icon, String title, int index, VoidCallback onPressed,
@@ -492,32 +533,36 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
       return ListTile(
         leading: Icon(
           icon,
-          color: isDark
-              ? (isSelected ? DarkColor.Primarycolor : DarkColor.color3)
-              : (isSelected
-                  ? LightColor.Primarycolor
-                  : LightColor.color3), // Change color based on selection
+          color: isSelected
+              ? Theme.of(context).primaryColor
+              : Theme.of(context)
+                  .textTheme
+                  .headlineSmall!
+                  .color, // Change color based on selection
           size: 24.w,
         ),
         title: PoppinsBold(
           text: title,
-          color: isDark
-              ? (isSelected ? DarkColor.Primarycolor : DarkColor.color3)
-              : (isSelected ? LightColor.Primarycolor : LightColor.color3),
+          color: isSelected
+              ? Theme.of(context).primaryColor
+              : Theme.of(context).textTheme.headlineSmall!.color,
           fontsize: 14.sp,
         ),
         onTap: onPressed,
       );
     }
 
+    final List<List<String>> data = [
+      ['assets/images/dar.png', 'DAR'],
+      ['assets/images/reports.png', 'Reports'],
+      // ['assets/images/default.png', 'Patrol'],
+    ];
+
     return SafeArea(
       child: Scaffold(
-        backgroundColor:
-            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         key: _scaffoldKeyClient, // Assign the GlobalKey to the Scaffold
         endDrawer: Drawer(
-          backgroundColor:
-              isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+          backgroundColor: Theme.of(context).canvasColor,
           child: Column(
             children: [
               GestureDetector(
@@ -525,7 +570,9 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ProfileScreen(empId: _employeeId,),
+                      builder: (context) => ProfileScreen(
+                        empId: _employeeId,
+                      ),
                     ),
                   );
                 },
@@ -534,10 +581,8 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                   width: double.maxFinite,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15.r),
-                    color: isDark
-                        ? DarkColor.Primarycolor
-                        : LightColor
-                            .Primarycolor, // Background color for the drawer header
+                    color: Theme.of(context)
+                        .primaryColor, // Background color for the drawer header
                   ),
                   child: Center(
                     child: Column(
@@ -561,18 +606,14 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                         SizedBox(height: 10.h),
                         PoppinsSemibold(
                           text: _userName,
-                          color: isDark
-                              ? DarkColor.WidgetColor
-                              : LightColor.WidgetColor,
+                          color: Theme.of(context).cardColor,
                           fontsize: 16.sp,
                           letterSpacing: -.3,
                         ),
                         SizedBox(height: 5.h),
                         PoppinsRegular(
                           text: _empEmail,
-                          color: isDark
-                              ? DarkColor.WidgetColor
-                              : LightColor.WidgetColor,
+                          color: Theme.of(context).cardColor,
                           fontsize: 16.sp,
                           letterSpacing: -.3,
                         )
@@ -592,55 +633,16 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => ProfileScreen(empId: _employeeId,),
-                          ),
-                        );
-                      },
-                    ),
-                    buildListTile(
-                      Icons.add_card,
-                      'Payment',
-                      2,
-                      () {},
-                    ),
-                    buildListTile(
-                      Icons.article,
-                      'Employment Letter',
-                      3,
-                      () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => EmploymentLetterScreen(),
-                          ),
-                        );
-                      },
-                    ),
-                    buildListTile(
-                      Icons.restart_alt,
-                      'History',
-                      4,
-                      () {
-                        // customEmail();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => HistoryScreen(
-                              empID: _employeeId,
+                            builder: (context) => ProfileScreen(
+                              empId: _employeeId,
                             ),
                           ),
                         );
                       },
                     ),
-                    buildListTile(
-                      Icons.settings,
-                      'Settings',
-                      5,
-                      () async {},
-                    ),
                     buildListTile(Icons.swipe_down_alt, 'Theme', 6, () {
                       setState(() {
-                        isDark = !isDark;
+                        themeManager.toggleTheme();
                       });
                     }),
                   ],
@@ -672,7 +674,6 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
           child: RefreshIndicator(
             onRefresh: _refreshData,
             child: CustomScrollView(
-              physics: PageScrollPhysics(),
               slivers: [
                 HomeScreenPart1(
                   userName: _userName,
@@ -707,68 +708,54 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                               child: HomeScreenCustomNavigation(
                                 text: 'Patrol',
                                 icon: Icons.map,
-                                color: isDark
-                                    ? (ScreenIndex == 0
+                                color: ScreenIndex == 0
+                                    ? ThemeMode.dark == themeManager.themeMode
                                         ? DarkColor.color1
-                                        : DarkColor.color4)
-                                    : (ScreenIndex == 0
-                                        ? LightColor.Primarycolor
-                                        : LightColor.color3),
-                                textcolor: isDark
-                                    ? (ScreenIndex == 0
+                                        : LightColor.Primarycolor
+                                    : Theme.of(context).focusColor,
+                                textcolor: ScreenIndex == 0
+                                    ? ThemeMode.dark == themeManager.themeMode
                                         ? DarkColor.color1
-                                        : DarkColor.color4)
-                                    : (ScreenIndex == 0
-                                        ? LightColor.Primarycolor
-                                        : LightColor.color3),
+                                        : LightColor.Primarycolor
+                                    : Theme.of(context).focusColor,
                               ),
                             ),
                             Bounce(
-                              // onTap: () => ChangeScreenIndex(1),
+                              onTap: () => ChangeScreenIndex(1),
                               child: HomeScreenCustomNavigation(
                                 text: 'Shifts',
                                 icon: Icons.add_task,
-                                color: isDark
-                                    ? (ScreenIndex == 1
+                                color: ScreenIndex == 1
+                                    ? ThemeMode.dark == themeManager.themeMode
                                         ? DarkColor.color1
-                                        : DarkColor.color4)
-                                    : (ScreenIndex == 1
-                                        ? LightColor.Primarycolor
-                                        : LightColor.color3),
-                                textcolor: isDark
-                                    ? (ScreenIndex == 1
+                                        : LightColor.Primarycolor
+                                    : Theme.of(context).focusColor,
+                                textcolor: ScreenIndex == 1
+                                    ? ThemeMode.dark == themeManager.themeMode
                                         ? DarkColor.color1
-                                        : DarkColor.color4)
-                                    : (ScreenIndex == 1
-                                        ? LightColor.Primarycolor
-                                        : LightColor.color3),
+                                        : LightColor.Primarycolor
+                                    : Theme.of(context).focusColor,
                               ),
                             ),
                             Bounce(
                               onTap: () => ChangeScreenIndex(2),
                               child: HomeScreenCustomNavigation(
-                                useSVG: true,
-                                SVG: 'assets/images/lab_profile.svg',
-                                text: 'Reports',
-                                icon: Icons.celebration,
-                                color: isDark
-                                    ? (ScreenIndex == 2
+                                text: 'Explore',
+                                icon: Icons.grid_view_rounded,
+                                color: ScreenIndex == 2
+                                    ? ThemeMode.dark == themeManager.themeMode
                                         ? DarkColor.color1
-                                        : DarkColor.color4)
-                                    : (ScreenIndex == 2
-                                        ? LightColor.Primarycolor
-                                        : LightColor.color3),
-                                textcolor: isDark
-                                    ? (ScreenIndex == 2
+                                        : LightColor.Primarycolor
+                                    : Theme.of(context).focusColor,
+                                textcolor: ScreenIndex == 2
+                                    ? ThemeMode.dark == themeManager.themeMode
                                         ? DarkColor.color1
-                                        : DarkColor.color4)
-                                    : (ScreenIndex == 2
-                                        ? LightColor.Primarycolor
-                                        : LightColor.color3),
+                                        : LightColor.Primarycolor
+                                    : Theme.of(context).focusColor,
                               ),
                             ),
                             Bounce(
-                              onTap: () => ChangeScreenIndex(3),
+                              onTap: () => {},
                               child: HomeScreenCustomNavigation(
                                 useSVG: true,
                                 SVG: NewMessage
@@ -780,20 +767,16 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                         : 'assets/images/no_message.svg',
                                 text: 'Message',
                                 icon: Icons.chat_bubble_outline,
-                                color: isDark
-                                    ? (ScreenIndex == 3
+                                color: ScreenIndex == 3
+                                    ? ThemeMode.dark == themeManager.themeMode
                                         ? DarkColor.color1
-                                        : DarkColor.color4)
-                                    : (ScreenIndex == 3
-                                        ? LightColor.Primarycolor
-                                        : LightColor.color3),
-                                textcolor: isDark
-                                    ? (ScreenIndex == 3
+                                        : LightColor.Primarycolor
+                                    : Theme.of(context).focusColor,
+                                textcolor: ScreenIndex == 3
+                                    ? ThemeMode.dark == themeManager.themeMode
                                         ? DarkColor.color1
-                                        : DarkColor.color4)
-                                    : (ScreenIndex == 3
-                                        ? LightColor.Primarycolor
-                                        : LightColor.color3),
+                                        : LightColor.Primarycolor
+                                    : Theme.of(context).focusColor,
                               ),
                             ),
                           ],
@@ -831,7 +814,9 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               ClientCheckPatrolScreen(
-                                                  PatrolIdl: PatrolId)));
+                                                PatrolIdl: PatrolId,
+                                                ScreenName: PatrolName,
+                                              )));
                                 },
                                 child: Container(
                                   height: 100.h,
@@ -840,22 +825,17 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                   decoration: BoxDecoration(
                                     boxShadow: [
                                       BoxShadow(
-                                        color: isDark
-                                            ? Colors.transparent
-                                            : LightColor.color3
-                                                .withOpacity(.05),
+                                        color: Theme.of(context).shadowColor,
                                         blurRadius: 5,
                                         spreadRadius: 2,
                                         offset: Offset(0, 3),
                                       )
                                     ],
-                                    color: isDark
-                                        ? DarkColor.WidgetColor
-                                        : LightColor.WidgetColor,
+                                    color: Theme.of(context).cardColor,
                                     borderRadius: BorderRadius.circular(14.r),
                                   ),
                                   padding: EdgeInsets.only(
-                                      top: 20.h, bottom: 20.h, right: 10.w),
+                                      top: 20.h, bottom: 20.h, right: 20.w),
                                   child: Column(
                                     children: [
                                       Row(
@@ -880,9 +860,8 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                       10.r,
                                                     ),
                                                   ),
-                                                  color: isDark
-                                                      ? DarkColor.Primarycolor
-                                                      : LightColor.Primarycolor,
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
                                                 ),
                                               ),
                                               SizedBox(width: 14.w),
@@ -894,9 +873,10 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                 children: [
                                                   InterSemibold(
                                                     text: PatrolName ?? "",
-                                                    color: isDark
-                                                        ? DarkColor.color1
-                                                        : LightColor.color3,
+                                                    color: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyMedium!
+                                                        .color,
                                                     fontsize: 14.sp,
                                                   ),
                                                   SizedBox(height: 4.h),
@@ -917,11 +897,14 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                         ),
                                                         SizedBox(width: 5.w),
                                                         Flexible(
-                                                          child: InterRegular(color: isDark
-                                                              ? DarkColor.color1
-                                                              : LightColor.color3,
+                                                          child: InterRegular(
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .bodyMedium!
+                                                                .color,
                                                             text:
-                                                                '2972 Westheimer Rd. Santa Ana, Illinois 85486 ',
+                                                                PatrolLocation,
                                                             maxLines: 2,
                                                             fontsize: 14.sp,
                                                           ),
@@ -941,9 +924,10 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                 InterRegular(
                                                   text: 'CheckPoints',
                                                   fontsize: 14.sp,
-                                                  color: isDark
-                                                      ? DarkColor.color1
-                                                      : LightColor.color3,
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyMedium!
+                                                      .color,
                                                 ),
                                                 SizedBox(height: 10.h),
                                                 Row(
@@ -952,20 +936,19 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                   children: [
                                                     Icon(
                                                       Icons.qr_code,
-                                                      color: isDark
-                                                          ? DarkColor
-                                                              .Primarycolor
-                                                          : LightColor
-                                                              .Primarycolor,
+                                                      color: Theme.of(context)
+                                                          .primaryColor,
                                                       size: 24.sp,
                                                     ),
                                                     SizedBox(width: 4.w),
                                                     InterMedium(
-                                                      text: '100',
+                                                      text: CheckpointCount
+                                                          .toString(),
                                                       fontsize: 13.sp,
-                                                      color: isDark
-                                                          ? DarkColor.color1
-                                                          : LightColor.color3,
+                                                      color: Theme.of(context)
+                                                          .textTheme
+                                                          .bodyMedium!
+                                                          .color,
                                                     )
                                                   ],
                                                 )
@@ -992,7 +975,6 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                         shiftDate, DateTime.now()))
                                     ? 'Today'
                                     : "${shiftDate.day} / ${shiftDate.month} / ${shiftDate.year}";
-
                                 return Padding(
                                   padding: EdgeInsets.only(
                                     left: 30.w,
@@ -1003,6 +985,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                       NavigateScreen(
                                         ClientCheckPatrolScreen(
                                           PatrolIdl: '',
+                                          ScreenName: '',
                                         ),
                                         context,
                                       );
@@ -1011,11 +994,13 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
+                                        SizedBox(height: 10.h),
                                         InterBold(
                                           text: dateString,
-                                          color: isDark
-                                              ? DarkColor.Primarycolor
-                                              : LightColor.color3,
+                                          color: Theme.of(context)
+                                              .textTheme
+                                              .bodySmall!
+                                              .color,
                                           fontsize: 14.sp,
                                         ),
                                         SizedBox(
@@ -1026,9 +1011,16 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                           margin: EdgeInsets.only(top: 10.h),
                                           width: double.maxFinite,
                                           decoration: BoxDecoration(
-                                            color: isDark
-                                                ? DarkColor.Primarycolor
-                                                : LightColor.Primarycolor,
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Theme.of(context)
+                                                    .shadowColor,
+                                                blurRadius: 5,
+                                                spreadRadius: 2,
+                                                offset: Offset(0, 3),
+                                              )
+                                            ],
+                                            color: Theme.of(context).cardColor,
                                             borderRadius:
                                                 BorderRadius.circular(14.sp),
                                           ),
@@ -1053,9 +1045,8 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                             Radius.circular(
                                                                 10.r),
                                                       ),
-                                                      color: isDark
-                                                          ? DarkColor.color22
-                                                          : LightColor.color3,
+                                                      color: Theme.of(context)
+                                                          .primaryColor,
                                                     ),
                                                   ),
                                                   SizedBox(width: 14.w),
@@ -1072,11 +1063,11 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                         InterSemibold(
                                                           text: shifts[index]
                                                               ['ShiftName'],
-                                                          color: isDark
-                                                              ? DarkColor
-                                                                  .color22
-                                                              : LightColor
-                                                                  .color3,
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .titleSmall!
+                                                                  .color,
                                                           fontsize: 14.sp,
                                                         ),
                                                         SizedBox(height: 5.h),
@@ -1114,45 +1105,51 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                           InterRegular(
                                                             text: 'Guards',
                                                             fontsize: 14.sp,
-                                                            color: isDark
-                                                                ? DarkColor
-                                                                    .color22
-                                                                : LightColor
-                                                                    .color3,
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .titleSmall!
+                                                                .color!,
                                                           ),
                                                           SizedBox(
                                                               height: 12.h),
                                                           Wrap(
                                                             spacing: -5.0,
                                                             children: [
-                                                              for (int i = 0;
-                                                                  i <
-                                                                      (shifts[index]['members'].length >
-                                                                              3
-                                                                          ? 3
-                                                                          : shifts[index]['members']
-                                                                              .length);
-                                                                  i++)
-                                                                CircleAvatar(
-                                                                  radius: 10.r,
-                                                                  backgroundImage:
-                                                                      NetworkImage(
-                                                                    shifts[index]
-                                                                        [
-                                                                        'members'][i],
-                                                                  ),
-                                                                ),
                                                               if (shifts[index][
-                                                                          'members']
-                                                                      .length >
-                                                                  3)
+                                                                      'members'] !=
+                                                                  null)
+                                                                for (int i = 0;
+                                                                    i <
+                                                                        (shifts[index]['members'].length >
+                                                                                3
+                                                                            ? 3
+                                                                            : shifts[index]['members'].length);
+                                                                    i++)
+                                                                  CircleAvatar(
+                                                                    radius:
+                                                                        10.r,
+                                                                    backgroundImage:
+                                                                        NetworkImage(
+                                                                      shifts[index]
+                                                                          [
+                                                                          'members'][i],
+                                                                    ),
+                                                                  ),
+                                                              if (shifts[index][
+                                                                          'members'] !=
+                                                                      null &&
+                                                                  shifts[index][
+                                                                              'members']
+                                                                          .length >
+                                                                      3)
                                                                 CircleAvatar(
                                                                   radius: 12.r,
-                                                                  backgroundColor: isDark
-                                                                      ? DarkColor
-                                                                          .color22
-                                                                      : LightColor
-                                                                          .color3,
+                                                                  backgroundColor: Theme.of(
+                                                                          context)
+                                                                      .textTheme
+                                                                      .titleSmall!
+                                                                      .color!,
                                                                   child:
                                                                       InterMedium(
                                                                     text:
@@ -1175,35 +1172,18 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                         children: [
                                                           InterRegular(
                                                             text: 'Started At',
-                                                            color: isDark
-                                                                ? DarkColor
-                                                                    .color22
-                                                                : LightColor
-                                                                    .color3,
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .titleSmall!
+                                                                .color!,
                                                             fontsize: 14.sp,
                                                           ),
                                                           SizedBox(height: 5.h),
-                                                          Row(
-                                                            children: [
-                                                              Icon(
-                                                                Icons
-                                                                    .check_circle_outlined,
-                                                                size: 24.w,
-                                                                color: isDark
-                                                                    ? DarkColor
-                                                                        .color22
-                                                                    : LightColor
-                                                                        .color3,
-                                                              ),
-                                                              SizedBox(
-                                                                  width: 6.w),
-                                                              InterMedium(
-                                                                text: shifts[
-                                                                        index][
-                                                                    'ShiftStartTime'],
-                                                                fontsize: 14.sp,
-                                                              ),
-                                                            ],
+                                                          InterMedium(
+                                                            text: shifts[index][
+                                                                'ShiftStartTime'],
+                                                            fontsize: 14.sp,
                                                           ),
                                                         ],
                                                       ),
@@ -1217,11 +1197,11 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                         children: [
                                                           InterRegular(
                                                             text: 'Ended At',
-                                                            color: isDark
-                                                                ? DarkColor
-                                                                    .color22
-                                                                : LightColor
-                                                                    .color3,
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .titleSmall!
+                                                                .color!,
                                                             fontsize: 14.sp,
                                                           ),
                                                           SizedBox(height: 5.h),
@@ -1258,280 +1238,58 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                             ),
                           )
                         : ScreenIndex == 2
-                            ? SliverList(
+                            ? SliverGrid(
+                                gridDelegate:
+                                    const SliverGridDelegateWithMaxCrossAxisExtent(
+                                  maxCrossAxisExtent: 200.0,
+                                  // mainAxisSpacing: 10.0,
+                                  // crossAxisSpacing: 10.0,
+                                  // childAspectRatio: 4.0,
+                                ),
                                 delegate: SliverChildBuilderDelegate(
-                                  (context, index) {
-                                    DateTime reportDate =
-                                        reports[index]['ReportDate'];
-                                    String dateString = (isSameDate(
-                                            reportDate, DateTime.now()))
-                                        ? 'Today'
-                                        : "${reportDate.day} / ${reportDate.month} / ${reportDate.year}";
-
-                                    return Padding(
-                                      padding: EdgeInsets.only(
-                                        left: 30.w,
-                                        right: 30.w,
-                                      ),
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ClientOpenReport(
-                                                reportName: reports[index]
-                                                    ['ReportName'],
-                                                reportCategory: reports[index]
-                                                    ['ReportCategory'],
-                                                reportDate: dateString,
-                                                reportFollowUpRequire: reports[
-                                                            index][
-                                                        'ReportFollowUpRequire']
-                                                    .toString(),
-                                                reportData: reports[index]
-                                                    ['ReportData'],
-                                                reportStatus: reports[index]
-                                                    ['ReportStatus'],
-                                                reportEmployeeName:
-                                                    reports[index]
-                                                        ['ReportEmployeeName'],
-                                                reportLocation: reports[index]
-                                                    ['ReportLocation'],
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            InterBold(
-                                              text: dateString,
-                                              color: isDark
-                                                  ? DarkColor.Primarycolor
-                                                  : LightColor.color3,
-                                              fontsize: 14.sp,
-                                            ),
-                                            SizedBox(
-                                              height: 10.sp,
-                                            ),
-                                            Column(
-                                              children: List.generate(
-                                                10,
-                                                (index) => Container(
-                                                  constraints: BoxConstraints(
-                                                      minHeight: 200.h),
-                                                  width: double.maxFinite,
-                                                  decoration: BoxDecoration(
-                                                    boxShadow: [
-                                                      BoxShadow(
-                                                        color: isDark
-                                                            ? Colors.transparent
-                                                            : LightColor.color3
-                                                                .withOpacity(
-                                                                    .05),
-                                                        blurRadius: 5,
-                                                        spreadRadius: 2,
-                                                        offset: Offset(0, 3),
-                                                      )
-                                                    ],
-                                                    color: isDark
-                                                        ? DarkColor.WidgetColor
-                                                        : LightColor
-                                                            .WidgetColor,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            14.r),
+                                  (BuildContext context, int index) {
+                                    return Bounce(
+                                      onTap: () {
+                                        switch (index) {
+                                          case 0:
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ClientDarScreen(
+                                                          clientId: _employeeId,
+                                                          companyId: _cmpId),
+                                                ));
+                                            break;
+                                          case 1:
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ClientReportScreen(
+                                                    employeeId: _employeeId,
                                                   ),
-                                                  padding: EdgeInsets.symmetric(
-                                                    vertical: 18.h,
-                                                    horizontal: 18.w,
-                                                  ),
-                                                  margin: EdgeInsets.only(
-                                                    top: 10.h,
-                                                  ),
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      InterSemibold(
-                                                        text: reports[index]
-                                                            ['ReportGuardName'],
-                                                        fontsize: 18.sp,
-                                                        color: isDark
-                                                            ? DarkColor
-                                                                .Primarycolor
-                                                            : LightColor.color3,
-                                                      ),
-                                                      SizedBox(height: 19.h),
-                                                      SizedBox(
-                                                        width: 240.w,
-                                                        child: Column(
-                                                          children: [
-                                                            Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceBetween,
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                InterMedium(
-                                                                  text:
-                                                                      'Report Name:',
-                                                                  fontsize:
-                                                                      16.sp,
-                                                                  color: isDark
-                                                                      ? DarkColor
-                                                                          .color1
-                                                                      : LightColor
-                                                                          .color3,
-                                                                ),
-                                                                InterMedium(
-                                                                  text: reports[
-                                                                          index]
-                                                                      [
-                                                                      'ReportName'],
-                                                                  fontsize:
-                                                                      16.sp,
-                                                                  color: isDark
-                                                                      ? DarkColor
-                                                                          .color3
-                                                                      : LightColor
-                                                                          .color3,
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            SizedBox(
-                                                                height: 10.h),
-                                                            Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceBetween,
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                InterMedium(
-                                                                  text:
-                                                                      'Category:',
-                                                                  fontsize:
-                                                                      16.sp,
-                                                                  color: isDark
-                                                                      ? DarkColor
-                                                                          .color1
-                                                                      : LightColor
-                                                                          .color3,
-                                                                ),
-                                                                InterMedium(
-                                                                  text: reports[
-                                                                          index]
-                                                                      [
-                                                                      'ReportCategory'],
-                                                                  fontsize:
-                                                                      16.sp,
-                                                                  color: isDark
-                                                                      ? DarkColor
-                                                                          .color3
-                                                                      : LightColor
-                                                                          .color3,
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            SizedBox(
-                                                                height: 10.h),
-                                                            Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceBetween,
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                InterMedium(
-                                                                  text:
-                                                                      'Emp Name:',
-                                                                  fontsize:
-                                                                      16.sp,
-                                                                  color: isDark
-                                                                      ? DarkColor
-                                                                          .color1
-                                                                      : LightColor
-                                                                          .color3,
-                                                                ),
-                                                                InterMedium(
-                                                                  text: reports[
-                                                                          index]
-                                                                      [
-                                                                      'ReportEmployeeName'],
-                                                                  fontsize:
-                                                                      16.sp,
-                                                                  color: isDark
-                                                                      ? DarkColor
-                                                                          .color3
-                                                                      : LightColor
-                                                                          .color3,
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            SizedBox(
-                                                                height: 10.h),
-                                                            Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceBetween,
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                InterMedium(
-                                                                  text:
-                                                                      'Status:',
-                                                                  fontsize:
-                                                                      16.sp,
-                                                                  color: isDark
-                                                                      ? DarkColor
-                                                                          .color1
-                                                                      : LightColor
-                                                                          .color3,
-                                                                ),
-                                                                InterMedium(
-                                                                  text: reports[
-                                                                          index]
-                                                                      [
-                                                                      'ReportStatus'],
-                                                                  fontsize:
-                                                                      16.sp,
-                                                                  color: isDark
-                                                                      ? DarkColor
-                                                                          .color3
-                                                                      : LightColor
-                                                                          .color3,
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: 20.sp,
-                                            ),
-                                          ],
-                                        ),
+                                                ));
+                                            break;
+                                          // case 2:
+                                          //   Navigator.push(
+                                          //       context,
+                                          //       MaterialPageRoute(
+                                          //         builder: (context) =>
+                                          //             ClientDarScreen(
+                                          //                 clientId: _employeeId,
+                                          //                 companyId: _cmpId),
+                                          //       ));
+                                          //   break;
+                                        }
+                                      },
+                                      child: gridWidget(
+                                        img: data[index][0],
+                                        tittle: data[index][1],
                                       ),
                                     );
                                   },
-                                  childCount: reports.length,
+                                  childCount: data.length,
                                 ),
                               )
                             : ScreenIndex == 3
@@ -1546,9 +1304,8 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                         children: [
                                           InterBold(
                                             text: 'Received Message ',
-                                            color: isDark
-                                                ? DarkColor.Primarycolor
-                                                : LightColor.Primarycolor,
+                                            color:
+                                                Theme.of(context).primaryColor,
                                             fontsize: 14.sp,
                                           ),
                                           Row(
@@ -1557,18 +1314,16 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                             children: [
                                               Icon(
                                                 Icons.add,
-                                                color: isDark
-                                                    ? DarkColor.Primarycolor
-                                                    : LightColor.Primarycolor,
+                                                color: Theme.of(context)
+                                                    .primaryColor,
                                                 size: 20.sp,
                                               ),
                                               SizedBox(width: 4.w),
                                               InterBold(
                                                 text: 'Create Message',
                                                 fontsize: 14.sp,
-                                                color: isDark
-                                                    ? DarkColor.Primarycolor
-                                                    : LightColor.Primarycolor,
+                                                color: Theme.of(context)
+                                                    .primaryColor,
                                                 maxLine: 2,
                                               )
                                             ],
@@ -1612,9 +1367,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                     border: Border(
                                       bottom: BorderSide(
                                         width: 1,
-                                        color: isDark
-                                            ? DarkColor.Primarycolor
-                                            : LightColor.Primarycolor,
+                                        color: Theme.of(context).primaryColor,
                                       ),
                                     ),
                                     // color: WidgetColor,
@@ -1672,25 +1425,28 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                 InterRegular(
                                                   text: 'Supervisor',
                                                   fontsize: 17.sp,
-                                                  color: isDark
-                                                      ? DarkColor.color3
-                                                      : LightColor.color3,
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .headlineSmall!
+                                                      .color,
                                                 ),
                                                 Row(
                                                   // mainAxisAlignment: MainAxisAlignment.end,
                                                   children: [
                                                     PoppinsRegular(
                                                       text: '9:36 AM',
-                                                      color: isDark
-                                                          ? DarkColor.color3
-                                                          : LightColor.color3,
+                                                      color: Theme.of(context)
+                                                          .textTheme
+                                                          .headlineSmall!
+                                                          .color,
                                                       fontsize: 15.sp,
                                                     ),
                                                     Icon(
                                                       Icons.arrow_forward_ios,
-                                                      color: isDark
-                                                          ? DarkColor.color1
-                                                          : LightColor.color3,
+                                                      color: Theme.of(context)
+                                                          .textTheme
+                                                          .bodyMedium!
+                                                          .color,
                                                       size: 15.sp,
                                                     )
                                                   ],
@@ -1705,9 +1461,10 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                 text:
                                                     'Nice. I don\'t know why people get all worked up about hawaiian pizza. I ...',
                                                 fontsize: 15.sp,
-                                                color: isDark
-                                                    ? DarkColor.color3
-                                                    : LightColor.color3,
+                                                color: Theme.of(context)
+                                                    .textTheme
+                                                    .headlineSmall!
+                                                    .color,
                                               ),
                                             ),
                                           ],

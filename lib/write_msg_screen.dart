@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
@@ -59,19 +60,12 @@ class _WriteMsgScreenState extends State<WriteMsgScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor:
-            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         appBar: AppBar(
-          shadowColor:
-              isDark ? DarkColor.color1 : LightColor.color3.withOpacity(.1),
-          backgroundColor:
-              isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-          elevation: 5,
+         
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: isDark ? DarkColor.color1 : LightColor.color3,
-              size: width / width24,
+              
             ),
             padding: EdgeInsets.only(left: width / width20),
             onPressed: () {
@@ -80,9 +74,7 @@ class _WriteMsgScreenState extends State<WriteMsgScreen> {
           ),
           title: InterMedium(
             text: 'Write Message',
-            fontsize: width / width18,
-            color: isDark ? DarkColor.color1 : LightColor.color3,
-            letterSpacing: -.3,
+            
           ),
           centerTitle: true,
         ),
@@ -99,7 +91,7 @@ class _WriteMsgScreenState extends State<WriteMsgScreen> {
                       text: 'Employee',
                       fontsize: width / width20,
                       color:
-                          isDark ? DarkColor.Primarycolor : LightColor.color3,
+                           Theme.of(context).textTheme.bodySmall!.color,
                       letterSpacing: -.3,
                     ),
                     SizedBox(height: height / height30),
@@ -121,17 +113,13 @@ class _WriteMsgScreenState extends State<WriteMsgScreen> {
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
-                            color: isDark
-                                ? Colors.transparent
-                                : LightColor.color3.withOpacity(.05),
+                            color: Theme.of(context).shadowColor,
                             blurRadius: 5,
                             spreadRadius: 2,
                             offset: Offset(0, 3),
                           )
                         ],
-                        color: isDark
-                            ? DarkColor.WidgetColor
-                            : LightColor.WidgetColor,
+                        color: Theme.of(context).cardColor,
                         borderRadius: BorderRadius.circular(width / width10),
                       ),
                       child: Row(
@@ -139,16 +127,12 @@ class _WriteMsgScreenState extends State<WriteMsgScreen> {
                         children: [
                           InterMedium(
                             text: 'Send To Admin',
-                            color: isDark
-                                ? DarkColor.color8
-                                : LightColor.color3,
+                            color:  Theme.of(context).textTheme.labelSmall!.color,
                             fontsize: width / width16,
                             letterSpacing: -.3,
                           ),
                           Checkbox(
-                            activeColor:  isDark
-                                ? DarkColor.Primarycolor
-                                : LightColor.Primarycolor,
+                            activeColor: Theme.of(context).primaryColor,
                             checkColor: DarkColor.color1,
                             value: isChecked,
                             onChanged: (bool? value) {
@@ -165,9 +149,7 @@ class _WriteMsgScreenState extends State<WriteMsgScreen> {
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
-                            color: isDark
-                                ? Colors.transparent
-                                : LightColor.color3.withOpacity(.05),
+                            color:Theme.of(context).shadowColor,
                             blurRadius: 5,
                             spreadRadius: 2,
                             offset: Offset(0, 3),
@@ -191,13 +173,9 @@ class _WriteMsgScreenState extends State<WriteMsgScreen> {
                       onPressed: () async {
                         
                       },
-                      color: isDark
-                          ? DarkColor.color1
-                          : LightColor.color1,
-                      backgroundcolor: isDark
-                          ? DarkColor.Primarycolor
-                          : LightColor.Primarycolor,
-                      borderRadius: width / width10,
+                      color: Theme.of(context).textTheme.headlineMedium!.color,
+                      backgroundcolor: Theme.of(context).primaryColor,
+                      borderRadius: 10.r,
                     ),
                   ],
                 ),

@@ -20,7 +20,7 @@ class SheduleScreen extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(horizontal: width / width20),
             height: 68,
-            color:  DarkColor.WidgetColor,
+            color: Theme.of(context).cardColor,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -54,7 +54,7 @@ class SheduleScreen extends StatelessWidget {
             shrinkWrap: true,
             itemBuilder: (context, index) {
               return Container(
-                color: DarkColor. WidgetColor,
+                color: Theme.of(context).cardColor,
                 margin: EdgeInsets.symmetric(vertical: 10.0),
                 height: 242,
                 child: Column(

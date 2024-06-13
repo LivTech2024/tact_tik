@@ -1,6 +1,7 @@
 import 'dart:ui' as ui;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_state_manager/src/simple/list_notifier.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'dart:async';
 import 'package:firebase_app_check/firebase_app_check.dart';
@@ -11,7 +12,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tact_tik/fonts/inter_semibold.dart';
 import 'package:tact_tik/screens/authChecker/authChecker.dart';
@@ -19,12 +19,16 @@ import 'package:tact_tik/screens/authChecker/authChecker.dart';
 // import 'package:tact_tik/screens/home%20screens/message%20screen/message_screen.dart';
 // import 'package:workmanager/workmanager.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
+import 'package:tact_tik/screens/client%20screens/patrol/unchecked_patrolss.dart';
 import 'package:tact_tik/services/Provider/provider.dart';
 import 'package:tact_tik/utils/colors.dart';
 import 'package:tact_tik/utils/constants.dart';
 import 'package:tact_tik/utils/notification_api/firebase_notification_api.dart';
+import 'package:tact_tik/utils/theme_manager.dart';
+import 'package:tact_tik/utils/themes.dart';
 
-bool isDark = true;
+ThemeManager themeManager = ThemeManager();
+
 // final navigatorKey = GlobalKey<NavigatorState>();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,14 +44,36 @@ Future<void> main() async {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   MyApp({Key? key}) : super(key: key);
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
 
-  // final ThemeChangeController = Get.put(UIProvider);
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    themeManager.addListener(ThemeListerner);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    themeManager.removeListener(ThemeListerner);
+    super.dispose();
+  }
+
+  ThemeListerner() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark =
+        Theme.of(context).brightness == Brightness.dark;
     return ScreenUtilInit(
       designSize: const ui.Size(430, 932),
       builder: (context, child) {
@@ -55,13 +81,9 @@ class MyApp extends StatelessWidget {
           child: GetMaterialApp(
             title: 'Tact Tik',
             debugShowCheckedModeBanner: false,
-            theme: ThemeData(
-              useMaterial3: true,
-              // brightness: Brightness.light,
-              // textTheme: GoogleFonts.poppinsTextTheme(
-              //   Theme.of(context).textTheme,
-              // ),
-            ),
+            theme: ligthTheme,
+            darkTheme: darkTheme,
+            themeMode: themeManager.themeMode,
             // navigatorKey: navigatorKey,
             // routes: {
             //   '/notification_screen': (context) => NotificationScreen(),
@@ -75,22 +97,22 @@ class MyApp extends StatelessWidget {
         );
       },
       child: OfflineBuilder(
-        connectivityBuilder: (BuildContext context,
-            ConnectivityResult connectivity,
-            Widget child,) {
+        connectivityBuilder: (
+          BuildContext context,
+          ConnectivityResult connectivity,
+          Widget child,
+        ) {
           final bool isConnected = connectivity != ConnectivityResult.none;
           if (isConnected) {
-            return AuthChecker();
+            return child;
           } else {
             return Scaffold(
-              backgroundColor:
-              isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
               body: Center(
                 child: InterSemibold(
                   text:
-                  'No internet connection.\nConnect to Internet or Restart the app',
+                      'No internet connection.\nConnect to Internet or Restart the app',
                   fontsize: 20.sp,
-                  color: isDark ? DarkColor.color1 : LightColor.color3,
+                  color: Theme.of(context).textTheme.bodyMedium!.color,
                 ),
               ),
             );

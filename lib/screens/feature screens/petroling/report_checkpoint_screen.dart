@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tact_tik/common/widgets/customErrorToast.dart';
@@ -67,8 +68,8 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
   }
 
   Future<void> _addImage() async {
-    XFile? pickedFile = await ImagePicker()
-        .pickImage(source: ImageSource.camera, imageQuality: 2);
+    XFile? pickedFile = await ImagePicker().pickImage(
+        source: ImageSource.camera, imageQuality: Platform.isIOS ? 30 : 50);
     if (pickedFile != null) {
       try {
         File file = File(pickedFile.path);
@@ -90,8 +91,8 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
   }
 
   Future<void> _addGallery() async {
-    List<XFile>? pickedFiles =
-        await ImagePicker().pickMultiImage(imageQuality: 2);
+    List<XFile>? pickedFiles = await ImagePicker()
+        .pickMultiImage(imageQuality: Platform.isIOS ? 30 : 50);
     if (pickedFiles != null) {
       for (var pickedFile in pickedFiles) {
         try {
@@ -127,7 +128,6 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
     int minWidth = 800; // Minimum width to reduce resolution step by step
     int minHeight = 800; // Minimum height to reduce resolution step by step
     XFile? result;
-
     do {
       result = await FlutterImageCompress.compressAndGetFile(
         file.absolute.path,
@@ -165,14 +165,9 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          shadowColor: isDark?Colors.transparent:LightColor.color3.withOpacity(.1),
-          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-          elevation: 5,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: isDark ? DarkColor.color1 : LightColor.color3,
-              size: width / width24,
             ),
             padding: EdgeInsets.only(left: width / width20),
             onPressed: () {
@@ -181,9 +176,6 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
           ),
           title: InterMedium(
             text: 'Report Checkpoint',
-            fontsize: width / width18,
-            color: isDark ? DarkColor.color1 : LightColor.color3,
-            letterSpacing: -.3,
           ),
           centerTitle: true,
         ),
@@ -200,7 +192,7 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                       'Add Image/Comment',
                       style: TextStyle(
                         fontSize: width / width14,
-                        color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                        color: Theme.of(context).textTheme.bodyMedium!.color,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -249,7 +241,8 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                       decoration: InputDecoration(
                         hintText: 'Add Comment',
                       ),
-                      style: TextStyle(color: isDark ? DarkColor.color1 : LightColor.color3),
+                      style: TextStyle(
+                          color: Theme.of(context).textTheme.bodyMedium!.color),
                     ),
                     SizedBox(height: height / height20),
                     GridView.builder(
@@ -306,15 +299,16 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                                   Icon(
                                     Icons.add,
                                     size: width / width20,
-                                    color: isDark
-                                        ? DarkColor.color1
-                                        : LightColor.color3,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .color,
                                   ),
                                   SizedBox(height: height / height10),
                                   InterMedium(
                                     text: 'Add Image',
                                     fontsize: width / width16,
-                                    color: DarkColor. color1,
+                                    color: DarkColor.color1,
                                   )
                                 ],
                               ),
@@ -363,7 +357,7 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                   color: Colors.black.withOpacity(0.5),
                   child: Center(
                     child: CircularProgressIndicator(
-                      color: DarkColor. Primarycolor,
+                      color: DarkColor.Primarycolor,
                     ),
                   ),
                 ),
@@ -407,12 +401,12 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                           });
                         }
                       },
-                      color: Colors.white,
-                      borderRadius: width / width20,
-                      backgroundcolor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+                      color: Theme.of(context).textTheme.headlineMedium!.color,
+                      borderRadius: 20.r,
+                      backgroundcolor: Theme.of(context).primaryColor,
                     ),
                     SizedBox(
-                      height: height / height20,
+                      height: 20.h,
                     ),
                   ],
                 ),

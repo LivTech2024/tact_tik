@@ -243,17 +243,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor:
-            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         appBar: AppBar(
-          backgroundColor:
-              isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-          elevation: 0,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: isDark ? DarkColor.color1 : LightColor.color3,
-              size: 24.sp,
             ),
             padding: EdgeInsets.only(left: width / width20),
             onPressed: () {
@@ -262,9 +255,6 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
           ),
           title: InterMedium(
             text: 'Assets',
-            fontsize:18.sp,
-            color: isDark ? DarkColor.color1 : LightColor.color3,
-            letterSpacing: -.3,
           ),
           centerTitle: true,
         ),
@@ -275,7 +265,9 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
               Container(
                 height: 65.h,
                 width: double.maxFinite,
-                color: isDark ? DarkColor.color24 : LightColor.WidgetColor,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? DarkColor.color24
+                    : LightColor.WidgetColor,
                 padding: EdgeInsets.symmetric(vertical: 16.h),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -285,11 +277,8 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                         onTap: () {
                           setState(() {
                             showCreate = true;
-                            colors[0] = isDark
-                                ? DarkColor.Primarycolor
-                                : LightColor.Primarycolor;
-                            colors[1] =
-                                isDark ? DarkColor.color25 : LightColor.color2;
+                            colors[0] = Theme.of(context).primaryColor;
+                            colors[1] = Theme.of(context).highlightColor;
                           });
                         },
                         child: SizedBox(
@@ -304,8 +293,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                       ),
                     ),
                     VerticalDivider(
-                      color:
-                          isDark ? DarkColor.Primarycolor : LightColor.color3,
+                      color: Theme.of(context).textTheme.bodySmall!.color,
                     ),
                     Expanded(
                       child: IgnorePointer(
@@ -314,12 +302,8 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                           onTap: () {
                             setState(() {
                               showCreate = false;
-                              colors[0] = isDark
-                                  ? DarkColor.color25
-                                  : LightColor.color2;
-                              colors[1] = isDark
-                                  ? DarkColor.Primarycolor
-                                  : LightColor.Primarycolor;
+                              colors[0] = Theme.of(context).highlightColor;
+                              colors[1] = Theme.of(context).primaryColor;
                             });
                           },
                           child: SizedBox(
@@ -340,8 +324,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
               SizedBox(height: 20.h),
               showCreate
                   ? Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 30.h),
+                      padding: EdgeInsets.symmetric(horizontal: 30.h),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -351,9 +334,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                               InterBold(
                                 text: 'Select Guards',
                                 fontsize: 16.sp,
-                                color: isDark
-                                    ? DarkColor.color1
-                                    : LightColor.color3,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color,
                               ),
                               IgnorePointer(
                                 ignoring: widget.OnlyView,
@@ -362,8 +346,8 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                     final result = await FirebaseFirestore
                                         .instance
                                         .collection('Employees')
-                                        .where('EmployeeRole',
-                                            isEqualTo: 'GUARD')
+                                        // .where('EmployeeRole',
+                                        //     isEqualTo: 'GUARD')
                                         .where('EmployeeCompanyId',
                                             isEqualTo: widget.companyId)
                                         .get();
@@ -377,9 +361,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                   child: InterBold(
                                     text: 'view all',
                                     fontsize: 14.sp,
-                                    color: isDark
-                                        ? DarkColor.color1
-                                        : LightColor.color3,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .color,
                                   ),
                                 ),
                               )
@@ -388,14 +373,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                           SizedBox(height: 24.h),
                           Container(
                             height: 64.h,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 10.h),
+                            padding: EdgeInsets.symmetric(horizontal: 10.h),
                             decoration: BoxDecoration(
-                              color: isDark
-                                  ? DarkColor.WidgetColor
-                                  : LightColor.WidgetColor,
-                              borderRadius:
-                                  BorderRadius.circular(13.r),
+                              color: Theme.of(context).cardColor,
+                              borderRadius: BorderRadius.circular(13.r),
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -427,16 +408,19 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                         hintStyle: GoogleFonts.poppins(
                                           fontWeight: FontWeight.w300,
                                           fontSize: width / width18,
-                                          color: isDark
-                                              ? DarkColor.color2
-                                              : LightColor.color2,
+                                          color: Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge!
+                                              .color,
                                         ),
                                         hintText: 'Search Guards',
                                         contentPadding: EdgeInsets.zero,
                                       ),
-                                      cursorColor: isDark
-                                          ? DarkColor.Primarycolor
-                                          : LightColor.Primarycolor,
+                                      cursorColor:
+                                          Theme.of(context).brightness ==
+                                                  Brightness.dark
+                                              ? DarkColor.Primarycolor
+                                              : LightColor.Primarycolor,
                                     ),
                                     suggestionsCallback: suggestionsCallback,
                                     itemBuilder: (context, Guards guards) {
@@ -446,16 +430,16 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                           width: 30.w,
                                           decoration: BoxDecoration(
                                             shape: BoxShape.circle,
-                                            color: isDark
-                                                ? DarkColor.Primarycolor
-                                                : LightColor.Primarycolor,
+                                            color:
+                                                Theme.of(context).primaryColor,
                                           ),
                                         ),
                                         title: InterRegular(
                                           text: guards.name,
-                                          color: isDark
-                                              ? DarkColor.color2
-                                              : LightColor.color2,
+                                          color: Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge!
+                                              .color,
                                         ),
                                       );
                                     },
@@ -466,9 +450,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                       ),
                                       child: InterRegular(
                                         text: 'No Such Screen found',
-                                        color: isDark
-                                            ? DarkColor.color2
-                                            : LightColor.color2,
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge!
+                                            .color,
                                         fontsize: 18.sp,
                                       ),
                                     ),
@@ -496,11 +481,8 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                   height: 44.h,
                                   width: 44.w,
                                   decoration: BoxDecoration(
-                                    color: isDark
-                                        ? DarkColor.Primarycolor
-                                        : LightColor.Primarycolor,
-                                    borderRadius:
-                                        BorderRadius.circular(10.r),
+                                    color: Theme.of(context).primaryColor,
+                                    borderRadius: BorderRadius.circular(10.r),
                                   ),
                                   child: Center(
                                     child: Icon(
@@ -536,7 +518,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                             text: 'Select equipment',
                             fontsize: 16.sp,
                             color:
-                                isDark ? DarkColor.color1 : LightColor.color3,
+                                Theme.of(context).textTheme.bodyMedium!.color,
                           ),
                           SizedBox(height: 10.h),
                           IgnorePointer(
@@ -550,9 +532,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                   value: data['EquipmentName'],
                                   child: InterRegular(
                                     text: data['EquipmentName'],
-                                    color: isDark
-                                        ? DarkColor.color3
-                                        : LightColor.color2,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .headlineSmall!
+                                        .color,
                                   ),
                                 );
                               }).toList(),
@@ -571,12 +554,9 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                 hintText: 'Select Equipment',
                                 hintStyle: TextStyle(color: Colors.white),
                                 filled: true,
-                                fillColor: isDark
-                                    ? DarkColor.WidgetColor
-                                    : LightColor.WidgetColor,
+                                fillColor: Theme.of(context).cardColor,
                                 border: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.circular(13.w),
+                                  borderRadius: BorderRadius.circular(13.w),
                                   borderSide: BorderSide.none,
                                 ),
                               ),
@@ -587,7 +567,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                             text: 'Allocate Qt.',
                             fontsize: 16.sp,
                             color:
-                                isDark ? DarkColor.color1 : LightColor.color3,
+                                Theme.of(context).textTheme.bodyMedium!.color,
                           ),
                           SizedBox(height: 10.h),
                           CustomeTextField(
@@ -600,7 +580,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                           InterBold(
                             text: 'Allocation Date',
                             color:
-                                isDark ? DarkColor.color1 : LightColor.color3,
+                                Theme.of(context).textTheme.bodyMedium!.color,
                             fontsize: 16.sp,
                           ),
                           SizedBox(height: 10.h),
@@ -616,11 +596,9 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                     child: Container(
                                       height: 60.h,
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(
-                                            10.r),
-                                        color: isDark
-                                            ? DarkColor.WidgetColor
-                                            : LightColor.WidgetColor,
+                                        borderRadius:
+                                            BorderRadius.circular(10.r),
+                                        color: Theme.of(context).cardColor,
                                       ),
                                       child: Row(
                                         mainAxisAlignment:
@@ -632,9 +610,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                                     .split(' ')[0]
                                                 : 'Start Time',
                                             fontsize: 16.sp,
-                                            color: isDark
-                                                ? DarkColor.color2
-                                                : LightColor.color2,
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .bodyLarge!
+                                                .color,
                                           ),
                                           SvgPicture.asset(
                                             'assets/images/calendar_clock.svg',
@@ -654,11 +633,9 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                     child: Container(
                                       height: 60.h,
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(
-                                            10.r),
-                                        color: isDark
-                                            ? DarkColor.WidgetColor
-                                            : LightColor.WidgetColor,
+                                        borderRadius:
+                                            BorderRadius.circular(10.r),
+                                        color: Theme.of(context).cardColor,
                                       ),
                                       child: Row(
                                         mainAxisAlignment:
@@ -670,9 +647,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                                     .split(' ')[0]
                                                 : 'End Time',
                                             fontsize: 16.sp,
-                                            color: isDark
-                                                ? DarkColor.color2
-                                                : LightColor.color2,
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .bodyLarge!
+                                                .color,
                                           ),
                                           SvgPicture.asset(
                                             'assets/images/calendar_clock.svg',
@@ -689,15 +667,12 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                           SizedBox(height: 20.h),
                           Container(
                             height: 60.h,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: width / width20),
+                            padding: EdgeInsets.symmetric(horizontal: 20.w),
                             decoration: BoxDecoration(
-                              color: isDark
-                                  ? DarkColor.WidgetColor
-                                  : LightColor.WidgetColor,
-                              borderRadius:
-                                  BorderRadius.circular(10.r),
+                              color: Theme.of(context).cardColor,
+                              borderRadius: BorderRadius.circular(10.r),
                             ),
+                            //Add receiver name too
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -707,10 +682,11 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                   children: [
                                     InterBold(
                                       text: 'Select Guards',
-                                      fontsize: width / width16,
-                                      color: isDark
-                                          ? DarkColor.color1
-                                          : LightColor.color3,
+                                      fontsize: 16.sp,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .color,
                                     ),
                                     IgnorePointer(
                                       ignoring: widget.OnlyView,
@@ -733,26 +709,24 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                         },
                                         child: InterBold(
                                           text: 'view all',
-                                          fontsize: width / width14,
-                                          color: isDark
-                                              ? DarkColor.color1
-                                              : LightColor.color3,
+                                          fontsize: 14.sp,
+                                          color: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .color,
                                         ),
                                       ),
                                     )
                                   ],
                                 ),
-                                SizedBox(height: height / height24),
+                                SizedBox(height: 24.h),
                                 Container(
-                                  height: height / height64,
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: width / width10),
+                                  height: 64.h,
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 10.w),
                                   decoration: BoxDecoration(
-                                    color: isDark
-                                        ? DarkColor.WidgetColor
-                                        : LightColor.WidgetColor,
-                                    borderRadius:
-                                        BorderRadius.circular(width / width13),
+                                    color: Theme.of(context).cardColor,
+                                    borderRadius: BorderRadius.circular(13.r),
                                   ),
                                   child: Row(
                                     mainAxisAlignment:
@@ -767,49 +741,47 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                           },
                                           style: GoogleFonts.poppins(
                                             fontWeight: FontWeight.w300,
-                                            fontSize: width / width18,
-                                            color: isDark
-                                                ? DarkColor.color1
-                                                : LightColor.color3,
+                                            fontSize: 18.sp,
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium!
+                                                .color,
                                           ),
                                           decoration: InputDecoration(
                                             border: OutlineInputBorder(
                                               borderSide: BorderSide.none,
                                               borderRadius: BorderRadius.all(
-                                                Radius.circular(
-                                                    width / width10),
+                                                Radius.circular(10.r),
                                               ),
                                             ),
                                             focusedBorder: InputBorder.none,
                                             hintStyle: GoogleFonts.poppins(
                                               fontWeight: FontWeight.w300,
-                                              fontSize: width / width18,
-                                              color: isDark
-                                                  ? DarkColor.color2
-                                                  : LightColor.color3,
+                                              fontSize: 18.sp,
+                                              color: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyLarge!
+                                                  .color,
                                             ),
                                             hintText: 'Search Guard',
                                             contentPadding: EdgeInsets.zero,
                                           ),
-                                          cursorColor: isDark
-                                              ? DarkColor.Primarycolor
-                                              : LightColor.Primarycolor,
+                                          cursorColor:
+                                              Theme.of(context).primaryColor,
                                         ),
                                       ),
                                       Container(
-                                        height: height / height44,
-                                        width: width / width44,
+                                        height: 44.h,
+                                        width: 44.w,
                                         decoration: BoxDecoration(
-                                          color: isDark
-                                              ? DarkColor.Primarycolor
-                                              : LightColor.Primarycolor,
-                                          borderRadius: BorderRadius.circular(
-                                              width / width10),
+                                          color: Theme.of(context).primaryColor,
+                                          borderRadius:
+                                              BorderRadius.circular(10.r),
                                         ),
                                         child: Center(
                                           child: Icon(
                                             Icons.search,
-                                            size: width / width20,
+                                            size: 20.sp,
                                             color: Colors.black,
                                           ),
                                         ),
@@ -835,15 +807,16 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                     );
                                   },
                                 ),
-                                SizedBox(height: height / height20),
+                                SizedBox(height: 20.h),
                                 InterBold(
                                   text: 'Select equipment',
-                                  fontsize: width / width16,
-                                  color: isDark
-                                      ? DarkColor.color1
-                                      : LightColor.color3,
+                                  fontsize: 16.sp,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .color,
                                 ),
-                                SizedBox(height: height / height10),
+                                SizedBox(height: 10.h),
                                 IgnorePointer(
                                   ignoring: widget.OnlyView,
                                   child: DropdownButtonFormField<String>(
@@ -856,9 +829,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                         value: data['EquipmentName'],
                                         child: InterRegular(
                                           text: data['EquipmentName'],
-                                          color: isDark
-                                              ? DarkColor.color3
-                                              : LightColor.color2,
+                                          color: Theme.of(context)
+                                              .textTheme
+                                              .headlineSmall!
+                                              .color,
                                         ),
                                       );
                                     }).toList(),
@@ -877,45 +851,46 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                     decoration: InputDecoration(
                                       hintText: 'Select Equipment',
                                       hintStyle: TextStyle(
-                                          color: isDark
-                                              ? DarkColor.color1
-                                              : LightColor.color3),
+                                          color: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .color),
                                       filled: true,
-                                      fillColor: isDark
-                                          ? DarkColor.WidgetColor
-                                          : LightColor.WidgetColor,
+                                      fillColor: Theme.of(context).cardColor,
                                       border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(
-                                            width / width13),
+                                        borderRadius:
+                                            BorderRadius.circular(13.r),
                                         borderSide: BorderSide.none,
                                       ),
                                     ),
                                   ),
                                 ),
-                                SizedBox(height: height / height20),
+                                SizedBox(height: 20.h),
                                 InterBold(
                                   text: 'Allocate Qt.',
-                                  fontsize: width / width16,
-                                  color: isDark
-                                      ? DarkColor.color1
-                                      : LightColor.color3,
+                                  fontsize: 16.sp,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .color,
                                 ),
-                                SizedBox(height: height / height10),
+                                SizedBox(height: 10.h),
                                 CustomeTextField(
                                   isEnabled: !widget.OnlyView,
                                   hint: '0',
                                   controller: _allocateQtController1,
                                   showIcon: true,
                                 ),
-                                SizedBox(height: height / height20),
+                                SizedBox(height: 20.h),
                                 InterBold(
                                   text: 'Allocation Date',
-                                  color: isDark
-                                      ? DarkColor.color1
-                                      : LightColor.color3,
-                                  fontsize: width / width16,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .color,
+                                  fontsize: 16.sp,
                                 ),
-                                SizedBox(height: height / height10),
+                                SizedBox(height: 10.h),
                                 IgnorePointer(
                                   ignoring: widget.OnlyView,
                                   child: Row(
@@ -926,14 +901,12 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                             _selectDate(context, true);
                                           },
                                           child: Container(
-                                            height: height / height60,
+                                            height: 60.h,
                                             decoration: BoxDecoration(
                                               borderRadius:
-                                                  BorderRadius.circular(
-                                                      width / width10),
-                                              color: isDark
-                                                  ? DarkColor.WidgetColor
-                                                  : LightColor.WidgetColor,
+                                                  BorderRadius.circular(10.r),
+                                              color:
+                                                  Theme.of(context).cardColor,
                                             ),
                                             child: Row(
                                               mainAxisAlignment:
@@ -944,35 +917,34 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                                       ? '${StartDate!.toLocal()}'
                                                           .split(' ')[0]
                                                       : 'Start Time',
-                                                  fontsize: width / width16,
-                                                  color: isDark
-                                                      ? DarkColor.color1
-                                                      : LightColor.color3,
+                                                  fontsize: 16.sp,
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyMedium!
+                                                      .color,
                                                 ),
                                                 SvgPicture.asset(
                                                   'assets/images/calendar_clock.svg',
-                                                  width: width / width20,
+                                                  width: 20.w,
                                                 )
                                               ],
                                             ),
                                           ),
                                         ),
                                       ),
-                                      SizedBox(width: width / width6),
+                                      SizedBox(width: 6.w),
                                       Expanded(
                                         child: GestureDetector(
                                           onTap: () {
                                             _selectDate(context, false);
                                           },
                                           child: Container(
-                                            height: height / height60,
+                                            height: 60.h,
                                             decoration: BoxDecoration(
                                               borderRadius:
-                                                  BorderRadius.circular(
-                                                      width / width10),
-                                              color: isDark
-                                                  ? DarkColor.WidgetColor
-                                                  : LightColor.WidgetColor,
+                                                  BorderRadius.circular(10.r),
+                                              color:
+                                                  Theme.of(context).cardColor,
                                             ),
                                             child: Row(
                                               mainAxisAlignment:
@@ -983,14 +955,15 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                                       ? '${EndDate!.toLocal()}'
                                                           .split(' ')[0]
                                                       : 'End Time',
-                                                  fontsize: width / width16,
-                                                  color: isDark
-                                                      ? DarkColor.color2
-                                                      : LightColor.color3,
+                                                  fontsize: 16.sp,
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyLarge!
+                                                      .color,
                                                 ),
                                                 SvgPicture.asset(
                                                   'assets/images/calendar_clock.svg',
-                                                  width: width / width20,
+                                                  width: 20.w,
                                                 )
                                               ],
                                             ),
@@ -1000,17 +973,14 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                     ],
                                   ),
                                 ),
-                                SizedBox(height: height / height20),
+                                SizedBox(height: 20.h),
                                 Container(
                                   height: height / height60,
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: width / width20),
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 20.w),
                                   decoration: BoxDecoration(
-                                    color: isDark
-                                        ? DarkColor.WidgetColor
-                                        : LightColor.WidgetColor,
-                                    borderRadius:
-                                        BorderRadius.circular(width / width10),
+                                    color: Theme.of(context).cardColor,
+                                    borderRadius: BorderRadius.circular(10.r),
                                   ),
                                   child: Row(
                                     mainAxisAlignment:
@@ -1021,9 +991,9 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                           Icon(
                                             Icons.check_circle,
                                             color: Colors.green,
-                                            size: width / width24,
+                                            size: 24.sp,
                                           ),
-                                          SizedBox(width: width / width6),
+                                          SizedBox(width: 6.w),
                                           InterMedium(
                                             text: 'Asset Returned ?',
                                             color: DarkColor.color8,
@@ -1033,9 +1003,8 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                         ],
                                       ),
                                       Checkbox(
-                                        activeColor: isDark
-                                            ? DarkColor.Primarycolor
-                                            : LightColor.Primarycolor,
+                                        activeColor:
+                                            Theme.of(context).primaryColor,
                                         checkColor: DarkColor.color1,
                                         value: isChecked,
                                         onChanged: (bool? value) {
@@ -1047,7 +1016,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                     ],
                                   ),
                                 ),
-                                SizedBox(height: height / height40),
+                                SizedBox(height: 40.h),
                                 IgnorePointer(
                                   ignoring: widget.OnlyView
                                       ? isChecked == false
@@ -1056,10 +1025,16 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                       : true,
                                   child: Button1(
                                     text: 'Done',
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .headlineMedium!
+                                        .color,
                                     onPressed: () {
                                       createEquipmentAllocation();
                                     },
-                                    backgroundcolor: isDark
+                                    backgroundcolor: Theme.of(context)
+                                                .brightness ==
+                                            Brightness.dark
                                         ? (widget.OnlyView
                                             ? isChecked == false
                                                 ? DarkColor.Primarycolorlight
@@ -1070,69 +1045,74 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                                 ? LightColor.Primarycolor
                                                 : LightColor.Primarycolor
                                             : LightColor.Primarycolorlight),
-                                    borderRadius: width / width10,
+                                    borderRadius: 10.r,
                                   ),
                                 ),
                               ],
                             ),
                           ),
                           Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: width / width30),
+                            padding: EdgeInsets.symmetric(horizontal: 30.w),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                SizedBox(height: height / height10),
+                                SizedBox(height: 10.h),
                                 InterBold(
                                   text: 'Allocate Qt.',
-                                  fontsize: width / width16,
-                                  color: isDark
-                                      ? DarkColor.color1
-                                      : LightColor.color3,
+                                  fontsize: 16.sp,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .color,
                                 ),
-                                SizedBox(height: height / height10),
+                                SizedBox(height: 10.h),
                                 CustomeTextField(
                                   hint: 'Title',
                                   controller: _titleController2,
                                   showIcon: true,
                                 ),
-                                SizedBox(height: height / height10),
+                                SizedBox(height: 10.h),
                                 InterBold(
                                   text: 'Allocate Qt.',
-                                  fontsize: width / width16,
-                                  color: isDark
-                                      ? DarkColor.color1
-                                      : LightColor.color3,
+                                  fontsize: 16.sp,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .color,
                                 ),
-                                SizedBox(height: height / height10),
+                                SizedBox(height: 10.h),
                                 CustomeTextField(
                                   hint: '0',
                                   controller: _allocateQtController2,
                                 ),
-                                SizedBox(height: height / height10),
+                                SizedBox(height: 10.h),
                                 InterBold(
                                   text: 'Description',
-                                  fontsize: width / width16,
-                                  color: isDark
-                                      ? DarkColor.color1
-                                      : LightColor.color3,
+                                  fontsize: 16.sp,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .color,
                                 ),
-                                SizedBox(height: height / height10),
+                                SizedBox(height: 10.h),
                                 CustomeTextField(
                                   hint: 'Write something about asset...',
                                   controller: _descriptionController,
                                   showIcon: true,
                                 ),
-                                SizedBox(height: height / height40),
+                                SizedBox(height: 40.h),
                                 Button1(
                                   text: 'Done',
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .headlineMedium!
+                                      .color,
                                   onPressed: () {
                                     createEquipmentAllocation();
                                   },
-                                  backgroundcolor: isDark
-                                      ? DarkColor.Primarycolor
-                                      : LightColor.Primarycolor,
-                                  borderRadius: width / width10,
+                                  backgroundcolor:
+                                      Theme.of(context).primaryColor,
+                                  borderRadius: 10.r,
                                 ),
                               ],
                             ),
@@ -1151,24 +1131,17 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                               },
                               backgroundcolor: widget.OnlyView
                                   ? isChecked == false
-                                      ? isDark
-                                          ? DarkColor.Primarycolorlight
-                                          : LightColor.Primarycolorlight
-                                      : isDark
-                                          ? DarkColor.Primarycolor
-                                          : LightColor.Primarycolor
-                                  : isDark
-                                      ? DarkColor.Primarycolorlight
-                                      : LightColor.Primarycolorlight,
-                              borderRadius: width / width10,
+                                      ? Theme.of(context).primaryColor
+                                      : Theme.of(context).primaryColor
+                                  : Theme.of(context).primaryColorLight,
+                              borderRadius: 10.r,
                             ),
                           ),
                         ],
                       ),
                     )
                   : Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 30.w),
+                      padding: EdgeInsets.symmetric(horizontal: 30.w),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -1177,7 +1150,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                             text: 'Allocate Qt.',
                             fontsize: 16.sp,
                             color:
-                                isDark ? DarkColor.color1 : LightColor.color3,
+                                Theme.of(context).textTheme.bodyMedium!.color,
                           ),
                           SizedBox(height: 10.h),
                           CustomeTextField(
@@ -1185,12 +1158,12 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                             controller: _titleController2,
                             showIcon: true,
                           ),
-                          SizedBox(height:10.sp),
+                          SizedBox(height: 10.sp),
                           InterBold(
                             text: 'Allocate Qt.',
                             fontsize: width / width16,
                             color:
-                                isDark ? DarkColor.color1 : LightColor.color3,
+                                Theme.of(context).textTheme.bodyMedium!.color,
                           ),
                           SizedBox(height: 10.h),
                           CustomeTextField(
@@ -1202,7 +1175,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                             text: 'Description',
                             fontsize: width / width16,
                             color:
-                                isDark ? DarkColor.color1 : LightColor.color3,
+                                Theme.of(context).textTheme.bodyMedium!.color,
                           ),
                           SizedBox(height: 10.h),
                           CustomeTextField(
@@ -1216,10 +1189,8 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                             onPressed: () {
                               createEquipmentAllocation();
                             },
-                            backgroundcolor: isDark
-                                ? DarkColor.Primarycolor
-                                : LightColor.Primarycolor,
-                            borderRadius: width / width10,
+                            backgroundcolor: Theme.of(context).primaryColor,
+                            borderRadius: 10.r,
                           ),
                         ],
                       ),

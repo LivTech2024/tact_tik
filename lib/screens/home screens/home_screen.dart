@@ -42,6 +42,7 @@ import 'package:tact_tik/services/Provider/provider.dart';
 import 'package:tact_tik/services/auth/auth.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:tact_tik/utils/colors.dart';
+import 'package:tact_tik/utils/theme_manager.dart';
 import '../../common/sizes.dart';
 import '../../fonts/roboto_bold.dart';
 import '../../fonts/roboto_medium.dart';
@@ -89,6 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
   double _shiftLongitude = 0;
   String _employeeId = "";
   String _employeeCompanyID = "";
+  String _employeeCompanyBranchID = "";
   bool ShiftStarted = false;
   bool ShiftExist = false;
   String _shiftLocationId = "";
@@ -114,12 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool issShift = false;
   int _shiftRestrictedRadius = 0;
   int scheduleCount = 0;
-  List IconColors = [
-    isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
-    isDark ? DarkColor.color4 : LightColor.color3,
-    isDark ? DarkColor.color4 : LightColor.color3,
-    isDark ? DarkColor.color4 : LightColor.color3
-  ];
+
   int ScreenIndex = 0;
   late GoogleMapController mapController;
   List<DocumentSnapshot> schedules_list = [];
@@ -139,11 +136,28 @@ class _HomeScreenState extends State<HomeScreen> {
     // For example, you can call setState() to update the UI
   }
 
+  List IconColors = [
+    ThemeMode.dark == themeManager.themeMode
+        ? DarkColor.color1
+        : LightColor.Primarycolor,
+    ThemeMode.dark == themeManager.themeMode
+        ? DarkColor.color3
+        : LightColor.color2,
+    ThemeMode.dark == themeManager.themeMode
+        ? DarkColor.color3
+        : LightColor.color2,
+    ThemeMode.dark == themeManager.themeMode
+        ? DarkColor.color3
+        : LightColor.color2,
+  ];
+
   void initState() {
     // selectedEvent = events[selectedDay] ?? [];
+
     _getUserInfo();
     getAndPrintAllSchedules();
     _requestPermissions();
+
     // _getCurrentUserUid();
 
     // checkLocation();
@@ -190,61 +204,6 @@ class _HomeScreenState extends State<HomeScreen> {
   //   }
   // }
 
-  void ChangeScreenIndex(int index) {
-    setState(() {
-      ScreenIndex = index;
-      ChangeIconColor(index);
-      print(ScreenIndex);
-      if (index == 1) {
-        _showWish = false;
-      } else
-        _showWish = true;
-    });
-  }
-
-  void ChangeIconColor(int index) {
-    setState(() {
-      switch (index) {
-        case 0:
-          IconColors[0] =
-              isDark ? DarkColor.Primarycolor : LightColor.Primarycolor;
-          IconColors[1] = isDark ? DarkColor.color4 : LightColor.color3;
-          IconColors[2] = isDark ? DarkColor.color4 : LightColor.color3;
-          IconColors[3] = isDark ? DarkColor.color4 : LightColor.color3;
-          break;
-        case 1:
-          IconColors[0] = isDark ? DarkColor.color4 : LightColor.color3;
-          IconColors[1] =
-              isDark ? DarkColor.Primarycolor : LightColor.Primarycolor;
-          IconColors[2] = isDark ? DarkColor.color4 : LightColor.color3;
-          IconColors[3] = isDark ? DarkColor.color4 : LightColor.color3;
-          break;
-        case 2:
-          IconColors[0] = isDark ? DarkColor.color4 : LightColor.color3;
-          IconColors[1] = isDark ? DarkColor.color4 : LightColor.color3;
-          IconColors[2] =
-              isDark ? DarkColor.Primarycolor : LightColor.Primarycolor;
-          IconColors[3] = isDark ? DarkColor.color4 : LightColor.color3;
-          ScreenIndex = 0;
-          // CalendarScreen
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => CalendarScreen(
-                      companyId: _employeeCompanyID, employeeId: _employeeId)));
-
-          break;
-        case 3:
-          IconColors[0] = isDark ? DarkColor.color4 : LightColor.color3;
-          IconColors[1] = isDark ? DarkColor.color4 : LightColor.color3;
-          IconColors[2] = isDark ? DarkColor.color4 : LightColor.color3;
-          IconColors[3] =
-              isDark ? DarkColor.Primarycolor : LightColor.Primarycolor;
-          break;
-      }
-    });
-  }
-
   FireStoreService fireStoreService = FireStoreService();
   final List<DateTime?> selectedDates = [];
 
@@ -279,6 +238,7 @@ class _HomeScreenState extends State<HomeScreen> {
           _empEmail = empEmail;
           employeeImg = empImage;
           _employeeCompanyID = empCompanyId;
+          _employeeCompanyBranchID = empBranchId;
         });
         print('User Info: ${userInfo.data()}');
         if (patrolInfo != null) {
@@ -497,6 +457,58 @@ class _HomeScreenState extends State<HomeScreen> {
       });
     }
 
+    void ChangeIconColor(int index) {
+      setState(() {
+        switch (index) {
+          case 0:
+            IconColors[0] = Theme.of(context).primaryColor;
+            IconColors[1] = Theme.of(context).focusColor;
+            IconColors[2] = Theme.of(context).focusColor;
+            IconColors[3] = Theme.of(context).focusColor;
+            break;
+          case 1:
+            IconColors[0] = Theme.of(context).focusColor;
+            IconColors[1] = Theme.of(context).primaryColor;
+            IconColors[2] = Theme.of(context).focusColor;
+            IconColors[3] = Theme.of(context).focusColor;
+            break;
+          case 2:
+            IconColors[0] = Theme.of(context).primaryColor;
+            IconColors[1] = Theme.of(context).focusColor;
+            IconColors[2] = Theme.of(context).focusColor;
+            IconColors[3] = Theme.of(context).focusColor;
+            // ScreenIndex = 0;
+            // CalendarScreen
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => CalendarScreen(
+                        companyId: _employeeCompanyID,
+                        employeeId: _employeeId)));
+
+            break;
+          case 3:
+            IconColors[0] = Theme.of(context).focusColor;
+            IconColors[1] = Theme.of(context).focusColor;
+            IconColors[2] = Theme.of(context).focusColor;
+            IconColors[3] = Theme.of(context).primaryColor;
+            break;
+        }
+      });
+    }
+
+    void ChangeScreenIndex(int index) {
+      setState(() {
+        ScreenIndex = index;
+        ChangeIconColor(index);
+        print(ScreenIndex);
+        if (index == 1) {
+          _showWish = false;
+        } else
+          _showWish = true;
+      });
+    }
+
     ListTile buildListTile(
         IconData icon, String title, int index, VoidCallback onPressed,
         {bool isLogout = false}) {
@@ -505,18 +517,19 @@ class _HomeScreenState extends State<HomeScreen> {
       return ListTile(
         leading: Icon(
           icon,
-          color: isDark
-              ? (isSelected ? DarkColor.Primarycolor : DarkColor.color3)
-              : (isSelected
-                  ? LightColor.Primarycolor
-                  : LightColor.color3), // Change color based on selection
+          color: isSelected
+              ? Theme.of(context).primaryColor
+              : Theme.of(context)
+                  .textTheme
+                  .headlineSmall!
+                  .color!, // Change color based on selection
           size: 24.sp,
         ),
         title: PoppinsBold(
           text: title,
-          color: isDark
-              ? (isSelected ? DarkColor.Primarycolor : DarkColor.color3)
-              : (isSelected ? LightColor.Primarycolor : LightColor.color3),
+          color: isSelected
+              ? Theme.of(context).primaryColor
+              : Theme.of(context).textTheme.headlineSmall!.color!,
           fontsize: 16.sp,
         ),
         onTap: onPressed,
@@ -525,12 +538,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor:
-            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         key: _scaffoldKey1, // Assign the GlobalKey to the Scaffold
         endDrawer: Drawer(
-          backgroundColor:
-              isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+          backgroundColor: Theme.of(context).canvasColor,
           child: Column(
             children: [
               Container(
@@ -540,10 +550,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 width: double.maxFinite,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15.r),
-                  color: isDark
-                      ? DarkColor.Primarycolor
-                      : LightColor
-                          .Primarycolor, // Background color for the drawer header
+                  color: Theme.of(context)
+                      .primaryColor, // Background color for the drawer header
                 ),
                 child: Center(
                   child: Column(
@@ -555,7 +563,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => ProfileScreen(empId: _employeeId,),
+                                builder: (context) => ProfileScreen(
+                                  empId: _employeeId,
+                                ),
                               ),
                             );
                           },
@@ -564,9 +574,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 AssetImage('assets/images/default.png'),
                             foregroundImage: NetworkImage(employeeImg!),
                             radius: 40.r,
-                            backgroundColor: isDark
-                                ? DarkColor.Primarycolor
-                                : LightColor.Primarycolor,
+                            backgroundColor: Theme.of(context).primaryColor,
                             // maxRadius: width / width50,
                             // minRadius: width / width50,
                           ),
@@ -574,18 +582,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         SizedBox(height: 10.h),
                         PoppinsSemibold(
                           text: _userName,
-                          color: isDark
-                              ? DarkColor.WidgetColor
-                              : LightColor.WidgetColor,
+                          color: Theme.of(context).cardColor,
                           fontsize: 16.sp,
                           letterSpacing: -.3,
                         ),
                         SizedBox(height: 5.h),
                         PoppinsRegular(
                           text: _empEmail,
-                          color: isDark
-                              ? DarkColor.WidgetColor
-                              : LightColor.WidgetColor,
+                          color: Theme.of(context).cardColor,
                           fontsize: 16.sp,
                           letterSpacing: -.3,
                         )
@@ -599,7 +603,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       Icons.door_back_door_outlined,
                       'Home',
                       0,
-                      () {},
+                      () {
+                        //If on homescreen the
+                      },
                     ),
                     buildListTile(
                       Icons.account_circle_outlined,
@@ -609,7 +615,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ProfileScreen(empId: _employeeId,)));
+                                builder: (context) => ProfileScreen(
+                                      empId: _employeeId,
+                                    )));
                       },
                     ),
                     buildListTile(
@@ -640,7 +648,28 @@ class _HomeScreenState extends State<HomeScreen> {
                       Icons.restart_alt,
                       'History',
                       4,
-                      () {
+                      () async {
+                        List<String> emails = [];
+                        // emails.add("sutarvaibhav37@gmail.com");
+                        // // emails.add("pankaj.kumar1312@yahoo.com");
+                        // // emails.add("alerts.tactik@gmail.com");
+                        // // emails.add("security@lestonholdings.com");
+                        // // emails.add("dan@tpssolution.com");
+                        // await sendDARTemplateEmail(
+                        //   "Leston holdings",
+                        //   emails,
+                        //   'Tacttik DAR',
+                        //   "Tacttik DAR",
+                        //   "Shift",
+                        //   "2 JUN",
+                        //   "livjeet kaur",
+                        //   "01:20:27",
+                        //   "06:00:00",
+                        //   "High level place",
+                        //   "completed",
+                        //   "formattedDateTime",
+                        //   "formattedEndTime",
+                        // );
                         // customEmail();
                         Navigator.push(
                           context,
@@ -653,62 +682,19 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                     buildListTile(
-                        isDark ? Icons.light_mode_outlined : Icons.light_mode,
-                        isDark ? 'Switch To Light Mode' : 'Switch to dark mode',
+                        Theme.of(context).brightness == Brightness.dark
+                            ? Icons.light_mode_outlined
+                            : Icons.light_mode,
+                        Theme.of(context).brightness == Brightness.dark
+                            ? 'Switch To Light Mode'
+                            : 'Switch to dark mode',
                         5, () {
-                      showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                                title: InterMedium(
-                                  text: 'Change Theme',
-                                  color: isDark
-                                      ? DarkColor.color2
-                                      : LightColor.color3,
-                                  fontsize: 20.sp,
-                                ),
-                                content: InterRegular(
-                                  text: isDark
-                                      ? 'Switch to Light Theme Restart App'
-                                      : 'Switch to Dark Theme Restart App',
-                                  fontsize: 12.sp,
-                                  color: isDark
-                                      ? DarkColor.color3
-                                      : LightColor.color4,
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.pop(context, false);
-                                    },
-                                    child: InterMedium(
-                                      text: 'CANCEL',
-                                      fontsize: 16.sp,
-                                      color: isDark
-                                          ? DarkColor.color3
-                                          : LightColor.color4,
-                                    ),
-                                  ),
-                                  TextButton(
-                                    onPressed: () async {
-                                      final SharedPreferences prefs =
-                                          await SharedPreferences.getInstance();
-                                      setState(() async {
-                                        isDark = !isDark;
-                                        await prefs.setBool('Theme', isDark);
-                                        SystemChannels.platform.invokeMethod(
-                                            'SystemNavigator.pop');
-                                      });
-                                    },
-                                    child: InterMedium(
-                                      text: 'Change & Restart',
-                                      fontsize: 16.sp,
-                                      color: isDark
-                                          ? DarkColor.color2
-                                          : LightColor.color3,
-                                    ),
-                                  ),
-                                ],
-                              ));
+                      setState(() {
+                        themeManager.toggleTheme();
+                        // await prefs.setBool('Theme', isDark);
+                        // SystemChannels.platform.invokeMethod(
+                        //     'SystemNavigator.pop');
+                      });
                     }),
                   ],
                 ),
@@ -735,7 +721,6 @@ class _HomeScreenState extends State<HomeScreen> {
         body: RefreshIndicator(
           onRefresh: _refreshData,
           child: CustomScrollView(
-            physics: PageScrollPhysics(),
             slivers: [
               HomeScreenPart1(
                 userName: _userName,
@@ -767,20 +752,16 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: HomeScreenCustomNavigation(
                               text: 'Shifts',
                               icon: Icons.add_task,
-                              color: isDark
-                                  ? (ScreenIndex == 0
+                              color: ScreenIndex == 0
+                                  ? ThemeMode.dark == themeManager.themeMode
                                       ? DarkColor.color1
-                                      : DarkColor.color4)
-                                  : (ScreenIndex == 0
-                                      ? LightColor.Primarycolor
-                                      : DarkColor.color4),
-                              textcolor: isDark
-                                  ? (ScreenIndex == 0
+                                      : LightColor.Primarycolor
+                                  : Theme.of(context).focusColor,
+                              textcolor: ScreenIndex == 0
+                                  ? ThemeMode.dark == themeManager.themeMode
                                       ? DarkColor.color1
-                                      : DarkColor.color4)
-                                  : (ScreenIndex == 0
-                                      ? LightColor.Primarycolor
-                                      : DarkColor.color4),
+                                      : LightColor.Primarycolor
+                                  : Theme.of(context).focusColor,
                             ),
                           ),
                           Bounce(
@@ -788,20 +769,16 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: HomeScreenCustomNavigation(
                               text: 'Explore',
                               icon: Icons.grid_view_rounded,
-                              color: isDark
-                                  ? (ScreenIndex == 1
+                              color: ScreenIndex == 1
+                                  ? ThemeMode.dark == themeManager.themeMode
                                       ? DarkColor.color1
-                                      : DarkColor.color4)
-                                  : (ScreenIndex == 1
-                                      ? LightColor.Primarycolor
-                                      : DarkColor.color4),
-                              textcolor: isDark
-                                  ? (ScreenIndex == 1
+                                      : LightColor.Primarycolor
+                                  : Theme.of(context).focusColor,
+                              textcolor: ScreenIndex == 1
+                                  ? ThemeMode.dark == themeManager.themeMode
                                       ? DarkColor.color1
-                                      : DarkColor.color4)
-                                  : (ScreenIndex == 1
-                                      ? LightColor.Primarycolor
-                                      : DarkColor.color4),
+                                      : LightColor.Primarycolor
+                                  : Theme.of(context).focusColor,
                             ),
                           ),
                           Bounce(
@@ -809,20 +786,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: HomeScreenCustomNavigation(
                               text: 'Calendar',
                               icon: Icons.calendar_today,
-                              color: isDark
-                                  ? (ScreenIndex == 2
-                                      ? DarkColor.color1
-                                      : DarkColor.color4)
-                                  : (ScreenIndex == 2
-                                      ? LightColor.Primarycolor
-                                      : DarkColor.color4),
-                              textcolor: isDark
-                                  ? (ScreenIndex == 2
-                                      ? DarkColor.color1
-                                      : DarkColor.color4)
-                                  : (ScreenIndex == 2
-                                      ? LightColor.Primarycolor
-                                      : DarkColor.color4),
+                              color: IconColors[2],
+                              textcolor: IconColors[2],
                             ),
                           ),
                           Bounce(
@@ -838,20 +803,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                       : 'assets/images/no_message.svg',
                               text: 'Message',
                               icon: Icons.chat_bubble_outline,
-                              color: isDark
-                                  ? (ScreenIndex == 3
+                              color: ScreenIndex == 3
+                                  ? ThemeMode.dark == themeManager.themeMode
                                       ? DarkColor.color1
-                                      : DarkColor.color4)
-                                  : (ScreenIndex == 3
-                                      ? LightColor.Primarycolor
-                                      : DarkColor.color4),
-                              textcolor: isDark
-                                  ? (ScreenIndex == 3
+                                      : LightColor.Primarycolor
+                                  : Theme.of(context).focusColor,
+                              textcolor: ScreenIndex == 3
+                                  ? ThemeMode.dark == themeManager.themeMode
                                       ? DarkColor.color1
-                                      : DarkColor.color4)
-                                  : (ScreenIndex == 3
-                                      ? LightColor.Primarycolor
-                                      : DarkColor.color4),
+                                      : LightColor.Primarycolor
+                                  : Theme.of(context).focusColor,
                             ),
                           ),
                         ],
@@ -867,7 +828,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           padding: EdgeInsets.symmetric(horizontal: 30.w),
                           child: ShiftExist
                               ? FutureBuilder(
-                                  future: Future.delayed(Duration(seconds: 2)),
+                                  future: Future.delayed(Duration(seconds: 1)),
                                   builder: (c, s) => s.connectionState ==
                                           ConnectionState.done
                                       ? StartTaskScreen(
@@ -891,9 +852,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                       : Center(
                                           child: InterMedium(
                                             text: 'Loading...',
-                                            color: isDark
-                                                ? DarkColor.Primarycolor
-                                                : LightColor.Primarycolor,
+                                            color:
+                                                Theme.of(context).primaryColor,
                                             fontsize: 14.sp,
                                           ),
                                         ),
@@ -1036,6 +996,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     keyId: _employeeId,
                                                     companyId:
                                                         _employeeCompanyID,
+                                                    branchId:
+                                                        _employeeCompanyBranchID,
                                                   )
                                               // AssetsScreen(
                                               //     assetEmpId:
@@ -1058,16 +1020,16 @@ class _HomeScreenState extends State<HomeScreen> {
                       : /*ScreenIndex == 2
                           ? SliverToBoxAdapter(
                               child: Padding(
-                                padding: EdgeInsets.only
-                                  left: width / width30,
-                                  right: width / width30,
-                                ),
+                                padding: EdgeInsets.symmetric(horizontal: 30.w),
+                                // left: width / width30,
+                                // right: width / width30,
                                 child: CustomCalendar(
                                   selectedDates: selectedDates,
                                 ),
                               ),
                             )
-                          :*/
+                          :
+                            */
                       ScreenIndex == 3
                           ? SliverList(
                               delegate: SliverChildBuilderDelegate(
@@ -1087,12 +1049,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                           border: Border(
                                             bottom: BorderSide(
                                               width: 1,
-                                              color: isDark
-                                                  ? DarkColor.Primarycolor
-                                                  : LightColor.Primarycolor,
+                                              color: Theme.of(context)
+                                                  .primaryColor,
                                             ),
                                           ),
-                                          // color: WidgetColor,
                                         ),
                                         padding: EdgeInsets.symmetric(
                                           vertical: 7.h,
@@ -1149,30 +1109,31 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       InterRegular(
                                                         text: 'Supervisor',
                                                         fontsize: 17.sp,
-                                                        color: isDark
-                                                            ? DarkColor.color1
-                                                            : LightColor.color3,
+                                                        color: Theme.of(context)
+                                                            .textTheme
+                                                            .bodyMedium!
+                                                            .color!,
                                                       ),
                                                       Row(
                                                         // mainAxisAlignment: MainAxisAlignment.end,
                                                         children: [
                                                           PoppinsRegular(
                                                             text: '9:36 AM',
-                                                            color: isDark
-                                                                ? DarkColor
-                                                                    .color3
-                                                                : LightColor
-                                                                    .color2,
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .bodyLarge!
+                                                                .color!,
                                                             fontsize: 15.sp,
                                                           ),
                                                           Icon(
                                                             Icons
                                                                 .arrow_forward_ios,
-                                                            color: isDark
-                                                                ? DarkColor
-                                                                    .color1
-                                                                : LightColor
-                                                                    .color3,
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .bodyMedium!
+                                                                .color!,
                                                             size: 15.sp,
                                                           )
                                                         ],
@@ -1187,9 +1148,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       text:
                                                           'Nice. I don\'t know why people get all worked up about hawaiian pizza. I ...',
                                                       fontsize: 15.sp,
-                                                      color: isDark
-                                                          ? DarkColor.color3
-                                                          : LightColor.color2,
+                                                      color: Theme.of(context)
+                                                          .textTheme
+                                                          .headlineSmall!
+                                                          .color!,
                                                     ),
                                                   ),
                                                 ],

@@ -56,16 +56,13 @@ class _SelectGuardsScreenState extends State<SelectReportsGuardsScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        
         appBar: AppBar(
-          shadowColor: isDark ? Colors.transparent : LightColor.color3.withOpacity(.1),
-          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-          elevation: 5,
+       
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: isDark ? DarkColor.color1 : LightColor.color3,
-              size: 24.w,
+              
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -74,9 +71,7 @@ class _SelectGuardsScreenState extends State<SelectReportsGuardsScreen> {
           ),
           title: InterMedium(
             text: 'Reports Guards',
-            fontsize: 18.w,
-            color: isDark ? DarkColor.color1 : LightColor.color3,
-            letterSpacing: -.3,
+           
           ),
           centerTitle: true,
         ),
@@ -116,17 +111,13 @@ class _SelectGuardsScreenState extends State<SelectReportsGuardsScreen> {
                           decoration: BoxDecoration(
                             boxShadow: [
                               BoxShadow(
-                                color: isDark
-                                    ? DarkColor.color1.withOpacity(.1)
-                                    : LightColor.color3.withOpacity(.1),
+                                color:Theme.of(context).shadowColor,
                                 blurRadius: 5,
                                 spreadRadius: 2,
                                 offset: Offset(0, 3),
                               )
                             ],
-                            color: isDark
-                                      ? DarkColor.WidgetColor
-                                      : LightColor.WidgetColor,
+                            color: Theme.of(context).cardColor,
                             borderRadius:
                             BorderRadius.circular(12.w),
                           ),
@@ -162,9 +153,8 @@ class _SelectGuardsScreenState extends State<SelectReportsGuardsScreen> {
                                           )
                                               : BoxDecoration(
                                             shape: BoxShape.circle,
-                                            color: isDark
-                                                            ? DarkColor.Primarycolor
-                                                            : LightColor.Primarycolor,
+                                            color:  Theme.of(context)
+                                                            .primaryColor,
                                             image: DecorationImage(
                                               image:  AssetImage(
                                                   'assets/images/default.png'),
@@ -177,9 +167,10 @@ class _SelectGuardsScreenState extends State<SelectReportsGuardsScreen> {
                                         InterBold(
                                           text: name,
                                           letterSpacing: -.3,
-                                          color: isDark
-                                                    ? DarkColor.color1
-                                                    : LightColor.color3,
+                                          color:  Theme.of(context)
+                                                    .textTheme
+                                                    .bodyMedium!
+                                                    .color,
                                         ),
                                       ],
                                     ),

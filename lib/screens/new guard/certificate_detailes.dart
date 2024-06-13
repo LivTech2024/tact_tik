@@ -13,6 +13,9 @@ import 'package:tact_tik/main.dart';
 import 'package:tact_tik/utils/colors.dart';
 
 class CertificateDetails extends StatefulWidget {
+  final TextEditingController CertificateController ;
+
+   CertificateDetails({super.key, required this.CertificateController});
   @override
   State<CertificateDetails> createState() => _CertificateDetailsState();
 }
@@ -23,9 +26,6 @@ class _CertificateDetailsState extends State<CertificateDetails> {
     List<Map<String, dynamic>> uploads = [];
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-    final TextEditingController SecurityLicensesController =
-        TextEditingController();
-  
 
     Future<void> _addImage() async {
       final pickedFile =
@@ -64,9 +64,6 @@ class _CertificateDetailsState extends State<CertificateDetails> {
       }
     }
 
-   
-    
-
     bool isEditMode = false;
     return Container(
       width: width / width50,
@@ -77,7 +74,7 @@ class _CertificateDetailsState extends State<CertificateDetails> {
         children: [
           InterBold(
             text: 'Add Certificates',
-            color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+            color: Theme.of(context).textTheme.bodySmall!.color,
             fontsize: width / width20,
           ),
           SizedBox(
@@ -124,21 +121,18 @@ class _CertificateDetailsState extends State<CertificateDetails> {
               decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
-                      color: isDark
-                          ? Colors.transparent
-                          : LightColor.color3.withOpacity(.05),
+                      color: Theme.of(context).shadowColor,
                       blurRadius: 5,
                       spreadRadius: 2,
                       offset: Offset(0, 3),
                     )
                   ],
-                  color:
-                      isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                  color: Theme.of(context).cardColor,
                   borderRadius: BorderRadius.circular(width / width8)),
               child: Center(
                 child: InterBold(
                   text: 'Upload Certificates',
-                  color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                  color: Theme.of(context).textTheme.bodySmall!.color,
                   fontsize: width / width20,
                 ),
               ),
@@ -149,15 +143,13 @@ class _CertificateDetailsState extends State<CertificateDetails> {
           ),
           SetTextfieldWidget(
             hintText: 'Certificates Number',
-            controller: SecurityLicensesController,
+            controller:widget. CertificateController,
             enabled: !isEditMode,
             isEditMode: isEditMode,
           ),
           SizedBox(
             height: height / height5,
           ),
-          
-          
         ],
       ),
     );

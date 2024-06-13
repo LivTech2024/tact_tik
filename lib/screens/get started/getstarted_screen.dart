@@ -37,7 +37,7 @@ class _GetStartedScreensState extends State<GetStartedScreens> {
             ? const SizedBox()
             : Container(
                 height: 66.h,
-                color: isDark?DarkColor.Secondarycolor:LightColor.Secondarycolor,
+                color: Theme.of(context).canvasColor,
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 40.w),
                   child: Row(
@@ -51,9 +51,7 @@ class _GetStartedScreensState extends State<GetStartedScreens> {
                         child: PoppinsBold(
                           text: 'Skip',
                           fontsize: 16.sp,
-                          color: isDark
-                              ? DarkColor.Primarycolor
-                              : LightColor.Primarycolor,
+                          color: Theme.of(context).primaryColor,
                         ),
                       ),
                       SmoothPageIndicator(
@@ -61,9 +59,7 @@ class _GetStartedScreensState extends State<GetStartedScreens> {
                         count: 3,
                         effect: WormEffect(
                           dotColor: DarkColor.color3,
-                          activeDotColor: isDark
-                              ? DarkColor.Primarycolor
-                              : LightColor.Primarycolor,
+                          activeDotColor:Theme.of(context).primaryColor,
                           dotHeight: 13.h,
                           dotWidth: 13.w,
                           type: WormType.thinUnderground,
@@ -82,9 +78,7 @@ class _GetStartedScreensState extends State<GetStartedScreens> {
                         icon: Icon(
                           Icons.arrow_forward_ios,
                        size: 24.sp,
-                          color: isDark
-                              ? DarkColor.Primarycolor
-                              : LightColor.Primarycolor,
+                          color: Theme.of(context).primaryColor,
                         ),
                       )
                     ],

@@ -279,20 +279,17 @@ class _CreateVisitorsState extends State<SCreateVisitors> {
     var isFieldEnabled = widget.visitorData != null;
     return SafeArea(
       child: Scaffold(
-        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        
         body: Stack(
           children: [
             CustomScrollView(
               slivers: [
                 SliverAppBar(
-                  shadowColor: isDark ? Colors.transparent : LightColor.color3.withOpacity(.1),
-                  backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-                  elevation: 5,
+                
                   leading: IconButton(
                     icon: Icon(
                       Icons.arrow_back_ios,
-                      color: isDark ? DarkColor.color1 : LightColor.color3,
-                      size: 24.w,
+                      
                     ),
                     padding: EdgeInsets.only(left: 20.w),
                     onPressed: () {
@@ -303,9 +300,7 @@ class _CreateVisitorsState extends State<SCreateVisitors> {
                   ),
                   title: InterMedium(
                     text: 'Create Visitors',
-                    fontsize: 18.sp,
-                    color: isDark ? DarkColor.color1 : LightColor.color3,
-                    letterSpacing: -.3,
+                   
                   ),
                   centerTitle: true,
                   floating: true, // Makes the app bar float above the content
@@ -319,7 +314,7 @@ class _CreateVisitorsState extends State<SCreateVisitors> {
                         SizedBox(height: 30.h),
                         InterBold(
                           text: 'Add Visitor',
-                          color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                          color: Theme.of(context).textTheme.bodySmall!.color,
                           fontsize: 20.sp,
                         ),
                         SizedBox(height: 30.h),
@@ -434,8 +429,8 @@ class _CreateVisitorsState extends State<SCreateVisitors> {
                               // Handle the case when saving or updating visitor data fails
                             }
                           },
-                          backgroundcolor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
-                          color: isDark ? DarkColor.color1 : LightColor.color1,
+                          backgroundcolor:  Theme.of(context).primaryColor,
+                          color:Theme.of(context).textTheme.headlineMedium!.color,
                           borderRadius: 10.w,
                           fontsize: 18.sp,
                         ),

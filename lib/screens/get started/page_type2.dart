@@ -42,7 +42,7 @@ class PageType2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+      color: Theme.of(context).canvasColor,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -51,7 +51,7 @@ class PageType2 extends StatelessWidget {
             height: 470.h,
             width: double.maxFinite,
             decoration: BoxDecoration(
-              color: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+              color: Theme.of(context).primaryColor,
               borderRadius: BorderRadius.only(
                 bottomRight: Radius.circular(40.r),
                 bottomLeft: Radius.circular(40.r),
@@ -78,7 +78,7 @@ class PageType2 extends StatelessWidget {
           PoppinsSemibold(
             text: tittls[index],
              fontsize: 32.sp,
-            color: isDark ? DarkColor.color1 : LightColor.color3,
+            color: Theme.of(context).textTheme.bodyMedium!.color,
           ),
           SizedBox(height: 27.h),
           SizedBox(
@@ -91,7 +91,7 @@ class PageType2 extends StatelessWidget {
           PoppinsRegular(
             text: description[index],
              fontsize: 14.sp,
-            color: isDark ? DarkColor.color2 : LightColor.color3,
+            color: Theme.of(context).textTheme.bodyLarge!.color,
             textAlign: TextAlign.center,
           ),
           Visibility(
@@ -106,9 +106,7 @@ class PageType2 extends StatelessWidget {
                 margin: EdgeInsets.only(left: 24.w, right: 24.w, top: 74.h),
                 decoration: BoxDecoration(
            borderRadius: BorderRadius.circular(15.r),
-                  color: isDark
-                      ? DarkColor.Primarycolor
-                      : LightColor.Primarycolor,
+                  color:Theme.of(context).primaryColor,
                 ),
                 child: Center(
                   child: PoppinsMedium(

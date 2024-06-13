@@ -101,8 +101,6 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor:
-            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         body: Stack(
           children: [
             SingleChildScrollView(
@@ -125,44 +123,46 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     TextField(
                       style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w500,
                         fontSize: 20.sp,
-                        color: isDark
-                            ? DarkColor.color1
-                            : LightColor.color3, // Change text color to white
+                        color: Theme.of(context)
+                            .textTheme
+                            .bodyMedium!
+                            .color, // Change text color to white
                       ),
                       controller: _emailcontrller,
                       decoration: InputDecoration(
-                        focusColor: isDark
-                            ? DarkColor.Primarycolor
-                            : LightColor.Primarycolor,
+                        focusColor: Theme.of(context).primaryColor,
                         labelText: 'Email',
                         hintStyle: GoogleFonts.poppins(
                           // fontWeight: FontWeight.w700,
                           fontSize: 20.sp,
-                          color: isDark
-                              ? DarkColor.color1
-                              : LightColor.color3, // Change text color to white
+                          color: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .color, // Change text color to white
                         ),
                         labelStyle: GoogleFonts.poppins(
                           // fontWeight: FontWeight.w700,
                           fontSize: 20.sp,
-                          color: isDark
-                              ? DarkColor.color1
-                              : LightColor.color3, // Change text color to white
+                          color: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .color, // Change text color to white
                         ),
-                        hintText: 'Enter your email',
+                        hintText: 'Email',
                       ),
                       keyboardType: TextInputType.emailAddress,
                     ),
                     SizedBox(height: 30.h),
                     TextField(
                       style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w500,
                         fontSize: (20.sp),
-                        color: isDark
-                            ? DarkColor.color1
-                            : LightColor.color3, // Change text color to white
+                        color: Theme.of(context)
+                            .textTheme
+                            .bodyMedium!
+                            .color, // Change text color to white
                       ),
                       controller: _passwordcontrller,
                       obscureText: _obscureText,
@@ -179,26 +179,28 @@ class _LoginScreenState extends State<LoginScreen> {
                                 : Icons.visibility,
                             size: 24.sp,
                             color:
-                                isDark ? DarkColor.color6 : LightColor.color2,
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? DarkColor.color6
+                                    : LightColor.color2,
                           ),
                         ),
-                        focusColor: isDark
-                            ? DarkColor.color1
-                            : LightColor.color3,
-                            hintStyle: GoogleFonts.poppins(
+                        focusColor:
+                            Theme.of(context).textTheme.bodyMedium!.color,
+                        hintStyle: GoogleFonts.poppins(
                           // fontWeight: FontWeight.w700,
                           fontSize: 20.sp,
-                          color: isDark
-                              ? DarkColor.color1
-                              : LightColor.color3, // Change text color to white
+                          color: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .color, // Change text color to white
                         ),
                         labelStyle: GoogleFonts.poppins(
                           // fontWeight: FontWeight.w700,
                           fontSize: 20.sp,
-                          color: isDark
-                              ? DarkColor.color1
-                              : LightColor
-                                  .color3, // Change text color to white
+                          color: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .color, // Change text color to white
                         ),
                         labelText: 'Password',
                         hintText: 'Enter your password',
@@ -215,14 +217,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     Button1(
                       height: 50.57.h,
-                      backgroundcolor: isDark
-                          ? DarkColor.Primarycolor
-                          : LightColor.Primarycolor,
+                      backgroundcolor: Theme.of(context).primaryColor,
                       text: 'Login',
                       fontsize: 18.sp,
-                      color: isDark
-                          ? DarkColor.Secondarycolor
-                          : LightColor.Secondarycolor,
+                      color: Theme.of(context).canvasColor,
                       borderRadius: 5.r,
                       onPressed: () {
                         // Auth().signInWithEmailAndPassword(_emailcontrller.text,
@@ -240,9 +238,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Visibility(
                   visible: _isLoading,
                   child: CircularProgressIndicator(
-                    color: isDark
-                        ? DarkColor.Primarycolor
-                        : LightColor.Primarycolor,
+                    color: Theme.of(context).primaryColor,
                   ),
                 ),
               ),

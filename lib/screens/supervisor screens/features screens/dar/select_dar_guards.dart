@@ -55,16 +55,14 @@ class _SelectGuardsScreenState extends State<SelectDARGuardsScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor:  isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        
         appBar: AppBar(
-          backgroundColor:  isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-          elevation: 5,
-          shadowColor:  isDark ? Colors.transparent: LightColor.color3.withOpacity(.1),
+          
+        
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color:  isDark ? DarkColor.color1 : LightColor.color3,
-              size: 24.sp,
+            
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -73,9 +71,7 @@ class _SelectGuardsScreenState extends State<SelectDARGuardsScreen> {
           ),
           title: InterMedium(
             text: 'Guards',
-            fontsize: 18.sp,
-            color:  isDark ? DarkColor.color1 : LightColor.color3,
-            letterSpacing: -.3,
+            
           ),
           centerTitle: true,
         ),
@@ -146,17 +142,13 @@ class _SelectGuardsScreenState extends State<SelectDARGuardsScreen> {
                           decoration: BoxDecoration(
                             boxShadow: [
                               BoxShadow(
-                                color: isDark
-                                          ? Colors.transparent
-                                          : LightColor.color3.withOpacity(.05),
+                                color: Theme.of(context).shadowColor,
                                 blurRadius: 5,
                                 spreadRadius: 2,
                                 offset: Offset(0, 3),
                               )
                             ],
-                            color: isDark
-                                      ? DarkColor.WidgetColor
-                                      : LightColor.WidgetColor,
+                            color: Theme.of(context).cardColor,
                             borderRadius:
                             BorderRadius.circular(12.r),
                           ),
@@ -192,11 +184,8 @@ class _SelectGuardsScreenState extends State<SelectDARGuardsScreen> {
                                           )
                                               : BoxDecoration(
                                             shape: BoxShape.circle,
-                                            color:  isDark
-                                                            ? DarkColor
-                                                                .Primarycolor
-                                                            : LightColor
-                                                                .Primarycolor,
+                                            color:  Theme.of(context)
+                                                            .primaryColor,
                                             image: DecorationImage(
                                               image:  AssetImage(
                                                   'assets/images/default.png'),
@@ -209,9 +198,10 @@ class _SelectGuardsScreenState extends State<SelectDARGuardsScreen> {
                                         InterBold(
                                           text: name,
                                           letterSpacing: -.3,
-                                          color: isDark
-                                                    ? DarkColor.color1
-                                                    : LightColor.color3,
+                                          color: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyMedium!
+                                                    .color,
                                         ),
                                       ],
                                     ),
@@ -235,9 +225,7 @@ class _SelectGuardsScreenState extends State<SelectDARGuardsScreen> {
                       : Center(
                     child: PoppinsBold(
                       text: 'No Guards Found',
-                      color:  isDark
-                                ? DarkColor.color2
-                                : LightColor.color3,
+                      color:   Theme.of(context).textTheme.bodyLarge!.color,
                       fontsize: 16.w,
                     ),
                   )

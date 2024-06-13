@@ -50,6 +50,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
       QuerySnapshot schedulesSnapshot = await firestore
           .collection('Shifts')
           .where('ShiftCompanyBranchId', isEqualTo: widget.BranchId)
+          .orderBy('ShiftDate', descending: true)
           .get();
 
       List<QueryDocumentSnapshot> schedules = schedulesSnapshot.docs;
@@ -64,7 +65,8 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
             continue;
           }
 
-          DateTime shiftDateWithoutTime = DateTime(shiftDate.year, shiftDate.month, shiftDate.day);
+          DateTime shiftDateWithoutTime =
+              DateTime(shiftDate.year, shiftDate.month, shiftDate.day);
 
           if (!groupedSchedules.containsKey(shiftDateWithoutTime)) {
             groupedSchedules[shiftDateWithoutTime] = [];
@@ -86,7 +88,8 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
 
     for (var date in groupedSchedules.keys) {
       for (var schedule in groupedSchedules[date]!) {
-        List<dynamic> assignedUserIds = List<dynamic>.from(schedule['ShiftAssignedUserId'] ?? 'NO DATA FOUND');
+        List<dynamic> assignedUserIds = List<dynamic>.from(
+            schedule['ShiftAssignedUserId'] ?? 'NO DATA FOUND');
         List<dynamic> employeeImages = [];
 
         try {
@@ -104,10 +107,12 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
             }
           }
 
-          Map<String, dynamic> scheduleData = schedule.data() as Map<String, dynamic>;
+          Map<String, dynamic> scheduleData =
+              schedule.data() as Map<String, dynamic>;
           scheduleData['EmployeeImages'] = employeeImages;
 
-          schedule.reference.update(scheduleData); // Update the schedule document in Firestore
+          schedule.reference.update(
+              scheduleData); // Update the schedule document in Firestore
         } catch (e) {
           print("Error fetching employee images: $e");
         }
@@ -124,21 +129,12 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
 
   @override
   Widget build(BuildContext context) {
-
-
     return SafeArea(
       child: Scaffold(
-        backgroundColor:
-            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         appBar: AppBar(
-          backgroundColor:
-              isDark ? DarkColor.AppBarcolor : LightColor.WidgetColor,
-          elevation: 0,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: isDark ? Colors.white : LightColor.color3,
-              size: 24.w,
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -148,9 +144,6 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
           ),
           title: InterMedium(
             text: 'All Schedule',
-            fontsize: 18.sp,
-            color: isDark ? Colors.white : LightColor.color3,
-            letterSpacing: -.3,
           ),
           centerTitle: true,
         ),
@@ -159,7 +152,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
           child: FloatingActionButton(
             shape: const CircleBorder(),
             backgroundColor:
-                isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+                Theme.of(context).primaryColor,
             onPressed: () {
               Navigator.push(
                   context,
@@ -170,19 +163,19 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                             GuardName: '',
                             GuardImg: '',
                             CompanyId: widget.CompanyId,
-                            supervisorEmail: '', shiftId: '',
+                            supervisorEmail: '',
+                            shiftId: '',
                           )));
             },
             child: Icon(
               Icons.add,
-              color: isDark ? DarkColor.color15 : LightColor.color1,
+              color: Theme.of(context).brightness == Brightness.dark ? DarkColor.color15 : LightColor.color1,
             ),
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         body: Padding(
-          padding:
-              EdgeInsets.only(left: 30.w, right: 30.w),
+          padding: EdgeInsets.only(left: 30.w, right: 30.w),
           child: CustomScrollView(
             slivers: [
               SliverToBoxAdapter(
@@ -193,27 +186,22 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                     InterBold(
                       text: 'Search',
                       fontsize: 20.sp,
-                      color: isDark ? Colors.white : LightColor.color3,
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
                     ),
                     SizedBox(height: 24.h),
                     Container(
                       height: 64.h,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10.w),
+                      padding: EdgeInsets.symmetric(horizontal: 10.w),
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
-                            color: isDark
-                                ? Colors.transparent
-                                : LightColor.color3.withOpacity(.05),
+                            color: Theme.of(context).shadowColor,
                             blurRadius: 5,
                             spreadRadius: 2,
                             offset: Offset(0, 3),
                           )
                         ],
-                        color: isDark
-                            ? DarkColor.WidgetColor
-                            : LightColor.WidgetColor,
+                        color: Theme.of(context).cardColor,
                         borderRadius: BorderRadius.circular(13.w),
                       ),
                       child: Row(
@@ -237,34 +225,26 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                 hintStyle: GoogleFonts.poppins(
                                   fontWeight: FontWeight.w300,
                                   fontSize: 18.sp,
-                                  color: isDark
-                                      ? Colors.white
-                                      : LightColor
-                                          .color3, // Change text color to white
+                                  color: Theme.of(context).textTheme.bodyMedium!.color, // Change text color to white
                                 ),
                                 hintText: 'Search',
                                 contentPadding: EdgeInsets.zero,
                               ),
-                              cursorColor: isDark
-                                  ? DarkColor.Primarycolor
-                                  : LightColor.Primarycolor,
+                              cursorColor: Theme.of(context).primaryColor,
                             ),
                           ),
                           Container(
                             height: 44.h,
                             width: 44.w,
                             decoration: BoxDecoration(
-                              color: isDark
-                                  ? DarkColor.Primarycolor
-                                  : LightColor.Primarycolor,
-                              borderRadius:
-                                  BorderRadius.circular(10.r),
+                              color: Theme.of(context).primaryColor,
+                              borderRadius: BorderRadius.circular(10.r),
                             ),
                             child: Center(
                               child: Icon(
                                 Icons.search,
                                 size: 20.w,
-                                color: isDark
+                                color: Theme.of(context).brightness == Brightness.dark
                                     ? DarkColor.Secondarycolor
                                     : LightColor.color1,
                               ),
@@ -298,15 +278,19 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                               ? 'Today'
                               : '${date.toLocal().toIso8601String().split('T').first}',
                           fontsize: 20.sp,
-                          color: isDark ? DarkColor.color1 : LightColor.color3,
+                          color:  Theme.of(context).textTheme.bodyMedium!.color,
                         ),
                         SizedBox(height: 24.h),
                         ...schedulesForDate.map((schedule) {
-                          String shiftName = schedule['ShiftName'] ?? 'NO DATA FOUND';
+                          String shiftName =
+                              schedule['ShiftName'] ?? 'NO DATA FOUND';
                           String shiftLocation =
-                              schedule['ShiftLocationAddress'] ?? 'NO DATA FOUND';
-                          String shiftStartTime = schedule['ShiftStartTime'] ?? 'NO DATA FOUND';
-                          String shiftEndTime = schedule['ShiftEndTime'] ?? 'NO DATA FOUND';
+                              schedule['ShiftLocationAddress'] ??
+                                  'NO DATA FOUND';
+                          String shiftStartTime =
+                              schedule['ShiftStartTime'] ?? 'NO DATA FOUND';
+                          String shiftEndTime =
+                              schedule['ShiftEndTime'] ?? 'NO DATA FOUND';
                           String shiftId = schedule['ShiftId'];
 
                           Map<String, dynamic>? scheduleData =
@@ -319,12 +303,10 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                             margin: EdgeInsets.only(top: 10.h),
                             width: double.maxFinite,
                             decoration: BoxDecoration(
-                              color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
-                              borderRadius:
-                                  BorderRadius.circular(14.r),
+                              color: Theme.of(context).cardColor,
+                              borderRadius: BorderRadius.circular(14.r),
                             ),
-                            padding: EdgeInsets.symmetric(
-                                vertical: 20.h),
+                            padding: EdgeInsets.symmetric(vertical: 20.h),
                             child: Column(
                               children: [
                                 Row(
@@ -338,9 +320,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                           topRight: Radius.circular(10.r),
                                           bottomRight: Radius.circular(10.r),
                                         ),
-                                        color: isDark
-                                            ? DarkColor.Primarycolor
-                                            : LightColor.Primarycolor,
+                                        color: Theme.of(context).primaryColor,
                                       ),
                                     ),
                                     SizedBox(width: 14.w),
@@ -354,16 +334,18 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                         children: [
                                           InterSemibold(
                                             text: shiftName,
-                                            color: isDark
-                                                ? DarkColor.color1
-                                                : LightColor.color3,
+                                            color:  Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium!
+                                                .color,
                                             fontsize: 14.sp,
                                           ),
                                           SizedBox(height: 5.h),
                                           InterRegular(
-                                            color: isDark
-                                                ? DarkColor.color1
-                                                : LightColor.color3,
+                                            color:  Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium!
+                                                .color,
                                             text: shiftLocation,
                                             maxLines: 1,
                                             fontsize: 14.sp,
@@ -394,9 +376,10 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                             InterRegular(
                                               text: 'Guards',
                                               fontsize: 14.sp,
-                                              color: isDark
-                                                  ? DarkColor.color1
-                                                  : LightColor.color3,
+                                              color:  Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium!
+                                                  .color,
                                             ),
                                             SizedBox(height: 12.h),
                                             Wrap(
@@ -412,17 +395,20 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                                     i++)
                                                   CircleAvatar(
                                                     radius: 10.r,
-                                                    backgroundImage: NetworkImage(employeeImages[i]),
+                                                    backgroundImage:
+                                                        NetworkImage(
+                                                            employeeImages[i]),
                                                   ),
                                                 if (employeeImages.length > 3)
                                                   CircleAvatar(
                                                     radius: 10.r,
-                                                    backgroundColor:
-                                                        isDark
-                                                        ? DarkColor.color1
-                                                        : LightColor.color3,
+                                                    backgroundColor:  Theme.of(context)
+                                                            .textTheme
+                                                            .bodyMedium!
+                                                            .color,
                                                     child: InterMedium(
-                                                      text: '+${employeeImages.length - 3}',
+                                                      text:
+                                                          '+${employeeImages.length - 3}',
                                                       fontsize: 12.sp,
                                                     ),
                                                   ),
@@ -439,9 +425,10 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                           children: [
                                             InterRegular(
                                               text: 'Shift',
-                                              color: isDark
-                                                  ? DarkColor.color1
-                                                  : LightColor.color3,
+                                              color:  Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium!
+                                                  .color,
                                               fontsize: 14.sp,
                                             ),
                                             SizedBox(height: 5.h),
@@ -458,12 +445,12 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                                       child: SvgPicture.asset(
                                                           'assets/images/calendar_line.svg'),
                                                     ),
-                                                    SizedBox(
-                                                        width: 6.w),
+                                                    SizedBox(width: 6.w),
                                                     InterMedium(
-                                                      color: isDark
-                                                          ? DarkColor.color1
-                                                          : LightColor.color3,
+                                                      color:  Theme.of(context)
+                                                          .textTheme
+                                                          .bodyMedium!
+                                                          .color,
                                                       text:
                                                           '$shiftStartTime - $shiftEndTime',
                                                       fontsize: 14.sp,
@@ -475,7 +462,17 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                                     Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
-                                                        builder: (context) => CreateSheduleScreen(GuardId: '', GuardName: '', GuardImg: '', CompanyId: widget.CompanyId, BranchId: '', supervisorEmail: '', shiftId: shiftId,),
+                                                        builder: (context) =>
+                                                            CreateSheduleScreen(
+                                                          GuardId: '',
+                                                          GuardName: '',
+                                                          GuardImg: '',
+                                                          CompanyId:
+                                                              widget.CompanyId,
+                                                          BranchId: '',
+                                                          supervisorEmail: '',
+                                                          shiftId: shiftId,
+                                                        ),
                                                       ),
                                                     );
                                                   },

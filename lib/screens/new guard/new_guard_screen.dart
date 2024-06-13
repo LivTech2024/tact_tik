@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:tact_tik/common/sizes.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
@@ -22,7 +23,29 @@ class NewGuardScreen extends StatefulWidget {
 
 class _NewGuardScreenState extends State<NewGuardScreen> {
   bool LastPage = false;
-
+  final TextEditingController FirstNameController = TextEditingController();
+  final TextEditingController LastNameController = TextEditingController();
+  final TextEditingController PhoneNumberController = TextEditingController();
+  final TextEditingController EmailController = TextEditingController();
+  final TextEditingController PasswordController = TextEditingController();
+  final TextEditingController RoleController = TextEditingController();
+  final TextEditingController PayRateController = TextEditingController();
+  final TextEditingController WeekHoursController = TextEditingController();
+  final TextEditingController BranchController = TextEditingController();
+  final TextEditingController AddressController = TextEditingController();
+  final TextEditingController cityController = TextEditingController();
+  final TextEditingController PostalCodeController = TextEditingController();
+  final TextEditingController ProvinceController = TextEditingController();
+  final TextEditingController DrivingLicenseController =
+      TextEditingController();
+  final TextEditingController SecurityLicensesController =
+      TextEditingController();
+  final TextEditingController CertificateController = TextEditingController();
+  final TextEditingController AccountNumberController = TextEditingController();
+  final TextEditingController TransitNumberController = TextEditingController();
+  final TextEditingController InstitutionNumberController =
+      TextEditingController();
+  final TextEditingController SINNumberController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -32,17 +55,10 @@ class _NewGuardScreenState extends State<NewGuardScreen> {
     );
 
     return Scaffold(
-      backgroundColor:
-          isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
       appBar: AppBar(
-        backgroundColor:
-            isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-        elevation: 0,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,
-            color: isDark ? DarkColor.color1 : LightColor.color3,
-            size: width / width24,
           ),
           padding: EdgeInsets.only(left: width / width20),
           onPressed: () {
@@ -51,9 +67,6 @@ class _NewGuardScreenState extends State<NewGuardScreen> {
         ),
         title: InterMedium(
           text: 'New Guard',
-          fontsize: width / width18,
-          color: isDark ? DarkColor.color1 : LightColor.color3,
-          letterSpacing: -.3,
         ),
         centerTitle: true,
       ),
@@ -66,11 +79,36 @@ class _NewGuardScreenState extends State<NewGuardScreen> {
           });
         },
         children: [
-          PersonalDetails(),
-          BankDetails(),
-          LicensesDetails(),
-          CertificateDetails(),
-          AddressDetails()
+          PersonalDetails(
+            FirstNameController: FirstNameController,
+            LastNameController: LastNameController,
+            PhoneNumberController: PhoneNumberController,
+            EmailController: EmailController,
+            PasswordController: PasswordController,
+            RoleController: RoleController,
+            PayRateController: PayRateController,
+            WeekHoursController: WeekHoursController,
+            BranchController: BranchController,
+          ),
+          BankDetails(
+            AccountNumberController: AccountNumberController,
+            TransitNumberController: TransitNumberController,
+            InstitutionNumberController: InstitutionNumberController,
+            SINNumberController: SINNumberController,
+          ),
+          LicensesDetails(
+            DrivingLicenseController: DrivingLicenseController,
+            SecurityLicensesController: SecurityLicensesController,
+          ),
+          CertificateDetails(
+            CertificateController: CertificateController,
+          ),
+          AddressDetails(
+            AddressController: AddressController,
+            cityController: cityController,
+            PostalCodeController: PostalCodeController,
+            ProvinceController: ProvinceController,
+          )
         ],
       )),
       bottomSheet: LastPage
@@ -78,15 +116,15 @@ class _NewGuardScreenState extends State<NewGuardScreen> {
             text: 'Submit',
             onPressed: (){},
             backgroundcolor:
-                isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
-            color: isDark ? DarkColor.color1 : LightColor.color1,
-            borderRadius: width / width10,
-            fontsize: width / width18,
+               Theme.of(context).primaryColor,
+            color: Theme.of(context).textTheme.headlineMedium!.color,
+            borderRadius: 10.r,
+            fontsize: 18.sp,
           )
           : Container(
-              height: height / height66,
+              height: 66.h,
               color:
-                  isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+                  Theme.of(context).canvasColor,
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: width / width40),
                 child: Row(
@@ -100,9 +138,9 @@ class _NewGuardScreenState extends State<NewGuardScreen> {
                       ),
                       icon: Icon(
                         Icons.arrow_back_ios,
-                        size: width / width24,
+                        size: 24.sp,
                         color:
-                            isDark ? DarkColor.Primarycolor : LightColor.color3,
+                            Theme.of(context).textTheme.bodySmall!.color,
                       ),
                     ),
                     IconButton(
@@ -112,9 +150,9 @@ class _NewGuardScreenState extends State<NewGuardScreen> {
                       ),
                       icon: Icon(
                         Icons.arrow_forward_ios,
-                        size: width / width24,
+                        size: 24.sp,
                         color:
-                            isDark ? DarkColor.Primarycolor : LightColor.color3,
+                            Theme.of(context).textTheme.bodySmall!.color,
                       ),
                     )
                   ],
