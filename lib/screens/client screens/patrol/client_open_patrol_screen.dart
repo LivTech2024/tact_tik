@@ -125,7 +125,7 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                 SizedBox(
                   height: 30.h,
                 ),
-                Row(
+                /*Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     SizedBox(
@@ -173,7 +173,7 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                 ),
                 SizedBox(
                   height: 20.h,
-                ),
+                ),*/
                 GestureDetector(
                   onTap: () {
                     // NavigateScreen();
