@@ -9,7 +9,7 @@ class NotificationScreen extends StatelessWidget {
     final message = ModalRoute.of(context)!.settings.arguments as RemoteMessage;
     return Scaffold(
       appBar: AppBar(
-        title: Text("Notification Screen"),
+        title: const Text("Notification Screen"),
       ),
       body: Column(
         children: [

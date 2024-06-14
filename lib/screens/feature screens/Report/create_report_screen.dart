@@ -7,8 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
+import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
@@ -63,9 +66,13 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
   final TextEditingController newCategoryController = TextEditingController();
   bool isChecked = false;
   String dropdownValue = 'Incident';
+  String dropdownValueGuard = 'All Guards';
+  String dropdownValueLocation = 'Select Location';
   bool dropdownShoe = false;
   bool _isLoading = false;
-
+  DateTime? StartDate;
+  DateTime? SelectedDate;
+  DateTime? EndDate;
   @override
   void initState() {
     // TODO: implement initState
@@ -246,10 +253,31 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
       uploads.removeAt(index);
     });
   }
+  Future<void> _selectDate(
+      BuildContext context, bool isStart, bool isDate) async {
+    final DateTime? dateTime = await showOmniDateTimePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2015, 8),
+      lastDate: DateTime(2101),
+    );
 
+    if (dateTime != null) {
+      setState(() {
+        if (isStart) {
+          StartDate = dateTime;
+        } else if (isDate) {
+          SelectedDate = dateTime;
+        } else {
+          EndDate = dateTime;
+        }
+      });
+    }
+  }
   // Initialize default value
   @override
   Widget build(BuildContext context) {
+    
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -387,6 +415,233 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                                 reportData['ReportIsFollowUpRequired'] == false
                             ? false
                             : true,
+                      ),
+                    ),
+                    
+                    SizedBox(height: 20.h),
+                    GestureDetector(
+                      onTap: () async {
+                        _selectDate(context, false, true);
+                        // DateTime? dateTime =
+                        //     await showOmniDateTimePicker(
+                        //         context: context);
+                      },
+                      child: Container(
+                        height: 60.h,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 20.w,
+                        ),
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Theme.of(context).shadowColor,
+                              blurRadius: 5,
+                              spreadRadius: 2,
+                              offset: Offset(0, 3),
+                            )
+                          ],
+                          borderRadius: BorderRadius.circular(10.r),
+                          color: Theme.of(context).cardColor,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            InterMedium(
+                              text: SelectedDate != null
+                                  ? '${SelectedDate!.toLocal()}'.split(' ')[0]
+                                  : 'Select Date',
+                              fontsize: 16.w,
+                              color:
+                                  Theme.of(context).textTheme.bodyLarge!.color,
+                            ),
+                            SvgPicture.asset(
+                              'assets/images/calendar_clock.svg',
+                              width: 20.w,
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    
+                    SizedBox(height: 20.h),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              _selectDate(context, true, false);
+                            },
+                            child: Container(
+                              height: 60.h,
+                              decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Theme.of(context).shadowColor,
+                                    blurRadius: 5,
+                                    spreadRadius: 2,
+                                    offset: Offset(0, 3),
+                                  )
+                                ],
+                                borderRadius: BorderRadius.circular(10.r),
+                                color: Theme.of(context).cardColor,
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  InterMedium(
+                                    text: StartDate != null
+                                        ? DateFormat('yyyy-MM-dd – kk:mm')
+                                            .format(StartDate!)
+                                        : 'Start Time',
+                                    fontsize: 16.sp,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .color,
+                                  ),
+                                  SvgPicture.asset(
+                                    'assets/images/calendar_clock.svg',
+                                    width: 20.w,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 6.w),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              _selectDate(context, false, false);
+                            },
+                            child: Container(
+                              height: 60.h,
+                              decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Theme.of(context).shadowColor,
+                                    blurRadius: 5,
+                                    spreadRadius: 2,
+                                    offset: Offset(0, 3),
+                                  )
+                                ],
+                                borderRadius: BorderRadius.circular(10.r),
+                                color: Theme.of(context).cardColor,
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  InterMedium(
+                                    text: EndDate != null
+                                        ? DateFormat('yyyy-MM-dd – kk:mm')
+                                            .format(EndDate!)
+                                        : 'End Time',
+                                    fontsize: 16.w,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge!
+                                        .color,
+                                  ),
+                                  SvgPicture.asset(
+                                    'assets/images/calendar_clock.svg',
+                                    width: 20.w,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20.h),
+                    Container(
+                       height: 60.h,
+                       width: double.maxFinite,
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Theme.of(context).shadowColor,
+                            blurRadius: 5,
+                            spreadRadius: 2,
+                            offset: Offset(0, 3),
+                          )
+                        ],
+                        color: Theme.of(context).cardColor,
+                        borderRadius: BorderRadius.circular(10.r),),
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton<String>(
+                          iconSize: 24.w,
+                          dropdownColor: Theme.of(context).cardColor,
+                          style: TextStyle(
+                              color: Theme.of(context).textTheme.bodyLarge!.color,
+                              fontSize: 14.sp),
+                          borderRadius: BorderRadius.circular(10.r),
+                          value: dropdownValueGuard ,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              dropdownValueGuard = newValue!;
+                            });
+                          },
+                          items: <String>[
+                            'All Guards',
+                            'available',
+                            'unavailable'
+                          ] // Add your options here
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20.h),
+                    Container(
+                      height: 60.h,
+                      width: double.maxFinite,
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Theme.of(context).shadowColor,
+                            blurRadius: 5,
+                            spreadRadius: 2,
+                            offset: Offset(0, 3),
+                          )
+                        ],
+                        color: Theme.of(context).cardColor,
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton<String>(
+                          iconSize: 24.w,
+                          dropdownColor: Theme.of(context).cardColor,
+                          style: TextStyle(
+                              color: Theme.of(context).textTheme.bodyLarge!.color,
+                              fontSize: 14.sp),
+                          borderRadius: BorderRadius.circular(10.r),
+                          value: dropdownValueLocation ,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              dropdownValueLocation = newValue!;
+                            });
+                          },
+                          items: <String>[
+                            'Select Location',
+                            'available',
+                            'unavailable'
+                          ] // Add your options here
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                        ),
                       ),
                     ),
                     SizedBox(height: 20.h),

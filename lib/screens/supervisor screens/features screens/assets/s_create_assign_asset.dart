@@ -66,6 +66,13 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
   List<DocumentSnapshot> equipment = [];
   List selectedGuards = [];
 
+  initColors(BuildContext context) {
+    return [
+      Theme.of(context).textTheme.bodySmall!.color,
+      Theme.of(context).highlightColor,
+    ];
+  }
+
   @override
   void initState() {
     super.initState();

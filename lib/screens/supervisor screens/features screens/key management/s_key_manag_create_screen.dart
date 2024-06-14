@@ -38,13 +38,13 @@ class SCreateKeyManagScreen extends StatefulWidget {
   final String companyId;
   final String branchId;
   final String AllocationKeyId;
-
+  final bool editKeyMode;
   SCreateKeyManagScreen({
     super.key,
     required this.keyId,
     required this.companyId,
     required this.branchId,
-    required this.AllocationKeyId,
+    required this.AllocationKeyId,this.editKeyMode = false
   });
 
   @override
@@ -340,6 +340,17 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
       itemBuilder: (context, index) => items[index],
     );
   }
+
+  // Future<List<Guards>> suggestionsCallback(String pattern) async =>
+  //     Future<List<Guards>>.delayed(
+  //       Duration(milliseconds: 300),
+  //       () => _screens.where((product) {
+  //         print(product.name);
+  // final nameLower = product.name.toLowerCase().split(' ').join('');
+  // final patternLower = pattern.toLowerCase().split(' ').join('');
+  // return nameLower.contains(patternLower);
+  // }).toList(),
+  // );
 
   @override
   Widget build(BuildContext context) {
@@ -705,7 +716,6 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                 },
                               ),
                               SizedBox(height: 20.h),
-                              //This should render both
                               selectedGuards.isNotEmpty
                                   ? Container(
                                       margin: EdgeInsets.only(top: 20.h),
@@ -899,6 +909,14 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                     horizontal: 20.w,
                                   ),
                                   decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Theme.of(context).shadowColor,
+                                        blurRadius: 5,
+                                        spreadRadius: 2,
+                                        offset: Offset(0, 3),
+                                      )
+                                    ],
                                     borderRadius: BorderRadius.circular(10.r),
                                     color: Theme.of(context).cardColor,
                                   ),
@@ -945,6 +963,15 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                       child: Container(
                                         height: 60.h,
                                         decoration: BoxDecoration(
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color:
+                                                  Theme.of(context).shadowColor,
+                                              blurRadius: 5,
+                                              spreadRadius: 2,
+                                              offset: Offset(0, 3),
+                                            )
+                                          ],
                                           borderRadius:
                                               BorderRadius.circular(10.r),
                                           color: Theme.of(context).cardColor,
@@ -983,6 +1010,15 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                       child: Container(
                                         height: 60.h,
                                         decoration: BoxDecoration(
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color:
+                                                  Theme.of(context).shadowColor,
+                                              blurRadius: 5,
+                                              spreadRadius: 2,
+                                              offset: Offset(0, 3),
+                                            )
+                                          ],
                                           borderRadius:
                                               BorderRadius.circular(10.r),
                                           color: Theme.of(context).cardColor,
@@ -1030,64 +1066,53 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                 showIcon: true,
                                 isExpanded: true,
                               ),
-                              SizedBox(height: 10.h),
-                              showReturnBtn
-                                  ? Container(
-                                      height: 60.h,
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 20.w),
-                                      decoration: BoxDecoration(
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color:
-                                                Theme.of(context).shadowColor,
-                                            blurRadius: 5,
-                                            spreadRadius: 2,
-                                            offset: Offset(0, 3),
-                                          )
-                                        ],
-                                        color: Theme.of(context).cardColor,
-                                        borderRadius:
-                                            BorderRadius.circular(10.r),
+                              SizedBox(height: 20.h),
+                              Visibility(
+                                // visible: widget.editKeyMode,
+                                child: Container(
+                                  height: 60.h,
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 20.w),
+                                  decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Theme.of(context).shadowColor,
+                                        blurRadius: 5,
+                                        spreadRadius: 2,
+                                        offset: Offset(0, 3),
+                                      )
+                                    ],
+                                    color: Theme.of(context).cardColor,
+                                    borderRadius: BorderRadius.circular(10.r),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      InterMedium(
+                                        text: 'Return Key',
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .labelSmall!
+                                            .color,
+                                        fontsize: 16.sp,
+                                        letterSpacing: -.3,
                                       ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Icon(
-                                                Icons.check_circle,
-                                                color: Colors.green,
-                                                size: 24.sp,
-                                              ),
-                                              SizedBox(width: 6.w),
-                                              InterMedium(
-                                                text: 'Key Returned ?',
-                                                color: Theme.of(context)
-                                                    .textTheme
-                                                    .labelSmall!
-                                                    .color,
-                                                fontsize: 16.sp,
-                                                letterSpacing: -.3,
-                                              )
-                                            ],
-                                          ),
-                                          Checkbox(
-                                            activeColor:
-                                                Theme.of(context).primaryColor,
-                                            checkColor: DarkColor.color1,
-                                            value: isChecked,
-                                            onChanged: (bool? value) {
-                                              setState(() {
-                                                isChecked = !isChecked;
-                                              });
-                                            },
-                                          ),
-                                        ],
+                                      Checkbox(
+                                        activeColor:
+                                            Theme.of(context).primaryColor,
+                                        checkColor: DarkColor.color1,
+                                        value: isChecked,
+                                        onChanged: (bool? value) {
+                                          setState(() {
+                                            isChecked = value!;
+                                          });
+                                        },
                                       ),
-                                    )
-                                  : SizedBox(height: 20.h),
+                                    ],
+                                  ),
+                                ),
+                              ),
                               SizedBox(height: 20.h),
                               if (_isLoading)
                                 Container(

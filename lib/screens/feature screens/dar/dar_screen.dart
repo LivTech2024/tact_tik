@@ -48,18 +48,21 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  List colors = ThemeMode.dark == ThemeManager
-      ? [
-          DarkColor.Primarycolor,
-          DarkColor.color25,
-        ]
-      : [
-          LightColor.Primarycolor,
-          DarkColor.color2,
+
+  
+
+  initColors(BuildContext context){
+ 
+  
+    return [
+          Theme.of(context).primaryColor,
+          Theme.of(context).highlightColor,
         ];
+  }
 
   @override
   Widget build(BuildContext context) {
+    List colors = initColors(context);
     // keep this code in firebase_function file  and handle its errors here
     Future<String?> _submitDAR() async {
       final _userService = UserService(firestoreService: FireStoreService());

@@ -204,6 +204,7 @@ class _PostOrderState extends State<PostOrder> {
                                     padding:
                                         EdgeInsets.symmetric(horizontal: 30.w),
                                     child: Container(
+                                      
                                       constraints: BoxConstraints(
                                         minHeight: 250.h,
                                       ),
@@ -214,6 +215,15 @@ class _PostOrderState extends State<PostOrder> {
                                       width: double.maxFinite,
                                       margin: EdgeInsets.only(bottom: 10.h),
                                       decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color:
+                                                Theme.of(context).shadowColor,
+                                            blurRadius: 5,
+                                            spreadRadius: 2,
+                                            offset: Offset(0, 3),
+                                          )
+                                        ],
                                         borderRadius:
                                             BorderRadius.circular(10.r),
                                         color: Theme.of(context).cardColor,
@@ -240,15 +250,16 @@ class _PostOrderState extends State<PostOrder> {
                                             decoration: BoxDecoration(
                                               boxShadow: [
                                                 BoxShadow(
-                                                  blurRadius: 1.8,
-                                                  blurStyle: BlurStyle.outer,
-                                                  spreadRadius: -1,
+                                                  color: Theme.of(context)
+                                                      .shadowColor,
+                                                  blurRadius: 5,
+                                                  spreadRadius: 2,
+                                                  offset: Offset(0, 3),
                                                 )
                                               ],
                                               borderRadius:
                                                   BorderRadius.circular(10.r),
-                                              color:
-                                                  Theme.of(context).cardColor,
+                                              color: Colors.white,
                                             ),
                                             child: Row(
                                               children: [

@@ -58,8 +58,10 @@ class _PersonalDetailsState extends State<PersonalDetails> {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
+    String dropdownValue = 'Guard';
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     bool isEditMode = false;
@@ -118,7 +120,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
             isEditMode: isEditMode,
           ),
           SizedBox(
-            height: height / height5,
+            height: 15.h,
           ),
           Container(
             height: 60.h,
@@ -184,6 +186,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
               ),
             ),
           ),
+          
           SizedBox(
             height: height / height5,
           ),
