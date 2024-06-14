@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:filter_list/filter_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -75,7 +76,7 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
   @override
   Widget build(BuildContext context) {
     final bool isDark =
-    Theme.of(context).brightness == Brightness.dark ? true : false;
+        Theme.of(context).brightness == Brightness.dark ? true : false;
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -139,6 +140,43 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                         // Iconcolor: DarkColor.color1,
                       ),
                     ),
+                    // Expanded(
+                    //   child: FilterListWidget<String>(
+                    //     listData: [
+                    //       "Apple",
+                    //       "Banana",
+                    //       "Cherry",
+                    //       "Date",
+                    //       "Fig",
+                    //       "Grape"
+                    //     ],
+                    //     selectedListData: ["Apple", "Cherry"],
+                    //     hideHeader: false,
+                    //     onApplyButtonClick: (selectedItems) {
+                    //       // Handle the selected items
+                    //       print('Selected items: $selectedItems');
+                    //     },
+                    //     choiceChipLabel: (item) {
+                    //       // Display text on the choice chip
+                    //       return item;
+                    //     },
+                    //     validateSelectedItem: (List<String>? list, String val) {
+                    //       // Check if the item is selected
+                    //       return list?.contains(val) ?? false;
+                    //     },
+                    //     onItemSearch: (list, query) {
+                    //       // Filter and return list based on search text
+                    //       if (list != null) {
+                    //         return list
+                    //             // .where((element) => element
+                    //             //     .toLowerCase()
+                    //             //     .contains(query.toLowerCase()))
+                    //             // .toList();
+                    //       }
+                    //       // return [];
+                    //     },
+                    //   ),
+                    // ),
                   ],
                 ),
                 SizedBox(height: 20.h),
