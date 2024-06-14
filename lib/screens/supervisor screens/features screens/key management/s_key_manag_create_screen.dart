@@ -239,6 +239,17 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
     );
   }
 
+  // Future<List<Guards>> suggestionsCallback(String pattern) async =>
+  //     Future<List<Guards>>.delayed(
+  //       Duration(milliseconds: 300),
+  //       () => _screens.where((product) {
+  //         print(product.name);
+  // final nameLower = product.name.toLowerCase().split(' ').join('');
+  // final patternLower = pattern.toLowerCase().split(' ').join('');
+  // return nameLower.contains(patternLower);
+  // }).toList(),
+  // );
+
   @override
   Widget build(BuildContext context) {
     List colors = [
@@ -587,7 +598,6 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                 },
                               ),
                               SizedBox(height: 20.h),
-                              //This should render both
                               selectedGuards.isNotEmpty
                                   ? Container(
                                       margin: EdgeInsets.only(top: 20.h),
@@ -940,7 +950,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                               ),
                               SizedBox(height: 20.h),
                               Visibility(
-                                visible: widget.editKeyMode,
+                                // visible: widget.editKeyMode,
                                 child: Container(
                                   height: 60.h,
                                   padding:

@@ -255,6 +255,7 @@ class _CalendarPageState extends State<CalendarPage> {
     final snapshot = await shiftsCollection
         .where('ShiftCompanyId', isEqualTo: widget.companyId)
         .get();
+    DateTime today = DateTime.now();
     final events = snapshot.docs.map((doc) {
       final data = doc.data();
       final name = data['ShiftName'] as String;
@@ -270,6 +271,10 @@ class _CalendarPageState extends State<CalendarPage> {
       final isShiftAcknowledgedByEmployee =
           shiftAcknowledgedUserIds.contains(currentUserId);
       final shiftId = data['ShiftId'];
+
+      if (today.isAtSameMomentAs(end)) {
+        print(shiftId);
+      }
 
       final otherUserIds =
           assignedUserIds.where((id) => id != currentUserId).toList();
