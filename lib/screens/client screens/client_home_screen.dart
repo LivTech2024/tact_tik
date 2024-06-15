@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:bounce/bounce.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:filter_list/filter_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -34,6 +35,29 @@ import '../home screens/widgets/home_screen_part1.dart';
 import '../home screens/widgets/homescreen_custom_navigation.dart';
 import 'Reports/client_oprn_report.dart';
 import 'Reports/client_report_screen.dart';
+
+class Location {
+  final String? name;
+  final IconData? icon;
+
+  Location({this.name, this.icon});
+}
+
+/// Creating a global list for example purpose.
+/// Generally it should be within data class or where ever you want
+List<Location> userList = [
+  Location(name: "Abigail", icon: Icons.location_on),
+  Location(name: "Audrey", icon: Icons.location_on),
+  Location(name: "Ava", icon: Icons.location_on),
+  Location(name: "Bella", icon: Icons.location_on),
+  Location(name: "Bernadette", icon: Icons.location_on),
+  Location(name: "Carol", icon: Icons.location_on),
+  Location(name: "Claire", icon: Icons.location_on),
+  Location(name: "Deirdre", icon: Icons.location_on),
+  Location(name: "Donna", icon: Icons.location_on),
+  Location(name: "Dorothy", icon: Icons.location_on),
+  Location(name: "Faith", icon: Icons.location_on),
+];
 
 class ClientHomeScreen extends StatefulWidget {
   const ClientHomeScreen({super.key});
@@ -88,6 +112,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
   List<Map<String, dynamic>> patrolsList = [];
   bool _showWish = true;
   bool NewMessage = false;
+  List<Location>? selectedUserList = [];
 
   void NavigateScreen(Widget screen, BuildContext context) {
     void NavigateScreen(Widget screen, BuildContext context) {
@@ -350,6 +375,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                   data['ReportStatus'].toString().isNotEmpty)
               ? data['ReportStatus']
               : 'Not Found',
+
           'ReportCategory': (data['ReportCategoryName'] != null &&
                   data['ReportCategoryName'].toString().isNotEmpty)
               ? data['ReportCategoryName']
@@ -449,6 +475,69 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
     return date1.year == date2.year &&
         date1.month == date2.month &&
         date1.day == date2.day;
+  }
+
+  Future<void> _openFilterDialog() async {
+    await FilterListDialog.display<Location>(
+      context,
+      hideSelectedTextCount: true,
+      // themeData: FilterListThemeData(
+      //   context,
+      //   choiceChipTheme: ChoiceChipThemeData.(context),
+      // ),
+      headlineText: 'Select Location',
+      height: 500.h,
+      listData: userList,
+      selectedListData: selectedUserList,
+      choiceChipLabel: (item) => item!.name,
+      validateSelectedItem: (list, val) => list!.contains(val),
+      controlButtons: [ControlButtonType.All, ControlButtonType.Reset],
+      onItemSearch: (user, query) {
+        /// When search query change in search bar then this method will be called
+        ///
+        /// Check if items contains query
+        return user.name!.toLowerCase().contains(query.toLowerCase());
+      },
+
+      onApplyButtonClick: (list) {
+        setState(() {
+          selectedUserList = List.from(list!);
+        });
+        Navigator.pop(context);
+      },
+      onCloseWidgetPress: () {
+        // Do anything with the close button.
+        //print("hello");
+        Navigator.pop(context, null);
+      },
+
+      /// uncomment below code to create custom choice chip
+      choiceChipBuilder: (context, item, isSelected) {
+        return Container(
+          constraints: BoxConstraints(minWidth: 10.w),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          decoration: BoxDecoration(
+              border: Border.all(
+            color: isSelected! ? Colors.blue[300]! : Colors.grey[300]!,
+          )),
+          child: Row(
+            children: [
+              Icon(
+                item.icon,
+                color: isSelected ? Colors.blue[300] : Colors.grey[500],
+                size: 24.sp,
+              ),
+              SizedBox(width: 10.w),
+              InterMedium(
+                text: item.name,
+                color: isSelected ? Colors.blue[300] : Colors.grey[500],
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -979,13 +1068,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                 children: [
                                   GestureDetector(
                                     onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  SelectLocationShift(
-                                                    companyId: _cmpId,
-                                                  )));
+                                      _openFilterDialog();
                                     },
                                     child: SizedBox(
                                       width: 150.w,
