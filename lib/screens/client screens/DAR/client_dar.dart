@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/main.dart';
+import 'package:tact_tik/screens/client%20screens/DAR/select_location_dar.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/icon_text_widget.dart';
 import '../../../fonts/inter_medium.dart';
 import '../../../fonts/inter_regular.dart';
@@ -151,7 +152,7 @@ class _ClientDarScreenState extends State<ClientDarScreen> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        SelectClientGuardsScreen(
+                                        SelectLocationDar(
                                           companyId: widget.companyId,
                                         )));
                           },

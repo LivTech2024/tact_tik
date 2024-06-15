@@ -14,6 +14,7 @@ import 'package:tact_tik/screens/client%20screens/DAR/client_dar.dart';
 import 'package:tact_tik/screens/client%20screens/patrol/client_check_patrol_screen.dart';
 import 'package:tact_tik/screens/client%20screens/patrol/client_open_patrol_screen.dart';
 import 'package:tact_tik/screens/client%20screens/select_client_guards_screen.dart';
+import 'package:tact_tik/screens/client%20screens/select_location_schift.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/icon_text_widget.dart';
 import '../../fonts/inter_bold.dart';
 import '../../fonts/inter_medium.dart';
@@ -982,7 +983,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      SelectClientGuardsScreen(
+                                                      SelectLocationShift(
                                                         companyId: _cmpId,
                                                       )));
                                         },
