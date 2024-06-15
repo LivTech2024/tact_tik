@@ -30,7 +30,7 @@ var ligthTheme = ThemeData(
       ),
       titleTextStyle: TextStyle(
         color: LightColor.color3,
-        fontSize: 12.sp,
+        fontSize: 18.sp,
         fontWeight: FontWeight.w500,
         letterSpacing: -.3,
       ),
@@ -109,7 +109,7 @@ var darkTheme = ThemeData(
     ),
     titleTextStyle: TextStyle(
       color: DarkColor.color5,
-      fontSize: 12.sp,
+      fontSize: 18.sp,
       fontWeight: FontWeight.w500,
       letterSpacing: -.3,
     ),

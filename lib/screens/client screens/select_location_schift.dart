@@ -17,7 +17,9 @@ import '../../../../utils/colors.dart';
 class SelectLocationShift extends StatefulWidget {
   final String companyId;
   final Function(String) onLocationSelected;
-   SelectLocationShift({super.key, required this.companyId, required this.onLocationSelected});
+
+  SelectLocationShift(
+      {super.key, required this.companyId, required this.onLocationSelected});
 
   @override
   State<SelectLocationShift> createState() => _SelectLocationShiftState();
@@ -92,11 +94,12 @@ class _SelectLocationShiftState extends State<SelectLocationShift> {
                   onChanged: (value) {
                     filterLocations(value);
                   },
-                // shape:WidgetStatePropertyAll(value),
-                backgroundColor:WidgetStatePropertyAll(Theme.of(context).cardColor),
-                
+                  // shape:WidgetStatePropertyAll(value),
+                  backgroundColor:
+                      WidgetStatePropertyAll(Theme.of(context).cardColor),
+
                   trailing: [
-                      Container(
+                    Container(
                       height: 43.h,
                       width: 43.w,
                       decoration: BoxDecoration(
@@ -121,10 +124,11 @@ class _SelectLocationShiftState extends State<SelectLocationShift> {
                         itemCount: _filteredLocationDocs.length,
                         itemBuilder: (context, index) {
                           QueryDocumentSnapshot locationDoc =
-                          _filteredLocationDocs[index];
+                              _filteredLocationDocs[index];
                           String locationName = locationDoc['LocationName'];
                           String locationId = locationDoc.id;
-                          String locationAddress = locationDoc['LocationAddress'];
+                          String locationAddress =
+                              locationDoc['LocationAddress'];
                           return GestureDetector(
                               onTap: () {
                                 widget.onLocationSelected(locationAddress);

@@ -174,210 +174,238 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                 SizedBox(
                   height: 20.h,
                 ),*/
-                GestureDetector(
-                  onTap: () {
-                    // NavigateScreen();
-                  },
-                  child: Container(
-                    height: 200.h,
-                    margin: EdgeInsets.only(top: 10.h),
-                    width: double.maxFinite,
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          color: Theme.of(context).shadowColor,
-                          blurRadius: 5,
-                          spreadRadius: 2,
-                          offset: Offset(0, 3),
-                        )
-                      ],
-                      color: Theme.of(context).cardColor,
-                      borderRadius: BorderRadius.circular(14.r),
-                    ),
-                    padding: EdgeInsets.symmetric(vertical: 20.h),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Column(
-                              children: [
-                                SizedBox(height: 5.h),
-                                Container(
-                                  height: 30.h,
-                                  width: 4.w,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(10.r),
-                                      bottomRight: Radius.circular(10.r),
-                                    ),
-                                    color:Theme.of(context).primaryColor,
+                Container(
+                  height: 200.h,
+                  margin: EdgeInsets.only(top: 10.h),
+                  width: double.maxFinite,
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: Theme.of(context).shadowColor,
+                        blurRadius: 5,
+                        spreadRadius: 2,
+                        offset: Offset(0, 3),
+                      )
+                    ],
+                    color: Theme.of(context).cardColor,
+                    borderRadius: BorderRadius.circular(14.r),
+                  ),
+                  padding: EdgeInsets.only(top: 20.h),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Column(
+                            children: [
+                              SizedBox(height: 5.h),
+                              Container(
+                                height: 30.h,
+                                width: 4.w,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(10.r),
+                                    bottomRight: Radius.circular(10.r),
                                   ),
+                                  color:Theme.of(context).primaryColor,
                                 ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(width: 14.w),
+                          SizedBox(
+                            width: 190.w,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                InterSemibold(
+                                  text: widget.guardName,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .color,
+                                  fontsize: 18.sp,
+                                ),
+                                // SizedBox(height: height / height5),
                               ],
                             ),
-                            SizedBox(width: 14.w),
+                          )
+                        ],
+                      ),
+                      // SizedBox(height: height / height10),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          left: 18.w,
+                          right: 24.w,
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
                             SizedBox(
-                              width: 190.w,
+                              width: 70.w,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  InterSemibold(
-                                    text: widget.guardName,
+                                  InterRegular(
+                                    text: 'Started at',
+                                    fontsize: 14.sp,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .displaySmall!
+                                        .color!,
+                                  ),
+                                  SizedBox(height: 12.h),
+                                  InterMedium(
+                                    text: widget.startTime,
+                                    fontsize: 14.sp,
                                     color: Theme.of(context)
                                         .textTheme
                                         .bodyMedium!
                                         .color,
-                                    fontsize: 18.sp,
                                   ),
-                                  // SizedBox(height: height / height5),
                                 ],
                               ),
-                            )
+                            ),
+                            SizedBox(
+                              width: 70.w,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  InterRegular(
+                                    text: 'Ended at',
+                                    fontsize: 14.sp,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .displaySmall!
+                                        .color!,
+                                  ),
+                                  SizedBox(height: 12.h),
+                                  InterMedium(
+                                    text: widget.endTime,
+                                    fontsize: 14.sp,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .color,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              width: 40.w,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  InterRegular(
+                                    text: 'Count',
+                                    fontsize: 14.sp,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .displaySmall!
+                                        .color!,
+                                  ),
+                                  SizedBox(height: 12.sp),
+                                  InterMedium(
+                                    text: '${widget.patrolLogCount}',
+                                    fontsize: 14.sp,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .color,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              width: 80.w,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  InterRegular(
+                                    text: 'Status',
+                                    fontsize: 14.sp,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .displaySmall!
+                                        .color!,
+                                  ),
+                                  SizedBox(height: 12.h),
+                                  InterBold(
+                                    text: widget.status,
+                                    fontsize: 14.sp,
+                                    color: Colors.green,
+                                  ),
+                                ],
+                              ),
+                            ),
                           ],
                         ),
-                        // SizedBox(height: height / height10),
-                        Padding(
-                          padding: EdgeInsets.only(
-                            left: 18.w,
-                            right: 24.w,
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              SizedBox(
-                                width: 70.w,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                      ),
+                      SizedBox(height: 14.h),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 18.w),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                InterRegular(
+                                  text: 'Feedback :',
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .displaySmall!
+                                      .color!,
+                                  fontsize: 14.sp,
+                                ),
+                                SizedBox(width: 4.w),
+                                Flexible(
+                                    child: InterRegular(
+                                  text: widget.feedback,
+                                 color: Theme.of(context)
+                                      .textTheme
+                                      .labelMedium!
+                                      .color,
+                                  fontsize: 14.sp,
+                                  maxLines: 3,
+                                )),
+                              ],
+                            ),
+                            SizedBox(
+                              width: 100.w,
+                              child: TextButton(
+                                clipBehavior: Clip.none,
+                                onPressed: () {},
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    InterRegular(
-                                      text: 'Started at',
-                                      fontsize: 14.sp,
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .displaySmall!
-                                          .color!,
+                                    Icon(
+                                      Icons.download_for_offline_sharp,
+                                      size: 24.sp,
+                                      color: Theme.of(context).textTheme.bodyMedium!.color,
                                     ),
-                                    SizedBox(height: 12.h),
+                                    SizedBox(
+                                      width: 10.w,
+                                    ),
                                     InterMedium(
-                                      text: widget.startTime,
+                                      text: 'PDF',
+                                      color: Theme.of(context).textTheme.bodyMedium!.color,
                                       fontsize: 14.sp,
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium!
-                                          .color,
+                                    ),
+                                    SizedBox(
+                                      width: 10.w,
                                     ),
                                   ],
                                 ),
                               ),
-                              SizedBox(
-                                width: 60.w,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    InterRegular(
-                                      text: 'Ended at',
-                                      fontsize: 14.sp,
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .displaySmall!
-                                          .color!,
-                                    ),
-                                    SizedBox(height: 12.h),
-                                    InterMedium(
-                                      text: widget.endTime,
-                                      fontsize: 14.sp,
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium!
-                                          .color,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                width: 40.w,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    InterRegular(
-                                      text: 'Count',
-                                      fontsize: 14.sp,
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .displaySmall!
-                                          .color!,
-                                    ),
-                                    SizedBox(height: 12.sp),
-                                    InterMedium(
-                                      text: '${widget.patrolLogCount}',
-                                      fontsize: 14.sp,
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium!
-                                          .color,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                width: 80.w,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    InterRegular(
-                                      text: 'Status',
-                                      fontsize: 14.sp,
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .displaySmall!
-                                          .color!,
-                                    ),
-                                    SizedBox(height: 12.h),
-                                    InterBold(
-                                      text: widget.status,
-                                      fontsize: 14.sp,
-                                      color: Colors.green,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                        SizedBox(height: 14.h),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 18.w),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              InterRegular(
-                                text: 'Feedback :',
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .displaySmall!
-                                    .color!,
-                                fontsize: 14.sp,
-                              ),
-                              SizedBox(width: 4.w),
-                              Flexible(
-                                  child: InterRegular(
-                                text: widget.feedback,
-                               color: Theme.of(context)
-                                    .textTheme
-                                    .labelMedium!
-                                    .color,
-                                fontsize: 14.sp,
-                                maxLines: 3,
-                              )),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
+                      )
+                    ],
                   ),
                 ),
                 SizedBox(height: 30.h),

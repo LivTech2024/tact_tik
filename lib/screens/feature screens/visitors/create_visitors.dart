@@ -1,7 +1,11 @@
+import 'dart:math';
+
+import 'package:chips_choice/chips_choice.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/common/widgets/setTextfieldWidget.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
@@ -9,11 +13,13 @@ import 'package:tact_tik/screens/feature%20screens/visitors/visitors.dart';
 import 'package:tact_tik/screens/feature%20screens/visitors/widgets/setTimeWidget.dart';
 import 'package:tact_tik/services/Userservice.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
+import 'package:textfield_tags/textfield_tags.dart';
 
 import '../../../common/sizes.dart';
 import '../../../common/widgets/button1.dart';
 import '../../../fonts/inter_regular.dart';
 import '../../../main.dart';
+import '../../../test_screen.dart';
 import '../../../utils/colors.dart';
 import '../../supervisor screens/home screens/widgets/set_details_widget.dart';
 import '../widgets/custome_textfield.dart';
@@ -33,6 +39,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
   late TextEditingController EmailController;
   late TextEditingController ContactNoController;
   late TextEditingController AssetHandoverController;
+  late DynamicTagController<DynamicTagData> _dynamicTagController;
   late TextEditingController AssetReturnController;
   late TextEditingController LicensePlateNumberController;
   late TextEditingController SetCountdownController;
@@ -42,6 +49,21 @@ class _CreateVisitorsState extends State<CreateVisitors> {
   TextEditingController _AllocateQtController2 = TextEditingController();
   TextEditingController _DescriptionController = TextEditingController();
 
+  // final random = Random();
+  List<String> tags = ['Education'];
+  List<String> options = [
+    'News',
+    'Entertainment',
+    'Politics',
+    'Automotive',
+    'Sports',
+    'Education',
+    'Fashion',
+    'Travel',
+    'Food',
+    'Tech',
+    'Science',
+  ];
   TimeOfDay? InTime;
   TimeOfDay? OutTime;
   bool _isLoading = false;
@@ -50,11 +72,18 @@ class _CreateVisitorsState extends State<CreateVisitors> {
   String? selectedKeyName;
   String? selectedKeyId;
   List<DocumentSnapshot> keys = [];
+  late double _distanceToField;
 
   // late final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
   //     GlobalKey<ScaffoldMessengerState>();
 
   late UserService _userService;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _distanceToField = MediaQuery.of(context).size.width;
+  }
 
   @override
   void initState() {
@@ -104,6 +133,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
           ? TimeOfDay.fromDateTime(outTimeTimestamp.toDate())
           : null;
     }
+    _dynamicTagController = DynamicTagController<DynamicTagData>();
   }
 
   @override
@@ -118,6 +148,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
     CommentsController.dispose();
     NoOfPersonController.dispose();
     CompanyNameController.dispose();
+    _dynamicTagController.dispose();
     super.dispose();
   }
 
@@ -419,11 +450,180 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                             fontsize: 20.sp,
                           ),
                           SizedBox(height: 10.h),
-                          SetTextfieldWidget(
+                          /*SetTextfieldWidget(
                             hintText: 'Asset Handover',
                             controller: AssetHandoverController,
                             enabled: !isEditMode,
                             isEditMode: isEditMode,
+                          ),*/
+                          TextFieldTags<DynamicTagData>(
+                            textfieldTagsController: _dynamicTagController,
+                            // initialTags: _initialTags,
+                            textSeparators: const [' ', ','],
+                            letterCase: LetterCase.normal,
+                            validator: (DynamicTagData tag) {
+                              // if (tag.tag == 'lion') {
+                              //   return 'Not envited per tiger request';
+                              // } else if (_dynamicTagController.getTags!
+                              //     .any((element) => element.tag == tag.tag)) {
+                              //   return 'Already in the club';
+                              // }
+                              return null;
+                            },
+                            inputFieldBuilder: (context, inputFieldValues) {
+                              return Container(
+                                constraints: BoxConstraints(
+                                  minHeight: 60.h,
+                                ),
+                                width: double.maxFinite,
+                                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                                decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Theme.of(context).shadowColor,
+                                      blurRadius: 5,
+                                      spreadRadius: 2,
+                                      offset: Offset(0, 3),
+                                    )
+                                  ],
+                                  borderRadius: BorderRadius.circular(10.r),
+                                  color: Theme.of(context).cardColor,
+                                ),
+                                margin: EdgeInsets.only(top: 10.h),
+                                child: Center(
+                                  child: TextField(
+                                    onTap: () {
+                                      _dynamicTagController.getFocusNode
+                                          ?.requestFocus();
+                                    },
+                                    controller:
+                                        inputFieldValues.textEditingController,
+                                    focusNode: inputFieldValues.focusNode,
+                                    decoration: InputDecoration(
+                                      isDense: true,
+                                      border: OutlineInputBorder(
+                                        borderSide: BorderSide.none,
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(10.r),
+                                        ),
+                                      ),
+                                      focusedBorder: InputBorder.none,
+                                      hintStyle: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.w300,
+                                        fontSize: 18.sp,
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge!
+                                            .color,
+                                      ),
+                                      contentPadding: EdgeInsets.zero,
+                                      counterText: "",
+                                      hintText: inputFieldValues.tags.isNotEmpty
+                                          ? ''
+                                          : "Asset Handover",
+                                      errorText: inputFieldValues.error,
+                                      prefixIconConstraints: BoxConstraints(
+                                          maxWidth: _distanceToField * 0.8),
+                                      prefixIcon: inputFieldValues
+                                              .tags.isNotEmpty
+                                          ? SingleChildScrollView(
+                                              controller: inputFieldValues
+                                                  .tagScrollController,
+                                              scrollDirection: Axis.vertical,
+                                              child: Padding(
+                                                padding: EdgeInsets.only(
+                                                  top: 8.h,
+                                                  bottom: 8.h,
+                                                  left: 8.w,
+                                                ),
+                                                child: Wrap(
+                                                    runSpacing: 4.0,
+                                                    spacing: 4.0,
+                                                    children: inputFieldValues
+                                                        .tags
+                                                        .map((DynamicTagData
+                                                            tag) {
+                                                      return Container(
+                                                        height: 40.h,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      5.r),
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .bodyMedium!
+                                                                  .color,
+                                                        ),
+                                                        margin: EdgeInsets
+                                                            .symmetric(
+                                                                horizontal:
+                                                                    5.w),
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                                horizontal:
+                                                                    10.w,
+                                                                vertical: 5.h),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          children: [
+                                                            InterRegular(
+                                                              text:
+                                                                  '${tag.tag}',
+                                                              color: Theme.of(context)
+                                                                          .brightness ==
+                                                                      Brightness
+                                                                          .dark
+                                                                  ? DarkColor
+                                                                      .color27
+                                                                  : LightColor
+                                                                      .color1,
+                                                            ),
+                                                            SizedBox(
+                                                                width: 4.w),
+                                                            InkWell(
+                                                              child: Icon(
+                                                                Icons.cancel,
+                                                                size: 14.sp,
+                                                                color: Theme.of(
+                                                                        context)
+                                                                    .textTheme
+                                                                    .displayMedium!
+                                                                    .color,
+                                                              ),
+                                                              onTap: () {
+                                                                inputFieldValues
+                                                                    .onTagRemoved(
+                                                                        tag);
+                                                              },
+                                                            )
+                                                          ],
+                                                        ),
+                                                      );
+                                                    }).toList()),
+                                              ),
+                                            )
+                                          : null,
+                                    ),
+                                    cursorColor: Theme.of(context).primaryColor,
+                                    onChanged: (value) {
+                                      final tagData = DynamicTagData(value);
+                                      inputFieldValues.onTagChanged(tagData);
+                                    },
+                                    onSubmitted: (value) {
+                                      final tagData = DynamicTagData(value);
+                                      inputFieldValues.onTagSubmitted(tagData);
+                                    },
+                                  ),
+                                ),
+                              );
+                            },
                           ),
                           SizedBox(height: 20.h),
                           InterBold(
@@ -433,11 +633,27 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                             fontsize: 20.sp,
                           ),
                           SizedBox(height: 10.h),
-                          SetTextfieldWidget(
+                          /*SetTextfieldWidget(
                             hintText: 'Asset Return',
                             controller: AssetReturnController,
                             enabled: isEditMode,
                             isEditMode: isEditMode,
+                          ),*/
+                          Content(
+                            title: 'Asset Return',
+                            child: ChipsChoice<String>.multiple(
+                              value: tags,
+                              onChanged: (val) => setState(() => tags = val),
+                              choiceItems: C2Choice.listFrom<String, String>(
+                                source: options,
+                                value: (i, v) => v,
+                                label: (i, v) => v,
+                                tooltip: (i, v) => v,
+                              ),
+                              choiceCheckmark: true,
+                              choiceStyle: C2ChipStyle.outlined(
+                                  color: Theme.of(context).primaryColor),
+                            ),
                           ),
                           SizedBox(height: 20.h),
                           InterBold(
@@ -450,6 +666,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                           SetTextfieldWidget(
                             hintText: 'License Plate Number ',
                             controller: LicensePlateNumberController,
+                            keyboardType: TextInputType.number,
                             enabled: !isEditMode,
                             isEditMode: isEditMode,
                           ),
@@ -493,7 +710,9 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                             hintText: 'No. Of Person',
                             controller: NoOfPersonController,
                             enabled: !isEditMode,
+                            keyboardType: TextInputType.number,
                             isEditMode: isEditMode,
+                            maxlength: 3,
                           ),
                           SizedBox(height: 20.h),
                           InterBold(

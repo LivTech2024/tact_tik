@@ -9,6 +9,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tact_tik/main.dart';
+import 'package:tact_tik/screens/supervisor%20screens/features%20screens/assets/select_assets_guards.dart';
 
 import '../../../../common/sizes.dart';
 import '../../../../common/widgets/button1.dart';
@@ -19,6 +20,7 @@ import '../../../../fonts/inter_regular.dart';
 import '../../../../utils/colors.dart';
 import '../../../feature screens/widgets/custome_textfield.dart';
 import '../../home screens/widgets/set_details_widget.dart';
+import 's_assets_view_screen.dart';
 
 class Guards {
   final String image;
@@ -59,6 +61,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
   String? selectedGuardId;
   String? selectedEquipmentId;
   String? selectedEquipmentName;
+  String? selectedBranch;
   DateTime? StartDate;
   DateTime? EndDate;
 
@@ -341,40 +344,59 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               InterBold(
-                                text: 'Select Guards',
-                                fontsize: 16.sp,
+                                text: 'Select Guard',
+                                fontsize: 16.w,
                                 color: Theme.of(context)
                                     .textTheme
                                     .bodyMedium!
                                     .color,
                               ),
-                              IgnorePointer(
-                                ignoring: widget.OnlyView,
-                                child: TextButton(
-                                  onPressed: () async {
-                                    final result = await FirebaseFirestore
-                                        .instance
-                                        .collection('Employees')
-                                        // .where('EmployeeRole',
-                                        //     isEqualTo: 'GUARD')
-                                        .where('EmployeeCompanyId',
-                                            isEqualTo: widget.companyId)
-                                        .get();
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              SelectAssetsGuardsScreen(
+                                                companyId: widget.companyId,
+                                                empId: '',
+                                              ))).then((value) => {
+                                        if (value != null)
+                                          {
+                                            print("Value: ${value}"),
+                                            setState(() {
+                                              bool guardExists =
+                                                  selectedGuards.any((guard) =>
+                                                      guard['GuardId'] ==
+                                                      value['id']);
 
-                                    setState(() {
-                                      guards = result.docs
-                                          .map((doc) => doc.data())
-                                          .toList();
-                                    });
-                                  },
-                                  child: InterBold(
-                                    text: 'view all',
-                                    fontsize: 14.sp,
-                                    color: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium!
-                                        .color,
-                                  ),
+                                              if (guardExists) {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                        'Guard already added'),
+                                                  ),
+                                                );
+                                              } else {
+                                                // Add the guard if it does not exist
+                                                selectedGuards.add({
+                                                  'GuardId': value['id'],
+                                                  'GuardName': value['name'],
+                                                  'GuardImg': value['url']
+                                                });
+                                              }
+                                            }),
+                                          }
+                                      });
+                                },
+                                child: InterBold(
+                                  text: '+ Add',
+                                  fontsize: 16.w,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .color,
                                 ),
                               )
                             ],
@@ -382,8 +404,16 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                           SizedBox(height: 24.h),
                           Container(
                             height: 64.h,
-                            padding: EdgeInsets.symmetric(horizontal: 10.h),
+                            padding: EdgeInsets.symmetric(horizontal: 10.w),
                             decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Theme.of(context).shadowColor,
+                                  blurRadius: 5,
+                                  spreadRadius: 2,
+                                  offset: Offset(0, 3),
+                                )
+                              ],
                               color: Theme.of(context).cardColor,
                               borderRadius: BorderRadius.circular(13.r),
                             ),
@@ -391,99 +421,39 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Expanded(
-                                  child: TypeAheadField<Guards>(
-                                    autoFlipDirection: true,
-                                    controller: _controller,
-                                    direction: VerticalDirection.down,
-                                    builder:
-                                        (context, _controller, focusNode) =>
-                                            TextField(
-                                      controller: _controller,
-                                      focusNode: focusNode,
-                                      autofocus: false,
-                                      style: GoogleFonts.poppins(
-                                        fontWeight: FontWeight.w300,
-                                        fontSize: width / width18,
-                                        color: Colors.white,
-                                      ),
-                                      decoration: InputDecoration(
-                                        border: OutlineInputBorder(
-                                          borderSide: BorderSide.none,
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(10.r),
-                                          ),
-                                        ),
-                                        focusedBorder: InputBorder.none,
-                                        hintStyle: GoogleFonts.poppins(
-                                          fontWeight: FontWeight.w300,
-                                          fontSize: width / width18,
-                                          color: Theme.of(context)
-                                              .textTheme
-                                              .bodyLarge!
-                                              .color,
-                                        ),
-                                        hintText: 'Search Guards',
-                                        contentPadding: EdgeInsets.zero,
-                                      ),
-                                      cursorColor:
-                                          Theme.of(context).brightness ==
-                                                  Brightness.dark
-                                              ? DarkColor.Primarycolor
-                                              : LightColor.Primarycolor,
-                                    ),
-                                    suggestionsCallback: suggestionsCallback,
-                                    itemBuilder: (context, Guards guards) {
-                                      return ListTile(
-                                        leading: Container(
-                                          height: 30.h,
-                                          width: 30.w,
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                          ),
-                                        ),
-                                        title: InterRegular(
-                                          text: guards.name,
-                                          color: Theme.of(context)
-                                              .textTheme
-                                              .bodyLarge!
-                                              .color,
-                                        ),
-                                      );
+                                  child: TextField(
+                                    controller: _searchController,
+                                    onChanged: (query) {
+                                      searchGuards(query);
                                     },
-                                    emptyBuilder: (context) => Padding(
-                                      padding: EdgeInsets.symmetric(
-                                        vertical: 10.h,
-                                        horizontal: 10.w,
+                                    style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w300,
+                                      fontSize: 18.sp,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .color,
+                                    ),
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderSide: BorderSide.none,
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(10.r),
+                                        ),
                                       ),
-                                      child: InterRegular(
-                                        text: 'No Such Screen found',
+                                      focusedBorder: InputBorder.none,
+                                      hintStyle: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.w300,
+                                        fontSize: 18.sp,
                                         color: Theme.of(context)
                                             .textTheme
                                             .bodyLarge!
                                             .color,
-                                        fontsize: 18.sp,
                                       ),
+                                      hintText: 'Search Guard',
+                                      contentPadding: EdgeInsets.zero,
                                     ),
-                                    decorationBuilder: (context, child) =>
-                                        Material(
-                                      type: MaterialType.card,
-                                      elevation: 4,
-                                      borderRadius: BorderRadius.circular(
-                                        10.r,
-                                      ),
-                                      child: child,
-                                    ),
-                                    debounceDuration:
-                                        const Duration(milliseconds: 300),
-                                    onSelected: (Guards guard) {
-                                      print(
-                                          'home screen search bar############################################');
-
-                                      print(guard.name);
-                                    },
-                                    listBuilder: gridLayoutBuilder,
+                                    cursorColor: Theme.of(context).primaryColor,
                                   ),
                                 ),
                                 Container(
@@ -496,13 +466,43 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                   child: Center(
                                     child: Icon(
                                       Icons.search,
-                                      size: 20.sp,
-                                      color: Colors.black,
+                                      size: 20.w,
+                                      color: Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? DarkColor.Secondarycolor
+                                          : LightColor.color1,
                                     ),
                                   ),
                                 )
                               ],
                             ),
+                          ),
+                          ListView.builder(
+                            physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: guards.length,
+                            itemBuilder: (context, index) {
+                              final guard = guards[index];
+                              return ListTile(
+                                title: Text(guard['EmployeeName']),
+                                onTap: () {
+                                  setState(() {
+                                    _searchController.text =
+                                        guard['EmployeeName'];
+                                    selectedGuards.add({
+                                      'GuardName': guard['EmployeeName'],
+                                      'GuardImg': guard['EmployeeImg'],
+                                      'GuardId': guard['EmployeeId'],
+                                    });
+                                    selectedGuardId = guard['EmployeeId'];
+                                    controller:
+                                    _searchController.text =
+                                        guard['EmployeeName'];
+                                    guards.clear();
+                                  });
+                                },
+                              );
+                            },
                           ),
                           Container(
                             margin: EdgeInsets.only(top: 20.h),
@@ -596,24 +596,6 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                 );
                               },
                             ),
-                          ),
-                          ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: guards.length,
-                            itemBuilder: (context, index) {
-                              final guard = guards[index];
-                              return ListTile(
-                                title: Text(guard['EmployeeName']),
-                                onTap: () {
-                                  setState(() {
-                                    _searchController.text =
-                                        guard['EmployeeName'];
-                                    selectedGuardId = guard['EmployeeId'];
-                                    guards.clear();
-                                  });
-                                },
-                              );
-                            },
                           ),
                           SizedBox(height: 20.h),
                           InterBold(
@@ -805,8 +787,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                   ],
                                 ),
                                 Checkbox(
-                                  activeColor: Theme.of(context)
-                                      .primaryColor,
+                                  activeColor: Theme.of(context).primaryColor,
                                   checkColor: DarkColor.color1,
                                   value: isChecked,
                                   onChanged: (bool? value) {
@@ -830,10 +811,11 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                 createEquipmentAllocation();
                               },
                               backgroundcolor: /*widget.OnlyView == true
-                                  ?*/ isChecked == false
+                                  ?*/
+                                  isChecked == false
                                       ? Theme.of(context).primaryColorLight
                                       : Theme.of(context).primaryColor,
-                                  // : Theme.of(context).primaryColorLight,
+                              // : Theme.of(context).primaryColorLight,
                               borderRadius: 10.r,
                             ),
                           ),
@@ -848,7 +830,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                         children: [
                           SizedBox(height: 10.h),
                           InterBold(
-                            text: 'Allocate Qt.',
+                            text: 'Title.',
                             fontsize: 16.sp,
                             color:
                                 Theme.of(context).textTheme.bodyMedium!.color,
@@ -870,6 +852,51 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                           CustomeTextField(
                             hint: '0',
                             controller: _allocateQtController2,
+                          ),
+                          InterBold(
+                            text: 'Select Branch',
+                            fontsize: 16.sp,
+                            color:
+                            Theme.of(context).textTheme.bodyMedium!.color,
+                          ),
+                          SizedBox(height: 10.h),
+                          DropdownButtonFormField<String>(
+                            value: selectedBranch,
+                            items: equipment.map((DocumentSnapshot document) {
+                              Map<String, dynamic> data =
+                              document.data() as Map<String, dynamic>;
+                              return DropdownMenuItem<String>(
+                                value: data['EquipmentName'],
+                                child: InterRegular(
+                                  text: data['EquipmentName'],
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .headlineSmall!
+                                      .color,
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                selectedBranch = newValue;
+                                // selectedEquipmentId = equipment
+                                //     .firstWhere((document) =>
+                                // (document.data() as Map<String,
+                                //     dynamic>)['EquipmentName'] ==
+                                //     newValue)
+                                //     .id;
+                              });
+                            },
+                            decoration: InputDecoration(
+                              hintText: 'Selected Branch',
+                              hintStyle: TextStyle(color: Colors.white),
+                              filled: true,
+                              fillColor: Theme.of(context).cardColor,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(13.w),
+                                borderSide: BorderSide.none,
+                              ),
+                            ),
                           ),
                           SizedBox(height: 10.h),
                           InterBold(

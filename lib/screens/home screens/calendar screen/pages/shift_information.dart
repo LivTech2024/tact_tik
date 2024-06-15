@@ -248,17 +248,17 @@ class _ShiftInformationState extends State<ShiftInformation> {
                                   children: [
                                     InterBold(
                                       text: 'Time:',
-                                      fontsize: width / width16,
+                                      fontsize: 16.sp,
                                       color: Theme.of(context)
                                           .textTheme
                                           .bodyMedium!
                                           .color,
                                     ),
-                                    SizedBox(width: width / width4),
+                                    SizedBox(width: 4.w),
                                     InterRegular(
                                       text:
                                           '${widget.startTime}-${widget.endTime}',
-                                      fontsize: width / width14,
+                                      fontsize: 14.sp,
                                       color: Theme.of(context)
                                           .textTheme
                                           .bodyLarge!
@@ -288,7 +288,23 @@ class _ShiftInformationState extends State<ShiftInformation> {
                           fontsize: 18.sp,
                           color: Theme.of(context).textTheme.bodyMedium!.color,
                         ),
-                        SizedBox(height: height / height100),
+                        widget.toRequest ? Column(
+                          children: [
+                            SizedBox(height: 20.h),
+                            Button1(
+                              text:  'Reject',
+                              onPressed: () {
+
+                              },
+                              backgroundcolor: Theme.of(context).primaryColor,
+                              borderRadius: 10.r,
+                              fontsize: 18.sp,
+                              color: Theme.of(context).textTheme.bodyMedium!.color,
+                              useBorder: true,
+                            ),
+                          ],
+                        ) : SizedBox(),
+                        SizedBox(height: 100.h),
                       ],
                     )
                   ],

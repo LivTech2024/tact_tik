@@ -323,14 +323,16 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
 
         if (selectedGuardId.isNotEmpty) {
           List<dynamic> shiftAssignedUserIds = data['ShiftAssignedUserId'];
-          if (shiftAssignedUserIds == null || !shiftAssignedUserIds.contains(selectedGuardId)) {
+          if (shiftAssignedUserIds == null ||
+              !shiftAssignedUserIds.contains(selectedGuardId)) {
             continue;
           }
         }
 
         if (selectedLocationAddress.isNotEmpty) {
           String? shiftLocationAddress = data['ShiftLocationAddress'];
-          if (shiftLocationAddress == null || shiftLocationAddress != selectedLocationAddress) {
+          if (shiftLocationAddress == null ||
+              shiftLocationAddress != selectedLocationAddress) {
             continue;
           }
         }
@@ -389,6 +391,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                   data['ReportStatus'].toString().isNotEmpty)
               ? data['ReportStatus']
               : 'Not Found',
+
           'ReportCategory': (data['ReportCategoryName'] != null &&
                   data['ReportCategoryName'].toString().isNotEmpty)
               ? data['ReportCategoryName']
@@ -1012,7 +1015,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                     : ScreenIndex == 1
                         ? SliverToBoxAdapter(
                             child: Padding(
-                              padding: EdgeInsets.all(8.w),
+                              padding: EdgeInsets.symmetric(horizontal: 30.w),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -1025,7 +1028,8 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                               builder: (context) =>
                                                   SelectLocationShift(
                                                     companyId: _cmpId,
-                                                    onLocationSelected: onLocationSelected,
+                                                    onLocationSelected:
+                                                        onLocationSelected,
                                                   )));
                                     },
                                     child: SizedBox(
@@ -1059,7 +1063,8 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                               builder: (context) =>
                                                   SelectClientGuardsScreen(
                                                     companyId: _cmpId,
-                                                    onGuardSelected: onGuardSelected,
+                                                    onGuardSelected:
+                                                        onGuardSelected,
                                                   )));
                                     },
                                     child: SizedBox(
