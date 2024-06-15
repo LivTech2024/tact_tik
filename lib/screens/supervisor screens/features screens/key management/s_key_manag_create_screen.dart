@@ -150,7 +150,6 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
         .collection('KeyAllocations')
         .where('KeyAllocationId', isEqualTo: allocationId)
         .get();
-
     var data = querySnapshot.docs;
 
     // Iterate over each document and print its fields
@@ -177,8 +176,19 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
         isChecked = doc['KeyAllocationIsReturned'] ?? "";
         selectedKeyId = doc['KeyAllocationKeyId'].toString() ?? "";
       });
+      if (doc['KeyAllocationIsReturned'] == true) {
+        print("KeyAllocationIsReturned is true");
+        setState(() {
+          editKeyMode = false;
+          // showReturnBtn = true;
+        });
+      } else {
+        setState(() {
+          editKeyMode = false;
+          showReturnBtn = true;
+        });
+      }
     }
-
     // Call _fetchKeysName after the main setState block
     _fetchKeysName(selectedKeyId);
   }

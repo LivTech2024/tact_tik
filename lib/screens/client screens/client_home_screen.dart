@@ -323,14 +323,16 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
 
         if (selectedGuardId.isNotEmpty) {
           List<dynamic> shiftAssignedUserIds = data['ShiftAssignedUserId'];
-          if (shiftAssignedUserIds == null || !shiftAssignedUserIds.contains(selectedGuardId)) {
+          if (shiftAssignedUserIds == null ||
+              !shiftAssignedUserIds.contains(selectedGuardId)) {
             continue;
           }
         }
 
         if (selectedLocationAddress.isNotEmpty) {
           String? shiftLocationAddress = data['ShiftLocationAddress'];
-          if (shiftLocationAddress == null || shiftLocationAddress != selectedLocationAddress) {
+          if (shiftLocationAddress == null ||
+              shiftLocationAddress != selectedLocationAddress) {
             continue;
           }
         }
@@ -1025,7 +1027,8 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                               builder: (context) =>
                                                   SelectLocationShift(
                                                     companyId: _cmpId,
-                                                    onLocationSelected: onLocationSelected,
+                                                    onLocationSelected:
+                                                        onLocationSelected,
                                                   )));
                                     },
                                     child: SizedBox(
@@ -1059,7 +1062,8 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                               builder: (context) =>
                                                   SelectClientGuardsScreen(
                                                     companyId: _cmpId,
-                                                    onGuardSelected: onGuardSelected,
+                                                    onGuardSelected:
+                                                        onGuardSelected,
                                                   )));
                                     },
                                     child: SizedBox(

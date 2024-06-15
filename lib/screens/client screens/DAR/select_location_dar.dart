@@ -18,7 +18,8 @@ class SelectLocationDar extends StatefulWidget {
   final String companyId;
   final Function(String) onLocationSelected;
 
-  SelectLocationDar({super.key, required this.companyId, required this.onLocationSelected});
+  SelectLocationDar(
+      {super.key, required this.companyId, required this.onLocationSelected});
 
   @override
   State<SelectLocationDar> createState() => _SelectLocationDarState();
@@ -130,10 +131,11 @@ class _SelectLocationDarState extends State<SelectLocationDar> {
                         itemCount: _filteredLocationDocs.length,
                         itemBuilder: (context, index) {
                           QueryDocumentSnapshot locationDoc =
-                          _filteredLocationDocs[index];
+                              _filteredLocationDocs[index];
                           String locationName = locationDoc['LocationName'];
                           String locationId = locationDoc.id;
-                          String locationAddress = locationDoc['LocationAddress'];
+                          String locationAddress =
+                              locationDoc['LocationAddress'];
                           return GestureDetector(
                               onTap: () {
                                 widget.onLocationSelected(locationAddress);
