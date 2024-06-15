@@ -98,7 +98,7 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
           slivers: [
             SliverList(
               delegate: SliverChildBuilderDelegate(
-                    (context, index) {
+                (context, index) {
                   DateTime reportDate = reports[index]['ReportDate'];
                   String dateString = (isSameDate(reportDate, DateTime.now()))
                       ? 'Today'
@@ -119,12 +119,12 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
                               reportCategory: reports[index]['ReportCategory'],
                               reportDate: dateString,
                               reportFollowUpRequire: reports[index]
-                              ['ReportFollowUpRequire']
+                                      ['ReportFollowUpRequire']
                                   .toString(),
                               reportData: reports[index]['ReportData'],
                               reportStatus: reports[index]['ReportStatus'],
                               reportEmployeeName: reports[index]
-                              ['ReportEmployeeName'],
+                                  ['ReportEmployeeName'],
                               reportLocation: reports[index]['ReportLocation'],
                             ),
                           ),
@@ -145,7 +145,7 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
                           Column(
                             children: List.generate(
                               1,
-                                  (innerIndex) => Container(
+                              (innerIndex) => Container(
                                 constraints: BoxConstraints(
                                   minHeight: 200.h,
                                 ),
@@ -174,7 +174,8 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     InterSemibold(
-                                      text: reports[index]['ReportEmployeeName'],
+                                      text: reports[index]
+                                          ['ReportEmployeeName'],
                                       fontsize: 18.sp,
                                       color: Theme.of(context)
                                           .textTheme
@@ -186,7 +187,7 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
                                       children: [
                                         Row(
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                           children: [
                                             InterMedium(
                                               text: 'Report Name:',
@@ -199,7 +200,8 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
                                             SizedBox(width: 20.w),
                                             Flexible(
                                               child: InterMedium(
-                                                text: reports[index]['ReportName'],
+                                                text: reports[index]
+                                                    ['ReportName'],
                                                 fontsize: 16.sp,
                                                 color: Theme.of(context)
                                                     .textTheme
@@ -212,7 +214,7 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
                                         SizedBox(height: 10.h),
                                         Row(
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                           children: [
                                             InterMedium(
                                               text: 'Category:',
@@ -226,7 +228,7 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
                                             Flexible(
                                               child: InterMedium(
                                                 text: reports[index]
-                                                ['ReportCategory'],
+                                                    ['ReportCategory'],
                                                 fontsize: 16.sp,
                                                 color: Theme.of(context)
                                                     .textTheme
@@ -239,7 +241,7 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
                                         SizedBox(height: 10.h),
                                         Row(
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                           children: [
                                             InterMedium(
                                               text: 'Emp Name:',
@@ -252,7 +254,7 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
                                             SizedBox(width: 20.w),
                                             InterMedium(
                                               text: reports[index]
-                                              ['ReportEmployeeName'],
+                                                  ['ReportEmployeeName'],
                                               fontsize: 16.sp,
                                               color: Theme.of(context)
                                                   .textTheme
@@ -264,7 +266,7 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
                                         SizedBox(height: 10.h),
                                         Row(
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                           children: [
                                             InterMedium(
                                               text: 'Status:',
@@ -276,7 +278,8 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
                                             ),
                                             SizedBox(width: 20.w),
                                             InterMedium(
-                                              text: reports[index]['ReportStatus'],
+                                              text: reports[index]
+                                                  ['ReportStatus'],
                                               fontsize: 16.sp,
                                               color: Theme.of(context)
                                                   .textTheme

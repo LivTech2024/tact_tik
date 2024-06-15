@@ -39,13 +39,13 @@ class SCreateKeyManagScreen extends StatefulWidget {
   final String branchId;
   final String AllocationKeyId;
   final bool editKeyMode;
-  SCreateKeyManagScreen({
-    super.key,
-    required this.keyId,
-    required this.companyId,
-    required this.branchId,
-    required this.AllocationKeyId,this.editKeyMode = false
-  });
+  SCreateKeyManagScreen(
+      {super.key,
+      required this.keyId,
+      required this.companyId,
+      required this.branchId,
+      required this.AllocationKeyId,
+      this.editKeyMode = false});
 
   @override
   State<SCreateKeyManagScreen> createState() =>

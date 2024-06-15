@@ -3157,7 +3157,7 @@ class FireStoreService {
     }
   }
 
-  Future<String?> getClientName(String clientId) async {
+  Future<String?> getClientName(String? clientId) async {
     try {
       DocumentSnapshot clientSnapshot = await FirebaseFirestore.instance
           .collection('Clients')
@@ -3879,7 +3879,7 @@ class FireStoreService {
     List<String>? video,
     required String status,
     required String clientId,
-    required Timestamp createdAt,
+    required DateTime? createdAt,
   }) async {
     try {
       final CollectionReference reportsRef =
@@ -3964,9 +3964,9 @@ class FireStoreService {
             if (tileDate == null || tileTime == null) continue;
 
             // Check if the tileDate is the current date
-            if (currentDate.year == createdAt.toDate().year &&
-                currentDate.month == createdAt.toDate().month &&
-                currentDate.day == createdAt.toDate().day) {
+            if (currentDate.year == createdAt!.year &&
+                currentDate.month == createdAt.month &&
+                currentDate.day == createdAt.day) {
               // Parse the tileTime to get the start and end times
               List<String> timeRange = tileTime.split(' - ');
               List<int> startTimeParts =
@@ -3996,8 +3996,7 @@ class FireStoreService {
               }
 
               // Check if the current time is within the range
-              if (createdAt.toDate().isAfter(startTime) &&
-                  createdAt.toDate().isBefore(endTime)) {
+              if (createdAt.isAfter(startTime) && createdAt.isBefore(endTime)) {
                 print("Created At $createdAt");
                 print("startTime At $startTime");
                 print("endTime At $endTime");
@@ -4021,7 +4020,7 @@ class FireStoreService {
                 empDarTiles[i] = tile;
                 print('Updated Tile at index $i: $tile');
               } else {
-                print("Created At ${createdAt.toDate()}");
+                print("Created At ${createdAt}");
                 print("startTime At $startTime");
                 print("endTime At $endTime");
                 print("unsuccessful in updating the tile");
@@ -4126,6 +4125,28 @@ class FireStoreService {
     }
   }
 
+  Future<Map<String, String>> getAllClientsNameAndID(String companyId) async {
+    try {
+      final QuerySnapshot<Map<String, dynamic>> snapshot =
+          await FirebaseFirestore.instance.collection('Clients').get();
+
+      final Map<String, String> clients = Map.fromEntries(
+        snapshot.docs
+            .where((doc) => doc.data()['ClientCompanyId'] == companyId)
+            .map((doc) => MapEntry(
+                  doc.id,
+                  doc.data()['ClientName'] as String,
+                )),
+      );
+
+      print("Clients: $clients");
+      return clients;
+    } catch (e) {
+      print("Error fetching clients: $e");
+      return {}; // Return empty map in case of error
+    }
+  }
+
   //Fetch location
   Future<List<String>> getAllLocation(String companyid) async {
     try {
@@ -4142,6 +4163,28 @@ class FireStoreService {
     } catch (e) {
       print("Error fetching report titles: $e");
       return []; // Return empty list in case of error
+    }
+  }
+
+  Future<Map<String, String>> getAllLocationsWithId(String companyId) async {
+    try {
+      final QuerySnapshot<Map<String, dynamic>> snapshot =
+          await FirebaseFirestore.instance.collection('Locations').get();
+
+      final Map<String, String> locations = Map.fromEntries(
+        snapshot.docs
+            .where((doc) => doc.data()['LocationCompanyId'] == companyId)
+            .map((doc) => MapEntry(
+                  doc.id,
+                  doc.data()['LocationName'] as String,
+                )),
+      );
+
+      print("Locations: $locations");
+      return locations;
+    } catch (e) {
+      print("Error fetching locations: $e");
+      return {}; // Return empty map in case of error
     }
   }
 

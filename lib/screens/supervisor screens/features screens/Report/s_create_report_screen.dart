@@ -358,8 +358,7 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
                           ),
                           Checkbox(
                             activeColor: Theme.of(context).primaryColor,
-                            checkColor:
-                                Colors.white,
+                            checkColor: Colors.white,
                             value: isChecked,
                             onChanged: (bool? value) {
                               setState(() {
@@ -578,7 +577,7 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
                                 clientId: widget.ClientId,
                                 followedUpId: widget.reportId,
                                 image: imageUrls,
-                                createdAt: Timestamp.now(),
+                                createdAt: DateTime.now(),
                                 shiftId: '');
                             if (isChecked == false) {
                               await fireStoreService
@@ -623,7 +622,7 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
                                 status: "started",
                                 clientId: widget.ClientId,
                                 image: imageUrls,
-                                createdAt: Timestamp.now(),
+                                createdAt: DateTime.now(),
                                 shiftId: '');
                             Navigator.pop(context, true);
                             setState(() {
@@ -690,7 +689,7 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
                                 status: "started",
                                 clientId: widget.ClientId,
                                 image: imageUrls,
-                                createdAt: Timestamp.now(),
+                                createdAt: DateTime.now(),
                                 shiftId: '');
                             // }
                             Navigator.pop(context, true);
@@ -703,8 +702,9 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
                             _isLoading = false; // Set loading state
                           });
                         },
-                        color: Theme.of(context).textTheme.headlineMedium!.color,
-                        backgroundcolor:  Theme.of(context).primaryColor,
+                        color:
+                            Theme.of(context).textTheme.headlineMedium!.color,
+                        backgroundcolor: Theme.of(context).primaryColor,
                         borderRadius: 10.h,
                       ),
                     ),
