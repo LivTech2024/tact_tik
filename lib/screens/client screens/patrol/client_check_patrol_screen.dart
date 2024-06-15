@@ -16,14 +16,15 @@ import '../../../fonts/inter_medium.dart';
 import '../../../fonts/inter_regular.dart';
 import '../../../fonts/inter_semibold.dart';
 import '../../../utils/colors.dart';
+import '../select_client_guards_screen.dart';
 import 'client_open_patrol_screen.dart';
 
 class ClientCheckPatrolScreen extends StatefulWidget {
   final String ScreenName;
   final String PatrolIdl;
-
+  final String companyId;
   ClientCheckPatrolScreen(
-      {super.key, required this.PatrolIdl, required this.ScreenName});
+      {super.key, required this.PatrolIdl, required this.ScreenName, required this.companyId});
 
   @override
   State<ClientCheckPatrolScreen> createState() =>
@@ -34,11 +35,19 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
   DateTime? selectedDate;
   List<Map<String, dynamic>> patrolsList = [];
   final FireStoreService fireStoreService = FireStoreService();
+  String selectedGuardId = '';
 
   @override
   void initState() {
     super.initState();
     get_PatrolInfo();
+  }
+
+  void onGuardSelected(String guardId) {
+    setState(() {
+      selectedGuardId = guardId;
+    });
+    print('Selected Guard ID: $selectedGuardId');
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -126,18 +135,31 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                     ),
                     SizedBox(
                       width: 140.w,
-                      child: IconTextWidget(
-                        space: 6.w,
-                        icon: Icons.add,
-                        Iconcolor: Theme.of(context).textTheme.bodySmall!.color
-                            as Color,
-                        iconSize: 20.sp,
-                        text: 'Select Guard',
-                        useBold: true,
-                        fontsize: 14.sp,
-                        color: Theme.of(context).textTheme.bodyMedium!.color
-                            as Color,
-                        // Iconcolor: DarkColor.color1,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SelectClientGuardsScreen(
+                                companyId: widget.companyId,
+                                onGuardSelected: onGuardSelected,
+                              ),
+                            ),
+                          );
+                        },
+                        child: IconTextWidget(
+                          space: 6.w,
+                          icon: Icons.add,
+                          Iconcolor: Theme.of(context).textTheme.bodySmall!.color
+                              as Color,
+                          iconSize: 20.sp,
+                          text: 'Select Guard',
+                          useBold: true,
+                          fontsize: 14.sp,
+                          color: Theme.of(context).textTheme.bodyMedium!.color
+                              as Color,
+                          // Iconcolor: DarkColor.color1,
+                        ),
                       ),
                     ),
                     // Expanded(
@@ -181,29 +203,48 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                 ),
                 SizedBox(height: 20.h),
                 patrolsList.isEmpty ||
-                        (selectedDate != null &&
-                            patrolsList.every((patrol) {
-                              final patrolDate =
-                                  DateTime.fromMillisecondsSinceEpoch(
-                                      patrol['PatrolLogStartedAt']
-                                          .millisecondsSinceEpoch);
-                              return patrolDate.year != selectedDate!.year ||
-                                  patrolDate.month != selectedDate!.month ||
-                                  patrolDate.day != selectedDate!.day;
-                            }))
+                    (selectedDate != null &&
+                        selectedGuardId != '' &&
+                        patrolsList.every((patrol) {
+                          final patrolDate = DateTime.fromMillisecondsSinceEpoch(
+                              patrol['PatrolLogStartedAt'].millisecondsSinceEpoch);
+                          final guardId = patrol['PatrolLogGuardId'];
+                          return (patrolDate.year != selectedDate!.year ||
+                              patrolDate.month != selectedDate!.month ||
+                              patrolDate.day != selectedDate!.day) ||
+                              guardId != selectedGuardId;
+                        })) ||
+                    (selectedDate != null &&
+                        selectedGuardId == '' &&
+                        patrolsList.every((patrol) {
+                          final patrolDate = DateTime.fromMillisecondsSinceEpoch(
+                              patrol['PatrolLogStartedAt'].millisecondsSinceEpoch);
+                          return patrolDate.year != selectedDate!.year ||
+                              patrolDate.month != selectedDate!.month ||
+                              patrolDate.day != selectedDate!.day;
+                        })) ||
+                    (selectedDate == null &&
+                        selectedGuardId != '' &&
+                        patrolsList.every((patrol) {
+                          final guardId = patrol['PatrolLogGuardId'];
+                          return guardId != selectedGuardId;
+                        }))
                     ? Center(
-                        child: Text(
-                          patrolsList.isEmpty
-                              ? 'No Patrols Found'
-                              : 'No Patrols Found for Selected Date',
-                          style: TextStyle(
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.bold,
-                            color:
-                                Theme.of(context).textTheme.bodyMedium!.color,
-                          ),
-                        ),
-                      )
+                  child: Text(
+                    patrolsList.isEmpty
+                        ? 'No Patrols Found'
+                        : selectedGuardId != '' && selectedDate != null
+                        ? 'No Patrols Found for Selected Date and Guard'
+                        : selectedDate != null
+                        ? 'No Patrols Found for Selected Date'
+                        : 'No Patrols Found for Selected Guard',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
+                    ),
+                  ),
+                )
                     : ListView.builder(
                         itemCount: patrolsList.length,
                         shrinkWrap: true,

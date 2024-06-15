@@ -13,8 +13,9 @@ import '../../../../utils/colors.dart';
 
 class SelectClientGuardsScreen extends StatefulWidget {
   final String companyId;
+  final Function(String) onGuardSelected;
 
-  const SelectClientGuardsScreen({super.key, required this.companyId});
+  const SelectClientGuardsScreen({super.key, required this.companyId, required this.onGuardSelected});
 
   @override
   State<SelectClientGuardsScreen> createState() => _SelectGuardsScreenState();
@@ -148,14 +149,8 @@ class _SelectGuardsScreenState extends State<SelectClientGuardsScreen> {
                             print(guardInfo);
                             return GestureDetector(
                                 onTap: () {
-                                  Navigator.pop(
-                                    context,
-                                    {
-                                      'name': name,
-                                      'id': id,
-                                      'url': url,
-                                    },
-                                  );
+                                  widget.onGuardSelected(id);
+                                  Navigator.pop(context);
                                 },
                                 child: Container(
                                   // height: 60,

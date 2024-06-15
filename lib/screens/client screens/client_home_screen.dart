@@ -82,7 +82,8 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
   bool issShift = false;
   int _shiftRestrictedRadius = 0;
   int scheduleCount = 0;
-
+  String selectedGuardId = '';
+  String selectedLocationAddress = '';
   int ScreenIndex = 0;
   final GlobalKey<ScaffoldState> _scaffoldKeyClient = GlobalKey();
   List<Map<String, dynamic>> patrolsList = [];
@@ -121,6 +122,22 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
     fetchReports();
   }
 
+  void onGuardSelected(String guardId) {
+    setState(() {
+      selectedGuardId = guardId;
+    });
+    print('Selected Guard ID: $selectedGuardId');
+    fetchShifts();
+  }
+
+  void onLocationSelected(String locationAddress) {
+    setState(() {
+      selectedLocationAddress = locationAddress;
+    });
+    print('Selected Location Address: $selectedLocationAddress');
+    fetchShifts();
+  }
+
   List<Map<String, dynamic>> shifts = [];
   List<Map<String, dynamic>> reports = [];
   bool isLoading = true;
@@ -134,6 +151,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
         String EmployeeId = userInfo['ClientId'];
         String empEmail = userInfo['ClientEmail'];
         String empImage = userInfo['ClientHomePageBgImg'] ?? "";
+        String companyId = userInfo['ClientCompanyId'];
         print("Employee Id ${EmployeeId}");
         var shiftInfo =
             await fireStoreService.getShiftByEmployeeIdFromUserInfo(EmployeeId);
@@ -147,6 +165,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
           _employeeId = EmployeeId;
           _empEmail = empEmail;
           employeeImg = empImage;
+          _cmpId = companyId;
         });
         print('User Info: ${userInfo.data()}');
         if (patrolInfo != null) {
@@ -296,19 +315,39 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
           .collection('Shifts')
           .where('ShiftClientId', isEqualTo: _employeeId)
           .get();
-      List<Map<String, dynamic>> fetchedShifts = querySnapshot.docs.map((doc) {
+
+      List<Map<String, dynamic>> fetchedShifts = [];
+
+      for (var doc in querySnapshot.docs) {
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-        return {
+
+        if (selectedGuardId.isNotEmpty) {
+          List<dynamic> shiftAssignedUserIds = data['ShiftAssignedUserId'];
+          if (shiftAssignedUserIds == null || !shiftAssignedUserIds.contains(selectedGuardId)) {
+            continue;
+          }
+        }
+
+        if (selectedLocationAddress.isNotEmpty) {
+          String? shiftLocationAddress = data['ShiftLocationAddress'];
+          if (shiftLocationAddress == null || shiftLocationAddress != selectedLocationAddress) {
+            continue;
+          }
+        }
+
+        fetchedShifts.add({
           'ShiftDate': data['ShiftDate'].toDate(),
           'ShiftName': data['ShiftName'],
           'ShiftLocationAddress': data['ShiftLocationAddress'],
           'ShiftStartTime': data['ShiftStartTime'],
           'ShiftEndTime': data['ShiftEndTime'],
           'members': data['members'],
-        };
-      }).toList();
+        });
+      }
+
       print("SHIFTS: ${fetchedShifts}");
       print("EMPLOYEE ID: ${_employeeId}");
+
       setState(() {
         shifts = fetchedShifts;
         isLoading = false;
@@ -817,6 +856,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               ClientCheckPatrolScreen(
+                                                companyId: _cmpId,
                                                 PatrolIdl: PatrolId,
                                                 ScreenName: PatrolName,
                                               )));
@@ -985,6 +1025,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                               builder: (context) =>
                                                   SelectLocationShift(
                                                     companyId: _cmpId,
+                                                    onLocationSelected: onLocationSelected,
                                                   )));
                                     },
                                     child: SizedBox(
@@ -1018,6 +1059,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                               builder: (context) =>
                                                   SelectClientGuardsScreen(
                                                     companyId: _cmpId,
+                                                    onGuardSelected: onGuardSelected,
                                                   )));
                                     },
                                     child: SizedBox(
@@ -1158,6 +1200,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                 onTap: () {
                                   NavigateScreen(
                                     ClientCheckPatrolScreen(
+                                      companyId: _cmpId,
                                       PatrolIdl: '',
                                       ScreenName: '',
                                     ),

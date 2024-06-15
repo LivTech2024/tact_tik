@@ -16,8 +16,9 @@ import '../../../../utils/colors.dart';
 
 class SelectLocationDar extends StatefulWidget {
   final String companyId;
+  final Function(String) onLocationSelected;
 
-  SelectLocationDar({super.key, required this.companyId});
+  SelectLocationDar({super.key, required this.companyId, required this.onLocationSelected});
 
   @override
   State<SelectLocationDar> createState() => _SelectLocationDarState();
@@ -26,16 +27,44 @@ class SelectLocationDar extends StatefulWidget {
 class _SelectLocationDarState extends State<SelectLocationDar> {
   get suggestionsCallback => null;
 
+  List<QueryDocumentSnapshot> _locationDocs = [];
+  List<QueryDocumentSnapshot> _filteredLocationDocs = [];
+
   @override
   void initState() {
     super.initState();
+    fetchLocations();
   }
 
-  List<String> _locatioInfo = [
-    'mumbai, india',
-    'mumbai, india',
-    'mumbai, india',
-  ];
+  Future<void> fetchLocations() async {
+    print('Company ID: ${widget.companyId}');
+
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('Locations')
+        .where('LocationCompanyId', isEqualTo: widget.companyId)
+        .get();
+
+    setState(() {
+      _locationDocs = querySnapshot.docs;
+      _filteredLocationDocs = _locationDocs;
+    });
+
+    print('Fetched Documents:');
+    for (QueryDocumentSnapshot doc in _locationDocs) {
+      print(doc.data());
+    }
+  }
+
+  void filterLocations(String query) {
+    List<QueryDocumentSnapshot> filteredDocs = _locationDocs.where((doc) {
+      String locationName = doc['LocationName'].toLowerCase();
+      return locationName.contains(query.toLowerCase());
+    }).toList();
+
+    setState(() {
+      _filteredLocationDocs = filteredDocs;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +98,7 @@ class _SelectLocationDarState extends State<SelectLocationDar> {
                 SearchBar(
                   hintText: 'Search Location',
                   onChanged: (value) {
-                    print(value);
+                    filterLocations(value);
                   },
                   // shape:WidgetStatePropertyAll(value),
                   backgroundColor:
@@ -94,14 +123,22 @@ class _SelectLocationDarState extends State<SelectLocationDar> {
                   ],
                 ),
                 SizedBox(height: 20.h),
-                _locatioInfo.length != 0
+                _filteredLocationDocs.isNotEmpty
                     ? ListView.builder(
                         physics: NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
-                        itemCount: _locatioInfo.length,
+                        itemCount: _filteredLocationDocs.length,
                         itemBuilder: (context, index) {
+                          QueryDocumentSnapshot locationDoc =
+                          _filteredLocationDocs[index];
+                          String locationName = locationDoc['LocationName'];
+                          String locationId = locationDoc.id;
+                          String locationAddress = locationDoc['LocationAddress'];
                           return GestureDetector(
-                              onTap: () {},
+                              onTap: () {
+                                widget.onLocationSelected(locationAddress);
+                                Navigator.pop(context);
+                              },
                               child: Container(
                                 decoration: BoxDecoration(
                                   color: Theme.of(context).cardColor,
@@ -132,7 +169,7 @@ class _SelectLocationDarState extends State<SelectLocationDar> {
                                               ),
                                               SizedBox(width: 20.w),
                                               InterBold(
-                                                text: _locatioInfo[index],
+                                                text: locationName,
                                                 letterSpacing: -.3,
                                                 color: Theme.of(context)
                                                     .textTheme

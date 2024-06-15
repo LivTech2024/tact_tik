@@ -34,10 +34,28 @@ class _ClientDarScreenState extends State<ClientDarScreen> {
   List<DocumentSnapshot> darList = [];
   List<MapEntry<String, List<DocumentSnapshot>>> groupedData = [];
   bool isLoading = true;
+  String selectedLocationAddress = '';
+  String selectedGuardId = '';
 
   @override
   void initState() {
     super.initState();
+    fetchDARData();
+  }
+
+  void onLocationSelected(String locationAddress) {
+    setState(() {
+      selectedLocationAddress = locationAddress;
+    });
+    print('Selected Location Address: $selectedLocationAddress');
+    fetchDARData();
+  }
+
+  void onGuardSelected(String guardId) {
+    setState(() {
+      selectedGuardId = guardId;
+    });
+    print('Selected Guard ID: $selectedGuardId');
     fetchDARData();
   }
 
@@ -57,6 +75,23 @@ class _ClientDarScreenState extends State<ClientDarScreen> {
       if (selectedDate != null) {
         var selectedFormattedDate = DateFormat('dd/MM/yyyy').format(selectedDate!);
         if (formattedDate != selectedFormattedDate) {
+          continue;
+        }
+      }
+
+      print("LOCATIOOOOOOOOOOOOOOOOOOOOOOOOOON: ${selectedLocationAddress}");
+      print(selectedGuardId);
+
+      if (selectedLocationAddress.isNotEmpty) {
+        var empDarLocationName = data['EmpDarLocationName'] as String?;
+        if (empDarLocationName != selectedLocationAddress) {
+          continue;
+        }
+      }
+
+      if (selectedGuardId.isNotEmpty) {
+        var empDarEmpId = data['EmpDarEmpId'] as String?;
+        if (empDarEmpId == null || empDarEmpId != selectedGuardId) {
           continue;
         }
       }
@@ -144,90 +179,84 @@ class _ClientDarScreenState extends State<ClientDarScreen> {
                         ),
                       ),
                     ),
-                    Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        SelectLocationDar(
-                                          companyId: widget.companyId,
-                                        )));
-                          },
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                width: 80.w,
-                                child: IconTextWidget(
-                                  space: 6.w,
-                                  icon: Icons.add,
-                                  iconSize: 20.sp,
-                                  text: 'Select',
-                                  useBold: true,
-                                  fontsize: 14.sp,
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall!
-                                      .color as Color,
-                                  Iconcolor: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium!
-                                      .color as Color,
-                                ),
-                              ),
-                              InterBold(
-                                text: 'Location',
-                                fontsize: 16.sp,
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          width: Platform.isIOS ? 30.w : 10.w,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        SelectClientGuardsScreen(
-                                          companyId: widget.companyId,
-                                        )));
-                          },
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                width: 80.w,
-                                child: IconTextWidget(
-                                  space: 6.w,
-                                  icon: Icons.add,
-                                  iconSize: 20.sp,
-                                  text: 'Select',
-                                  useBold: true,
-                                  fontsize: 14.sp,
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall!
-                                      .color as Color,
-                                  Iconcolor: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium!
-                                      .color as Color,
-                                ),
-                              ),
-                              InterBold(
-                                text: 'Employee',
-                                fontsize: 16.sp,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+        Row(
+          children: [
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SelectLocationDar(
+                      companyId: widget.companyId,
+                      onLocationSelected: onLocationSelected,
                     ),
+                  ),
+                );
+              },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: 80.w,
+                    child: IconTextWidget(
+                      space: 6.w,
+                      icon: Icons.add,
+                      iconSize: 20.sp,
+                      text: 'Select',
+                      useBold: true,
+                      fontsize: 14.sp,
+                      color: Theme.of(context).textTheme.bodySmall!.color as Color,
+                      Iconcolor:
+                      Theme.of(context).textTheme.bodyMedium!.color as Color,
+                    ),
+                  ),
+                  InterBold(
+                    text: 'Location',
+                    fontsize: 16.sp,
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              width: Platform.isIOS ? 30.w : 10.w,
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SelectClientGuardsScreen(
+                      companyId: widget.companyId,
+                      onGuardSelected: onGuardSelected,
+                    ),
+                  ),
+                );
+              },
+              child: Column(
+                children: [
+                  SizedBox(
+                    width: 80.w,
+                    child: IconTextWidget(
+                      space: 6.w,
+                      icon: Icons.add,
+                      iconSize: 20.sp,
+                      text: 'Select',
+                      useBold: true,
+                      fontsize: 14.sp,
+                      color: Theme.of(context).textTheme.bodySmall!.color as Color,
+                      Iconcolor:
+                      Theme.of(context).textTheme.bodyMedium!.color as Color,
+                    ),
+                  ),
+                  InterBold(
+                    text: 'Employee',
+                    fontsize: 16.sp,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
                   ],
                 ),
                 ListView.builder(

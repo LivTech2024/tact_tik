@@ -16,8 +16,8 @@ import '../../../../utils/colors.dart';
 
 class SelectLocationShift extends StatefulWidget {
   final String companyId;
-
-   SelectLocationShift({super.key, required this.companyId});
+  final Function(String) onLocationSelected;
+   SelectLocationShift({super.key, required this.companyId, required this.onLocationSelected});
 
   @override
   State<SelectLocationShift> createState() => _SelectLocationShiftState();
@@ -26,16 +26,37 @@ class SelectLocationShift extends StatefulWidget {
 class _SelectLocationShiftState extends State<SelectLocationShift> {
   get suggestionsCallback => null;
 
+  List<QueryDocumentSnapshot> _locationDocs = [];
+  List<QueryDocumentSnapshot> _filteredLocationDocs = [];
+
   @override
   void initState() {
     super.initState();
+    fetchLocations();
   }
 
-  List<String> _locatioInfo = [
-    'mumbai, india',
-    'mumbai, india',
-    'mumbai, india',
-  ];
+  Future<void> fetchLocations() async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('Locations')
+        .where('LocationCompanyId', isEqualTo: widget.companyId)
+        .get();
+
+    setState(() {
+      _locationDocs = querySnapshot.docs;
+      _filteredLocationDocs = _locationDocs;
+    });
+  }
+
+  void filterLocations(String query) {
+    List<QueryDocumentSnapshot> filteredDocs = _locationDocs.where((doc) {
+      String locationName = doc['LocationName'].toLowerCase();
+      return locationName.contains(query.toLowerCase());
+    }).toList();
+
+    setState(() {
+      _filteredLocationDocs = filteredDocs;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +90,7 @@ class _SelectLocationShiftState extends State<SelectLocationShift> {
                 SearchBar(
                   hintText: 'Search Location',
                   onChanged: (value) {
-                    print(value);
+                    filterLocations(value);
                   },
                 // shape:WidgetStatePropertyAll(value),
                 backgroundColor:WidgetStatePropertyAll(Theme.of(context).cardColor),
@@ -93,30 +114,34 @@ class _SelectLocationShiftState extends State<SelectLocationShift> {
                   ],
                 ),
                 SizedBox(height: 20.h),
-                _locatioInfo.length != 0
+                _filteredLocationDocs.isNotEmpty
                     ? ListView.builder(
                         physics: NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
-                        itemCount: _locatioInfo.length,
+                        itemCount: _filteredLocationDocs.length,
                         itemBuilder: (context, index) {
+                          QueryDocumentSnapshot locationDoc =
+                          _filteredLocationDocs[index];
+                          String locationName = locationDoc['LocationName'];
+                          String locationId = locationDoc.id;
+                          String locationAddress = locationDoc['LocationAddress'];
                           return GestureDetector(
-                              onTap: () {},
+                              onTap: () {
+                                widget.onLocationSelected(locationAddress);
+                                Navigator.pop(context);
+                              },
                               child: Container(
-                                
                                 decoration: BoxDecoration(
                                   color: Theme.of(context).cardColor,
                                   borderRadius: BorderRadius.circular(12.h),
                                 ),
-                              
                                 height: 60.h,
-                                
                                 margin: EdgeInsets.only(bottom: 10.h),
                                 width: double.maxFinite,
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Container(
-                    
                                       height: 48.h,
                                       padding: EdgeInsets.symmetric(
                                           horizontal: 20.w),
@@ -135,7 +160,7 @@ class _SelectLocationShiftState extends State<SelectLocationShift> {
                                               ),
                                               SizedBox(width: 20.w),
                                               InterBold(
-                                                text: _locatioInfo[index],
+                                                text: locationName,
                                                 letterSpacing: -.3,
                                                 color: Theme.of(context)
                                                     .textTheme
