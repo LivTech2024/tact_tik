@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:bounce/bounce.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:filter_list/filter_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -35,29 +34,6 @@ import '../home screens/widgets/home_screen_part1.dart';
 import '../home screens/widgets/homescreen_custom_navigation.dart';
 import 'Reports/client_oprn_report.dart';
 import 'Reports/client_report_screen.dart';
-
-class Location {
-  final String? name;
-  final IconData? icon;
-
-  Location({this.name, this.icon});
-}
-
-/// Creating a global list for example purpose.
-/// Generally it should be within data class or where ever you want
-List<Location> userList = [
-  Location(name: "Abigail", icon: Icons.location_on),
-  Location(name: "Audrey", icon: Icons.location_on),
-  Location(name: "Ava", icon: Icons.location_on),
-  Location(name: "Bella", icon: Icons.location_on),
-  Location(name: "Bernadette", icon: Icons.location_on),
-  Location(name: "Carol", icon: Icons.location_on),
-  Location(name: "Claire", icon: Icons.location_on),
-  Location(name: "Deirdre", icon: Icons.location_on),
-  Location(name: "Donna", icon: Icons.location_on),
-  Location(name: "Dorothy", icon: Icons.location_on),
-  Location(name: "Faith", icon: Icons.location_on),
-];
 
 class ClientHomeScreen extends StatefulWidget {
   const ClientHomeScreen({super.key});
@@ -106,13 +82,13 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
   bool issShift = false;
   int _shiftRestrictedRadius = 0;
   int scheduleCount = 0;
-
+  String selectedGuardId = '';
+  String selectedLocationAddress = '';
   int ScreenIndex = 0;
   final GlobalKey<ScaffoldState> _scaffoldKeyClient = GlobalKey();
   List<Map<String, dynamic>> patrolsList = [];
   bool _showWish = true;
   bool NewMessage = false;
-  List<Location>? selectedUserList = [];
 
   void NavigateScreen(Widget screen, BuildContext context) {
     void NavigateScreen(Widget screen, BuildContext context) {
@@ -146,6 +122,22 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
     fetchReports();
   }
 
+  void onGuardSelected(String guardId) {
+    setState(() {
+      selectedGuardId = guardId;
+    });
+    print('Selected Guard ID: $selectedGuardId');
+    fetchShifts();
+  }
+
+  void onLocationSelected(String locationAddress) {
+    setState(() {
+      selectedLocationAddress = locationAddress;
+    });
+    print('Selected Location Address: $selectedLocationAddress');
+    fetchShifts();
+  }
+
   List<Map<String, dynamic>> shifts = [];
   List<Map<String, dynamic>> reports = [];
   bool isLoading = true;
@@ -159,6 +151,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
         String EmployeeId = userInfo['ClientId'];
         String empEmail = userInfo['ClientEmail'];
         String empImage = userInfo['ClientHomePageBgImg'] ?? "";
+        String companyId = userInfo['ClientCompanyId'];
         print("Employee Id ${EmployeeId}");
         var shiftInfo =
             await fireStoreService.getShiftByEmployeeIdFromUserInfo(EmployeeId);
@@ -172,6 +165,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
           _employeeId = EmployeeId;
           _empEmail = empEmail;
           employeeImg = empImage;
+          _cmpId = companyId;
         });
         print('User Info: ${userInfo.data()}');
         if (patrolInfo != null) {
@@ -321,19 +315,39 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
           .collection('Shifts')
           .where('ShiftClientId', isEqualTo: _employeeId)
           .get();
-      List<Map<String, dynamic>> fetchedShifts = querySnapshot.docs.map((doc) {
+
+      List<Map<String, dynamic>> fetchedShifts = [];
+
+      for (var doc in querySnapshot.docs) {
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-        return {
+
+        if (selectedGuardId.isNotEmpty) {
+          List<dynamic> shiftAssignedUserIds = data['ShiftAssignedUserId'];
+          if (shiftAssignedUserIds == null || !shiftAssignedUserIds.contains(selectedGuardId)) {
+            continue;
+          }
+        }
+
+        if (selectedLocationAddress.isNotEmpty) {
+          String? shiftLocationAddress = data['ShiftLocationAddress'];
+          if (shiftLocationAddress == null || shiftLocationAddress != selectedLocationAddress) {
+            continue;
+          }
+        }
+
+        fetchedShifts.add({
           'ShiftDate': data['ShiftDate'].toDate(),
           'ShiftName': data['ShiftName'],
           'ShiftLocationAddress': data['ShiftLocationAddress'],
           'ShiftStartTime': data['ShiftStartTime'],
           'ShiftEndTime': data['ShiftEndTime'],
           'members': data['members'],
-        };
-      }).toList();
+        });
+      }
+
       print("SHIFTS: ${fetchedShifts}");
       print("EMPLOYEE ID: ${_employeeId}");
+
       setState(() {
         shifts = fetchedShifts;
         isLoading = false;
@@ -375,7 +389,6 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                   data['ReportStatus'].toString().isNotEmpty)
               ? data['ReportStatus']
               : 'Not Found',
-
           'ReportCategory': (data['ReportCategoryName'] != null &&
                   data['ReportCategoryName'].toString().isNotEmpty)
               ? data['ReportCategoryName']
@@ -475,69 +488,6 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
     return date1.year == date2.year &&
         date1.month == date2.month &&
         date1.day == date2.day;
-  }
-
-  Future<void> _openFilterDialog() async {
-    await FilterListDialog.display<Location>(
-      context,
-      hideSelectedTextCount: true,
-      // themeData: FilterListThemeData(
-      //   context,
-      //   choiceChipTheme: ChoiceChipThemeData.(context),
-      // ),
-      headlineText: 'Select Location',
-      height: 500.h,
-      listData: userList,
-      selectedListData: selectedUserList,
-      choiceChipLabel: (item) => item!.name,
-      validateSelectedItem: (list, val) => list!.contains(val),
-      controlButtons: [ControlButtonType.All, ControlButtonType.Reset],
-      onItemSearch: (user, query) {
-        /// When search query change in search bar then this method will be called
-        ///
-        /// Check if items contains query
-        return user.name!.toLowerCase().contains(query.toLowerCase());
-      },
-
-      onApplyButtonClick: (list) {
-        setState(() {
-          selectedUserList = List.from(list!);
-        });
-        Navigator.pop(context);
-      },
-      onCloseWidgetPress: () {
-        // Do anything with the close button.
-        //print("hello");
-        Navigator.pop(context, null);
-      },
-
-      /// uncomment below code to create custom choice chip
-      choiceChipBuilder: (context, item, isSelected) {
-        return Container(
-          constraints: BoxConstraints(minWidth: 10.w),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          decoration: BoxDecoration(
-              border: Border.all(
-            color: isSelected! ? Colors.blue[300]! : Colors.grey[300]!,
-          )),
-          child: Row(
-            children: [
-              Icon(
-                item.icon,
-                color: isSelected ? Colors.blue[300] : Colors.grey[500],
-                size: 24.sp,
-              ),
-              SizedBox(width: 10.w),
-              InterMedium(
-                text: item.name,
-                color: isSelected ? Colors.blue[300] : Colors.grey[500],
-              ),
-            ],
-          ),
-        );
-      },
-    );
   }
 
   @override
@@ -906,6 +856,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               ClientCheckPatrolScreen(
+                                                companyId: _cmpId,
                                                 PatrolIdl: PatrolId,
                                                 ScreenName: PatrolName,
                                               )));
@@ -1068,7 +1019,14 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                 children: [
                                   GestureDetector(
                                     onTap: () {
-                                      _openFilterDialog();
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  SelectLocationShift(
+                                                    companyId: _cmpId,
+                                                    onLocationSelected: onLocationSelected,
+                                                  )));
                                     },
                                     child: SizedBox(
                                       width: 150.w,
@@ -1101,6 +1059,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                               builder: (context) =>
                                                   SelectClientGuardsScreen(
                                                     companyId: _cmpId,
+                                                    onGuardSelected: onGuardSelected,
                                                   )));
                                     },
                                     child: SizedBox(
@@ -1241,6 +1200,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                 onTap: () {
                                   NavigateScreen(
                                     ClientCheckPatrolScreen(
+                                      companyId: _cmpId,
                                       PatrolIdl: '',
                                       ScreenName: '',
                                     ),
