@@ -78,6 +78,7 @@ class _SKeyManagementViewScreenState extends State<SKeyManagementViewScreen> {
                   companyId: widget.companyId,
                   branchId: '',
                   AllocationKeyId: '',
+                  guardcreation: false,
                 ),
               ),
             );
@@ -181,6 +182,7 @@ class _SKeyManagementViewScreenState extends State<SKeyManagementViewScreen> {
                                     companyId: widget.companyId,
                                     branchId: widget.branchId,
                                     AllocationKeyId: key['KeyAllocationId'],
+                                    guardcreation: false,
                                   ),
                                 ),
                               );

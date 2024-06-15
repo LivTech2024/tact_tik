@@ -805,8 +805,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                   ],
                                 ),
                                 Checkbox(
-                                  activeColor: Theme.of(context)
-                                      .primaryColor,
+                                  activeColor: Theme.of(context).primaryColor,
                                   checkColor: DarkColor.color1,
                                   value: isChecked,
                                   onChanged: (bool? value) {
@@ -830,10 +829,11 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                 createEquipmentAllocation();
                               },
                               backgroundcolor: /*widget.OnlyView == true
-                                  ?*/ isChecked == false
+                                  ?*/
+                                  isChecked == false
                                       ? Theme.of(context).primaryColorLight
                                       : Theme.of(context).primaryColor,
-                                  // : Theme.of(context).primaryColorLight,
+                              // : Theme.of(context).primaryColorLight,
                               borderRadius: 10.r,
                             ),
                           ),

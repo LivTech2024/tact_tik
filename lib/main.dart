@@ -1,7 +1,6 @@
 import 'dart:ui' as ui;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_state_manager/src/simple/list_notifier.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'dart:async';
 import 'package:firebase_app_check/firebase_app_check.dart';
@@ -11,17 +10,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tact_tik/fonts/inter_semibold.dart';
 import 'package:tact_tik/screens/authChecker/authChecker.dart';
 
 // import 'package:tact_tik/screens/home%20screens/message%20screen/message_screen.dart';
 // import 'package:workmanager/workmanager.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
-import 'package:tact_tik/screens/client%20screens/patrol/unchecked_patrolss.dart';
-import 'package:tact_tik/services/Provider/provider.dart';
-import 'package:tact_tik/utils/colors.dart';
 import 'package:tact_tik/utils/constants.dart';
 import 'package:tact_tik/utils/notification_api/firebase_notification_api.dart';
 import 'package:tact_tik/utils/theme_manager.dart';
@@ -122,6 +116,7 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
+
 /*
     return ScreenUtilInit(
       designSize: const ui.Size(430, 932),
@@ -173,7 +168,6 @@ class _MyAppState extends State<MyApp> {
   }
 }
 */
-
 /*ProviderScope(
         child: GetMaterialApp(
           title: 'Tact Tik',

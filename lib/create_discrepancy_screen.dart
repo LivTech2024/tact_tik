@@ -22,15 +22,13 @@ import '../../../utils/colors.dart';
 // import '../widgets/custome_textfield.dart';
 
 class CreateDiscrepancyScreen extends StatefulWidget {
-  
-
   CreateDiscrepancyScreen({
     Key? key,
-  
   }) : super(key: key);
 
   @override
-  State<CreateDiscrepancyScreen> createState() => _CreateDiscrepancyScreenState();
+  State<CreateDiscrepancyScreen> createState() =>
+      _CreateDiscrepancyScreenState();
 }
 
 class _CreateDiscrepancyScreenState extends State<CreateDiscrepancyScreen> {
@@ -54,7 +52,6 @@ class _CreateDiscrepancyScreenState extends State<CreateDiscrepancyScreen> {
     // TODO: implement initState
 
     super.initState();
-
   }
 
   void getAllTitles() async {
@@ -67,8 +64,6 @@ class _CreateDiscrepancyScreenState extends State<CreateDiscrepancyScreen> {
     print("Report Titles : $data");
     print("Getting all titles");
   }
-
-  
 
   List<Map<String, dynamic>> uploads = [];
 
@@ -168,11 +163,9 @@ class _CreateDiscrepancyScreenState extends State<CreateDiscrepancyScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              
             ),
             padding: EdgeInsets.only(left: width / width20),
             onPressed: () {
@@ -181,23 +174,22 @@ class _CreateDiscrepancyScreenState extends State<CreateDiscrepancyScreen> {
           ),
           title: InterMedium(
             text: 'Create Discrepancy',
-           
           ),
           centerTitle: true,
         ),
         bottomSheet: Container(
           padding: EdgeInsets.symmetric(
             horizontal: 20,
-            vertical:10,
+            vertical: 10,
           ),
-          color: Theme.of(context).canvasColor  ,
+          color: Theme.of(context).canvasColor,
           child: Button1(
-                        text: 'Done',
-                        onPressed: (){},
-                        backgroundcolor: Theme.of(context).primaryColor,
-                        borderRadius: 10.r,
+            text: 'Done',
+            onPressed: () {},
+            backgroundcolor: Theme.of(context).primaryColor,
+            borderRadius: 10.r,
             color: Theme.of(context).textTheme.headlineMedium!.color,
-                      ),
+          ),
         ),
         body: Stack(
           children: [
@@ -211,26 +203,22 @@ class _CreateDiscrepancyScreenState extends State<CreateDiscrepancyScreen> {
                     InterBold(
                       text: '11/02/2024',
                       fontsize: width / width20,
-                      color:
-                           Theme.of(context).textTheme.bodySmall!.color,
+                      color: Theme.of(context).textTheme.bodySmall!.color,
                       letterSpacing: -.3,
                     ),
                     SizedBox(height: height / height30),
                     CustomeTextField(
                       hint: 'Title',
                       controller: titleController,
-                      isEnabled: 
-                           true,
-                           showIcon: false,
+                      isEnabled: true,
+                      showIcon: false,
                     ),
-                    
-                    
                     SizedBox(height: height / height20),
                     Container(
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
-                            color:  Theme.of(context).shadowColor,
+                            color: Theme.of(context).shadowColor,
                             blurRadius: 5,
                             spreadRadius: 2,
                             offset: Offset(0, 3),
@@ -247,8 +235,6 @@ class _CreateDiscrepancyScreenState extends State<CreateDiscrepancyScreen> {
                             : true,
                       ),
                     ),
-            
-                   
                     SizedBox(height: height / height20),
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
@@ -341,7 +327,8 @@ class _CreateDiscrepancyScreenState extends State<CreateDiscrepancyScreen> {
                               height: 66.w,
                               width: 66.w,
                               decoration: BoxDecoration(
-                                color: Theme.of(context).brightness == Brightness.dark
+                                color: Theme.of(context).brightness ==
+                                        Brightness.dark
                                     ? DarkColor.WidgetColor
                                     : LightColor.Primarycolor,
                                 borderRadius:
@@ -349,7 +336,7 @@ class _CreateDiscrepancyScreenState extends State<CreateDiscrepancyScreen> {
                               ),
                               child: Center(
                                 child: Icon(
-                                  color:  Theme.of(context)
+                                  color: Theme.of(context)
                                       .textTheme
                                       .bodyMedium!
                                       .color,
@@ -406,13 +393,9 @@ class _CreateDiscrepancyScreenState extends State<CreateDiscrepancyScreen> {
                       visible: shouldShowButton,
                       child: Button1(
                         text: 'Submit',
-                        onPressed: () async {
-                          
-                          
-                            
-                           
-                        },
-                        color: Theme.of(context).textTheme.headlineMedium!.color,
+                        onPressed: () async {},
+                        color:
+                            Theme.of(context).textTheme.headlineMedium!.color,
                         backgroundcolor: Theme.of(context).primaryColor,
                         borderRadius: 10.r,
                       ),
