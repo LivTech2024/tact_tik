@@ -60,8 +60,7 @@ class _ReportScreenState extends State<SReportScreen> {
   }
 
   void getAllReports() async {
-    reportData = await fireStoreService.getReportWithCompanyID(
-        widget.companyId, widget.locationId);
+    reportData = await fireStoreService.getReportWithEmpID(widget.empId);
     groupedReportData.clear(); // Clear existing data before adding new data
     reportData.forEach((report) {
       String reportDate =
@@ -108,17 +107,12 @@ class _ReportScreenState extends State<SReportScreen> {
 
   @override
   Widget build(BuildContext context) {
-
-
     return SafeArea(
       child: Scaffold(
-        
         appBar: AppBar(
-          
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-             
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -127,7 +121,6 @@ class _ReportScreenState extends State<SReportScreen> {
           ),
           title: InterMedium(
             text: 'Report',
-          
           ),
           centerTitle: true,
         ),
@@ -153,9 +146,12 @@ class _ReportScreenState extends State<SReportScreen> {
               }
             });
           },
-          backgroundColor:  Theme.of(context).primaryColor,
+          backgroundColor: Theme.of(context).primaryColor,
           shape: CircleBorder(),
-          child: Icon(Icons.add,color: Theme.of(context).textTheme.bodyMedium!.color,),
+          child: Icon(
+            Icons.add,
+            color: Theme.of(context).textTheme.bodyMedium!.color,
+          ),
         ),
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 30.w),
@@ -163,7 +159,6 @@ class _ReportScreenState extends State<SReportScreen> {
             children: [
               SizedBox(height: 30.h),
               SizedBox(
-                
                 height: 50.h,
                 child: ListView.builder(
                   itemCount: tittles.length,
@@ -171,7 +166,7 @@ class _ReportScreenState extends State<SReportScreen> {
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) {
                     return Padding(
-                      padding:  EdgeInsets.symmetric(vertical: 8.h),
+                      padding: EdgeInsets.symmetric(vertical: 8.h),
                       child: GestureDetector(
                         onTap: () {
                           setState(() {
@@ -181,8 +176,7 @@ class _ReportScreenState extends State<SReportScreen> {
                         },
                         child: AnimatedContainer(
                           margin: EdgeInsets.only(right: 10.w),
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 20.w),
+                          padding: EdgeInsets.symmetric(horizontal: 20.w),
                           constraints: BoxConstraints(
                             minWidth: 70.w,
                           ),
@@ -231,7 +225,7 @@ class _ReportScreenState extends State<SReportScreen> {
                         if (groupReports.isNotEmpty)
                           InterBold(
                             text: groupDate,
-                            color:  Theme.of(context).textTheme.bodySmall!.color,
+                            color: Theme.of(context).textTheme.bodySmall!.color,
                             fontsize: 20.sp,
                           ),
                         SizedBox(height: 30.h),
@@ -286,8 +280,7 @@ class _ReportScreenState extends State<SReportScreen> {
                                         )
                                       ],
                                       color: Theme.of(context).cardColor,
-                                      borderRadius: BorderRadius.circular(
-                                          10.w),
+                                      borderRadius: BorderRadius.circular(10.w),
                                     ),
                                     child: Row(
                                       children: [
@@ -298,8 +291,8 @@ class _ReportScreenState extends State<SReportScreen> {
                                           child: SvgPicture.asset(
                                             Theme.of(context).brightness ==
                                                     Brightness.dark
-                                                ?
-                                            'assets/images/report_icon.svg':'assets/images/report_icon_light.svg',
+                                                ? 'assets/images/report_icon.svg'
+                                                : 'assets/images/report_icon_light.svg',
                                             height: 24.h,
                                             fit: BoxFit.fitHeight,
                                           ),
@@ -315,15 +308,14 @@ class _ReportScreenState extends State<SReportScreen> {
                                                 report['ReportName'],
                                                 style: TextStyle(
                                                   fontSize: 20.sp,
-                                                  color:  Theme.of(context)
+                                                  color: Theme.of(context)
                                                       .textTheme
                                                       .bodyLarge!
                                                       .color,
                                                   fontWeight: FontWeight.w500,
                                                 ),
                                               ),
-                                              SizedBox(
-                                                  height: 10.h),
+                                              SizedBox(height: 10.h),
                                               Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment
@@ -333,9 +325,8 @@ class _ReportScreenState extends State<SReportScreen> {
                                                     children: [
                                                       InterMedium(
                                                         text: 'CATEGORY: ',
-                                                        fontsize:
-                                                            14.w,
-                                                        color:  Theme.of(context)
+                                                        fontsize: 14.w,
+                                                        color: Theme.of(context)
                                                             .textTheme
                                                             .displayLarge!
                                                             .color,
@@ -343,9 +334,8 @@ class _ReportScreenState extends State<SReportScreen> {
                                                       InterRegular(
                                                         text: report[
                                                             'ReportCategoryName'],
-                                                        fontsize:
-                                                            14.w,
-                                                        color:  Theme.of(context)
+                                                        fontsize: 14.w,
+                                                        color: Theme.of(context)
                                                             .textTheme
                                                             .displayMedium!
                                                             .color,
@@ -354,7 +344,7 @@ class _ReportScreenState extends State<SReportScreen> {
                                                   ),
                                                   InterRegular(
                                                     text: formattedTime,
-                                                    color:  Theme.of(context)
+                                                    color: Theme.of(context)
                                                         .textTheme
                                                         .displayMedium!
                                                         .color,

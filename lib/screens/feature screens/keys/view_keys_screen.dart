@@ -127,8 +127,8 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
         return Theme(
           data: ThemeData.dark().copyWith(
             colorScheme: ColorScheme.dark(
-              primary: DarkColor. Primarycolor,
-              secondary: DarkColor. Primarycolor,
+              primary: DarkColor.Primarycolor,
+              secondary: DarkColor.Primarycolor,
             ),
           ),
           child: child!,
@@ -191,11 +191,9 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     bool isEditMode = widget.visitorData != null;
     return SafeArea(
       child: Scaffold(
-        
         body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -204,7 +202,7 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
               InterBold(
                 text: 'Allocation Date',
                 color: Theme.of(context).textTheme.bodySmall!.color,
-          fontsize: 20.sp,
+                fontsize: 20.sp,
               ),
               SizedBox(height: 30.h),
               Row(
@@ -213,14 +211,19 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                     child: Container(
                       height: 60.h,
                       decoration: BoxDecoration(
-                         borderRadius: BorderRadius.circular(10.r),
+                        borderRadius: BorderRadius.circular(10.r),
                         color: Theme.of(context).cardColor,
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          InterMedium(text: widget.startDate, fontsize: 16.sp, color: Theme.of(context).textTheme.bodyLarge!.color),
-                          SvgPicture.asset('assets/images/calendar_clock.svg', width: 20.w)
+                          InterMedium(
+                              text: widget.startDate,
+                              fontsize: 16.sp,
+                              color:
+                                  Theme.of(context).textTheme.bodyLarge!.color),
+                          SvgPicture.asset('assets/images/calendar_clock.svg',
+                              width: 20.w)
                         ],
                       ),
                     ),
@@ -236,8 +239,13 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          InterMedium(text: widget.endDate, fontsize: 16.sp, color: Theme.of(context).textTheme.bodyLarge!.color),
-                          SvgPicture.asset('assets/images/calendar_clock.svg', width: 20.w)
+                          InterMedium(
+                              text: widget.endDate,
+                              fontsize: 16.sp,
+                              color:
+                                  Theme.of(context).textTheme.bodyLarge!.color),
+                          SvgPicture.asset('assets/images/calendar_clock.svg',
+                              width: 20.w)
                         ],
                       ),
                     ),
@@ -245,7 +253,10 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                 ],
               ),
               SizedBox(height: 30.h),
-              InterBold(text: 'Key', color: Theme.of(context).textTheme.bodyMedium!.color, fontsize: 16.sp),
+              InterBold(
+                  text: 'Key',
+                  color: Theme.of(context).textTheme.bodyMedium!.color,
+                  fontsize: 16.sp),
               Container(
                 height: 60.h,
                 width: double.maxFinite,
@@ -271,8 +282,7 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                           child: Center(
                             child: Icon(
                               Icons.home_repair_service,
-                              color:
-                                  Theme.of(context).primaryColor,
+                              color: Theme.of(context).primaryColor,
                               size: 24.sp,
                             ),
                           ),
@@ -296,7 +306,8 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                             return InterMedium(
                               text: keyName,
                               fontsize: 16.sp,
-                              color: Theme.of(context).textTheme.bodyMedium!.color,
+                              color:
+                                  Theme.of(context).textTheme.bodyMedium!.color,
                             );
                           },
                         ),
@@ -428,7 +439,7 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                     onPressed: () async {
                       await _saveVisitorData();
                     },
-                    backgroundcolor: Theme.of(context).primaryColor ,
+                    backgroundcolor: Theme.of(context).primaryColor,
                     color: Theme.of(context).hoverColor,
                     borderRadius: 10.r,
                     fontsize: 18.sp,

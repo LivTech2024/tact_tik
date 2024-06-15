@@ -15,7 +15,8 @@ class SAssetsViewScreen extends StatefulWidget {
   final String empId;
   final String companyId;
 
-  const SAssetsViewScreen({super.key, required this.empId, required this.companyId});
+  const SAssetsViewScreen(
+      {super.key, required this.empId, required this.companyId});
 
   @override
   _SAssetsViewScreenState createState() => _SAssetsViewScreenState();
@@ -67,14 +68,17 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
 
     return SafeArea(
       child: Scaffold(
-        
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      SCreateAssignAssetScreen(companyId: widget.companyId, empId: '', OnlyView: false, equipemtAllocId: '',),
+                  builder: (context) => SCreateAssignAssetScreen(
+                    companyId: widget.companyId,
+                    empId: '',
+                    OnlyView: false,
+                    equipemtAllocId: '',
+                  ),
                 ));
           },
           backgroundColor: Theme.of(context).primaryColor,
@@ -84,11 +88,9 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
         body: CustomScrollView(
           slivers: [
             SliverAppBar(
-          
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back_ios,
-                
                 ),
                 padding: EdgeInsets.only(left: 20.w),
                 onPressed: () {
@@ -98,7 +100,6 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
               ),
               title: InterMedium(
                 text: 'Assets',
-               
               ),
               centerTitle: true,
               floating: true,
@@ -112,7 +113,6 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                     SizedBox(
                       height: 30.h,
                     ),
-                   
                     SizedBox(
                       height: 30.h,
                     ),
@@ -130,8 +130,7 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                     if (index == 0) {
                       return Padding(
                         padding: EdgeInsets.symmetric(
-                            horizontal: 30.w,
-                            vertical: 30.h),
+                            horizontal: 30.w, vertical: 30.h),
                         child: InterBold(
                           text: getDateHeader(date),
                           fontsize: 20.sp,
@@ -140,14 +139,15 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                       );
                     }
                     final equipment = equipmentsForDate[index - 1];
-                    final createdAt = equipment['EquipmentAllocationCreatedAt'].toDate();
+                    final createdAt =
+                        equipment['EquipmentAllocationCreatedAt'].toDate();
                     final formattedTime =
                         DateFormat('hh:mm a').format(createdAt);
-                    final equipmentAllocationId = equipment['EquipmentAllocationId'];
+                    final equipmentAllocationId =
+                        equipment['EquipmentAllocationId'];
 
                     return Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 30.w),
+                      padding: EdgeInsets.symmetric(horizontal: 30.w),
                       child: GestureDetector(
                         onTap: () {
                           Navigator.push(
@@ -168,16 +168,14 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                           decoration: BoxDecoration(
                             boxShadow: [
                               BoxShadow(
-                                color:Theme.of(context).shadowColor,
+                                color: Theme.of(context).shadowColor,
                                 blurRadius: 5,
                                 spreadRadius: 2,
                                 offset: Offset(0, 3),
                               )
                             ],
-                            borderRadius:
-                                BorderRadius.circular(10.w),
-                            color:
-                                Theme.of(context).cardColor,
+                            borderRadius: BorderRadius.circular(10.w),
+                            color: Theme.of(context).cardColor,
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -194,9 +192,10 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                                       padding: EdgeInsets.symmetric(
                                           horizontal: 10.w),
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(
-                                            10.w),
-                                        color: Theme.of(context).primaryColorLight,
+                                        borderRadius:
+                                            BorderRadius.circular(10.w),
+                                        color:
+                                            Theme.of(context).primaryColorLight,
                                       ),
                                       child: Center(
                                         child: Icon(
@@ -208,9 +207,11 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                                     ),
                                     SizedBox(width: 20.w),
                                     FutureBuilder<String>(
-                                      future: getEquipmentName(equipment['EquipmentAllocationEquipId']),
+                                      future: getEquipmentName(equipment[
+                                          'EquipmentAllocationEquipId']),
                                       builder: (context, snapshot) {
-                                        if (snapshot.connectionState == ConnectionState.waiting) {
+                                        if (snapshot.connectionState ==
+                                            ConnectionState.waiting) {
                                           return InterMedium(
                                             text: 'Loading...',
                                             fontsize: 16.sp,
@@ -220,16 +221,17 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                                           return InterMedium(
                                             text: 'Error: ${snapshot.error}',
                                             fontsize: 16.sp,
-                                            color:  Theme.of(context)
+                                            color: Theme.of(context)
                                                 .textTheme
                                                 .bodyMedium!
                                                 .color,
                                           );
                                         } else {
                                           return InterMedium(
-                                            text: snapshot.data ?? 'Unknown Equipment',
+                                            text: snapshot.data ??
+                                                'Unknown Equipment',
                                             fontsize: 16.sp,
-                                            color:  Theme.of(context)
+                                            color: Theme.of(context)
                                                 .textTheme
                                                 .bodyMedium!
                                                 .color,
@@ -242,13 +244,13 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                               ),
                               InterMedium(
                                 text: formattedTime,
-                                color:  Theme.of(context)
+                                color: Theme.of(context)
                                     .textTheme
                                     .displayMedium!
                                     .color,
                                 fontsize: 16.sp,
                               ),
-                              SizedBox(width:20.w),
+                              SizedBox(width: 20.w),
                             ],
                           ),
                         ),

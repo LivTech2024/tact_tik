@@ -150,6 +150,7 @@ class _SKeyManagementViewScreenState extends State<SKeyManagementViewScreen> {
                     final createdAt = key['KeyAllocationCreatedAt'].toDate();
                     final formattedTime =
                         DateFormat('hh:mm a').format(createdAt);
+
                     final keyId = key.id; // Get the document ID
 
                     return FutureBuilder<String?>(
@@ -296,14 +297,14 @@ class _SKeyManagementViewScreenState extends State<SKeyManagementViewScreen> {
                                           ),
                                         ],
                                       ),
-                                      InterMedium(
-                                        text: formattedTime,
-                                        color: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium!
-                                            .color,
-                                        fontsize: 16.sp,
-                                      ),
+                                      // InterMedium(
+                                      //   text: formattedTime,
+                                      //   color: Theme.of(context)
+                                      //       .textTheme
+                                      //       .bodyMedium!
+                                      //       .color,
+                                      //   fontsize: 16.sp,
+                                      // ),
                                       // SizedBox(width: 10.w),
                                     ],
                                   ),

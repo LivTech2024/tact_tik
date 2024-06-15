@@ -405,10 +405,10 @@ packages:
     dependency: "direct main"
     description:
       name: filter_list
-      sha256: "2d80d6d19beb7847c1176e8bf6fe06d302b23eb7d1bf48c231dd730409ff9b4d"
+      sha256: "5b2bdfcf37ebe0730b0b46d59ca2091a1dd7a3a6df39c0fbdfa5ea165903d1e1"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.2"
+    version: "1.0.3"
   firebase_app_check:
     dependency: "direct main"
     description:
@@ -598,6 +598,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.0.3"
+  flutter_filter_dialog:
+    dependency: "direct main"
+    description:
+      name: flutter_filter_dialog
+      sha256: "1420b5303ce2b1c7677c3a8bd61a43af0a0849d8dce408ffda98ee220bb4fdc4"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.0"
   flutter_image_compress:
     dependency: "direct main"
     description:
@@ -1701,6 +1709,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
+  sticky_headers:
+    dependency: transitive
+    description:
+      name: sticky_headers
+      sha256: "9b3dd2cb0fd6a7038170af3261f855660cbb241cb56c501452cb8deed7023ede"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.0+2"
   stream_channel:
     dependency: transitive
     description:
@@ -1982,5 +1998,5 @@ packages:
     source: hosted
     version: "6.5.0"
 sdks:
-  dart: ">=3.3.0 <4.0.0"
+  dart: ">=3.3.3 <4.0.0"
   flutter: ">=3.19.2"

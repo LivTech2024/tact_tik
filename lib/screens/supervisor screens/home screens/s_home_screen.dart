@@ -634,6 +634,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                         builder: (context) =>
                                             SelectAssetsGuardsScreen(
                                           companyId: _CompanyId,
+                                          empId: _employeeId,
                                         ),
                                       ),
                                     );

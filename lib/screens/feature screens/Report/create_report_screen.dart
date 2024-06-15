@@ -59,6 +59,12 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
   List<Map<String, dynamic>> DisplayIMage = [];
 
   FireStoreService fireStoreService = FireStoreService();
+  // List<String> ClintValues = ['Client'];
+  String? selectedClint = 'Client';
+  String? selectedClientName;
+  // String? selectedClientId;
+  String? selectedClientId = 'Client';
+  // List<String> LocationValues = ['Select Location'];
   List<String> tittles = [];
   Map<String, dynamic> reportData = {};
   final TextEditingController explainController = TextEditingController();
@@ -67,17 +73,24 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
   bool isChecked = false;
   String dropdownValue = 'Incident';
   String dropdownValueGuard = 'All Guards';
-  String dropdownValueLocation = 'Select Location';
+  // String dropdownValueLocation = 'Select Location';
+  String? selectedLocationName;
+  String? selectedLocationId = '';
+
   bool dropdownShoe = false;
   bool _isLoading = false;
   DateTime? StartDate;
   DateTime? SelectedDate;
   DateTime? EndDate;
+  Map<String, String> clientMap = {};
+  Map<String, String> locationMap = {};
   @override
   void initState() {
     // TODO: implement initState
     getAllTitles();
     getAllReports();
+    getAllClientNames();
+    getAllLocationNames();
     super.initState();
     shouldShowButton = widget.buttonEnable;
     print("Shift Id at Create Report ${widget.ShiftId}");
@@ -94,8 +107,39 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
     print("Getting all titles");
   }
 
+  void getAllClientNames() async {
+    Map<String, String> clients =
+        await fireStoreService.getAllClientsNameAndID(widget.companyID);
+    if (clients.isNotEmpty) {
+      setState(() {
+        clientMap = clients;
+        // ClintValues.addAll(
+        //     clients.values.toList()); // Update ClintValues if needed
+      });
+    }
+  }
+
+  void getAllLocationNames() async {
+    Map<String, String> locations =
+        await fireStoreService.getAllLocationsWithId(widget.companyID);
+    if (locations.isNotEmpty) {
+      setState(() {
+        locationMap = locations;
+      });
+    }
+  }
+
+  void updateSelectedClient(String clientId) {
+    setState(() {
+      selectedClientId = clientId;
+      selectedClientName = clientMap[clientId];
+    });
+  }
+
   void getAllReports() async {
     if (widget.SearchId.isNotEmpty) {
+      // getAllClientNames();
+      // getAllLocationNames();
       Map<String, dynamic>? data =
           (await fireStoreService.getReportWithSearchId(widget.SearchId));
       if (data != null) {
@@ -105,8 +149,21 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
           titleController.text = reportData['ReportName'];
           explainController.text = reportData['ReportData'];
           dropdownValue = reportData['ReportCategoryName'];
+          // Timestamp reportCreatedAt = reportData['ReportCreatedAt'];
+          SelectedDate = reportData['ReportCreatedAt'].toDate();
+          selectedLocationName = reportData['ReportLocationName'];
+          selectedLocationId = reportData['ReportLocationId'];
+          selectedClientId = reportData['ReportClientId'];
+          // selectedClientName = clientMap[selectedClientId];
           // uploads.add(reportData['ReportImage']);
         });
+        if (selectedClientId != null) {
+          String? ClientName =
+              await fireStoreService.getClientName(selectedClientId);
+          setState(() {
+            selectedClientName = ClientName;
+          });
+        }
         if (reportData['ReportIsFollowUpRequired'] == false) {
           setState(() {
             shouldShowButton = false;
@@ -127,6 +184,8 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
         print(reportData['ReportIsFollowUpRequired']);
       }
     } else {
+      // getAllClientNames();
+      // getAllLocationNames();
       Map<String, dynamic>? data =
           (await fireStoreService.getReportWithId(widget.reportId));
       if (data != null) {
@@ -136,8 +195,20 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
           titleController.text = reportData['ReportName'];
           explainController.text = reportData['ReportData'];
           dropdownValue = reportData['ReportCategoryName'];
+          SelectedDate = reportData['ReportCreatedAt'].toDate();
+          selectedLocationName = reportData['ReportLocationName'];
+          selectedLocationId = reportData['ReportLocationId'];
+          selectedClientId = reportData['ReportClientId'];
+          // selectedClientName = clientMap[selectedClientId];
           // uploads.add(reportData['ReportImage']);
         });
+        if (selectedClientId != null) {
+          String? ClientName =
+              await fireStoreService.getClientName(selectedClientId);
+          setState(() {
+            selectedClientName = ClientName;
+          });
+        }
         if (reportData['ReportIsFollowUpRequired'] == false) {
           setState(() {
             shouldShowButton = false;
@@ -253,6 +324,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
       uploads.removeAt(index);
     });
   }
+
   Future<void> _selectDate(
       BuildContext context, bool isStart, bool isDate) async {
     final DateTime? dateTime = await showOmniDateTimePicker(
@@ -274,10 +346,10 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
       });
     }
   }
+
   // Initialize default value
   @override
   Widget build(BuildContext context) {
-    
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -417,7 +489,6 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                             : true,
                       ),
                     ),
-                    
                     SizedBox(height: 20.h),
                     GestureDetector(
                       onTap: () async {
@@ -448,8 +519,9 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                           children: [
                             InterMedium(
                               text: SelectedDate != null
-                                  ? '${SelectedDate!.toLocal()}'.split(' ')[0]
-                                  : 'Select Date',
+                                  ? DateFormat('yyyy-MM-dd – kk:mm')
+                                      .format(SelectedDate!)
+                                  : 'Report Time',
                               fontsize: 16.w,
                               color:
                                   Theme.of(context).textTheme.bodyLarge!.color,
@@ -462,138 +534,85 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                         ),
                       ),
                     ),
-                    
-                    SizedBox(height: 20.h),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: () {
-                              _selectDate(context, true, false);
-                            },
-                            child: Container(
-                              height: 60.h,
-                              decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Theme.of(context).shadowColor,
-                                    blurRadius: 5,
-                                    spreadRadius: 2,
-                                    offset: Offset(0, 3),
-                                  )
-                                ],
-                                borderRadius: BorderRadius.circular(10.r),
-                                color: Theme.of(context).cardColor,
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  InterMedium(
-                                    text: StartDate != null
-                                        ? DateFormat('yyyy-MM-dd – kk:mm')
-                                            .format(StartDate!)
-                                        : 'Start Time',
-                                    fontsize: 16.sp,
-                                    color: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium!
-                                        .color,
-                                  ),
-                                  SvgPicture.asset(
-                                    'assets/images/calendar_clock.svg',
-                                    width: 20.w,
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 6.w),
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: () {
-                              _selectDate(context, false, false);
-                            },
-                            child: Container(
-                              height: 60.h,
-                              decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Theme.of(context).shadowColor,
-                                    blurRadius: 5,
-                                    spreadRadius: 2,
-                                    offset: Offset(0, 3),
-                                  )
-                                ],
-                                borderRadius: BorderRadius.circular(10.r),
-                                color: Theme.of(context).cardColor,
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  InterMedium(
-                                    text: EndDate != null
-                                        ? DateFormat('yyyy-MM-dd – kk:mm')
-                                            .format(EndDate!)
-                                        : 'End Time',
-                                    fontsize: 16.w,
-                                    color: Theme.of(context)
-                                        .textTheme
-                                        .bodyLarge!
-                                        .color,
-                                  ),
-                                  SvgPicture.asset(
-                                    'assets/images/calendar_clock.svg',
-                                    width: 20.w,
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
                     SizedBox(height: 20.h),
                     Container(
-                       height: 60.h,
-                       width: double.maxFinite,
-                      padding: EdgeInsets.symmetric(horizontal: 20.w),
+                      height: 60.h,
+                      padding: EdgeInsets.symmetric(horizontal: 10.w),
                       decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: Theme.of(context).shadowColor,
-                            blurRadius: 5,
-                            spreadRadius: 2,
-                            offset: Offset(0, 3),
-                          )
-                        ],
-                        color: Theme.of(context).cardColor,
-                        borderRadius: BorderRadius.circular(10.r),),
+                        // color: Colors.redAccent,
+                        borderRadius: BorderRadius.circular(10.w),
+                        border: Border(
+                          bottom: BorderSide(
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? DarkColor.color19
+                                    : LightColor.color3,
+                          ),
+                        ),
+                      ),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
+                          isExpanded: true,
                           iconSize: 24.w,
+                          hint: Text(
+                            "Select Client",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          icon: Icon(Icons.arrow_drop_down),
+                          iconEnabledColor:
+                              Theme.of(context).textTheme.bodyMedium!.color,
+                          // Set icon color for enabled state
                           dropdownColor: Theme.of(context).cardColor,
                           style: TextStyle(
-                              color: Theme.of(context).textTheme.bodyLarge!.color,
-                              fontSize: 14.sp),
-                          borderRadius: BorderRadius.circular(10.r),
-                          value: dropdownValueGuard ,
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .color),
+                          value: selectedClientName,
                           onChanged: (String? newValue) {
                             setState(() {
-                              dropdownValueGuard = newValue!;
+                              selectedClientName = newValue!;
+                              selectedClientId = clientMap.entries
+                                  .firstWhere(
+                                      (entry) => entry.value == newValue)
+                                  .key;
+                              print(
+                                  '$selectedClientName selected with ID: $selectedClientId');
                             });
                           },
-                          items: <String>[
-                            'All Guards',
-                            'available',
-                            'unavailable'
-                          ] // Add your options here
-                              .map<DropdownMenuItem<String>>((String value) {
+                          items: clientMap.entries
+                              .map<DropdownMenuItem<String>>((entry) {
                             return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
+                              value: entry.value,
+                              child: Row(
+                                children: [
+                                  selectedClientName == entry.value
+                                      ? Icon(Icons.account_circle_outlined,
+                                          color: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .color)
+                                      : Icon(Icons.account_circle_outlined,
+                                          color: Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge!
+                                              .color),
+                                  // Conditional icon color based on selection
+                                  SizedBox(width: 10.w),
+                                  InterRegular(
+                                      text: entry.value,
+                                      color: selectedClientName == entry.value
+                                          ? Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .color
+                                          : Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge!
+                                              .color),
+                                  // Conditional text color based on selection
+                                ],
+                              ),
                             );
                           }).toList(),
                         ),
@@ -602,43 +621,79 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                     SizedBox(height: 20.h),
                     Container(
                       height: 60.h,
-                      width: double.maxFinite,
-                      padding: EdgeInsets.symmetric(horizontal: 20.w),
+                      padding: EdgeInsets.symmetric(horizontal: 10.w),
                       decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: Theme.of(context).shadowColor,
-                            blurRadius: 5,
-                            spreadRadius: 2,
-                            offset: Offset(0, 3),
-                          )
-                        ],
-                        color: Theme.of(context).cardColor,
+                        // color: Colors.redAccent,
                         borderRadius: BorderRadius.circular(10.r),
+                        border: Border(
+                          bottom: BorderSide(
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? DarkColor.color19
+                                    : LightColor.color3,
+                          ),
+                        ),
                       ),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
+                          isExpanded: true,
+                          hint: Text(
+                            "Select Location",
+                            style: TextStyle(color: Colors.white),
+                          ),
                           iconSize: 24.w,
+                          icon: Icon(Icons.arrow_drop_down),
+                          iconEnabledColor:
+                              Theme.of(context).textTheme.bodyMedium!.color,
                           dropdownColor: Theme.of(context).cardColor,
                           style: TextStyle(
-                              color: Theme.of(context).textTheme.bodyLarge!.color,
-                              fontSize: 14.sp),
-                          borderRadius: BorderRadius.circular(10.r),
-                          value: dropdownValueLocation ,
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .color),
+                          value: selectedLocationName,
                           onChanged: (String? newValue) {
                             setState(() {
-                              dropdownValueLocation = newValue!;
+                              selectedLocationName = newValue!;
+                              selectedLocationId = locationMap.entries
+                                  .firstWhere(
+                                      (entry) => entry.value == newValue)
+                                  .key;
+                              print(
+                                  '$selectedLocationName selected with ID: $selectedLocationId');
                             });
                           },
-                          items: <String>[
-                            'Select Location',
-                            'available',
-                            'unavailable'
-                          ] // Add your options here
-                              .map<DropdownMenuItem<String>>((String value) {
+                          items: locationMap.entries
+                              .map<DropdownMenuItem<String>>((entry) {
                             return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
+                              value: entry.value,
+                              child: Row(
+                                children: [
+                                  selectedLocationName == entry.value
+                                      ? Icon(Icons.location_on_outlined,
+                                          color: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .color)
+                                      : Icon(Icons.location_on_outlined,
+                                          color: Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge!
+                                              .color),
+                                  SizedBox(width: 10.w),
+                                  InterRegular(
+                                      text: entry.value,
+                                      color: selectedLocationName == entry.value
+                                          ? Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .color
+                                          : Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge!
+                                              .color),
+                                ],
+                              ),
                             );
                           }).toList(),
                         ),
@@ -865,8 +920,10 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                               return {'type': upload['type']};
                             }));
                             await fireStoreService.createReport(
-                                locationId: widget.locationId,
-                                locationName: widget.locationName,
+                                locationId:
+                                    selectedLocationId ?? widget.locationId,
+                                locationName:
+                                    selectedLocationName ?? widget.locationName,
                                 isFollowUpRequired: isChecked,
                                 companyId: widget.companyID,
                                 employeeId: widget.empId,
@@ -878,10 +935,10 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                                 categoryId: id ?? "",
                                 data: explainController.text,
                                 status: "completed",
-                                clientId: widget.ClientId,
+                                clientId: selectedClientId ?? widget.ClientId,
                                 followedUpId: widget.reportId,
                                 image: imageUrls,
-                                createdAt: Timestamp.now(),
+                                createdAt: SelectedDate,
                                 shiftId: widget.ShiftId);
                             if (isChecked == false) {
                               await fireStoreService
@@ -913,8 +970,10 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                               return {'type': upload['type']};
                             }));
                             await fireStoreService.createReport(
-                                locationId: widget.locationId,
-                                locationName: widget.locationName,
+                                locationId:
+                                    selectedLocationId ?? widget.locationId,
+                                locationName:
+                                    selectedLocationName ?? widget.locationName,
                                 isFollowUpRequired: isChecked,
                                 companyId: widget.companyID,
                                 employeeId: widget.empId,
@@ -924,9 +983,9 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                                 categoryId: newId ?? "",
                                 data: explainController.text,
                                 status: "pending",
-                                clientId: widget.ClientId,
+                                clientId: selectedClientId ?? widget.ClientId,
                                 image: imageUrls,
-                                createdAt: Timestamp.now(),
+                                createdAt: SelectedDate,
                                 shiftId: widget.ShiftId);
                             Navigator.pop(context, true);
                             setState(() {
@@ -980,8 +1039,10 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                               return {'type': upload['type']};
                             }));
                             await fireStoreService.createReport(
-                                locationId: widget.locationId,
-                                locationName: widget.locationName,
+                                locationId:
+                                    selectedLocationId ?? widget.locationId,
+                                locationName:
+                                    selectedLocationName ?? widget.locationName,
                                 isFollowUpRequired: isChecked,
                                 companyId: widget.companyID,
                                 employeeId: widget.empId,
@@ -991,9 +1052,9 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                                 categoryId: id ?? "",
                                 data: explainController.text,
                                 status: "pending",
-                                clientId: widget.ClientId,
+                                clientId: selectedClientId ?? widget.ClientId,
                                 image: imageUrls,
-                                createdAt: Timestamp.now(),
+                                createdAt: SelectedDate,
                                 shiftId: widget.ShiftId);
                             // }
                             Navigator.pop(context, true);

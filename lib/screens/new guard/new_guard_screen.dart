@@ -69,17 +69,20 @@ class _NewGuardScreenState extends State<NewGuardScreen> {
 
   Future<void> createEmployee() async {
     try {
-      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: EmailController.text,
         password: PasswordController.text,
       );
 
       String uid = userCredential.user!.uid;
 
-      final employeeName = '${FirstNameController.text} ${LastNameController.text}';
+      final employeeName =
+          '${FirstNameController.text} ${LastNameController.text}';
       final nameSearchIndex = generateSearchIndex(employeeName);
 
-      DocumentReference newEmployeeDoc = FirebaseFirestore.instance.collection('Employees').doc(uid);
+      DocumentReference newEmployeeDoc =
+          FirebaseFirestore.instance.collection('Employees').doc(uid);
 
       String bankVoidCheckImgUrl = '';
       String certificateDocUrl = '';
@@ -177,7 +180,6 @@ class _NewGuardScreenState extends State<NewGuardScreen> {
       ));
     }
   }
-
 
   List<String> generateSearchIndex(String name) {
     List<String> searchIndex = [];

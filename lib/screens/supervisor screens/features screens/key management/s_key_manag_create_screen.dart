@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
+import 'package:tact_tik/common/widgets/customErrorToast.dart';
 import 'package:tact_tik/common/widgets/customToast.dart';
 import 'package:tact_tik/main.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
@@ -38,13 +39,13 @@ class SCreateKeyManagScreen extends StatefulWidget {
   final String branchId;
   final String AllocationKeyId;
   final bool editKeyMode;
-  SCreateKeyManagScreen({
-    super.key,
-    required this.keyId,
-    required this.companyId,
-    required this.branchId,
-    required this.AllocationKeyId,this.editKeyMode = false
-  });
+  SCreateKeyManagScreen(
+      {super.key,
+      required this.keyId,
+      required this.companyId,
+      required this.branchId,
+      required this.AllocationKeyId,
+      this.editKeyMode = false});
 
   @override
   State<SCreateKeyManagScreen> createState() =>
@@ -85,15 +86,19 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
   List<Map<String, dynamic>> guards = [];
   List<String> keyNames = ['Select'];
   Map<String, DocumentSnapshot> keyNameToDocMap = {};
-  bool editKeyMode = false;
-
+  bool editKeyMode = true;
+  bool showReturnBtn = false;
+  bool _isLoading = false;
   @override
   void initState() {
     super.initState();
     if (widget.AllocationKeyId.isNotEmpty) {
       setState(() {
-        editKeyMode = true;
+        // editKeyMode = false;
+        showReturnBtn = true;
       });
+      _fetchKeys();
+
       _fetchAllotedData(widget.AllocationKeyId);
       //fetch the data and display the details and a checkbox based on this condition
     } else {
@@ -117,6 +122,28 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
         for (var doc in querySnapshot.docs) doc.get('KeyName'): doc
       };
     });
+  }
+
+  Future<void> _fetchKeysName(String? keyId) async {
+    if (keyId == null || keyId.isEmpty) {
+      // Handle the case where keyId is null or empty
+      return;
+    }
+
+    DocumentSnapshot documentSnapshot =
+        await FirebaseFirestore.instance.collection('Keys').doc(keyId).get();
+
+    if (documentSnapshot.exists) {
+      setState(() {
+        selectedKeyName = documentSnapshot.get("KeyName");
+        dropdownValue = selectedKeyName!; // Update the dropdown value
+      });
+    } else {
+      // Handle the case where the document does not exist
+      setState(() {
+        selectedKeyName = "Key not found";
+      });
+    }
   }
 
   Future<void> _fetchAllotedData(String allocationId) async {
@@ -145,8 +172,22 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
             doc['KeyAllocationRecipientCompany'].toString() ?? "";
         _ContactController.text =
             doc['KeyAllocationRecipientContact'].toString() ?? "";
-        // DateFormat( 'yyyy-MM-dd – kk:mm').format(EndDate!) KeyAllocationRecipientContact
+        _recipientController.text =
+            doc['KeyAllocationRecipientName'].toString() ?? "";
+        _AllocationPurposeController.text =
+            doc['KeyAllocationPurpose'].toString() ?? "";
+        isChecked = doc['KeyAllocationIsReturned'] ?? "";
+        selectedKeyId = doc['KeyAllocationKeyId'].toString() ?? "";
+        _fetchKeysName(selectedKeyId);
+        // KeyAllocationIsReturned
+        // DateFormat( 'yyyy-MM-dd – kk:mm').format(EndDate!) KeyAllocationRecipientContact KeyAllocationPurpose
       });
+      if (doc['KeyAllocationIsReturned'] == true) {
+        print("KeyAllocationIsReturned is true");
+        setState(() {
+          editKeyMode = false;
+        });
+      }
       //  (doc['KeyAllocationEndTime'] as Timestamp).toDate();
       // Add other fields as needed
     }
@@ -162,7 +203,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
 
     final result = await FirebaseFirestore.instance
         .collection('Employees')
-        .where('EmployeeRole', isEqualTo: 'GUARD')
+        // .where('EmployeeRole', isEqualTo: 'GUARD')
         .where('EmployeeCompanyId', isEqualTo: widget.companyId)
         .where('EmployeeNameSearchIndex', arrayContains: query)
         .get();
@@ -185,36 +226,97 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
       setState(() {
         if (isStart) {
           StartDate = dateTime;
+          if (EndDate != null && StartDate!.isAfter(EndDate!)) {
+            // Reset EndDate if it's before StartDate
+            EndDate = null;
+
+            showErrorToast(context, 'End date must be after the start date.');
+          }
         } else if (isDate) {
           SelectedDate = dateTime;
         } else {
-          EndDate = dateTime;
+          if (StartDate != null && dateTime.isBefore(StartDate!)) {
+            // ScaffoldMessenger.of(context).showSnackBar(
+            //   SnackBar(
+            //     content: Text('End date must be after the start date.'),
+            //   ),
+            // );
+            showErrorToast(context, 'End date must be after the start date.');
+          } else {
+            EndDate = dateTime;
+          }
         }
       });
     }
   }
 
   Future<void> _saveData() async {
-    CollectionReference keyAllocations =
-        FirebaseFirestore.instance.collection('KeyAllocations');
-    DocumentReference docRef = await keyAllocations.add({
-      'KeyAllocationCreatedAt': FieldValue.serverTimestamp(),
-      'KeyAllocationDate': SelectedDate,
-      'KeyAllocationEndTime': EndDate,
-      'KeyAllocationStartTime': StartDate,
-      'KeyAllocationId': '',
-      'KeyAllocationIsReturned': false,
-      'KeyAllocationKeyId': selectedKeyId ?? '',
-      'KeyAllocationKeyQty': int.tryParse(_AllocateQtController1.text) ?? 0,
-      'KeyAllocationPurpose': _AllocationPurposeController.text,
-      'KeyAllocationRecipientCompany': _CompanyNameController.text,
-      'KeyAllocationRecipientContact': _ContactController.text,
-      'KeyAllocationRecipientName': _GuardNameController.text,
-    });
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+      CollectionReference keyAllocations =
+          FirebaseFirestore.instance.collection('KeyAllocations');
+      DocumentReference docRef = await keyAllocations.add({
+        'KeyAllocationCreatedAt': FieldValue.serverTimestamp(),
+        'KeyAllocationDate': SelectedDate,
+        'KeyAllocationEndTime': EndDate,
+        'KeyAllocationStartTime': StartDate,
+        'KeyAllocationId': '',
+        'KeyAllocationIsReturned': isChecked,
+        'KeyAllocationKeyId': selectedKeyId ?? '',
+        'KeyAllocationKeyQty': int.tryParse(_AllocateQtController1.text) ?? 0,
+        'KeyAllocationPurpose': _AllocationPurposeController.text,
+        'KeyAllocationRecipientCompany': _CompanyNameController.text,
+        'KeyAllocationRecipientContact': _ContactController.text,
+        'KeyAllocationRecipientName': _recipientController.text,
+      });
 
-    await docRef.update({
-      'KeyAllocationId': docRef.id,
-    });
+      await docRef.update({
+        'KeyAllocationId': docRef.id,
+      });
+      setState(() {
+        _isLoading = false;
+      });
+      showSuccessToast(context, "Created SuccessFully");
+      Navigator.pop(context);
+    } catch (e) {
+      showErrorToast(context, "Please Try Again");
+    }
+  }
+
+  Future<void> _updateData() async {
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+      CollectionReference keyAllocations =
+          FirebaseFirestore.instance.collection('KeyAllocations');
+
+      DocumentReference docRef = keyAllocations.doc(widget.AllocationKeyId);
+
+      await docRef.set({
+        'KeyAllocationReturnedAt': FieldValue.serverTimestamp(),
+        'KeyAllocationDate': SelectedDate,
+        'KeyAllocationEndTime': EndDate,
+        'KeyAllocationStartTime': StartDate,
+        'KeyAllocationId': docRef.id,
+        'KeyAllocationIsReturned': isChecked,
+        'KeyAllocationKeyId': selectedKeyId ?? '',
+        'KeyAllocationKeyQty': int.tryParse(_AllocateQtController1.text) ?? 0,
+        'KeyAllocationPurpose': _AllocationPurposeController.text,
+        'KeyAllocationRecipientCompany': _CompanyNameController.text,
+        'KeyAllocationRecipientContact': _ContactController.text,
+        'KeyAllocationRecipientName': _recipientController.text,
+      }, SetOptions(merge: true));
+      setState(() {
+        _isLoading = false;
+      });
+      showSuccessToast(context, "Updated SuccessFully");
+      Navigator.pop(context);
+    } catch (e) {
+      showErrorToast(context, "Please Try Again");
+    }
   }
 
   void createKey() {}
@@ -427,153 +529,167 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                 hint: 'Recipient name',
                                 controller: _recipientController,
                                 showIcon: false,
-                                textInputType: TextInputType.number,
+                                textInputType: TextInputType.name,
                               ),
                               SizedBox(height: 20.h),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  InterBold(
-                                    text: 'Select Guard',
-                                    fontsize: 16.w,
-                                    color: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium!
-                                        .color,
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  SelectGuardsScreen(
-                                                    companyId: widget.companyId,
-                                                  ))).then((value) => {
-                                            if (value != null)
-                                              {
-                                                print("Value: ${value}"),
-                                                setState(() {
-                                                  bool guardExists =
-                                                      selectedGuards.any(
-                                                          (guard) =>
-                                                              guard[
-                                                                  'GuardId'] ==
-                                                              value['id']);
-
-                                                  if (guardExists) {
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .showSnackBar(
-                                                      SnackBar(
-                                                        content: Text(
-                                                            'Guard already added'),
-                                                      ),
-                                                    );
-                                                  } else {
-                                                    // Add the guard if it does not exist
-                                                    selectedGuards.add({
-                                                      'GuardId': value['id'],
-                                                      'GuardName':
-                                                          value['name'],
-                                                      'GuardImg': value['url']
-                                                    });
-                                                  }
-                                                }),
-                                              }
-                                          });
-                                    },
-                                    child: InterBold(
-                                      text: '+ Add',
-                                      fontsize: 16.w,
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium!
-                                          .color,
-                                    ),
-                                  )
-                                ],
-                              ),
-                              SizedBox(height: 10.h),
-                              Container(
-                                height: 64.h,
-                                padding: EdgeInsets.symmetric(horizontal: 10.w),
-                                decoration: BoxDecoration(
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Theme.of(context).shadowColor,
-                                      blurRadius: 5,
-                                      spreadRadius: 2,
-                                      offset: Offset(0, 3),
-                                    )
-                                  ],
-                                  color: Theme.of(context).cardColor,
-                                  borderRadius: BorderRadius.circular(13.r),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Expanded(
-                                      child: TextField(
-                                        controller: _searchController,
-                                        onChanged: (query) {
-                                          searchGuards(query);
-                                        },
-                                        style: GoogleFonts.poppins(
-                                          fontWeight: FontWeight.w300,
-                                          fontSize: 18.sp,
+                              !showReturnBtn
+                                  ? Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        InterBold(
+                                          text: 'Select Guard',
+                                          fontsize: 16.w,
                                           color: Theme.of(context)
                                               .textTheme
                                               .bodyMedium!
                                               .color,
                                         ),
-                                        decoration: InputDecoration(
-                                          border: OutlineInputBorder(
-                                            borderSide: BorderSide.none,
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(10.r),
-                                            ),
-                                          ),
-                                          focusedBorder: InputBorder.none,
-                                          hintStyle: GoogleFonts.poppins(
-                                            fontWeight: FontWeight.w300,
-                                            fontSize: 18.sp,
+                                        GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        SelectGuardsScreen(
+                                                          companyId:
+                                                              widget.companyId,
+                                                        ))).then((value) => {
+                                                  if (value != null)
+                                                    {
+                                                      print("Value: ${value}"),
+                                                      setState(() {
+                                                        bool guardExists =
+                                                            selectedGuards.any(
+                                                                (guard) =>
+                                                                    guard[
+                                                                        'GuardId'] ==
+                                                                    value[
+                                                                        'id']);
+
+                                                        if (guardExists) {
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(
+                                                            SnackBar(
+                                                              content: Text(
+                                                                  'Guard already added'),
+                                                            ),
+                                                          );
+                                                        } else {
+                                                          // Add the guard if it does not exist
+                                                          selectedGuards.add({
+                                                            'GuardId':
+                                                                value['id'],
+                                                            'GuardName':
+                                                                value['name'],
+                                                            'GuardImg':
+                                                                value['url']
+                                                          });
+                                                        }
+                                                      }),
+                                                    }
+                                                });
+                                          },
+                                          child: InterBold(
+                                            text: '+ Add',
+                                            fontsize: 16.w,
                                             color: Theme.of(context)
                                                 .textTheme
-                                                .bodyLarge!
+                                                .bodyMedium!
                                                 .color,
                                           ),
-                                          hintText: 'Search Guard',
-                                          contentPadding: EdgeInsets.zero,
-                                        ),
-                                        cursorColor:
-                                            Theme.of(context).primaryColor,
-                                      ),
-                                    ),
-                                    Container(
-                                      height: 44.h,
-                                      width: 44.w,
+                                        )
+                                      ],
+                                    )
+                                  : SizedBox(height: 20.h),
+                              SizedBox(height: 10.h),
+                              !showReturnBtn
+                                  ? Container(
+                                      height: 64.h,
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 10.w),
                                       decoration: BoxDecoration(
-                                        color: Theme.of(context).primaryColor,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color:
+                                                Theme.of(context).shadowColor,
+                                            blurRadius: 5,
+                                            spreadRadius: 2,
+                                            offset: Offset(0, 3),
+                                          )
+                                        ],
+                                        color: Theme.of(context).cardColor,
                                         borderRadius:
-                                            BorderRadius.circular(10.r),
+                                            BorderRadius.circular(13.r),
                                       ),
-                                      child: Center(
-                                        child: Icon(
-                                          Icons.search,
-                                          size: 20.w,
-                                          color: Theme.of(context).brightness ==
-                                                  Brightness.dark
-                                              ? DarkColor.Secondarycolor
-                                              : LightColor.color1,
-                                        ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Expanded(
+                                            child: TextField(
+                                              controller: _searchController,
+                                              onChanged: (query) {
+                                                searchGuards(query);
+                                              },
+                                              style: GoogleFonts.poppins(
+                                                fontWeight: FontWeight.w300,
+                                                fontSize: 18.sp,
+                                                color: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyMedium!
+                                                    .color,
+                                              ),
+                                              decoration: InputDecoration(
+                                                border: OutlineInputBorder(
+                                                  borderSide: BorderSide.none,
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                    Radius.circular(10.r),
+                                                  ),
+                                                ),
+                                                focusedBorder: InputBorder.none,
+                                                hintStyle: GoogleFonts.poppins(
+                                                  fontWeight: FontWeight.w300,
+                                                  fontSize: 18.sp,
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyLarge!
+                                                      .color,
+                                                ),
+                                                hintText: 'Search Guard',
+                                                contentPadding: EdgeInsets.zero,
+                                              ),
+                                              cursorColor: Theme.of(context)
+                                                  .primaryColor,
+                                            ),
+                                          ),
+                                          Container(
+                                            height: 44.h,
+                                            width: 44.w,
+                                            decoration: BoxDecoration(
+                                              color: Theme.of(context)
+                                                  .primaryColor,
+                                              borderRadius:
+                                                  BorderRadius.circular(10.r),
+                                            ),
+                                            child: Center(
+                                              child: Icon(
+                                                Icons.search,
+                                                size: 20.w,
+                                                color: Theme.of(context)
+                                                            .brightness ==
+                                                        Brightness.dark
+                                                    ? DarkColor.Secondarycolor
+                                                    : LightColor.color1,
+                                              ),
+                                            ),
+                                          )
+                                        ],
                                       ),
                                     )
-                                  ],
-                                ),
-                              ),
+                                  : SizedBox(height: 20.h),
                               ListView.builder(
                                 shrinkWrap: true,
                                 itemCount: guards.length,
@@ -591,6 +707,8 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                           'GuardId': guard['EmployeeId'],
                                         });
                                         selectedGuardId = guard['EmployeeId'];
+                                        _recipientController.text =
+                                            guard['EmployeeName'];
                                         guards.clear();
                                       });
                                     },
@@ -996,21 +1114,36 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                 ),
                               ),
                               SizedBox(height: 20.h),
-                              Button1(
-                                text: 'Save',
-                                onPressed: () {
-                                  _saveData();
-                                },
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .headlineMedium!
-                                    .color,
-                                borderRadius: 10.r,
-                                backgroundcolor: Theme.of(context).primaryColor,
-                              ),
-                              SizedBox(
-                                height: 20.h,
-                              )
+                              if (_isLoading)
+                                Container(
+                                  color: Colors.black.withOpacity(0.5),
+                                  child: Center(
+                                    child: CircularProgressIndicator(
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                                  ),
+                                ),
+                              editKeyMode == true
+                                  ? Button1(
+                                      text: 'Save',
+                                      onPressed: () {
+                                        if (showReturnBtn == true) {
+                                          _updateData();
+                                        } else {
+                                          _saveData();
+                                        }
+                                      },
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .headlineMedium!
+                                          .color,
+                                      borderRadius: 10.r,
+                                      backgroundcolor:
+                                          Theme.of(context).primaryColor,
+                                    )
+                                  : SizedBox(
+                                      height: 20.h,
+                                    )
                             ],
                           ),
                         )
@@ -1068,36 +1201,38 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                               SizedBox(
                                 height: 40.h,
                               ),
-                              Button1(
-                                text: 'Save',
-                                onPressed: () async {
-                                  // _saveData();
-                                  var keycreate =
-                                      await _fireStoreService.CreateKey(
-                                          widget.branchId,
-                                          widget.companyId,
-                                          _keyNameController2.text,
-                                          0,
-                                          _DescriptionController.text,
-                                          int.parse(
-                                              _AllocateQtController2.text));
-                                  showSuccessToast(
-                                      context, 'Key has been Created');
-                                  _fetchKeys();
-                                  setState(() {
-                                    showCreate = false;
-                                  });
-                                },
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .headlineMedium!
-                                    .color,
-                                borderRadius: 10.r,
-                                backgroundcolor: Theme.of(context).primaryColor,
-                              ),
-                              SizedBox(
-                                height: 20.h,
-                              )
+                              editKeyMode == true
+                                  ? Button1(
+                                      text: 'Save',
+                                      onPressed: () async {
+                                        // _saveData();
+                                        var keycreate =
+                                            await _fireStoreService.CreateKey(
+                                                widget.branchId,
+                                                widget.companyId,
+                                                _keyNameController2.text,
+                                                0,
+                                                _DescriptionController.text,
+                                                int.parse(_AllocateQtController2
+                                                    .text));
+                                        showSuccessToast(
+                                            context, 'Key has been Created');
+                                        _fetchKeys();
+                                        setState(() {
+                                          showCreate = false;
+                                        });
+                                      },
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .headlineMedium!
+                                          .color,
+                                      borderRadius: 10.r,
+                                      backgroundcolor:
+                                          Theme.of(context).primaryColor,
+                                    )
+                                  : SizedBox(
+                                      height: 20.h,
+                                    )
                             ],
                           ),
                         ),

@@ -970,81 +970,80 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                         ),
                       )
                     : ScreenIndex == 1
-                        ? 
-                            SliverToBoxAdapter(
-                              child: Padding(
-                                padding:  EdgeInsets.all(8.w),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      SelectLocationShift(
-                                                        companyId: _cmpId,
-                                                      )));
-                                        },
-                                        child: SizedBox(
-                                          width: 150.w,
-                                          child: IconTextWidget(
-                                            space: 6.w,
-                                            icon: Icons.add,
-                                            iconSize: 20.sp,
-                                            text: 'Select Location',
-                                            useBold: true,
-                                            fontsize: 14.sp,
-                                            color: Theme.of(context)
-                                                .textTheme
-                                                .bodySmall!
-                                                .color as Color,
-                                            Iconcolor: Theme.of(context)
-                                                .textTheme
-                                                .bodyMedium!
-                                                .color as Color,
-                                          ),
-                                        ),
+                        ? SliverToBoxAdapter(
+                            child: Padding(
+                              padding: EdgeInsets.all(8.w),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  SelectLocationShift(
+                                                    companyId: _cmpId,
+                                                  )));
+                                    },
+                                    child: SizedBox(
+                                      width: 150.w,
+                                      child: IconTextWidget(
+                                        space: 6.w,
+                                        icon: Icons.add,
+                                        iconSize: 20.sp,
+                                        text: 'Select Location',
+                                        useBold: true,
+                                        fontsize: 14.sp,
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall!
+                                            .color as Color,
+                                        Iconcolor: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .color as Color,
                                       ),
-                                      // SizedBox(
-                                      //   width: Platform.isIOS ? 30.w : 10.w,
-                                      // ),
-                                      GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      SelectClientGuardsScreen(
-                                                        companyId: _cmpId,
-                                                      )));
-                                        },
-                                        child: SizedBox(
-                                          width: 150.w,
-                                          child: IconTextWidget(
-                                            space: 6.w,
-                                            icon: Icons.add,
-                                            iconSize: 20.sp,
-                                            text: 'Select Employee',
-                                            useBold: true,
-                                            fontsize: 14.sp,
-                                            color: Theme.of(context)
-                                                .textTheme
-                                                .bodySmall!
-                                                .color as Color,
-                                            Iconcolor: Theme.of(context)
-                                                .textTheme
-                                                .bodyMedium!
-                                                .color as Color,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                                    ),
                                   ),
+                                  // SizedBox(
+                                  //   width: Platform.isIOS ? 30.w : 10.w,
+                                  // ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  SelectClientGuardsScreen(
+                                                    companyId: _cmpId,
+                                                  )));
+                                    },
+                                    child: SizedBox(
+                                      width: 150.w,
+                                      child: IconTextWidget(
+                                        space: 6.w,
+                                        icon: Icons.add,
+                                        iconSize: 20.sp,
+                                        text: 'Select Employee',
+                                        useBold: true,
+                                        fontsize: 14.sp,
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall!
+                                            .color as Color,
+                                        Iconcolor: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .color as Color,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            )
-                         
+                            ),
+                          )
                         : ScreenIndex == 2
                             ? SliverGrid(
                                 gridDelegate:
@@ -1141,278 +1140,265 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                     ),
                                   )
                                 : const SliverToBoxAdapter(),
-                                ScreenIndex == 1
-                        ? 
-                            SliverList(
-                                delegate: SliverChildBuilderDelegate(
-                                  (context, index) {
-                                    DateTime shiftDate = shifts[index]['ShiftDate'];
-                                    String dateString = (isSameDate(
-                                            shiftDate, DateTime.now()))
-                                        ? 'Today'
-                                        : "${shiftDate.day} / ${shiftDate.month} / ${shiftDate.year}";
-                                    return Padding(
-                                      padding: EdgeInsets.only(
-                                        left: 30.w,
-                                        right: 30.w,
+                ScreenIndex == 1
+                    ? SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            DateTime shiftDate = shifts[index]['ShiftDate'];
+                            String dateString = (isSameDate(
+                                    shiftDate, DateTime.now()))
+                                ? 'Today'
+                                : "${shiftDate.day} / ${shiftDate.month} / ${shiftDate.year}";
+                            return Padding(
+                              padding: EdgeInsets.only(
+                                left: 30.w,
+                                right: 30.w,
+                              ),
+                              child: GestureDetector(
+                                onTap: () {
+                                  NavigateScreen(
+                                    ClientCheckPatrolScreen(
+                                      PatrolIdl: '',
+                                      ScreenName: '',
+                                    ),
+                                    context,
+                                  );
+                                },
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(height: 10.h),
+                                    InterBold(
+                                      text: dateString,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall!
+                                          .color,
+                                      fontsize: 14.sp,
+                                    ),
+                                    SizedBox(
+                                      height: 10.sp,
+                                    ),
+                                    Container(
+                                      height: 160.h,
+                                      margin: EdgeInsets.only(top: 10.h),
+                                      width: double.maxFinite,
+                                      decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color:
+                                                Theme.of(context).shadowColor,
+                                            blurRadius: 5,
+                                            spreadRadius: 2,
+                                            offset: Offset(0, 3),
+                                          )
+                                        ],
+                                        color: Theme.of(context).cardColor,
+                                        borderRadius:
+                                            BorderRadius.circular(14.sp),
                                       ),
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          NavigateScreen(
-                                            ClientCheckPatrolScreen(
-                                              PatrolIdl: '',
-                                              ScreenName: '',
-                                            ),
-                                            context,
-                                          );
-                                        },
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            SizedBox(height: 10.h),
-                                            InterBold(
-                                              text: dateString,
-                                              color: Theme.of(context)
-                                                  .textTheme
-                                                  .bodySmall!
-                                                  .color,
-                                              fontsize: 14.sp,
-                                            ),
-                                            SizedBox(
-                                              height: 10.sp,
-                                            ),
-                                            Container(
-                                              height: 160.h,
-                                              margin: EdgeInsets.only(top: 10.h),
-                                              width: double.maxFinite,
-                                              decoration: BoxDecoration(
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    color: Theme.of(context)
-                                                        .shadowColor,
-                                                    blurRadius: 5,
-                                                    spreadRadius: 2,
-                                                    offset: Offset(0, 3),
-                                                  )
-                                                ],
-                                                color: Theme.of(context).cardColor,
-                                                borderRadius:
-                                                    BorderRadius.circular(14.sp),
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 20.h),
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                height: 30.h,
+                                                width: 4.w,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.only(
+                                                    topRight:
+                                                        Radius.circular(10.r),
+                                                    bottomRight:
+                                                        Radius.circular(10.r),
+                                                  ),
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                ),
                                               ),
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical: 20.h),
-                                              child: Column(
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
+                                              SizedBox(width: 14.w),
+                                              SizedBox(
+                                                width: 190.w,
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    InterSemibold(
+                                                      text: shifts[index]
+                                                          ['ShiftName'],
+                                                      color: Theme.of(context)
+                                                          .textTheme
+                                                          .titleSmall!
+                                                          .color,
+                                                      fontsize: 14.sp,
+                                                    ),
+                                                    SizedBox(height: 5.h),
+                                                    InterRegular(
+                                                      text: shifts[index][
+                                                          'ShiftLocationAddress'],
+                                                      maxLines: 1,
+                                                      fontsize: 14.sp,
+                                                    ),
+                                                  ],
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                          SizedBox(height: 10.h),
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                              left: 18.w,
+                                              right: 24.w,
+                                            ),
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                SizedBox(
+                                                  width: 100.w,
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
                                                     children: [
-                                                      Container(
-                                                        height: 30.h,
-                                                        width: 4.w,
-                                                        decoration: BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius.only(
-                                                            topRight:
-                                                                Radius.circular(
-                                                                    10.r),
-                                                            bottomRight:
-                                                                Radius.circular(
-                                                                    10.r),
-                                                          ),
-                                                          color: Theme.of(context)
-                                                              .primaryColor,
-                                                        ),
+                                                      InterRegular(
+                                                        text: 'Guards',
+                                                        fontsize: 14.sp,
+                                                        color: Theme.of(context)
+                                                            .textTheme
+                                                            .titleSmall!
+                                                            .color!,
                                                       ),
-                                                      SizedBox(width: 14.w),
-                                                      SizedBox(
-                                                        width: 190.w,
-                                                        child: Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            InterSemibold(
-                                                              text: shifts[index]
-                                                                  ['ShiftName'],
-                                                              color:
-                                                                  Theme.of(context)
+                                                      SizedBox(height: 12.h),
+                                                      Wrap(
+                                                        spacing: -5.0,
+                                                        children: [
+                                                          if (shifts[index]
+                                                                  ['members'] !=
+                                                              null)
+                                                            for (int i = 0;
+                                                                i <
+                                                                    (shifts[index]['members'].length >
+                                                                            3
+                                                                        ? 3
+                                                                        : shifts[index]['members']
+                                                                            .length);
+                                                                i++)
+                                                              CircleAvatar(
+                                                                radius: 10.r,
+                                                                backgroundImage:
+                                                                    NetworkImage(
+                                                                  shifts[index][
+                                                                      'members'][i],
+                                                                ),
+                                                              ),
+                                                          if (shifts[index][
+                                                                      'members'] !=
+                                                                  null &&
+                                                              shifts[index][
+                                                                          'members']
+                                                                      .length >
+                                                                  3)
+                                                            CircleAvatar(
+                                                              radius: 12.r,
+                                                              backgroundColor:
+                                                                  Theme.of(
+                                                                          context)
                                                                       .textTheme
                                                                       .titleSmall!
-                                                                      .color,
-                                                              fontsize: 14.sp,
+                                                                      .color!,
+                                                              child:
+                                                                  InterMedium(
+                                                                text:
+                                                                    '+${shifts[index]['members'].length - 3}',
+                                                                fontsize: 12.sp,
+                                                              ),
                                                             ),
-                                                            SizedBox(height: 5.h),
-                                                            InterRegular(
-                                                              text: shifts[index][
-                                                                  'ShiftLocationAddress'],
-                                                              maxLines: 1,
-                                                              fontsize: 14.sp,
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      )
+                                                        ],
+                                                      ),
                                                     ],
                                                   ),
-                                                  SizedBox(height: 10.h),
-                                                  Padding(
-                                                    padding: EdgeInsets.only(
-                                                      left: 18.w,
-                                                      right: 24.w,
-                                                    ),
-                                                    child: Row(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment.start,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        SizedBox(
-                                                          width: 100.w,
-                                                          child: Column(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              InterRegular(
-                                                                text: 'Guards',
-                                                                fontsize: 14.sp,
-                                                                color: Theme.of(
-                                                                        context)
-                                                                    .textTheme
-                                                                    .titleSmall!
-                                                                    .color!,
-                                                              ),
-                                                              SizedBox(
-                                                                  height: 12.h),
-                                                              Wrap(
-                                                                spacing: -5.0,
-                                                                children: [
-                                                                  if (shifts[index][
-                                                                          'members'] !=
-                                                                      null)
-                                                                    for (int i = 0;
-                                                                        i <
-                                                                            (shifts[index]['members'].length >
-                                                                                    3
-                                                                                ? 3
-                                                                                : shifts[index]['members'].length);
-                                                                        i++)
-                                                                      CircleAvatar(
-                                                                        radius:
-                                                                            10.r,
-                                                                        backgroundImage:
-                                                                            NetworkImage(
-                                                                          shifts[index]
-                                                                              [
-                                                                              'members'][i],
-                                                                        ),
-                                                                      ),
-                                                                  if (shifts[index][
-                                                                              'members'] !=
-                                                                          null &&
-                                                                      shifts[index][
-                                                                                  'members']
-                                                                              .length >
-                                                                          3)
-                                                                    CircleAvatar(
-                                                                      radius: 12.r,
-                                                                      backgroundColor: Theme.of(
-                                                                              context)
-                                                                          .textTheme
-                                                                          .titleSmall!
-                                                                          .color!,
-                                                                      child:
-                                                                          InterMedium(
-                                                                        text:
-                                                                            '+${shifts[index]['members'].length - 3}',
-                                                                        fontsize:
-                                                                            12.sp,
-                                                                      ),
-                                                                    ),
-                                                                ],
-                                                              ),
-                                                            ],
+                                                ),
+                                                SizedBox(
+                                                  width: 100.w,
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      InterRegular(
+                                                        text: 'Started At',
+                                                        color: Theme.of(context)
+                                                            .textTheme
+                                                            .titleSmall!
+                                                            .color!,
+                                                        fontsize: 14.sp,
+                                                      ),
+                                                      SizedBox(height: 5.h),
+                                                      InterMedium(
+                                                        text: shifts[index]
+                                                            ['ShiftStartTime'],
+                                                        fontsize: 14.sp,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: 100.w,
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      InterRegular(
+                                                        text: 'Ended At',
+                                                        color: Theme.of(context)
+                                                            .textTheme
+                                                            .titleSmall!
+                                                            .color!,
+                                                        fontsize: 14.sp,
+                                                      ),
+                                                      SizedBox(height: 5.h),
+                                                      Row(
+                                                        children: [
+                                                          SizedBox(width: 6.w),
+                                                          InterMedium(
+                                                            text: shifts[index][
+                                                                'ShiftEndTime'],
+                                                            fontsize: 14.sp,
                                                           ),
-                                                        ),
-                                                        SizedBox(
-                                                          width: 100.w,
-                                                          child: Column(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              InterRegular(
-                                                                text: 'Started At',
-                                                                color: Theme.of(
-                                                                        context)
-                                                                    .textTheme
-                                                                    .titleSmall!
-                                                                    .color!,
-                                                                fontsize: 14.sp,
-                                                              ),
-                                                              SizedBox(height: 5.h),
-                                                              InterMedium(
-                                                                text: shifts[index][
-                                                                    'ShiftStartTime'],
-                                                                fontsize: 14.sp,
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          width: 100.w,
-                                                          child: Column(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              InterRegular(
-                                                                text: 'Ended At',
-                                                                color: Theme.of(
-                                                                        context)
-                                                                    .textTheme
-                                                                    .titleSmall!
-                                                                    .color!,
-                                                                fontsize: 14.sp,
-                                                              ),
-                                                              SizedBox(height: 5.h),
-                                                              Row(
-                                                                children: [
-                                                                  SizedBox(
-                                                                      width: 6.w),
-                                                                  InterMedium(
-                                                                    text: shifts[
-                                                                            index][
-                                                                        'ShiftEndTime'],
-                                                                    fontsize: 14.sp,
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                )
+                                              ],
                                             ),
-                                            SizedBox(
-                                              height: 10.h,
-                                            ),
-                                          ],
-                                        ),
+                                          )
+                                        ],
                                       ),
-                                    );
-                                  },
-                                  childCount: shifts.length,
+                                    ),
+                                    SizedBox(
+                                      height: 10.h,
+                                    ),
+                                  ],
                                 ),
-                              ): SliverToBoxAdapter(),
+                              ),
+                            );
+                          },
+                          childCount: shifts.length,
+                        ),
+                      )
+                    : SliverToBoxAdapter(),
                 ScreenIndex == 3
                     ? SliverList(
                         delegate: SliverChildBuilderDelegate(
@@ -1560,8 +1546,6 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                         ),
                       )
                     : SliverToBoxAdapter(),
-
-                    
               ],
             ),
           ),
