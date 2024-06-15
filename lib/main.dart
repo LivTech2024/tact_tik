@@ -116,6 +116,7 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
+
 /*
     return ScreenUtilInit(
       designSize: const ui.Size(430, 932),
@@ -167,7 +168,6 @@ class _MyAppState extends State<MyApp> {
   }
 }
 */
-
 /*ProviderScope(
         child: GetMaterialApp(
           title: 'Tact Tik',
