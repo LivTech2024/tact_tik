@@ -978,13 +978,13 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                 children: [
                                   GestureDetector(
                                     onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  SelectClientGuardsScreen(
-                                                    companyId: _cmpId,
-                                                  )));
+                                      // Navigator.push(
+                                      //     context,
+                                      //     MaterialPageRoute(
+                                      //         builder: (context) =>
+                                      //             SelectClientGuardsScreen(
+                                      //               companyId: _cmpId,
+                                      //             )));
                                     },
                                     child: SizedBox(
                                       width: 150.w,

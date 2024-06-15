@@ -89,20 +89,22 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
   bool editKeyMode = true;
   bool showReturnBtn = false;
   bool _isLoading = false;
+  bool buttonClicked = false;
+  bool _isCreatingKey = false;
   @override
   void initState() {
     super.initState();
+    _fetchKeys();
     if (widget.AllocationKeyId.isNotEmpty) {
       setState(() {
-        // editKeyMode = false;
+        editKeyMode = false;
         showReturnBtn = true;
       });
-      _fetchKeys();
 
       _fetchAllotedData(widget.AllocationKeyId);
       //fetch the data and display the details and a checkbox based on this condition
     } else {
-      _fetchKeys();
+      // _fetchKeys();
     }
   }
 
@@ -215,11 +217,16 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
 
   Future<void> _selectDate(
       BuildContext context, bool isStart, bool isDate) async {
+    final DateTime now = DateTime.now();
+    final DateTime firstSelectableDate = DateTime(now.year, now.month,
+        now.day - 1); // Ensure it starts from today without including time
+
     final DateTime? dateTime = await showOmniDateTimePicker(
       context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2015, 8),
-      lastDate: DateTime(2101),
+      initialDate: firstSelectableDate,
+      firstDate: firstSelectableDate,
+      lastDate: DateTime(
+          now.year + 10), // Adjust the last date as per your requirement
     );
 
     if (dateTime != null) {
@@ -229,18 +236,12 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
           if (EndDate != null && StartDate!.isAfter(EndDate!)) {
             // Reset EndDate if it's before StartDate
             EndDate = null;
-
             showErrorToast(context, 'End date must be after the start date.');
           }
         } else if (isDate) {
           SelectedDate = dateTime;
         } else {
           if (StartDate != null && dateTime.isBefore(StartDate!)) {
-            // ScaffoldMessenger.of(context).showSnackBar(
-            //   SnackBar(
-            //     content: Text('End date must be after the start date.'),
-            //   ),
-            // );
             showErrorToast(context, 'End date must be after the start date.');
           } else {
             EndDate = dateTime;
@@ -1127,6 +1128,29 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                   ? Button1(
                                       text: 'Save',
                                       onPressed: () {
+                                        //                                   'KeyAllocationCreatedAt': FieldValue.serverTimestamp(),
+                                        // 'KeyAllocationDate': SelectedDate,
+                                        // 'KeyAllocationEndTime': EndDate,
+                                        // 'KeyAllocationStartTime': StartDate,
+                                        // 'KeyAllocationId': '',
+                                        // 'KeyAllocationIsReturned': isChecked,
+                                        // 'KeyAllocationKeyId': selectedKeyId ?? '',
+                                        // 'KeyAllocationKeyQty': int.tryParse(_AllocateQtController1.text) ?? 0,
+                                        // 'KeyAllocationPurpose': _AllocationPurposeController.text,
+                                        // 'KeyAllocationRecipientCompany': _CompanyNameController.text,
+                                        // 'KeyAllocationRecipientContact': _ContactController.text,
+                                        // 'KeyAllocationRecipientName': _recipientController.text,
+                                        if (_AllocateQtController1
+                                                .text.isEmpty ||
+                                            _AllocationPurposeController
+                                                .text.isEmpty ||
+                                            _ContactController.text.isEmpty ||
+                                            _recipientController.text.isEmpty ||
+                                            selectedKeyId!.isEmpty) {
+                                          showErrorToast(context,
+                                              "Fields cannot be empty");
+                                          return;
+                                        }
                                         if (showReturnBtn == true) {
                                           _updateData();
                                         } else {
@@ -1204,24 +1228,60 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                               editKeyMode == true
                                   ? Button1(
                                       text: 'Save',
-                                      onPressed: () async {
-                                        // _saveData();
-                                        var keycreate =
-                                            await _fireStoreService.CreateKey(
-                                                widget.branchId,
-                                                widget.companyId,
-                                                _keyNameController2.text,
-                                                0,
-                                                _DescriptionController.text,
-                                                int.parse(_AllocateQtController2
-                                                    .text));
-                                        showSuccessToast(
-                                            context, 'Key has been Created');
-                                        _fetchKeys();
-                                        setState(() {
-                                          showCreate = false;
-                                        });
-                                      },
+                                      onPressed: _isCreatingKey
+                                          ? () {
+                                              showErrorToast(
+                                                  context, "Already Clicked");
+                                            }
+                                          : () async {
+                                              if (_DescriptionController.text.isEmpty ||
+                                                  _AllocateQtController2
+                                                      .text.isEmpty ||
+                                                  _keyNameController2
+                                                      .text.isEmpty) {
+                                                showErrorToast(context,
+                                                    "Fields cannot be empty");
+                                                return;
+                                              }
+                                              try {
+                                                setState(() {
+                                                  _isCreatingKey = true;
+                                                });
+                                                var keycreate =
+                                                    await _fireStoreService.CreateKey(
+                                                        widget.branchId,
+                                                        widget.companyId,
+                                                        _keyNameController2
+                                                            .text,
+                                                        0,
+                                                        _DescriptionController
+                                                            .text,
+                                                        int.parse(
+                                                            _AllocateQtController2
+                                                                .text));
+                                                showSuccessToast(context,
+                                                    'Key has been Created');
+                                                setState(() {
+                                                  _AllocateQtController2
+                                                      .clear();
+                                                  _DescriptionController
+                                                      .clear();
+                                                  _keyNameController2.clear();
+                                                });
+                                                _fetchKeys();
+                                                setState(() {
+                                                  showCreate = false;
+                                                });
+                                                setState(() {
+                                                  _isCreatingKey = false;
+                                                });
+                                              } catch (e) {
+                                                showErrorToast(context,
+                                                    "Error Creating Key");
+                                              }
+                                            },
+                                      // _saveData();
+
                                       color: Theme.of(context)
                                           .textTheme
                                           .headlineMedium!
