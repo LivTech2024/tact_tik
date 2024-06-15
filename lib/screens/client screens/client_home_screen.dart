@@ -83,7 +83,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
   int _shiftRestrictedRadius = 0;
   int scheduleCount = 0;
   String selectedGuardId = '';
-  String selectedLocationAddress = '';
+  List<String> selectedLocationAddress = [];
   int ScreenIndex = 0;
   final GlobalKey<ScaffoldState> _scaffoldKeyClient = GlobalKey();
   List<Map<String, dynamic>> patrolsList = [];
@@ -130,9 +130,9 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
     fetchShifts();
   }
 
-  void onLocationSelected(String locationAddress) {
+  void onLocationSelected(List<dynamic> locationAddresses) {
     setState(() {
-      selectedLocationAddress = locationAddress;
+      selectedLocationAddress = List<String>.from(locationAddresses);
     });
     print('Selected Location Address: $selectedLocationAddress');
     fetchShifts();
@@ -329,8 +329,8 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
         }
 
         if (selectedLocationAddress.isNotEmpty) {
-          String? shiftLocationAddress = data['ShiftLocationAddress'];
-          if (shiftLocationAddress == null || shiftLocationAddress != selectedLocationAddress) {
+          var shiftLocationAddress = data['ShiftLocationAddress'] as String?;
+          if (!selectedLocationAddress.contains(shiftLocationAddress)) {
             continue;
           }
         }
@@ -1019,14 +1019,11 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                 children: [
                                   GestureDetector(
                                     onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  SelectLocationShift(
-                                                    companyId: _cmpId,
-                                                    onLocationSelected: onLocationSelected,
-                                                  )));
+                                      SelectLocationShift.showLocationDialog(
+                                        context,
+                                        _cmpId,
+                                        onLocationSelected,
+                                      );
                                     },
                                     child: SizedBox(
                                       width: 150.w,
