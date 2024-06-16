@@ -49,7 +49,7 @@ class SCreateAssignAssetScreen extends StatefulWidget {
 }
 
 class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
-  List colors = [DarkColor.Primarycolor, DarkColor.color25];
+ 
   bool isChecked = false;
   bool showCreate = true;
   TextEditingController _titleController1 = TextEditingController();
@@ -69,13 +69,12 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
   List<DocumentSnapshot> equipment = [];
   List selectedGuards = [];
 
-  initColors(BuildContext context) {
-    return [
-      Theme.of(context).textTheme.bodySmall!.color,
-      Theme.of(context).highlightColor,
-    ];
-  }
-
+  List<Color> colors = [
+    themeManager == ThemeData.dark()
+        ? DarkColor.Primarycolor
+        : LightColor.color3,
+    themeManager == ThemeData.dark() ? DarkColor.color25 : LightColor.color2,
+  ];
   @override
   void initState() {
     super.initState();

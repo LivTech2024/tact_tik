@@ -483,6 +483,10 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
                               child: Center(
                                 child: Icon(
                                   Icons.add,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .color,
                                   size: 20.w,
                                 ),
                               ),

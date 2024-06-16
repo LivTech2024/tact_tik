@@ -84,15 +84,15 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final bool isDark =
-        Theme.of(context).brightness == Brightness.dark ? true : false;
+   
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
+          
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              size: 24.sp,
+             
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -101,7 +101,7 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
           ),
           title: InterRegular(
             text: widget.ScreenName,
-            letterSpacing: -.3,
+     
           ),
           centerTitle: true,
         ),
@@ -339,9 +339,8 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                                       bottomRight:
                                                           Radius.circular(10.r),
                                                     ),
-                                                    color: isDark
-                                                        ? DarkColor.Primarycolor
-                                                        : LightColor.Primarycolor,
+                                                    color: Theme.of(context)
+                                                        .primaryColor,
                                                   ),
                                                 ),
                                               ],

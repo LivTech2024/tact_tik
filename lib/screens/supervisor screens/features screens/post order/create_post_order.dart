@@ -364,7 +364,7 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
                             color: Theme.of(context).cardColor,
                             borderRadius: BorderRadius.circular(8.r)),
                         child: Center(
-                          child: Icon(Icons.add),
+                          child: Icon(Icons.add, color: Theme.of(context).textTheme.bodyMedium!.color),
                         ),
                       ),
                     ),

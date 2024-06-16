@@ -311,17 +311,19 @@ class _CreateVisitorsState extends State<CreateVisitors> {
       duration: Duration(seconds: 2),
     ));
   }
-
-  initColors(BuildContext context) {
-    return [
-      Theme.of(context).textTheme.bodySmall!.color,
-      Theme.of(context).highlightColor,
-    ];
-  }
+List<Color> colors = [
+    themeManager.themeMode == ThemeMode.dark
+        ? DarkColor.Primarycolor
+        : LightColor.color3,
+    themeManager.themeMode == ThemeMode.dark
+        ? DarkColor.color25
+        : LightColor.color2,
+  ];
+ 
 
   @override
   Widget build(BuildContext context) {
-    List colors = initColors(context);
+    
     bool isEditMode = widget.visitorData != null;
 
     var isFieldEnabled = widget.visitorData != null;

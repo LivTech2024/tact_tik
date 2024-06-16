@@ -44,12 +44,15 @@ class SDarDisplayScreen extends StatefulWidget {
 
 class _DarDisplayScreenState extends State<SDarDisplayScreen> {
   
-initColors(BuildContext context) {
-      return [
-        Theme.of(context).primaryColor,
-        Theme.of(context).highlightColor,
-      ];
-    }
+
+  List<Color> colors = [
+    themeManager.themeMode == ThemeMode.dark
+        ? DarkColor.Primarycolor
+        : LightColor.color3,
+    themeManager.themeMode == ThemeMode.dark
+        ? DarkColor.color25
+        : LightColor.color2,
+  ];
   bool showAllDARS = false;
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -102,7 +105,7 @@ initColors(BuildContext context) {
     bool isNewEntry(DocumentSnapshot document) {
       return document['EmpDarShiftId'] == widget.EmpDarShiftID;
     }
-    List colors = initColors(context);
+    
 
     return SafeArea(
       child: Scaffold(
@@ -292,17 +295,17 @@ initColors(BuildContext context) {
                                   colors[1] = Theme.of(context).highlightColor;
                                 });
                               },
-                              // child: Container(
-                              //   height: 65.h,
-                              //   color: Theme.of(context).cardColor,
-                              //   child: Center(
-                              //     child: InterBold(
-                              //       text: 'Today',
-                              //       color: colors[0],
-                              //       fontsize: 18.sp,
-                              //     ),
-                              //   ),
-                              // ),
+                              child: Container(
+                                height: 65.h,
+                                color: Theme.of(context).cardColor,
+                                child: Center(
+                                  child: InterBold(
+                                    text: 'Today',
+                                    color: colors[0],
+                                    fontsize: 18.sp,
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
                           Padding(
