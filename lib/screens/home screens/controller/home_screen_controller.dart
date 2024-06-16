@@ -67,17 +67,17 @@ class HomeScreenController extends GetxController {
   Future<void> startBgLocationService() async {
     try {
       print('start Bg location service');
-      if (await _checkLocationPermission()) {
-        await _startLocator();
-        final _isRunning = await BackgroundLocator.isServiceRunning();
-        print('Running ${_isRunning.toString()}');
+      // if (await _checkLocationPermission()) {
+      await _startLocator();
+      final _isRunning = await BackgroundLocator.isServiceRunning();
+      print('Running ${_isRunning.toString()}');
 
-        // isRunning = _isRunning;
-        // lastLocation = null;
-      } else {
-        print("Location permission Error");
-        // show error
-      }
+      // isRunning = _isRunning;
+      // lastLocation = null;
+      // } else {
+      //   print("Location permission Error");
+      //   // show error
+      // }
     } catch (e) {
       print(e);
     }

@@ -101,6 +101,7 @@ class _SelectGuardsScreenState extends State<SelectAssetsGuardsScreen> {
                                         builder: (context) => SAssetsViewScreen(
                                               companyId: widget.companyId,
                                               empId: id,
+                                              EmpName: name,
                                             )));
                               },
                               child: Container(

@@ -14,9 +14,12 @@ import '../../../../utils/colors.dart';
 class SAssetsViewScreen extends StatefulWidget {
   final String empId;
   final String companyId;
-
+  final String EmpName;
   const SAssetsViewScreen(
-      {super.key, required this.empId, required this.companyId});
+      {super.key,
+      required this.empId,
+      required this.companyId,
+      required this.EmpName});
 
   @override
   _SAssetsViewScreenState createState() => _SAssetsViewScreenState();
@@ -99,7 +102,7 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                 },
               ),
               title: InterMedium(
-                text: 'Assets',
+                text: 'Assets : ${widget.EmpName}',
               ),
               centerTitle: true,
               floating: true,

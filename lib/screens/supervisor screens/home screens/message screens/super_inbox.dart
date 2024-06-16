@@ -63,17 +63,17 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
   }*/
 
   String dropdownValue = 'All Guards'; // Initialize default value
-  initColors(BuildContext context) {
-    return [
-      Theme.of(context).textTheme.bodySmall!.color,
-      Theme.of(context).highlightColor,
-    ];
-  }
+  List<Color> colors = [
+    themeManager.themeMode == ThemeMode.dark
+        ? DarkColor.Primarycolor
+        : LightColor.color3,
+    themeManager.themeMode == ThemeMode.dark
+        ? DarkColor.color25
+        : LightColor.color2,
+  ];
 
   @override
   Widget build(BuildContext context) {
-    List colors = initColors(context);
-
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -117,8 +117,10 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                       onTap: () {
                         setState(() {
                           showGuards = true;
-                          colors[0] =
-                              Theme.of(context).textTheme.bodySmall!.color;
+                          colors[0] = Theme.of(context)
+                              .textTheme
+                              .bodySmall!
+                              .color as Color;
                           colors[1] = Theme.of(context).highlightColor;
                         });
                       },
@@ -142,8 +144,10 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                         setState(() {
                           showGuards = false;
                           colors[0] = Theme.of(context).highlightColor;
-                          colors[1] =
-                              Theme.of(context).textTheme.bodySmall!.color;
+                          colors[1] = Theme.of(context)
+                              .textTheme
+                              .bodySmall!
+                              .color as Color;
                         });
                       },
                       child: SizedBox(

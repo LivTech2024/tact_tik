@@ -15,9 +15,9 @@ import '../../../../fonts/inter_regular.dart';
 import '../../../../utils/colors.dart';
 
 class SelectReportsGuardsScreen extends StatefulWidget {
-  final String companyId;
+  final String EmpId;
 
-  const SelectReportsGuardsScreen({super.key, required this.companyId});
+  const SelectReportsGuardsScreen({super.key, required this.EmpId});
 
   @override
   State<SelectReportsGuardsScreen> createState() => _SelectGuardsScreenState();
@@ -39,8 +39,8 @@ class _SelectGuardsScreenState extends State<SelectReportsGuardsScreen> {
   Future<void> _getEmployeesByCompanyId() async {
     final querySnapshot = await FirebaseFirestore.instance
         .collection('Employees')
-        // .where('EmployeeCompanyId', isEqualTo: widget.companyId)
-        .where('EmployeeRole', isEqualTo: "GUARD")
+        .where("EmployeeSupervisorId", arrayContains: widget.EmpId)
+        // .where('EmployeeRole', isEqualTo: "GUARD")
         .get();
 
     setState(() {

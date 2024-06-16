@@ -24,7 +24,10 @@ class ClientCheckPatrolScreen extends StatefulWidget {
   final String PatrolIdl;
   final String companyId;
   ClientCheckPatrolScreen(
-      {super.key, required this.PatrolIdl, required this.ScreenName, required this.companyId});
+      {super.key,
+      required this.PatrolIdl,
+      required this.ScreenName,
+      required this.companyId});
 
   @override
   State<ClientCheckPatrolScreen> createState() =>
@@ -84,15 +87,12 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final bool isDark =
-        Theme.of(context).brightness == Brightness.dark ? true : false;
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              size: 24.sp,
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -101,7 +101,6 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
           ),
           title: InterRegular(
             text: widget.ScreenName,
-            letterSpacing: -.3,
           ),
           centerTitle: true,
         ),
@@ -126,7 +125,7 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                               .color as Color,
                           text: selectedDate != null
                               ? DateFormat('dd/MM/yyyy').format(selectedDate!)
-                              : 'display shift date',
+                              : 'Select Date',
                           fontsize: 14.sp,
                           color: Theme.of(context).textTheme.bodySmall!.color
                               as Color,
@@ -150,8 +149,10 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                         child: IconTextWidget(
                           space: 6.w,
                           icon: Icons.add,
-                          Iconcolor: Theme.of(context).textTheme.bodySmall!.color
-                              as Color,
+                          Iconcolor: Theme.of(context)
+                              .textTheme
+                              .bodySmall!
+                              .color as Color,
                           iconSize: 20.sp,
                           text: 'Select Guard',
                           useBold: true,
@@ -203,48 +204,53 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                 ),
                 SizedBox(height: 20.h),
                 patrolsList.isEmpty ||
-                    (selectedDate != null &&
-                        selectedGuardId != '' &&
-                        patrolsList.every((patrol) {
-                          final patrolDate = DateTime.fromMillisecondsSinceEpoch(
-                              patrol['PatrolLogStartedAt'].millisecondsSinceEpoch);
-                          final guardId = patrol['PatrolLogGuardId'];
-                          return (patrolDate.year != selectedDate!.year ||
-                              patrolDate.month != selectedDate!.month ||
-                              patrolDate.day != selectedDate!.day) ||
-                              guardId != selectedGuardId;
-                        })) ||
-                    (selectedDate != null &&
-                        selectedGuardId == '' &&
-                        patrolsList.every((patrol) {
-                          final patrolDate = DateTime.fromMillisecondsSinceEpoch(
-                              patrol['PatrolLogStartedAt'].millisecondsSinceEpoch);
-                          return patrolDate.year != selectedDate!.year ||
-                              patrolDate.month != selectedDate!.month ||
-                              patrolDate.day != selectedDate!.day;
-                        })) ||
-                    (selectedDate == null &&
-                        selectedGuardId != '' &&
-                        patrolsList.every((patrol) {
-                          final guardId = patrol['PatrolLogGuardId'];
-                          return guardId != selectedGuardId;
-                        }))
+                        (selectedDate != null &&
+                            selectedGuardId != '' &&
+                            patrolsList.every((patrol) {
+                              final patrolDate =
+                                  DateTime.fromMillisecondsSinceEpoch(
+                                      patrol['PatrolLogStartedAt']
+                                          .millisecondsSinceEpoch);
+                              final guardId = patrol['PatrolLogGuardId'];
+                              return (patrolDate.year != selectedDate!.year ||
+                                      patrolDate.month != selectedDate!.month ||
+                                      patrolDate.day != selectedDate!.day) ||
+                                  guardId != selectedGuardId;
+                            })) ||
+                        (selectedDate != null &&
+                            selectedGuardId == '' &&
+                            patrolsList.every((patrol) {
+                              final patrolDate =
+                                  DateTime.fromMillisecondsSinceEpoch(
+                                      patrol['PatrolLogStartedAt']
+                                          .millisecondsSinceEpoch);
+                              return patrolDate.year != selectedDate!.year ||
+                                  patrolDate.month != selectedDate!.month ||
+                                  patrolDate.day != selectedDate!.day;
+                            })) ||
+                        (selectedDate == null &&
+                            selectedGuardId != '' &&
+                            patrolsList.every((patrol) {
+                              final guardId = patrol['PatrolLogGuardId'];
+                              return guardId != selectedGuardId;
+                            }))
                     ? Center(
-                  child: Text(
-                    patrolsList.isEmpty
-                        ? 'No Patrols Found'
-                        : selectedGuardId != '' && selectedDate != null
-                        ? 'No Patrols Found for Selected Date and Guard'
-                        : selectedDate != null
-                        ? 'No Patrols Found for Selected Date'
-                        : 'No Patrols Found for Selected Guard',
-                    style: TextStyle(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).textTheme.bodyMedium!.color,
-                    ),
-                  ),
-                )
+                        child: Text(
+                          patrolsList.isEmpty
+                              ? 'No Patrols Found'
+                              : selectedGuardId != '' && selectedDate != null
+                                  ? 'No Patrols Found for Selected Date and Guard'
+                                  : selectedDate != null
+                                      ? 'No Patrols Found for Selected Date'
+                                      : 'No Patrols Found for Selected Guard',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                            color:
+                                Theme.of(context).textTheme.bodyMedium!.color,
+                          ),
+                        ),
+                      )
                     : ListView.builder(
                         itemCount: patrolsList.length,
                         shrinkWrap: true,
@@ -291,192 +297,206 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                             '',
                                     checkpoints:
                                         patrol['PatrolLogCheckPoints'] ?? [],
+                                    data: patrol,
                                   ),
                                   context,
                                 );
                               },
-                              child: Container(
-                                height: 140.h,
-                                margin: EdgeInsets.only(top: 10.h),
-                                width: double.maxFinite,
-                                decoration: BoxDecoration(
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Theme.of(context).shadowColor,
-                                      blurRadius: 5,
-                                      spreadRadius: 2,
-                                      offset: Offset(0, 3),
-                                    )
-                                  ],
-                                  color: Theme.of(context).cardColor,
-                                  borderRadius: BorderRadius.circular(14.r),
-                                ),
-                                padding: EdgeInsets.symmetric(vertical: 20.h),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(height: 20.h),
+                                  InterMedium(
+                                    text: 'Date hear',
+                                  ),
+                                  SizedBox(height: 10.h),
+                                  Container(
+                                    height: 140.h,
+                                    margin: EdgeInsets.only(top: 10.h),
+                                    width: double.maxFinite,
+                                    decoration: BoxDecoration(
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Theme.of(context).shadowColor,
+                                          blurRadius: 5,
+                                          spreadRadius: 2,
+                                          offset: Offset(0, 3),
+                                        )
+                                      ],
+                                      color: Theme.of(context).cardColor,
+                                      borderRadius: BorderRadius.circular(14.r),
+                                    ),
+                                    padding:
+                                        EdgeInsets.symmetric(vertical: 20.h),
+                                    child: Column(
                                       children: [
-                                        Column(
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
-                                            SizedBox(height: 5.h),
-                                            Container(
-                                              height: 30.h,
-                                              width: 4.w,
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.only(
-                                                  topRight:
-                                                      Radius.circular(10.r),
-                                                  bottomRight:
-                                                      Radius.circular(10.r),
+                                            Column(
+                                              children: [
+                                                SizedBox(height: 5.h),
+                                                Container(
+                                                  height: 30.h,
+                                                  width: 4.w,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.only(
+                                                      topRight:
+                                                          Radius.circular(10.r),
+                                                      bottomRight:
+                                                          Radius.circular(10.r),
+                                                    ),
+                                                    color: Theme.of(context)
+                                                        .primaryColor,
+                                                  ),
                                                 ),
-                                                color: isDark
-                                                    ? DarkColor.Primarycolor
-                                                    : LightColor.Primarycolor,
-                                              ),
+                                              ],
                                             ),
+                                            SizedBox(width: 14.w),
+                                            SizedBox(
+                                              width: 190.w,
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  InterSemibold(
+                                                    text: patrol[
+                                                            'PatrolLogGuardName'] ??
+                                                        "",
+                                                    color: Theme.of(context)
+                                                        .textTheme
+                                                        .displaySmall!
+                                                        .color as Color,
+                                                    fontsize: 18.sp,
+                                                  ),
+                                                ],
+                                              ),
+                                            )
                                           ],
                                         ),
-                                        SizedBox(width: 14.w),
-                                        SizedBox(
-                                          width: 190.w,
-                                          child: Column(
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 18.w, right: 24.w),
+                                          child: Row(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             mainAxisAlignment:
-                                                MainAxisAlignment.center,
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
-                                              InterSemibold(
-                                                text: patrol[
-                                                        'PatrolLogGuardName'] ??
-                                                    "",
-                                                color: Theme.of(context)
-                                                    .textTheme
-                                                    .displaySmall!
-                                                    .color as Color,
-                                                fontsize: 18.sp,
+                                              SizedBox(
+                                                width: 80.w,
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    InterRegular(
+                                                      text: 'Started at',
+                                                      fontsize: 12.sp,
+                                                      color: Theme.of(context)
+                                                          .textTheme
+                                                          .displaySmall!
+                                                          .color as Color,
+                                                    ),
+                                                    SizedBox(height: 12.h),
+                                                    InterMedium(
+                                                      text:
+                                                          DateFormat('hh:mm a')
+                                                              .format(
+                                                        DateTime
+                                                            .fromMillisecondsSinceEpoch(
+                                                          patrol['PatrolLogStartedAt']
+                                                              .millisecondsSinceEpoch,
+                                                        ),
+                                                      ),
+                                                      fontsize: 12.sp,
+                                                      color: Theme.of(context)
+                                                          .textTheme
+                                                          .displaySmall!
+                                                          .color as Color,
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
+                                              SizedBox(
+                                                width: 60.w,
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    InterRegular(
+                                                      text: 'Ended at',
+                                                      fontsize: 12.sp,
+                                                      color: Theme.of(context)
+                                                          .textTheme
+                                                          .displaySmall!
+                                                          .color as Color,
+                                                    ),
+                                                    SizedBox(height: 12.h),
+                                                    InterMedium(
+                                                      text:
+                                                          DateFormat('hh:mm a')
+                                                              .format(
+                                                        DateTime
+                                                            .fromMillisecondsSinceEpoch(
+                                                          patrol['PatrolLogEndedAt']
+                                                              .millisecondsSinceEpoch,
+                                                        ),
+                                                      ),
+                                                      fontsize: 12.sp,
+                                                      color: Theme.of(context)
+                                                          .textTheme
+                                                          .displaySmall!
+                                                          .color as Color,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: 80.w,
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    InterRegular(
+                                                      text: 'Status',
+                                                      fontsize: 12.sp,
+                                                      color: Theme.of(context)
+                                                          .textTheme
+                                                          .displaySmall!
+                                                          .color as Color,
+                                                    ),
+                                                    SizedBox(height: 12.h),
+                                                    InterMedium(
+                                                      text: patrol[
+                                                              'PatrolLogStatus'] ??
+                                                          'incomplete',
+                                                      fontsize: 12.sp,
+                                                      color: Theme.of(context)
+                                                          .textTheme
+                                                          .displaySmall!
+                                                          .color as Color,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              SvgPicture.asset(
+                                                'assets/images/icons/backarrow.svg',
+                                                width: 22.w,
+                                                height: 22.w,
+                                              )
                                             ],
                                           ),
-                                        )
+                                        ),
                                       ],
                                     ),
-                                    Padding(
-                                      padding: EdgeInsets.only(
-                                          left: 18.w, right: 24.w),
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          SizedBox(
-                                            width: 80.w,
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                InterRegular(
-                                                  text: 'Started at',
-                                                  fontsize: 12.sp,
-                                                  color: Theme.of(context)
-                                                      .textTheme
-                                                      .displaySmall!
-                                                      .color as Color,
-                                                ),
-                                                SizedBox(height: 12.h),
-                                                InterMedium(
-                                                  text: DateFormat('hh:mm a')
-                                                      .format(
-                                                    DateTime
-                                                        .fromMillisecondsSinceEpoch(
-                                                      patrol['PatrolLogStartedAt']
-                                                          .millisecondsSinceEpoch,
-                                                    ),
-                                                  ),
-                                                  fontsize: 12.sp,
-                                                  color: Theme.of(context)
-                                                      .textTheme
-                                                      .displaySmall!
-                                                      .color as Color,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: 80.w,
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                InterRegular(
-                                                  text: 'Ended at',
-                                                  fontsize: 12.sp,
-                                                  color: Theme.of(context)
-                                                      .textTheme
-                                                      .displaySmall!
-                                                      .color as Color,
-                                                ),
-                                                SizedBox(height: 12.h),
-                                                InterMedium(
-                                                  text: DateFormat('hh:mm a')
-                                                      .format(
-                                                    DateTime
-                                                        .fromMillisecondsSinceEpoch(
-                                                      patrol['PatrolLogEndedAt']
-                                                          .millisecondsSinceEpoch,
-                                                    ),
-                                                  ),
-                                                  fontsize: 12.sp,
-                                                  color: Theme.of(context)
-                                                      .textTheme
-                                                      .displaySmall!
-                                                      .color as Color,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: 40.w,
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                InterRegular(
-                                                  text: 'Status',
-                                                  fontsize: 12.sp,
-                                                  color: Theme.of(context)
-                                                      .textTheme
-                                                      .displaySmall!
-                                                      .color as Color,
-                                                ),
-                                                SizedBox(height: 12.h),
-                                                InterMedium(
-                                                  text: patrol[
-                                                          'PatrolLogStatus'] ??
-                                                      'incomplete',
-                                                  fontsize: 12.sp,
-                                                  color: Theme.of(context)
-                                                      .textTheme
-                                                      .displaySmall!
-                                                      .color as Color,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          SvgPicture.asset(
-                                            'assets/images/icons/backarrow.svg',
-                                            width: 22.w,
-                                            height: 22.w,
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             );
                           } else {

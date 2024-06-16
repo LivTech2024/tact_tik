@@ -100,6 +100,25 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
       child: Scaffold(
         body: CustomScrollView(
           slivers: [
+            SliverAppBar(
+              leading: IconButton(
+                icon: Icon(
+                  Icons.arrow_back_ios,
+                ),
+                padding: EdgeInsets.only(left: 20.w),
+                onPressed: () {
+                  Navigator.pop(context);
+                  print(
+                      "Navigtor debug: ${Navigator.of(context)
+                          .toString()}");
+                },
+              ),
+              title: InterMedium(
+                text: 'Reports',
+              ),
+              centerTitle: true,
+              floating: true, // Makes the app bar float above the content
+            ),
             SliverList(
               delegate: SliverChildBuilderDelegate(
                 (context, index) {

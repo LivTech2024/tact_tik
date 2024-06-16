@@ -580,7 +580,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                       MaterialPageRoute(
                                         builder: (context) =>
                                             SelectReportsGuardsScreen(
-                                          companyId: _CompanyId,
+                                          EmpId: _employeeId,
                                         ),
                                       ),
                                     );
@@ -844,8 +844,17 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                             icon: Icons.add,
                           ),
                         ),
-                        RoundedButton(
-                          icon: Icons.add_card,
+                        Bounce(
+                          onTap: () {
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //       builder: (context) => ),
+                            // );
+                          },
+                          child: RoundedButton(
+                            icon: Icons.add_card,
+                          ),
                         ),
                         Bounce(
                           onTap: () {

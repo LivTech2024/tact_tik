@@ -221,10 +221,12 @@ class _SPostOrderState extends State<SPostOrder> {
                                                     PoppinsMedium(
                                                       text: fileName,
                                                       color: Theme.of(context).textTheme.titleMedium!.color,
+                                                      fontsize: 14.sp,
                                                     ),
                                                     PoppinsRegular(
                                                       text: fileSize,
                                                       color: Theme.of(context).textTheme.titleLarge!.color,
+                                                      fontsize: 14.sp,
                                                     )
                                                   ],
                                                 )

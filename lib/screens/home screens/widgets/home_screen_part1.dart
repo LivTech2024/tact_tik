@@ -352,10 +352,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                                   Icon(screen.icon, color: Colors.blueAccent),
                               title: InterRegular(
                                 text: screen.name,
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium!
-                                    .color,
+                                color: Theme.of(context).textTheme.bodyMedium!.color,
                               ),
                             );
                           },

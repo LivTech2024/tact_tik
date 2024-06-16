@@ -59,12 +59,14 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
     _fetchShiftDetails();
   }
 
-  initColors(BuildContext context) {
-    return [
-      Theme.of(context).textTheme.bodySmall!.color,
-      Theme.of(context).highlightColor,
-    ];
-  }
+ List<Color> colors = [
+    themeManager.themeMode == ThemeMode.dark
+        ? DarkColor.Primarycolor
+        : LightColor.color3,
+    themeManager.themeMode == ThemeMode.dark
+        ? DarkColor.color25
+        : LightColor.color2,
+  ];
 
   Future<Map<String, List<Map<String, dynamic>>>> fetchReports() async {
     final employeeId = _userService.employeeId;
@@ -479,7 +481,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
-    List colors = initColors(context);
+    ;
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
