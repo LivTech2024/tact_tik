@@ -74,10 +74,12 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
   List<DocumentSnapshot> branches = [];
 
   List<Color> colors = [
-    themeManager == ThemeData.dark()
+    themeManager.themeMode == ThemeMode.dark
         ? DarkColor.Primarycolor
         : LightColor.color3,
-    themeManager == ThemeData.dark() ? DarkColor.color25 : LightColor.color2,
+    themeManager.themeMode == ThemeMode.dark
+        ? DarkColor.color25
+        : LightColor.color2,
   ];
   @override
   void initState() {
