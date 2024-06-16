@@ -460,16 +460,18 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
   //   print("darList: $darList");
   //   return darList;
   // }
-  initColors(BuildContext context) {
-    return [
-      Theme.of(context).textTheme.bodySmall!.color,
-      Theme.of(context).highlightColor,
-    ];
-  }
+ List<Color> colors = [
+    themeManager.themeMode == ThemeMode.dark
+        ? DarkColor.Primarycolor
+        : LightColor.color3,
+    themeManager.themeMode == ThemeMode.dark
+        ? DarkColor.color25
+        : LightColor.color2,
+  ];
 
   @override
   Widget build(BuildContext context) {
-    List colors = initColors(context);
+   
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -506,7 +508,7 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                           setState(() {
                             showDARS = true;
                             colors[0] =
-                                Theme.of(context).textTheme.bodySmall!.color;
+                                Theme.of(context).textTheme.bodySmall!.color as Color;
                             colors[1] = Theme.of(context).highlightColor;
                           });
                         },
@@ -538,7 +540,7 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                             showDARS = false;
                             colors[0] = Theme.of(context).highlightColor;
                             colors[1] =
-                                Theme.of(context).textTheme.bodySmall!.color;
+                                Theme.of(context).textTheme.bodySmall!.color as Color;
                           });
                         },
                         child: Container(
