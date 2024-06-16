@@ -8,7 +8,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tact_tik/common/widgets/customErrorToast.dart';
+import 'package:tact_tik/common/widgets/customToast.dart';
 import 'package:tact_tik/main.dart';
+import 'package:tact_tik/screens/new%20guard/personel_details.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/assets/select_assets_guards.dart';
 
 import '../../../../common/sizes.dart';
@@ -67,6 +70,8 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
   List<Map<String, dynamic>> guards = [];
   List<DocumentSnapshot> equipment = [];
   List selectedGuards = [];
+  String? selectedBranchID;
+  List<DocumentSnapshot> branches = [];
 
   List<Color> colors = [
     themeManager == ThemeData.dark()
@@ -79,19 +84,49 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
     super.initState();
     fetchEquipmentAllocationData();
     fetchEquipment();
+    fetchBranches();
+    print("Only VIew ${widget.OnlyView}");
+  }
+
+  Future<void> fetchBranches() async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('CompanyBranch')
+        .where("CompanyId", isEqualTo: widget.companyId)
+        .get();
+
+    if (querySnapshot != null) {
+      setState(() {
+        branches = querySnapshot.docs;
+      });
+    }
   }
 
   Future<void> fetchEquipmentAllocationData() async {
     if (widget.empId.isNotEmpty) {
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection('EquipmentAllocations')
-          .where('EquipmentAllocationEmpId', isEqualTo: widget.empId)
+          .where('EquipmentAllocationId', isEqualTo: widget.equipemtAllocId)
           .limit(1)
           .get();
 
       if (querySnapshot.docs.isNotEmpty) {
         DocumentSnapshot document = querySnapshot.docs.first;
-        setState(() async {
+
+        // Perform asynchronous work before calling setState
+        String employeeId = document['EquipmentAllocationEmpId'];
+        DocumentSnapshot employeeSnapshot = await FirebaseFirestore.instance
+            .collection('Employees')
+            .doc(employeeId)
+            .get();
+
+        String equipmentId = document['EquipmentAllocationEquipId'];
+        DocumentSnapshot equipmentSnapshot = await FirebaseFirestore.instance
+            .collection('Equipments')
+            .doc(equipmentId)
+            .get();
+        print("Ischecked ${document['EquipmentAllocationIsReturned']}");
+        // Call setState to update the sta    te synchronously
+        setState(() {
           _allocateQtController1.text =
               document['EquipmentAllocationEquipQty'].toString();
           isChecked = document['EquipmentAllocationIsReturned'];
@@ -101,22 +136,11 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
           EndDate = (document['EquipmentAllocationEndDate'] as Timestamp)
               .toDate()
               .toLocal();
-
-          String employeeId = document['EquipmentAllocationEmpId'];
-          DocumentSnapshot employeeSnapshot = await FirebaseFirestore.instance
-              .collection('Employees')
-              .doc(employeeId)
-              .get();
           _searchController.text = employeeSnapshot['EmployeeName'];
           selectedGuardId = employeeId;
-
-          String equipmentId = document['EquipmentAllocationEquipId'];
-          DocumentSnapshot equipmentSnapshot = await FirebaseFirestore.instance
-              .collection('Equipments')
-              .doc(equipmentId)
-              .get();
           selectedEquipmentName = equipmentSnapshot['EquipmentName'];
           selectedEquipmentId = equipmentId;
+          // isChecked = document['EquipmentAllocationIsReturned'];
         });
       }
     }
@@ -132,7 +156,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
 
     final result = await FirebaseFirestore.instance
         .collection('Employees')
-        .where('EmployeeRole', isEqualTo: 'GUARD')
+        // .where('EmployeeRole', isEqualTo: 'GUARD')
         .where('EmployeeCompanyId', isEqualTo: widget.companyId)
         .where('EmployeeNameSearchIndex', arrayContains: query)
         .get();
@@ -160,8 +184,8 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
       'EquipmentAllocationCreatedAt': FieldValue.serverTimestamp(),
       'EquipmentAllocationDate': FieldValue.serverTimestamp(),
       'EquipmentAllocationEmpId': selectedGuardId ?? '',
-      'EquipmentAllocationEndDate': FieldValue.serverTimestamp(),
-      'EquipmentAllocationStartDate': FieldValue.serverTimestamp(),
+      'EquipmentAllocationEndDate': EndDate,
+      'EquipmentAllocationStartDate': StartDate,
       'EquipmentAllocationEquipId': selectedEquipmentId ?? '',
       'EquipmentAllocationEquipQty': _allocateQtController1.text.isNotEmpty
           ? int.parse(_allocateQtController1.text)
@@ -176,20 +200,65 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
     });
   }
 
+  Future<void> createEquipment() async {
+    try {
+      if (_titleController2.text.isNotEmpty ||
+          _allocateQtController2.text.isNotEmpty) {
+        CollectionReference equipmentAllocations =
+            FirebaseFirestore.instance.collection('Equipments');
+        DocumentReference docRef = await equipmentAllocations.add({
+          'EquipmentCreatedAt': FieldValue.serverTimestamp(),
+          'EquipmentCompanyId': widget.companyId,
+          'EquipmentCompanyBranchId': selectedBranchID,
+          'EquipmentName': _titleController2.text,
+          'EquipmentDescription': _descriptionController.text,
+          'EquipmentModifiedAt': FieldValue.serverTimestamp(),
+          'EquipmentTotalQuantity': _allocateQtController2.text.isNotEmpty
+              ? int.parse(_allocateQtController2.text)
+              : 0,
+          'EquipmentAllotedQuantity': 0,
+          "EquipmentNameSearchIndex":
+              _generateSearchIndex(_titleController2.text),
+          // Initialize with an empty string
+        });
+
+        // Update the document with the generated document reference ID EquipmentTotalQuantity
+        await docRef.update({
+          'EquipmentId': docRef.id,
+        });
+        setState(() {
+          _titleController2.clear();
+          _descriptionController.clear();
+          _allocateQtController2.clear();
+        });
+        showSuccessToast(context, "Equipment created");
+      } else {
+        showErrorToast(context, "Fields Cannot be empty");
+      }
+    } catch (e) {
+      showErrorToast(context, "Error");
+    }
+  }
+
   Future<void> updateEquipmentAllocation() async {
     CollectionReference equipmentAllocations =
         FirebaseFirestore.instance.collection('EquipmentAllocations');
     await equipmentAllocations.doc(widget.equipemtAllocId).update({
       'EquipmentAllocationIsReturned': isChecked,
+      'EquipmentAllocationReturnedAt': FieldValue.serverTimestamp(),
     });
   }
 
   Future<void> _selectDate(BuildContext context, bool isStart) async {
+    final DateTime now = DateTime.now();
+    final DateTime firstSelectableDate =
+        DateTime(now.year, now.month, now.day - 1);
     final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(2015, 8),
-        lastDate: DateTime(2101));
+      context: context,
+      initialDate: firstSelectableDate,
+      firstDate: firstSelectableDate,
+      lastDate: DateTime(now.year + 10),
+    );
     setState(() {
       if (picked != null) {
         if (isStart) {
@@ -338,312 +407,371 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              InterBold(
-                                text: 'Select Guard',
-                                fontsize: 16.w,
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium!
-                                    .color,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              SelectAssetsGuardsScreen(
-                                                companyId: widget.companyId,
-                                                empId: '',
-                                              ))).then((value) => {
-                                        if (value != null)
-                                          {
-                                            print("Value: ${value}"),
-                                            setState(() {
-                                              bool guardExists =
-                                                  selectedGuards.any((guard) =>
-                                                      guard['GuardId'] ==
-                                                      value['id']);
+                          !widget.OnlyView
+                              ? Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    showCreate
+                                        ? InterBold(
+                                            text: 'Select Guard',
+                                            fontsize: 16.w,
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium!
+                                                .color,
+                                          )
+                                        : SizedBox(),
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    SelectAssetsGuardsScreen(
+                                                      companyId:
+                                                          widget.companyId,
+                                                      empId: '',
+                                                    ))).then((value) => {
+                                              if (value != null)
+                                                {
+                                                  print("Value: ${value}"),
+                                                  setState(() {
+                                                    bool guardExists =
+                                                        selectedGuards.any(
+                                                            (guard) =>
+                                                                guard[
+                                                                    'GuardId'] ==
+                                                                value['id']);
 
-                                              if (guardExists) {
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(
-                                                  SnackBar(
-                                                    content: Text(
-                                                        'Guard already added'),
-                                                  ),
-                                                );
-                                              } else {
-                                                // Add the guard if it does not exist
-                                                selectedGuards.add({
-                                                  'GuardId': value['id'],
-                                                  'GuardName': value['name'],
-                                                  'GuardImg': value['url']
-                                                });
-                                              }
-                                            }),
-                                          }
-                                      });
-                                },
-                                child: InterBold(
-                                  text: '+ Add',
+                                                    if (guardExists) {
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(
+                                                        SnackBar(
+                                                          content: Text(
+                                                              'Guard already added'),
+                                                        ),
+                                                      );
+                                                    } else {
+                                                      // Add the guard if it does not exist
+                                                      selectedGuards.add({
+                                                        'GuardId': value['id'],
+                                                        'GuardName':
+                                                            value['name'],
+                                                        'GuardImg': value['url']
+                                                      });
+                                                    }
+                                                  }),
+                                                }
+                                            });
+                                      },
+                                      child: InterBold(
+                                        text: '+ Add',
+                                        fontsize: 16.w,
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .color,
+                                      ),
+                                    )
+                                  ],
+                                )
+                              : InterBold(
+                                  text: 'Selected Guard',
                                   fontsize: 16.w,
                                   color: Theme.of(context)
                                       .textTheme
                                       .bodyMedium!
                                       .color,
                                 ),
-                              )
-                            ],
-                          ),
                           SizedBox(height: 24.h),
-                          Container(
-                            height: 64.h,
-                            padding: EdgeInsets.symmetric(horizontal: 10.w),
-                            decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Theme.of(context).shadowColor,
-                                  blurRadius: 5,
-                                  spreadRadius: 2,
-                                  offset: Offset(0, 3),
-                                )
-                              ],
-                              color: Theme.of(context).cardColor,
-                              borderRadius: BorderRadius.circular(13.r),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: TextField(
-                                    controller: _searchController,
-                                    onChanged: (query) {
-                                      searchGuards(query);
-                                    },
-                                    style: GoogleFonts.poppins(
-                                      fontWeight: FontWeight.w300,
-                                      fontSize: 18.sp,
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium!
-                                          .color,
-                                    ),
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(
-                                        borderSide: BorderSide.none,
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(10.r),
-                                        ),
-                                      ),
-                                      focusedBorder: InputBorder.none,
-                                      hintStyle: GoogleFonts.poppins(
-                                        fontWeight: FontWeight.w300,
-                                        fontSize: 18.sp,
-                                        color: Theme.of(context)
-                                            .textTheme
-                                            .bodyLarge!
-                                            .color,
-                                      ),
-                                      hintText: 'Search Guard',
-                                      contentPadding: EdgeInsets.zero,
-                                    ),
-                                    cursorColor: Theme.of(context).primaryColor,
-                                  ),
-                                ),
-                                Container(
-                                  height: 44.h,
-                                  width: 44.w,
+                          !widget.OnlyView
+                              ? Container(
+                                  height: 64.h,
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 10.w),
                                   decoration: BoxDecoration(
-                                    color: Theme.of(context).primaryColor,
-                                    borderRadius: BorderRadius.circular(10.r),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Theme.of(context).shadowColor,
+                                        blurRadius: 5,
+                                        spreadRadius: 2,
+                                        offset: Offset(0, 3),
+                                      )
+                                    ],
+                                    color: Theme.of(context).cardColor,
+                                    borderRadius: BorderRadius.circular(13.r),
                                   ),
-                                  child: Center(
-                                    child: Icon(
-                                      Icons.search,
-                                      size: 20.w,
-                                      color: Theme.of(context).brightness ==
-                                              Brightness.dark
-                                          ? DarkColor.Secondarycolor
-                                          : LightColor.color1,
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                          ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: guards.length,
-                            itemBuilder: (context, index) {
-                              final guard = guards[index];
-                              return ListTile(
-                                title: Text(guard['EmployeeName']),
-                                onTap: () {
-                                  setState(() {
-                                    _searchController.text =
-                                        guard['EmployeeName'];
-                                    selectedGuards.add({
-                                      'GuardName': guard['EmployeeName'],
-                                      'GuardImg': guard['EmployeeImg'],
-                                      'GuardId': guard['EmployeeId'],
-                                    });
-                                    selectedGuardId = guard['EmployeeId'];
-                                    controller:
-                                    _searchController.text =
-                                        guard['EmployeeName'];
-                                    guards.clear();
-                                  });
-                                },
-                              );
-                            },
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(top: 20.h),
-                            height: 80.h,
-                            width: double.maxFinite,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: 0,
-                              itemBuilder: (context, index) {
-                                String guardId =
-                                    selectedGuards[index]['GuardId'];
-                                String guardName =
-                                    selectedGuards[index]['GuardName'];
-                                String guardImg =
-                                    selectedGuards[index]['GuardImg'];
-                                return Padding(
-                                  padding: EdgeInsets.only(right: 20.h),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.end,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Stack(
-                                        clipBehavior: Clip.none,
-                                        children: [
-                                          Container(
-                                            height: 50.h,
-                                            width: 50.w,
-                                            decoration: guardImg != ""
-                                                ? BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    image: DecorationImage(
-                                                      image: NetworkImage(
-                                                          guardImg ?? ""),
-                                                      filterQuality:
-                                                          FilterQuality.high,
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                  )
-                                                : BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    color: Theme.of(context)
-                                                        .primaryColor,
-                                                    image: DecorationImage(
-                                                      image: AssetImage(
-                                                          'assets/images/default.png'),
-                                                      filterQuality:
-                                                          FilterQuality.high,
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                  ),
+                                      Expanded(
+                                        child: TextField(
+                                          controller: _searchController,
+                                          onChanged: (query) {
+                                            searchGuards(query);
+                                          },
+                                          style: GoogleFonts.poppins(
+                                            fontWeight: FontWeight.w300,
+                                            fontSize: 18.sp,
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium!
+                                                .color,
                                           ),
-                                          Positioned(
-                                            top: -4,
-                                            right: -5,
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                setState(() {
-                                                  // selectedGuards
-                                                  //     .removeAt(index);
-                                                });
-                                              },
-                                              child: Container(
-                                                height: 20.h,
-                                                width: 20.w,
-                                                decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    color: DarkColor.color1),
-                                                child: Center(
-                                                  child: Icon(
-                                                    Icons.close,
-                                                    size: 8,
-                                                    color: DarkColor
-                                                        .Secondarycolor,
-                                                  ),
-                                                ),
+                                          decoration: InputDecoration(
+                                            border: OutlineInputBorder(
+                                              borderSide: BorderSide.none,
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(10.r),
                                               ),
                                             ),
-                                          )
-                                        ],
+                                            focusedBorder: InputBorder.none,
+                                            hintStyle: GoogleFonts.poppins(
+                                              fontWeight: FontWeight.w300,
+                                              fontSize: 18.sp,
+                                              color: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyLarge!
+                                                  .color,
+                                            ),
+                                            hintText: 'Search Guard',
+                                            contentPadding: EdgeInsets.zero,
+                                          ),
+                                          cursorColor:
+                                              Theme.of(context).primaryColor,
+                                        ),
                                       ),
-                                      SizedBox(height: 8.h),
-                                      InterBold(
-                                        text: guardName,
-                                        fontsize: 14.sp,
-                                        color: Theme.of(context)
-                                            .textTheme
-                                            .displayMedium!
-                                            .color,
+                                      Container(
+                                        height: 44.h,
+                                        width: 44.w,
+                                        decoration: BoxDecoration(
+                                          color: Theme.of(context).primaryColor,
+                                          borderRadius:
+                                              BorderRadius.circular(10.r),
+                                        ),
+                                        child: Center(
+                                          child: Icon(
+                                            Icons.search,
+                                            size: 20.w,
+                                            color:
+                                                Theme.of(context).brightness ==
+                                                        Brightness.dark
+                                                    ? DarkColor.Secondarycolor
+                                                    : LightColor.color1,
+                                          ),
+                                        ),
                                       )
                                     ],
                                   ),
-                                );
-                              },
-                            ),
-                          ),
+                                )
+                              : InterBold(
+                                  text: _searchController.text,
+                                  fontsize: 16.w,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .color,
+                                ),
+                          !widget.OnlyView
+                              ? ListView.builder(
+                                  physics: NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  itemCount: guards.length,
+                                  itemBuilder: (context, index) {
+                                    final guard = guards[index];
+                                    return ListTile(
+                                      title: Text(guard['EmployeeName']),
+                                      onTap: () {
+                                        setState(() {
+                                          _searchController.text =
+                                              guard['EmployeeName'];
+                                          selectedGuards.add({
+                                            'GuardName': guard['EmployeeName'],
+                                            'GuardImg': guard['EmployeeImg'],
+                                            'GuardId': guard['EmployeeId'],
+                                          });
+                                          selectedGuardId = guard['EmployeeId'];
+                                          controller:
+                                          _searchController.text =
+                                              guard['EmployeeName'];
+                                          guards.clear();
+                                        });
+                                      },
+                                    );
+                                  },
+                                )
+                              : SizedBox(),
+                          !widget.OnlyView
+                              ? Container(
+                                  margin: EdgeInsets.only(top: 20.h),
+                                  height: 80.h,
+                                  width: double.maxFinite,
+                                  child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: 0,
+                                    itemBuilder: (context, index) {
+                                      String guardId =
+                                          selectedGuards[index]['GuardId'];
+                                      String guardName =
+                                          selectedGuards[index]['GuardName'];
+                                      String guardImg =
+                                          selectedGuards[index]['GuardImg'];
+                                      return Padding(
+                                        padding: EdgeInsets.only(right: 20.h),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            Stack(
+                                              clipBehavior: Clip.none,
+                                              children: [
+                                                Container(
+                                                  height: 50.h,
+                                                  width: 50.w,
+                                                  decoration: guardImg != ""
+                                                      ? BoxDecoration(
+                                                          shape:
+                                                              BoxShape.circle,
+                                                          image:
+                                                              DecorationImage(
+                                                            image: NetworkImage(
+                                                                guardImg ?? ""),
+                                                            filterQuality:
+                                                                FilterQuality
+                                                                    .high,
+                                                            fit: BoxFit.cover,
+                                                          ),
+                                                        )
+                                                      : BoxDecoration(
+                                                          shape:
+                                                              BoxShape.circle,
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .primaryColor,
+                                                          image:
+                                                              DecorationImage(
+                                                            image: AssetImage(
+                                                                'assets/images/default.png'),
+                                                            filterQuality:
+                                                                FilterQuality
+                                                                    .high,
+                                                            fit: BoxFit.cover,
+                                                          ),
+                                                        ),
+                                                ),
+                                                Positioned(
+                                                  top: -4,
+                                                  right: -5,
+                                                  child: GestureDetector(
+                                                    onTap: () {
+                                                      setState(() {
+                                                        // selectedGuards
+                                                        //     .removeAt(index);
+                                                      });
+                                                    },
+                                                    child: Container(
+                                                      height: 20.h,
+                                                      width: 20.w,
+                                                      decoration: BoxDecoration(
+                                                          shape:
+                                                              BoxShape.circle,
+                                                          color:
+                                                              DarkColor.color1),
+                                                      child: Center(
+                                                        child: Icon(
+                                                          Icons.close,
+                                                          size: 8,
+                                                          color: DarkColor
+                                                              .Secondarycolor,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                            SizedBox(height: 8.h),
+                                            InterBold(
+                                              text: guardName,
+                                              fontsize: 14.sp,
+                                              color: Theme.of(context)
+                                                  .textTheme
+                                                  .displayMedium!
+                                                  .color,
+                                            )
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                )
+                              : SizedBox(),
                           SizedBox(height: 20.h),
                           InterBold(
-                            text: 'Select equipment',
+                            text: widget.OnlyView
+                                ? "Selected equipment"
+                                : 'Select equipment',
                             fontsize: 16.sp,
                             color:
                                 Theme.of(context).textTheme.bodyMedium!.color,
                           ),
                           SizedBox(height: 10.h),
-                          IgnorePointer(
-                            ignoring: widget.OnlyView,
-                            child: DropdownButtonFormField<String>(
-                              value: selectedEquipmentName,
-                              items: equipment.map((DocumentSnapshot document) {
-                                Map<String, dynamic> data =
-                                    document.data() as Map<String, dynamic>;
-                                return DropdownMenuItem<String>(
-                                  value: data['EquipmentName'],
-                                  child: InterRegular(
-                                    text: data['EquipmentName'],
-                                    color: Theme.of(context)
-                                        .textTheme
-                                        .headlineSmall!
-                                        .color,
+                          !widget.OnlyView
+                              ? IgnorePointer(
+                                  ignoring: widget.OnlyView,
+                                  child: DropdownButtonFormField<String>(
+                                    value: selectedEquipmentName,
+                                    items: equipment
+                                        .map((DocumentSnapshot document) {
+                                      Map<String, dynamic> data = document
+                                          .data() as Map<String, dynamic>;
+                                      return DropdownMenuItem<String>(
+                                        value: data['EquipmentName'],
+                                        child: InterRegular(
+                                          text: data['EquipmentName'],
+                                          color: Theme.of(context)
+                                              .textTheme
+                                              .headlineSmall!
+                                              .color,
+                                        ),
+                                      );
+                                    }).toList(),
+                                    onChanged: (String? newValue) {
+                                      setState(() {
+                                        selectedEquipmentName = newValue;
+                                        selectedEquipmentId = equipment
+                                            .firstWhere((document) =>
+                                                (document.data() as Map<String,
+                                                        dynamic>)[
+                                                    'EquipmentName'] ==
+                                                newValue)
+                                            .id;
+                                      });
+                                    },
+                                    decoration: InputDecoration(
+                                      hintText: 'Select Equipment',
+                                      hintStyle: TextStyle(color: Colors.white),
+                                      filled: true,
+                                      fillColor: Theme.of(context).cardColor,
+                                      border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(13.w),
+                                        borderSide: BorderSide.none,
+                                      ),
+                                    ),
                                   ),
-                                );
-                              }).toList(),
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  selectedEquipmentName = newValue;
-                                  selectedEquipmentId = equipment
-                                      .firstWhere((document) =>
-                                          (document.data() as Map<String,
-                                              dynamic>)['EquipmentName'] ==
-                                          newValue)
-                                      .id;
-                                });
-                              },
-                              decoration: InputDecoration(
-                                hintText: 'Select Equipment',
-                                hintStyle: TextStyle(color: Colors.white),
-                                filled: true,
-                                fillColor: Theme.of(context).cardColor,
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(13.w),
-                                  borderSide: BorderSide.none,
+                                )
+                              : InterBold(
+                                  text: selectedEquipmentName.toString(),
+                                  fontsize: 16.sp,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .color,
                                 ),
-                              ),
-                            ),
-                          ),
                           SizedBox(height: 20.h),
                           InterBold(
                             text: 'Allocate Qt.',
@@ -789,34 +917,47 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                   checkColor: DarkColor.color1,
                                   value: isChecked,
                                   onChanged: (bool? value) {
-                                    setState(() {
-                                      isChecked = !isChecked;
-                                    });
+                                    if (widget.OnlyView) {
+                                      setState(() {
+                                        isChecked = !isChecked;
+                                      });
+                                    } else {
+                                      showErrorToast(context,
+                                          "Cannot perform this operation");
+                                    }
                                   },
                                 ),
                               ],
                             ),
                           ),
                           SizedBox(height: 40.h),
-                          IgnorePointer(
-                            ignoring:
-                                widget.OnlyView == true && isChecked == true
-                                    ? true
-                                    : false,
-                            child: Button1(
-                              text: 'Save',
-                              onPressed: () {
-                                createEquipmentAllocation();
-                              },
-                              backgroundcolor: /*widget.OnlyView == true
+                          // IgnorePointer(
+                          // ignoring:
+                          //     widget.OnlyView == true && isChecked == true
+                          //         ? true
+                          //         : false,
+                          !isChecked
+                              ? Button1(
+                                  text: 'Save',
+                                  onPressed: () {
+                                    print("clicked");
+                                    if (isChecked == false) {
+                                      createEquipmentAllocation();
+                                    } else {
+                                      updateEquipmentAllocation();
+                                    }
+                                  },
+                                  backgroundcolor: /*widget.OnlyView == true
                                   ?*/
-                                  isChecked == false
-                                      ? Theme.of(context).primaryColorLight
-                                      : Theme.of(context).primaryColor,
-                              // : Theme.of(context).primaryColorLight,
-                              borderRadius: 10.r,
-                            ),
-                          ),
+                                      isChecked == false
+                                          ? Theme.of(context).primaryColorLight
+                                          : Theme.of(context).primaryColor,
+                                  // : Theme.of(context).primaryColorLight,
+                                  borderRadius: 10.r,
+                                )
+                              : SizedBox(),
+                          // ),
+
                           SizedBox(height: 20.h),
                         ],
                       ),
@@ -860,13 +1001,14 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                           SizedBox(height: 10.h),
                           DropdownButtonFormField<String>(
                             value: selectedBranch,
-                            items: equipment.map((DocumentSnapshot document) {
+                            items: branches.map((DocumentSnapshot document) {
                               Map<String, dynamic> data =
                                   document.data() as Map<String, dynamic>;
+                              print(data);
                               return DropdownMenuItem<String>(
-                                value: data['EquipmentName'],
+                                value: data['CompanyBranchName'],
                                 child: InterRegular(
-                                  text: data['EquipmentName'],
+                                  text: data['CompanyBranchName'],
                                   color: Theme.of(context)
                                       .textTheme
                                       .headlineSmall!
@@ -877,12 +1019,16 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                             onChanged: (String? newValue) {
                               setState(() {
                                 selectedBranch = newValue;
-                                // selectedEquipmentId = equipment
-                                //     .firstWhere((document) =>
-                                // (document.data() as Map<String,
-                                //     dynamic>)['EquipmentName'] ==
-                                //     newValue)
-                                //     .id;
+
+                                selectedBranchID = branches
+                                    .firstWhere((document) =>
+                                        (document.data() as Map<String,
+                                            dynamic>)['CompanyBranchName'] ==
+                                        newValue)
+                                    .id;
+                                print(
+                                    "Selected selectedBranchID ${selectedBranchID}");
+                                print("Selected Brnch ${selectedBranch}");
                               });
                             },
                             decoration: InputDecoration(
@@ -913,7 +1059,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                           Button1(
                             text: 'Save',
                             onPressed: () {
-                              createEquipmentAllocation();
+                              createEquipment();
                             },
                             backgroundcolor: Theme.of(context).primaryColor,
                             borderRadius: 10.r,
@@ -929,6 +1075,15 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
   }
 }
 
+List<String> _generateSearchIndex(String keyName) {
+  List<String> searchIndex = [];
+  for (int i = 0; i < keyName.length; i++) {
+    for (int j = i + 1; j <= keyName.length; j++) {
+      searchIndex.add(keyName.substring(i, j).toLowerCase());
+    }
+  }
+  return searchIndex;
+}
 /*Container(
                             height: 60.h,
                             padding: EdgeInsets.symmetric(horizontal: 20.w),

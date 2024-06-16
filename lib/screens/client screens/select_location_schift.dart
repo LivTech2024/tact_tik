@@ -9,7 +9,8 @@ import '../../../../fonts/inter_bold.dart';
 import '../../../../utils/colors.dart';
 
 class SelectLocationShift {
-  static Future<void> showLocationDialog(BuildContext context, String companyId, Function(List<dynamic>) onLocationSelected) async {
+  static Future<void> showLocationDialog(BuildContext context, String companyId,
+      Function(List<dynamic>) onLocationSelected) async {
     List<QueryDocumentSnapshot> locationDocs = [];
     List<QueryDocumentSnapshot> filteredLocationDocs = [];
 
@@ -19,7 +20,33 @@ class SelectLocationShift {
         hideSelectedTextCount: true,
         headlineText: 'Select Location',
         height: 500.h,
-        listData: filteredLocationDocs.map((doc) => doc['LocationName'] as String).toList(),
+        themeData: FilterListThemeData(
+          context,
+          controlButtonBarTheme: ControlButtonBarThemeData(context,
+              backgroundColor: Theme.of(context).cardColor),
+          backgroundColor: Theme.of(context).cardColor,
+          headerTheme: HeaderThemeData(
+            searchFieldIconColor:
+                Theme.of(context).textTheme.headlineMedium!.color,
+            headerTextStyle: TextStyle(
+                color:
+                    Theme.of(context).textTheme.headlineMedium!.color as Color,
+                fontSize: 15.sp),
+            closeIconColor:
+                Theme.of(context).textTheme.headlineMedium!.color as Color,
+            backgroundColor: Theme.of(context).cardColor,
+            searchFieldHintTextStyle: TextStyle(
+              color: Theme.of(context).textTheme.headlineMedium!.color,
+            ),
+            searchFieldTextStyle: TextStyle(
+              color: Theme.of(context).textTheme.headlineMedium!.color,
+            ),
+            searchFieldBackgroundColor: Theme.of(context).cardColor,
+          ),
+        ),
+        listData: filteredLocationDocs
+            .map((doc) => doc['LocationName'] as String)
+            .toList(),
         selectedListData: [],
         choiceChipLabel: (item) => item,
         validateSelectedItem: (list, val) => list!.contains(val),
@@ -32,7 +59,8 @@ class SelectLocationShift {
             onLocationSelected([]);
           } else {
             onLocationSelected(list.map((selectedLocation) {
-              return locationDocs.firstWhere((doc) => doc['LocationName'] == selectedLocation)['LocationAddress'];
+              return locationDocs.firstWhere((doc) =>
+                  doc['LocationName'] == selectedLocation)['LocationAddress'];
             }).toList());
           }
           Navigator.pop(context);
@@ -43,23 +71,31 @@ class SelectLocationShift {
         choiceChipBuilder: (context, item, isSelected) {
           return Container(
             constraints: BoxConstraints(minWidth: 10.w),
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+            margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
             decoration: BoxDecoration(
-                border: Border.all(
-                  color: isSelected! ? Colors.blue[300]! : Colors.grey[300]!,
-                )),
+              borderRadius: BorderRadius.circular(10.r),
+              border: Border.all(
+                color: isSelected!
+                    ? Theme.of(context).primaryColor
+                    : Colors.grey[300]!,
+              ),
+            ),
             child: Row(
               children: [
                 Icon(
                   Icons.location_on,
-                  color: isSelected ? Colors.blue[300] : Colors.grey[500],
+                  color: isSelected
+                      ? Theme.of(context).primaryColor
+                      : Colors.grey[500],
                   size: 24.sp,
                 ),
                 SizedBox(width: 10.w),
                 InterMedium(
                   text: item,
-                  color: isSelected ? Colors.blue[300] : Colors.grey[500],
+                  color: isSelected
+                      ? Theme.of(context).primaryColor
+                      : Colors.grey[500],
                 ),
               ],
             ),

@@ -38,6 +38,7 @@ import '../../home screens/widgets/home_screen_part1.dart';
 import '../../home screens/widgets/homescreen_custom_navigation.dart';
 import '../../new guard/new_guard_screen.dart';
 import '../features screens/Report/select_reports_guards.dart';
+import '../features screens/assets/s_assets_view_screen.dart';
 import '../features screens/assets/select_assets_guards.dart';
 import '../features screens/dar/select_dar_guards.dart';
 import '../features screens/history/select_history_guards.dart';
@@ -631,10 +632,10 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) =>
-                                            SelectAssetsGuardsScreen(
+                                        builder: (context) => SAssetsViewScreen(
                                           companyId: _CompanyId,
                                           empId: _employeeId,
+                                          EmpName: _employeeId,
                                         ),
                                       ),
                                     );
