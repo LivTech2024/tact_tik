@@ -723,30 +723,34 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                                                     maxLines: 5,
                                                   ),
                                                   SizedBox(height: 20.h),
-                                                  Row(
-                                                    children: List.generate(
-                                                      (data[index]['TileImages']
-                                                              as List)
-                                                          .length,
-                                                      (i) => Container(
-                                                        margin: EdgeInsets.only(
-                                                            right: 10.w),
-                                                        height: 50.h,
-                                                        width: 50.w,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                            10.r,
-                                                          ),
-                                                          image:
-                                                              DecorationImage(
-                                                            image: NetworkImage(
-                                                              data[index][
-                                                                  'TileImages'][i],
+                                                  SingleChildScrollView(
+                                                    scrollDirection:
+                                                        Axis.horizontal,
+                                                    child: Row(
+                                                      children: List.generate(
+                                                        (data[index]['TileImages']
+                                                                as List)
+                                                            .length,
+                                                        (i) => Container(
+                                                          margin: EdgeInsets.only(
+                                                              right: 10.w),
+                                                          height: 50.h,
+                                                          width: 50.w,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                              10.r,
                                                             ),
-                                                            fit: BoxFit.cover,
+                                                            image:
+                                                                DecorationImage(
+                                                              image: NetworkImage(
+                                                                data[index][
+                                                                    'TileImages'][i],
+                                                              ),
+                                                              fit: BoxFit.cover,
+                                                            ),
                                                           ),
                                                         ),
                                                       ),
