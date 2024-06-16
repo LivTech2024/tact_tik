@@ -14,10 +14,17 @@ class Button1 extends StatelessWidget {
     this.color,
     required this.onPressed,
     this.height = 65,
-    this.backgroundcolor = DarkColor. WidgetColor, this.borderRadius = 0, this.useBorderRadius = false, this.MyBorderRadius, this.useWidget = false, this.MyWidget,
+    this.backgroundcolor = DarkColor.WidgetColor,
+    this.borderRadius = 0,
+    this.useBorderRadius = false,
+    this.MyBorderRadius,
+    this.useWidget = false,
+    this.MyWidget,
+    this.useBorder = false,
   });
 
   final bool useBold;
+  final bool useBorder;
   final bool useBorderRadius;
   final bool useWidget;
   final String text;
@@ -35,19 +42,35 @@ class Button1 extends StatelessWidget {
     return Bounce(
       onTap: onPressed,
       child: Container(
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-                color: Theme.of(context).shadowColor,
-                blurRadius: 5,
-                spreadRadius: 2,
-                offset: Offset(0, 3),
-              )
-          ],
-            color: backgroundcolor,
-            borderRadius: useBorderRadius
-                ? MyBorderRadius
-                : BorderRadius.circular(borderRadius)),
+        decoration: useBorder
+            ? BoxDecoration(
+                boxShadow: [
+                    BoxShadow(
+                      color: Theme.of(context).shadowColor,
+                      blurRadius: 5,
+                      spreadRadius: 2,
+                      offset: Offset(0, 3),
+                    )
+                  ],
+                // color: backgroundcolor,
+                borderRadius: useBorderRadius
+                    ? MyBorderRadius
+                    : BorderRadius.circular(borderRadius),
+                border: Border.all(color: backgroundcolor))
+            : BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: Theme.of(context).shadowColor,
+                    blurRadius: 5,
+                    spreadRadius: 2,
+                    offset: Offset(0, 3),
+                  )
+                ],
+                color: backgroundcolor,
+                borderRadius: useBorderRadius
+                    ? MyBorderRadius
+                    : BorderRadius.circular(borderRadius),
+              ),
         height: height,
         child: Center(
           child: useWidget

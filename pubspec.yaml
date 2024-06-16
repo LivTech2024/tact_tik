@@ -33,6 +33,7 @@ dependencies:
   bounce: ^1.0.2
   cached_network_image: ^3.3.1
   calendar_date_picker2: ^0.5.5
+  chips_choice: ^3.0.1
   cloud_firestore: ^4.15.9
   cr_calendar: ^1.2.1
   crypto: ^3.0.3
@@ -96,6 +97,7 @@ dependencies:
   smooth_page_indicator: ^1.1.0
   syncfusion_flutter_datepicker: ^21.2.3
   syncfusion_flutter_pdf: ^21.2.4
+  textfield_tags: ^3.0.1
   toastification: ^1.2.1
   url_launcher: ^6.2.6
 

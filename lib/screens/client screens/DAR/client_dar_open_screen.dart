@@ -150,7 +150,7 @@ class _ClientDarOpenScreenState extends State<ClientDarOpenScreen> {
                         ],
                       ),
                       // SizedBox(height: 10.h),
-                      Padding(
+                      /*Padding(
                         padding: EdgeInsets.only(left: 20.w),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -196,7 +196,35 @@ class _ClientDarOpenScreenState extends State<ClientDarOpenScreen> {
                             ),
                           ],
                         ),
-                      )
+                      )*/
+                      SizedBox(
+                        width: 100.w,
+                        child: TextButton(
+                          clipBehavior: Clip.none,
+                          onPressed: () {},
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.download_for_offline_sharp,
+                                size: 24.sp,
+                                color: Theme.of(context).textTheme.bodyMedium!.color,
+                              ),
+                              SizedBox(
+                                width: 10.w,
+                              ),
+                              InterMedium(
+                                text: 'PDF',
+                                color: Theme.of(context).textTheme.bodyMedium!.color,
+                                fontsize: 14.sp,
+                              ),
+                              SizedBox(
+                                width: 10.w,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),

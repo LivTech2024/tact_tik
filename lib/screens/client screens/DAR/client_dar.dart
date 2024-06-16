@@ -34,7 +34,7 @@ class _ClientDarScreenState extends State<ClientDarScreen> {
   List<DocumentSnapshot> darList = [];
   List<MapEntry<String, List<DocumentSnapshot>>> groupedData = [];
   bool isLoading = true;
-  String selectedLocationAddress = '';
+  List<String> selectedLocationAddress = [];
   String selectedGuardId = '';
 
   @override
@@ -43,9 +43,9 @@ class _ClientDarScreenState extends State<ClientDarScreen> {
     fetchDARData();
   }
 
-  void onLocationSelected(String locationAddress) {
+  void onLocationSelected(List<dynamic> locationAddresses) {
     setState(() {
-      selectedLocationAddress = locationAddress;
+      selectedLocationAddress = List<String>.from(locationAddresses);
     });
     print('Selected Location Address: $selectedLocationAddress');
     fetchDARData();
@@ -84,7 +84,7 @@ class _ClientDarScreenState extends State<ClientDarScreen> {
 
       if (selectedLocationAddress.isNotEmpty) {
         var empDarLocationName = data['EmpDarLocationName'] as String?;
-        if (empDarLocationName != selectedLocationAddress) {
+        if (!selectedLocationAddress.contains(empDarLocationName)) {
           continue;
         }
       }
@@ -183,14 +183,10 @@ class _ClientDarScreenState extends State<ClientDarScreen> {
           children: [
             GestureDetector(
               onTap: () {
-                Navigator.push(
+                SelectLocationDar.showLocationDialog(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => SelectLocationDar(
-                      companyId: widget.companyId,
-                      onLocationSelected: onLocationSelected,
-                    ),
-                  ),
+                  widget.companyId,
+                  onLocationSelected,
                 );
               },
               child: Column(

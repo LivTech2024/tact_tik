@@ -65,22 +65,22 @@ class HomeScreenController extends GetxController {
 
   /// start Bg the location service
   Future<void> startBgLocationService() async {
-    // try {
-    print('start Bg location service');
-    if (await _checkLocationPermission()) {
+    try {
+      print('start Bg location service');
+      // if (await _checkLocationPermission()) {
       await _startLocator();
       final _isRunning = await BackgroundLocator.isServiceRunning();
       print('Running ${_isRunning.toString()}');
 
       // isRunning = _isRunning;
       // lastLocation = null;
-    } else {
-      print("Location permission Error");
-      // show error
+      // } else {
+      //   print("Location permission Error");
+      //   // show error
+      // }
+    } catch (e) {
+      print(e);
     }
-    // } catch (e) {
-    //   print(e);
-    // }
   }
 
   Future<bool> _checkLocationPermission() async {
@@ -92,7 +92,6 @@ class HomeScreenController extends GetxController {
       } else {}
     } else if (status.isDenied) {
     } else if (status.isPermanentlyDenied) {}
-
     return true;
   }
 

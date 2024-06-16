@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:bounce/bounce.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:tact_tik/main.dart';
 import 'package:tact_tik/login_screen.dart';
 import 'package:tact_tik/screens/client%20screens/DAR/client_dar.dart';
@@ -34,6 +36,7 @@ import '../home screens/widgets/home_screen_part1.dart';
 import '../home screens/widgets/homescreen_custom_navigation.dart';
 import 'Reports/client_oprn_report.dart';
 import 'Reports/client_report_screen.dart';
+import 'package:http/http.dart' as http;
 
 class ClientHomeScreen extends StatefulWidget {
   const ClientHomeScreen({super.key});
@@ -83,7 +86,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
   int _shiftRestrictedRadius = 0;
   int scheduleCount = 0;
   String selectedGuardId = '';
-  String selectedLocationAddress = '';
+  List<String> selectedLocationAddress = [];
   int ScreenIndex = 0;
   final GlobalKey<ScaffoldState> _scaffoldKeyClient = GlobalKey();
   List<Map<String, dynamic>> patrolsList = [];
@@ -122,6 +125,218 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
     fetchReports();
   }
 
+  //TODO IMPLEMENT THIS WITH BUTTON
+  //TODO PASTE THIS: generateShiftReportPdf(_userName, fetchedPatrols, shifts[index]['ShiftName'], shifts[index]['ShiftStartTime'], shifts[index]['ShiftEndTime']);
+  Future<String> generateShiftReportPdf(
+      String? ClientName,
+      List<Map<String, dynamic>> Data,
+      String GuardName,
+      String shiftinTime,
+      String shiftOutTime,
+      ) async {
+    final dateFormat = DateFormat('HH:mm'); // Define the format for time
+    String patrolInfoHTML = '';
+    for (var item in Data) {
+      String checkpointImagesHTML = '';
+      for (var checkpoint in item['PatrolLogCheckPoints']) {
+        String checkpointImages = '';
+        if (checkpoint['CheckPointImage'] != null) {
+          for (var image in checkpoint['CheckPointImage']) {
+            checkpointImages +=
+            '<img src="$image">'; // Set max-width to ensure responsiveness
+            // checkpointImages +=
+            //     '<p>$image</p>'; // Set max-width to ensure responsiveness
+          }
+        }
+        checkpointImagesHTML += '''
+        <div>
+          <p>Checkpoint Name: ${checkpoint['CheckPointName']}</p>
+          $checkpointImages
+          <p>Comment: ${checkpoint['CheckPointComment']}</p>
+          <p>Reported At: ${dateFormat.format(checkpoint['CheckPointReportedAt'].toDate())}</p>
+          <p>Status: ${checkpoint['CheckPointStatus']}</p>
+        </div>
+      ''';
+      }
+
+      patrolInfoHTML += '''
+      <tr>
+        <td>${item['PatrolLogPatrolCount']}</td>
+        <td>${dateFormat.format(item['PatrolLogStartedAt'].toDate())}</td>
+        <td>${dateFormat.format(item['PatrolLogEndedAt'].toDate())}</td>
+        <td>${checkpointImagesHTML}</td>
+      </tr>
+    ''';
+    }
+
+    final htmlcontent = """
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .logo-container img {
+            max-height: 50px; /* Set the max-height for the logos */
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 24px;
+            flex-grow: 1; /* Allow the <h1> to grow and fill the space */
+        }
+
+        section {
+            padding: 20px;
+            background-color: #fff;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        /* Other styles for tables, images, and footer */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin-bottom: 10px;
+            max-height: 200px; /* Define a max-height for the images */
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            margin-top: auto; /* Push the footer to the bottom of the page */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Security Report</h1>
+    </header>
+
+    <section>
+        <h2>Dear ${ClientName},</h2>
+        <p>I hope this email finds you well. I wanted to provide you with an update on the recent patrol activities carried out by our assigned security guard during their shift. Below is a detailed breakdown of the patrols conducted.</p>
+    </section>
+
+    <section>
+        <h3>Shift Information</h3>
+        <table>
+            <tr>
+                <th>Guard Name</th>
+                <th>Shift Time In</th>
+                <th>Shift Time Out</th>
+            </tr>
+            <tr>
+                <td>${GuardName}</td>
+                <td>${shiftinTime}</td>
+                <td>${shiftOutTime}</td>
+            </tr>
+        </table>
+    </section>
+
+    <section>
+        <h3>Patrol Information</h3>
+        <table>
+            <tr>
+                <th>Patrol Count</th>
+                <th>Patrol Time In</th>
+                <th>Patrol Time Out</th>
+                <th>Checkpoint Details</th>
+            </tr>
+            ${patrolInfoHTML}
+        </table>
+    </section>
+
+    <section>
+        <h3>Comments</h3>
+        <table>
+            <tr>
+                <th>Incident</th>
+                <th>Important Note</th>
+                <th>Feedback Note</th>
+            </tr>
+        </table>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 TEAM TACTTIK. All rights reserved.</p>
+    </footer>
+</body>
+</html>
+  """;
+
+    // Generate the PDF
+    final pdfResponse = await http.post(
+      Uri.parse('https://backend-sceurity-app.onrender.com/api/html_to_pdf'),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'html': htmlcontent,
+        'file_name': 'security_report.pdf',
+      }),
+    );
+
+    if (pdfResponse.statusCode == 200) {
+      print('PDF generated successfully');
+      final pdfBase64 = await base64Encode(pdfResponse.bodyBytes);
+      savePdfLocally(pdfBase64, 'security_report.pdf');
+      return pdfBase64;
+    } else {
+      print('Failed to generate PDF. Status code: ${pdfResponse.statusCode}');
+      throw Exception('Failed to generate PDF');
+    }
+  }
+
+  Future<File> savePdfLocally(String pdfBase64, String fileName) async {
+    final pdfBytes = base64Decode(pdfBase64);
+    final directory = await getApplicationDocumentsDirectory();
+    final file = File('${directory.path}/$fileName');
+    await file.writeAsBytes(pdfBytes);
+    return file;
+  }
+
   void onGuardSelected(String guardId) {
     setState(() {
       selectedGuardId = guardId;
@@ -130,9 +345,9 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
     fetchShifts();
   }
 
-  void onLocationSelected(String locationAddress) {
+  void onLocationSelected(List<dynamic> locationAddresses) {
     setState(() {
-      selectedLocationAddress = locationAddress;
+      selectedLocationAddress = List<String>.from(locationAddresses);
     });
     print('Selected Location Address: $selectedLocationAddress');
     fetchShifts();
@@ -309,6 +524,8 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
     }
   }
 
+  List<Map<String, dynamic>> fetchedPatrols = [];
+
   Future<void> fetchShifts() async {
     try {
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
@@ -329,9 +546,20 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
         }
 
         if (selectedLocationAddress.isNotEmpty) {
-          String? shiftLocationAddress = data['ShiftLocationAddress'];
-          if (shiftLocationAddress == null || shiftLocationAddress != selectedLocationAddress) {
+          var shiftLocationAddress = data['ShiftLocationAddress'] as String?;
+          if (!selectedLocationAddress.contains(shiftLocationAddress)) {
             continue;
+          }
+        }
+
+        List<dynamic> patrols = data['ShiftLinkedPatrols'];
+        for (var patrol in patrols) {
+          QuerySnapshot patrolSnapshot = await FirebaseFirestore.instance
+              .collection('Patrols')
+              .where('PatrolId', isEqualTo: patrol['LinkedPatrolId'])
+              .get();
+          for (var patrolDoc in patrolSnapshot.docs) {
+            fetchedPatrols.add(patrolDoc.data() as Map<String, dynamic>);
           }
         }
 
@@ -341,7 +569,8 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
           'ShiftLocationAddress': data['ShiftLocationAddress'],
           'ShiftStartTime': data['ShiftStartTime'],
           'ShiftEndTime': data['ShiftEndTime'],
-          'members': data['members'],
+          'members': data['ShiftAssignedUserId'],
+          'patrols': fetchedPatrols,
         });
       }
 
@@ -1019,14 +1248,11 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                 children: [
                                   GestureDetector(
                                     onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  SelectLocationShift(
-                                                    companyId: _cmpId,
-                                                    onLocationSelected: onLocationSelected,
-                                                  )));
+                                      SelectLocationShift.showLocationDialog(
+                                        context,
+                                        _cmpId,
+                                        onLocationSelected,
+                                      );
                                     },
                                     child: SizedBox(
                                       width: 150.w,
@@ -1061,6 +1287,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                     companyId: _cmpId,
                                                     onGuardSelected: onGuardSelected,
                                                   )));
+
                                     },
                                     child: SizedBox(
                                       width: 150.w,

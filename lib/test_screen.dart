@@ -1,86 +1,57 @@
 import 'package:flutter/material.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
-import 'package:tact_tik/utils/colors.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:tact_tik/fonts/inter_medium.dart';
 
-class DatePickerDemo extends StatefulWidget {
+class Content extends StatefulWidget {
+  final String title;
+  final Widget child;
+
+  const Content({
+    Key? key,
+    required this.title,
+    required this.child,
+  }) : super(key: key);
+
   @override
-  _DatePickerDemoState createState() => _DatePickerDemoState();
+  ContentState createState() => ContentState();
 }
 
-class _DatePickerDemoState extends State<DatePickerDemo> {
-  List<DateTime> _selectedDates = [];
-  // Color primaryColor = ; // Define primary color here
-
-
+class ContentState extends State<Content> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Date Picker Demo'),
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 20.w),
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color:Theme.of(context).shadowColor,
+            blurRadius: 5,
+            spreadRadius: 2,
+            offset: Offset(0, 3),
+          )
+        ],
+        borderRadius: BorderRadius.circular(10.r),
+        color: Theme.of(context).cardColor,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            ElevatedButton(
-              onPressed: () {
-                _showDatePicker(context);
-              },
-              child: Text('Select Dates'),
+      margin: EdgeInsets.only(top: 10.h),
+      // clipBehavior: Clip.antiAliasWithSaveLayer,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          /*Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(15.sp),
+            // color: Colors.blueGrey[50],
+            child: InterMedium(
+              text: widget.title,
+              color: Theme.of(context).textTheme.bodyMedium!.color,
+              fontsize: 18.sp,
             ),
-            SizedBox(height: 20),
-            Text('Selected Dates:'),
-            SizedBox(height: 10),
-            Text(_selectedDates.join(', ')),
-          ],
-        ),
+          ),*/
+          Flexible(fit: FlexFit.loose, child: widget.child),
+        ],
       ),
-    );
-  }
-
-  void _showDatePicker(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          child: Container(
-            width: MediaQuery.of(context).size.width - 120,
-            height: 400,
-            padding: EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text('Select Dates', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
-                SizedBox(height: 20),
-                Expanded(
-                  child: SfDateRangePicker(
-                    selectionTextStyle: TextStyle(color:DarkColor. Primarycolor), // Use primary color here
-                    selectionShape: DateRangePickerSelectionShape.circle,
-                    selectionColor: DarkColor.Primarycolor, // Use primary color here
-                    selectionRadius: 4,
-                    view: DateRangePickerView.month,
-                    selectionMode: DateRangePickerSelectionMode.multiple,
-                    initialSelectedDates: _selectedDates,
-                    onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
-                      setState(() {
-                        _selectedDates = args.value.cast<DateTime>();
-                      });
-                    },
-                  ),
-                ),
-                SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('Done'),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
     );
   }
 }
