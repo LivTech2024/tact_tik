@@ -75,19 +75,19 @@ class SelectLocationDar {
             margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             decoration: BoxDecoration(
                 border: Border.all(
-              color: isSelected! ? Colors.blue[300]! : Colors.grey[300]!,
+              color: isSelected! ? Theme.of(context).primaryColor : Colors.grey[300]!,
             )),
             child: Row(
               children: [
                 Icon(
                   Icons.location_on,
-                  color: isSelected ? Colors.blue[300] : Colors.grey[500],
+                  color: isSelected ? Theme.of(context).primaryColor : Colors.grey[500],
                   size: 24.sp,
                 ),
                 SizedBox(width: 10.w),
                 InterMedium(
                   text: item,
-                  color: isSelected ? Colors.blue[300] : Colors.grey[500],
+                  color: isSelected ? Theme.of(context).primaryColor : Colors.grey[500],
                 ),
               ],
             ),

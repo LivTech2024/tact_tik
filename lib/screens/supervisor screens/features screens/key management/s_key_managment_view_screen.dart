@@ -190,7 +190,9 @@ class _SKeyManagementViewScreenState extends State<SKeyManagementViewScreen> {
                                 minHeight: 100.w,
                               ),
                               padding: EdgeInsets.symmetric(
-                                  horizontal: 10.w, vertical: 10.h),
+                                horizontal: 10.w,
+                                vertical: 10.h,
+                              ),
                               width: double.maxFinite,
                               margin: EdgeInsets.only(bottom: 10.h),
                               decoration: BoxDecoration(

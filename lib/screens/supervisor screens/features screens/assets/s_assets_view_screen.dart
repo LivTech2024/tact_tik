@@ -113,9 +113,9 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                     SizedBox(
                       height: 30.h,
                     ),
-                    SizedBox(
+                    /*SizedBox(
                       height: 30.h,
-                    ),
+                    ),*/
                   ],
                 ),
               ),
@@ -162,7 +162,13 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                                       )));
                         },
                         child: Container(
-                          height: 60.h,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 10.w,
+                            vertical: 10.h,
+                          ),
+                          constraints: BoxConstraints(
+                            minHeight: 100.w,
+                          ),
                           width: double.maxFinite,
                           margin: EdgeInsets.only(bottom: 10.h),
                           decoration: BoxDecoration(
@@ -177,80 +183,138 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                             borderRadius: BorderRadius.circular(10.w),
                             color: Theme.of(context).cardColor,
                           ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                          child: Column(
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      height: 44.h,
-                                      width: 44.w,
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 10.w),
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(10.w),
-                                        color:
-                                            Theme.of(context).primaryColorLight,
-                                      ),
-                                      child: Center(
-                                        child: Icon(
-                                          Icons.home_repair_service,
-                                          color: Theme.of(context).primaryColor,
-                                          size: 24.w,
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.all(8.sp),
+                                    child: Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          height: 44.h,
+                                          width: 44.w,
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 10.w),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10.w),
+                                            color:
+                                                Theme.of(context).primaryColorLight,
+                                          ),
+                                          child: Center(
+                                            child: Icon(
+                                              Icons.home_repair_service,
+                                              color: Theme.of(context).primaryColor,
+                                              size: 24.w,
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(width: 20.w),
+                                        FutureBuilder<String>(
+                                          future: getEquipmentName(equipment[
+                                              'EquipmentAllocationEquipId']),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.connectionState ==
+                                                ConnectionState.waiting) {
+                                              return InterMedium(
+                                                text: 'Loading...',
+                                                fontsize: 16.sp,
+                                                color: DarkColor.color1,
+                                              );
+                                            } else if (snapshot.hasError) {
+                                              return InterMedium(
+                                                text: 'Error: ${snapshot.error}',
+                                                fontsize: 16.sp,
+                                                color: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyMedium!
+                                                    .color,
+                                              );
+                                            } else {
+                                              return InterMedium(
+                                                text: snapshot.data ??
+                                                    'Unknown Equipment',
+                                                fontsize: 16.sp,
+                                                color: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyMedium!
+                                                    .color,
+                                              );
+                                            }
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  InterMedium(
+                                    text: formattedTime,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .displayMedium!
+                                        .color,
+                                    fontsize: 16.sp,
+                                  ),
+                                  SizedBox(width: 20.w),
+                                ],
+                              ),
+                              SizedBox(height: 10.h),
+                              Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment:
+                                CrossAxisAlignment.center,
+                                children: [
+                                  Row(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        height: 44.h,
+                                        width: 44.w,
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 10.w,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                          BorderRadius.circular(10.w),
+                                          color: Theme.of(context)
+                                              .primaryColorLight,
+                                        ),
+                                        child: Center(
+                                          child: Icon(
+                                            Icons.account_circle_outlined,
+                                            color: Theme.of(context)
+                                                .primaryColor,
+                                            size: 24.w,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    SizedBox(width: 20.w),
-                                    FutureBuilder<String>(
-                                      future: getEquipmentName(equipment[
-                                          'EquipmentAllocationEquipId']),
-                                      builder: (context, snapshot) {
-                                        if (snapshot.connectionState ==
-                                            ConnectionState.waiting) {
-                                          return InterMedium(
-                                            text: 'Loading...',
-                                            fontsize: 16.sp,
-                                            color: DarkColor.color1,
-                                          );
-                                        } else if (snapshot.hasError) {
-                                          return InterMedium(
-                                            text: 'Error: ${snapshot.error}',
-                                            fontsize: 16.sp,
-                                            color: Theme.of(context)
-                                                .textTheme
-                                                .bodyMedium!
-                                                .color,
-                                          );
-                                        } else {
-                                          return InterMedium(
-                                            text: snapshot.data ??
-                                                'Unknown Equipment',
-                                            fontsize: 16.sp,
-                                            color: Theme.of(context)
-                                                .textTheme
-                                                .bodyMedium!
-                                                .color,
-                                          );
-                                        }
-                                      },
-                                    ),
-                                  ],
-                                ),
+                                      SizedBox(width: 20.w),
+                                      InterMedium(
+                                        text: 'JKSDFsK',
+                                        fontsize: 16.sp,
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .color,
+                                      ),
+                                    ],
+                                  ),
+                                  // InterMedium(
+                                  //   text: formattedTime,
+                                  //   color: Theme.of(context)
+                                  //       .textTheme
+                                  //       .bodyMedium!
+                                  //       .color,
+                                  //   fontsize: 16.sp,
+                                  // ),
+                                  // SizedBox(width: 10.w),
+                                ],
                               ),
-                              InterMedium(
-                                text: formattedTime,
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .displayMedium!
-                                    .color,
-                                fontsize: 16.sp,
-                              ),
-                              SizedBox(width: 20.w),
                             ],
                           ),
                         ),
