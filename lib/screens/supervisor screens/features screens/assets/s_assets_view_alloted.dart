@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart'; // for date formatting
 import 'package:tact_tik/main.dart';
-import 'package:tact_tik/screens/supervisor%20screens/features%20screens/assets/s_assets_view_alloted.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/assets/s_create_assign_asset.dart';
 
 import '../../../../common/sizes.dart';
@@ -12,21 +11,23 @@ import '../../../../fonts/inter_medium.dart';
 import '../../../../fonts/inter_regular.dart';
 import '../../../../utils/colors.dart';
 
-class SAssetsViewScreen extends StatefulWidget {
+class SAssetsViewAllotedScreen extends StatefulWidget {
   final String empId;
   final String companyId;
   final String EmpName;
-  const SAssetsViewScreen(
+  final VoidCallback onRefresh;
+  const SAssetsViewAllotedScreen(
       {super.key,
       required this.empId,
       required this.companyId,
-      required this.EmpName});
+      required this.EmpName,
+      required this.onRefresh});
 
   @override
   _SAssetsViewScreenState createState() => _SAssetsViewScreenState();
 }
 
-class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
+class _SAssetsViewScreenState extends State<SAssetsViewAllotedScreen> {
   Map<String, List<QueryDocumentSnapshot>> groupedEquipments = {};
 
   @override
@@ -35,10 +36,14 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
     fetchEquipments();
   }
 
+  void refresh() {
+    fetchEquipments();
+  }
+
   Future<void> fetchEquipments() async {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('Equipments')
-        .where('EquipmentCompanyId', isEqualTo: widget.companyId)
+        .collection('EquipmentAllocations')
+        .where('EquipmentAllocationEquipId', isEqualTo: widget.empId)
         .get();
 
     groupEquipmentsByDate(querySnapshot.docs);
@@ -48,7 +53,7 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
     final Map<String, List<QueryDocumentSnapshot>> tempGroupedEquipments = {};
 
     for (var equipment in equipments) {
-      final createdAt = equipment['EquipmentCreatedAt'].toDate();
+      final createdAt = equipment['EquipmentAllocationCreatedAt'].toDate();
       final dateKey = DateFormat('yyyy-MM-dd').format(createdAt);
 
       if (!tempGroupedEquipments.containsKey(dateKey)) {
@@ -82,7 +87,10 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                     empId: '',
                     OnlyView: false,
                     equipemtAllocId: '',
-                    onRefresh: () {},
+                    onRefresh: () {
+                      widget.onRefresh();
+                      fetchEquipments();
+                    },
                   ),
                 ));
           },
@@ -104,7 +112,7 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                 },
               ),
               title: InterMedium(
-                text: 'Assets',
+                text: 'Alloted Assets for ${widget.EmpName}',
               ),
               centerTitle: true,
               floating: true,
@@ -144,34 +152,29 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                       );
                     }
                     final equipment = equipmentsForDate[index - 1];
-                    final createdAt = equipment['EquipmentCreatedAt'].toDate();
+                    final createdAt =
+                        equipment['EquipmentAllocationCreatedAt'].toDate();
                     final formattedTime =
                         DateFormat('hh:mm a').format(createdAt);
-                    final equipmentAllocationId = equipment['EquipmentId'];
+                    final equipmentAllocationId =
+                        equipment['EquipmentAllocationId'];
 
                     return Padding(
                       padding: EdgeInsets.symmetric(horizontal: 30.w),
                       child: GestureDetector(
                         onTap: () {
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) =>
-                          //             SCreateAssignAssetScreen(
-                          //               equipemtAllocId: equipmentAllocationId,
-                          //               companyId: widget.companyId,
-                          //               empId: widget.empId,
-                          //               OnlyView: true,
-                          //             )));
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      SAssetsViewAllotedScreen(
+                                      SCreateAssignAssetScreen(
+                                        equipemtAllocId: equipmentAllocationId,
                                         companyId: widget.companyId,
-                                        empId: equipment['EquipmentId'],
-                                        EmpName: equipment['EquipmentName'],
+                                        empId: equipment[
+                                            'EquipmentAllocationEmpId'],
+                                        OnlyView: true,
                                         onRefresh: () {
+                                          widget.onRefresh();
                                           fetchEquipments();
                                         },
                                       )));
@@ -233,8 +236,8 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                                         ),
                                         SizedBox(width: 20.w),
                                         FutureBuilder<String>(
-                                          future: getEquipmentName(
-                                              equipment['EquipmentId']),
+                                          future: getEquipmentName(equipment[
+                                              'EquipmentAllocationEquipId']),
                                           builder: (context, snapshot) {
                                             if (snapshot.connectionState ==
                                                 ConnectionState.waiting) {
@@ -312,19 +315,43 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                                         ),
                                       ),
                                       SizedBox(width: 20.w),
-                                      InterMedium(
-                                        text:
-                                            " TotalQuantity: ${equipment['EquipmentTotalQuantity'].toString()}",
-                                        fontsize: 12.sp,
-                                        color: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium!
-                                            .color,
+                                      FutureBuilder<String>(
+                                        future: getEmpName(equipment[
+                                            'EquipmentAllocationEmpId']),
+                                        builder: (context, snapshot) {
+                                          if (snapshot.connectionState ==
+                                              ConnectionState.waiting) {
+                                            return InterMedium(
+                                              text: 'Loading...',
+                                              fontsize: 16.sp,
+                                              color: DarkColor.color1,
+                                            );
+                                          } else if (snapshot.hasError) {
+                                            return InterMedium(
+                                              text: 'Error: ${snapshot.error}',
+                                              fontsize: 16.sp,
+                                              color: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium!
+                                                  .color,
+                                            );
+                                          } else {
+                                            return InterMedium(
+                                              text: snapshot.data ??
+                                                  'Unknown Equipment',
+                                              fontsize: 16.sp,
+                                              color: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium!
+                                                  .color,
+                                            );
+                                          }
+                                        },
                                       ),
                                       SizedBox(width: 20.w),
                                       InterMedium(
                                         text:
-                                            " Allocated Quantity: ${equipment['EquipmentAllotedQuantity'].toString()}",
+                                            " Allocated Quantity: ${equipment['EquipmentAllocationEquipQty'].toString()}",
                                         fontsize: 12.sp,
                                         color: Theme.of(context)
                                             .textTheme
@@ -371,6 +398,19 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
     }
 
     return 'Unknown Equipment';
+  }
+
+  Future<String> getEmpName(String equipmentId) async {
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('Employees')
+        .where('EmployeeId', isEqualTo: equipmentId)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      return querySnapshot.docs.first['EmployeeName'];
+    }
+
+    return 'Unknown Name';
   }
 
   String getDateHeader(String date) {

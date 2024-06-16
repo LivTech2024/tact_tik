@@ -128,12 +128,12 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
   //TODO IMPLEMENT THIS WITH BUTTON
   //TODO PASTE THIS: generateShiftReportPdf(_userName, fetchedPatrols, shifts[index]['ShiftName'], shifts[index]['ShiftStartTime'], shifts[index]['ShiftEndTime']);
   Future<String> generateShiftReportPdf(
-      String? ClientName,
-      List<Map<String, dynamic>> Data,
-      String GuardName,
-      String shiftinTime,
-      String shiftOutTime,
-      ) async {
+    String? ClientName,
+    List<Map<String, dynamic>> Data,
+    String GuardName,
+    String shiftinTime,
+    String shiftOutTime,
+  ) async {
     final dateFormat = DateFormat('HH:mm'); // Define the format for time
     String patrolInfoHTML = '';
     for (var item in Data) {
@@ -143,7 +143,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
         if (checkpoint['CheckPointImage'] != null) {
           for (var image in checkpoint['CheckPointImage']) {
             checkpointImages +=
-            '<img src="$image">'; // Set max-width to ensure responsiveness
+                '<img src="$image">'; // Set max-width to ensure responsiveness
             // checkpointImages +=
             //     '<p>$image</p>'; // Set max-width to ensure responsiveness
           }
@@ -540,7 +540,8 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
 
         if (selectedGuardId.isNotEmpty) {
           List<dynamic> shiftAssignedUserIds = data['ShiftAssignedUserId'];
-          if (shiftAssignedUserIds == null || !shiftAssignedUserIds.contains(selectedGuardId)) {
+          if (shiftAssignedUserIds == null ||
+              !shiftAssignedUserIds.contains(selectedGuardId)) {
             continue;
           }
         }
@@ -1251,7 +1252,8 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                     children: [
                                       GestureDetector(
                                         onTap: () {
-                                          SelectLocationShift.showLocationDialog(
+                                          SelectLocationShift
+                                              .showLocationDialog(
                                             context,
                                             _cmpId,
                                             onLocationSelected,
@@ -1288,9 +1290,9 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                   builder: (context) =>
                                                       SelectClientGuardsScreen(
                                                         companyId: _cmpId,
-                                                        onGuardSelected: onGuardSelected,
+                                                        onGuardSelected:
+                                                            onGuardSelected,
                                                       )));
-
                                         },
                                         child: SizedBox(
                                           width: 150.w,
@@ -1314,7 +1316,9 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                       ),
                                     ],
                                   ),
-                                  SizedBox(height: 20.h,)
+                                  SizedBox(
+                                    height: 20.h,
+                                  )
                                 ],
                               ),
                             ),
@@ -1699,6 +1703,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                         status: '',
                                         feedback: '',
                                         checkpoints: [],
+                                        data: {},
                                       ),
                                       context);
                                 },

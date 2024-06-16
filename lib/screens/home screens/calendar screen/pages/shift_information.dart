@@ -288,22 +288,27 @@ class _ShiftInformationState extends State<ShiftInformation> {
                           fontsize: 18.sp,
                           color: Theme.of(context).textTheme.bodyMedium!.color,
                         ),
-                        widget.toRequest ? Column(
-                          children: [
-                            SizedBox(height: 20.h),
+                        // SizedBox(height: 50.h),
+                        widget.toRequest
+                            ?
+                            // ? Column(
+                            //     children: [
+                            // SizedBox(height: 20.h),
                             Button1(
-                              text:  'Reject',
-                              onPressed: () {
-
-                              },
-                              backgroundcolor: Theme.of(context).primaryColor,
-                              borderRadius: 10.r,
-                              fontsize: 18.sp,
-                              color: Theme.of(context).textTheme.bodyMedium!.color,
-                              useBorder: true,
-                            ),
-                          ],
-                        ) : SizedBox(),
+                                text: 'Reject',
+                                onPressed: () {},
+                                backgroundcolor: Theme.of(context).primaryColor,
+                                borderRadius: 10.r,
+                                fontsize: 18.sp,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color,
+                                useBorder: true,
+                              )
+                            // ],
+                            // )
+                            : SizedBox(),
                         SizedBox(height: 100.h),
                       ],
                     )

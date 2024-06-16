@@ -39,13 +39,17 @@ class SCreateKeyManagScreen extends StatefulWidget {
   final String branchId;
   final String AllocationKeyId;
   final bool editKeyMode;
+  final bool guardcreation;
+  String? locationId;
   SCreateKeyManagScreen(
       {super.key,
       required this.keyId,
       required this.companyId,
       required this.branchId,
       required this.AllocationKeyId,
-      this.editKeyMode = false});
+      this.editKeyMode = false,
+      this.locationId,
+      required this.guardcreation});
 
   @override
   State<SCreateKeyManagScreen> createState() =>
@@ -60,13 +64,6 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
   DateTime? SelectedDate;
   DateTime? EndDate;
   String dropdownValue = 'Select';
-  List<String> tittles = [
-    'Select',
-    'yash home key',
-    'vaibhav room key',
-    'heaven key',
-    'jaldhi fix key'
-  ];
   List selectedGuards = [];
   TextEditingController _tittleController = TextEditingController();
   TextEditingController _GuardNameController = TextEditingController();
@@ -89,20 +86,22 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
   bool editKeyMode = true;
   bool showReturnBtn = false;
   bool _isLoading = false;
+  bool buttonClicked = false;
+  bool _isCreatingKey = false;
   @override
   void initState() {
     super.initState();
+    _fetchKeys();
     if (widget.AllocationKeyId.isNotEmpty) {
-      setState(() {
-        // editKeyMode = false;
-        showReturnBtn = true;
-      });
-      _fetchKeys();
+      // setState(() {
+      //   editKeyMode = false;
+      //   showReturnBtn = true;
+      // });
 
       _fetchAllotedData(widget.AllocationKeyId);
       //fetch the data and display the details and a checkbox based on this condition
     } else {
-      _fetchKeys();
+      // _fetchKeys();
     }
   }
 
@@ -126,7 +125,6 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
 
   Future<void> _fetchKeysName(String? keyId) async {
     if (keyId == null || keyId.isEmpty) {
-      // Handle the case where keyId is null or empty
       return;
     }
 
@@ -136,7 +134,8 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
     if (documentSnapshot.exists) {
       setState(() {
         selectedKeyName = documentSnapshot.get("KeyName");
-        dropdownValue = selectedKeyName!; // Update the dropdown value
+        dropdownValue =
+            selectedKeyName!; // Update the dropdown value immediately
       });
     } else {
       // Handle the case where the document does not exist
@@ -151,15 +150,13 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
         .collection('KeyAllocations')
         .where('KeyAllocationId', isEqualTo: allocationId)
         .get();
-
     var data = querySnapshot.docs;
 
     // Iterate over each document and print its fields
     for (var doc in data) {
       print("Document ID: ${doc.id}");
-      print("Key Allocation ID: ${doc['KeyAllocationId']}");
-      print("Key Allocation Created At: ${doc['KeyAllocationCreatedAt']}");
-      print("Key Allocation Key ID: ${doc['KeyAllocationKeyId']}");
+      // ... other data processing
+
       setState(() {
         // dropdownValue = doc['KeyAllocationId'].toString();
         SelectedDate = (doc['KeyAllocationDate'] as Timestamp).toDate();
@@ -178,20 +175,76 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
             doc['KeyAllocationPurpose'].toString() ?? "";
         isChecked = doc['KeyAllocationIsReturned'] ?? "";
         selectedKeyId = doc['KeyAllocationKeyId'].toString() ?? "";
-        _fetchKeysName(selectedKeyId);
-        // KeyAllocationIsReturned
-        // DateFormat( 'yyyy-MM-dd – kk:mm').format(EndDate!) KeyAllocationRecipientContact KeyAllocationPurpose
       });
       if (doc['KeyAllocationIsReturned'] == true) {
         print("KeyAllocationIsReturned is true");
         setState(() {
           editKeyMode = false;
+          // showReturnBtn = true;
+        });
+      } else {
+        setState(() {
+          editKeyMode = false;
+          showReturnBtn = true;
         });
       }
-      //  (doc['KeyAllocationEndTime'] as Timestamp).toDate();
-      // Add other fields as needed
     }
+    // Call _fetchKeysName after the main setState block
+    _fetchKeysName(selectedKeyId);
   }
+
+  // Future<void> _fetchAllotedData(String allocationId) async {
+  //   QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+  //       .collection('KeyAllocations')
+  //       .where('KeyAllocationId', isEqualTo: allocationId)
+  //       .get();
+
+  //   var data = querySnapshot.docs;
+
+  //   // Iterate over each document and print its fields
+  //   for (var doc in data) {
+  //     print("Document ID: ${doc.id}");
+  //     print("Key Allocation ID: ${doc['KeyAllocationId']}");
+  //     print("Key Allocation Created At: ${doc['KeyAllocationCreatedAt']}");
+  //     print("Key Allocation Key ID: ${doc['KeyAllocationKeyId']}");
+  //     setState(() {
+  //       // dropdownValue = doc['KeyAllocationId'].toString();
+  //       SelectedDate = (doc['KeyAllocationDate'] as Timestamp).toDate();
+  //       StartDate = (doc['KeyAllocationStartTime'] as Timestamp).toDate();
+  //       _AllocateQtController1.text = doc['KeyAllocationKeyQty'].toString();
+
+  //       // EndDate = doc['KeyAllocationEndTime'];s
+  //       EndDate = (doc['KeyAllocationEndTime'] as Timestamp).toDate();
+  //       _CompanyNameController.text =
+  //           doc['KeyAllocationRecipientCompany'].toString() ?? "";
+  //       _ContactController.text =
+  //           doc['KeyAllocationRecipientContact'].toString() ?? "";
+  //       _recipientController.text =
+  //           doc['KeyAllocationRecipientName'].toString() ?? "";
+  //       _AllocationPurposeController.text =
+  //           doc['KeyAllocationPurpose'].toString() ?? "";
+  //       isChecked = doc['KeyAllocationIsReturned'] ?? "";
+  //       selectedKeyId = doc['KeyAllocationKeyId'].toString() ?? "";
+  //       _fetchKeysName(selectedKeyId);
+  //       // KeyAllocationIsReturned
+  //       // DateFormat( 'yyyy-MM-dd – kk:mm').format(EndDate!) KeyAllocationRecipientContact KeyAllocationPurpose
+  //     });
+  //     if (doc['KeyAllocationIsReturned'] == true) {
+  //       print("KeyAllocationIsReturned is true");
+  //       setState(() {
+  //         editKeyMode = false;
+  //         // showReturnBtn = true;
+  //       });
+  //     } else {
+  //       setState(() {
+  //         editKeyMode = false;
+  //         showReturnBtn = true;
+  //       });
+  //     }
+  //     //  (doc['KeyAllocationEndTime'] as Timestamp).toDate();
+  //     // Add other fields as needed
+  //   }
+  // }
 
   Future<void> searchGuards(String query) async {
     if (query.isEmpty) {
@@ -215,11 +268,16 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
 
   Future<void> _selectDate(
       BuildContext context, bool isStart, bool isDate) async {
+    final DateTime now = DateTime.now();
+    final DateTime firstSelectableDate = DateTime(now.year, now.month,
+        now.day - 1); // Ensure it starts from today without including time
+
     final DateTime? dateTime = await showOmniDateTimePicker(
       context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2015, 8),
-      lastDate: DateTime(2101),
+      initialDate: firstSelectableDate,
+      firstDate: firstSelectableDate,
+      lastDate: DateTime(
+          now.year + 10), // Adjust the last date as per your requirement
     );
 
     if (dateTime != null) {
@@ -229,18 +287,12 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
           if (EndDate != null && StartDate!.isAfter(EndDate!)) {
             // Reset EndDate if it's before StartDate
             EndDate = null;
-
             showErrorToast(context, 'End date must be after the start date.');
           }
         } else if (isDate) {
           SelectedDate = dateTime;
         } else {
           if (StartDate != null && dateTime.isBefore(StartDate!)) {
-            // ScaffoldMessenger.of(context).showSnackBar(
-            //   SnackBar(
-            //     content: Text('End date must be after the start date.'),
-            //   ),
-            // );
             showErrorToast(context, 'End date must be after the start date.');
           } else {
             EndDate = dateTime;
@@ -271,7 +323,11 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
         'KeyAllocationRecipientContact': _ContactController.text,
         'KeyAllocationRecipientName': _recipientController.text,
       });
-
+      if (widget.guardcreation == true) {
+        await docRef.update({
+          'KeyAllocationLocationId': widget.locationId,
+        });
+      }
       await docRef.update({
         'KeyAllocationId': docRef.id,
       });
@@ -297,17 +353,17 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
 
       await docRef.set({
         'KeyAllocationReturnedAt': FieldValue.serverTimestamp(),
-        'KeyAllocationDate': SelectedDate,
-        'KeyAllocationEndTime': EndDate,
-        'KeyAllocationStartTime': StartDate,
+        // 'KeyAllocationDate': SelectedDate,
+        // 'KeyAllocationEndTime': EndDate,
+        // 'KeyAllocationStartTime': StartDate,
         'KeyAllocationId': docRef.id,
-        'KeyAllocationIsReturned': isChecked,
-        'KeyAllocationKeyId': selectedKeyId ?? '',
-        'KeyAllocationKeyQty': int.tryParse(_AllocateQtController1.text) ?? 0,
-        'KeyAllocationPurpose': _AllocationPurposeController.text,
-        'KeyAllocationRecipientCompany': _CompanyNameController.text,
-        'KeyAllocationRecipientContact': _ContactController.text,
-        'KeyAllocationRecipientName': _recipientController.text,
+        // 'KeyAllocationIsReturned': isChecked,
+        // 'KeyAllocationKeyId': selectedKeyId ?? '',
+        // 'KeyAllocationKeyQty': int.tryParse(_AllocateQtController1.text) ?? 0,
+        // 'KeyAllocationPurpose': _AllocationPurposeController.text,
+        // 'KeyAllocationRecipientCompany': _CompanyNameController.text,
+        // 'KeyAllocationRecipientContact': _ContactController.text,
+        // 'KeyAllocationRecipientName': _recipientController.text,
       }, SetOptions(merge: true));
       setState(() {
         _isLoading = false;
@@ -458,66 +514,92 @@ List<Color> colors = [
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               InterBold(
-                                text: 'Select key',
+                                text: widget.AllocationKeyId.isEmpty
+                                    ? 'Select key'
+                                    : "Selected Key",
                                 fontsize: 16.w,
                                 color: Theme.of(context)
                                     .textTheme
                                     .bodyMedium!
                                     .color,
                               ),
-                              SizedBox(height: 10.h),
-                              Container(
-                                height: 60.h,
-                                padding: EdgeInsets.symmetric(horizontal: 20.w),
-                                decoration: BoxDecoration(
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Theme.of(context).shadowColor,
-                                      blurRadius: 5,
-                                      spreadRadius: 2,
-                                      offset: Offset(0, 3),
+                              SizedBox(height: 20.h),
+                              widget.AllocationKeyId.isEmpty
+                                  ? Container(
+                                      height: 60.h,
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 20.w),
+                                      decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color:
+                                                Theme.of(context).shadowColor,
+                                            blurRadius: 5,
+                                            spreadRadius: 2,
+                                            offset: Offset(0, 3),
+                                          )
+                                        ],
+                                        color: Theme.of(context).cardColor,
+                                        borderRadius:
+                                            BorderRadius.circular(10.r),
+                                      ),
+                                      child: DropdownButtonHideUnderline(
+                                        child: DropdownButton<String>(
+                                          isExpanded: true,
+                                          iconSize: 24.sp,
+                                          dropdownColor:
+                                              Theme.of(context).cardColor,
+                                          style: TextStyle(
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .bodyLarge!
+                                                .color,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(10.r),
+                                          value: dropdownValue,
+                                          onChanged: (String? newValue) {
+                                            setState(() {
+                                              dropdownValue = newValue!;
+                                              if (newValue != 'Select') {
+                                                selectedKeyId =
+                                                    keyNameToDocMap[newValue]!
+                                                        .id;
+                                              } else {
+                                                selectedKeyId = '';
+                                              }
+                                              print(
+                                                  '$dropdownValue selected, selectedKeyId: $selectedKeyId');
+                                            });
+                                          },
+                                          items: keyNames.isEmpty
+                                              ? [
+                                                  DropdownMenuItem(
+                                                      value: "Select",
+                                                      child: Text("Select"))
+                                                ]
+                                              : keyNames
+                                                  .map<
+                                                      DropdownMenuItem<String>>(
+                                                    (String value) =>
+                                                        DropdownMenuItem<
+                                                            String>(
+                                                      value: value,
+                                                      child: Text(value),
+                                                    ),
+                                                  )
+                                                  .toList(),
+                                        ),
+                                      ),
                                     )
-                                  ],
-                                  color: Theme.of(context).cardColor,
-                                  borderRadius: BorderRadius.circular(10.r),
-                                ),
-                                child: DropdownButtonHideUnderline(
-                                  child: DropdownButton<String>(
-                                    isExpanded: true,
-                                    iconSize: 24.sp,
-                                    dropdownColor: Theme.of(context).cardColor,
-                                    style: TextStyle(
+                                  : InterBold(
+                                      text: selectedKeyName ?? "",
+                                      fontsize: 16.w,
                                       color: Theme.of(context)
                                           .textTheme
-                                          .bodyLarge!
+                                          .bodyMedium!
                                           .color,
                                     ),
-                                    borderRadius: BorderRadius.circular(10.r),
-                                    value: dropdownValue,
-                                    onChanged: (String? newValue) {
-                                      setState(() {
-                                        dropdownValue = newValue!;
-                                        if (newValue != 'Select') {
-                                          selectedKeyId =
-                                              keyNameToDocMap[newValue]!.id;
-                                        } else {
-                                          selectedKeyId = '';
-                                        }
-                                        print(
-                                            '$dropdownValue selected, selectedKeyId: $selectedKeyId');
-                                      });
-                                    },
-                                    items: keyNames
-                                        .map<DropdownMenuItem<String>>(
-                                            (String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: InterMedium(text: value),
-                                      );
-                                    }).toList(),
-                                  ),
-                                ),
-                              ),
                               SizedBox(height: 20.h),
                               InterBold(
                                 text: 'Recipient Name',
@@ -536,7 +618,7 @@ List<Color> colors = [
                                 textInputType: TextInputType.name,
                               ),
                               SizedBox(height: 20.h),
-                              !showReturnBtn
+                              !showReturnBtn && widget.AllocationKeyId.isEmpty
                                   ? Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
@@ -606,9 +688,9 @@ List<Color> colors = [
                                         )
                                       ],
                                     )
-                                  : SizedBox(height: 20.h),
-                              SizedBox(height: 10.h),
-                              !showReturnBtn
+                                  : SizedBox(height: 0.h),
+                              SizedBox(height: 20.h),
+                              !showReturnBtn && widget.AllocationKeyId.isEmpty
                                   ? Container(
                                       height: 64.h,
                                       padding: EdgeInsets.symmetric(
@@ -693,7 +775,7 @@ List<Color> colors = [
                                         ],
                                       ),
                                     )
-                                  : SizedBox(height: 20.h),
+                                  : SizedBox(height: 0.h),
                               ListView.builder(
                                 shrinkWrap: true,
                                 itemCount: guards.length,
@@ -832,7 +914,9 @@ List<Color> colors = [
                                       ),
                                     )
                                   : SizedBox(
-                                      height: 20.h,
+                                      height: widget.AllocationKeyId.isEmpty
+                                          ? 20.h
+                                          : 0,
                                       child: InterMedium(
                                         text: 'No Guards selected',
                                         fontsize: 16.w,
@@ -842,7 +926,7 @@ List<Color> colors = [
                                             .color,
                                       ),
                                     ),
-                              SizedBox(height: 20.h),
+                              SizedBox(height: 0.h),
                               InterBold(
                                 text: 'Contact',
                                 fontsize: 16.w,
@@ -1073,6 +1157,7 @@ List<Color> colors = [
                               SizedBox(height: 20.h),
                               Visibility(
                                 // visible: widget.editKeyMode,
+                                visible: !showReturnBtn,
                                 child: Container(
                                   height: 60.h,
                                   padding:
@@ -1127,10 +1212,33 @@ List<Color> colors = [
                                     ),
                                   ),
                                 ),
-                              editKeyMode == true
+                              showReturnBtn == true || editKeyMode == true
                                   ? Button1(
                                       text: 'Save',
                                       onPressed: () {
+                                        //                                   'KeyAllocationCreatedAt': FieldValue.serverTimestamp(),
+                                        // 'KeyAllocationDate': SelectedDate,
+                                        // 'KeyAllocationEndTime': EndDate,
+                                        // 'KeyAllocationStartTime': StartDate,
+                                        // 'KeyAllocationId': '',
+                                        // 'KeyAllocationIsReturned': isChecked,
+                                        // 'KeyAllocationKeyId': selectedKeyId ?? '',
+                                        // 'KeyAllocationKeyQty': int.tryParse(_AllocateQtController1.text) ?? 0,
+                                        // 'KeyAllocationPurpose': _AllocationPurposeController.text,
+                                        // 'KeyAllocationRecipientCompany': _CompanyNameController.text,
+                                        // 'KeyAllocationRecipientContact': _ContactController.text,
+                                        // 'KeyAllocationRecipientName': _recipientController.text,
+                                        if (_AllocateQtController1
+                                                .text.isEmpty ||
+                                            _AllocationPurposeController
+                                                .text.isEmpty ||
+                                            _ContactController.text.isEmpty ||
+                                            _recipientController.text.isEmpty ||
+                                            selectedKeyId!.isEmpty) {
+                                          showErrorToast(context,
+                                              "Fields cannot be empty");
+                                          return;
+                                        }
                                         if (showReturnBtn == true) {
                                           _updateData();
                                         } else {
@@ -1208,24 +1316,60 @@ List<Color> colors = [
                               editKeyMode == true
                                   ? Button1(
                                       text: 'Save',
-                                      onPressed: () async {
-                                        // _saveData();
-                                        var keycreate =
-                                            await _fireStoreService.CreateKey(
-                                                widget.branchId,
-                                                widget.companyId,
-                                                _keyNameController2.text,
-                                                0,
-                                                _DescriptionController.text,
-                                                int.parse(_AllocateQtController2
-                                                    .text));
-                                        showSuccessToast(
-                                            context, 'Key has been Created');
-                                        _fetchKeys();
-                                        setState(() {
-                                          showCreate = false;
-                                        });
-                                      },
+                                      onPressed: _isCreatingKey
+                                          ? () {
+                                              showErrorToast(
+                                                  context, "Already Clicked");
+                                            }
+                                          : () async {
+                                              if (_DescriptionController.text.isEmpty ||
+                                                  _AllocateQtController2
+                                                      .text.isEmpty ||
+                                                  _keyNameController2
+                                                      .text.isEmpty) {
+                                                showErrorToast(context,
+                                                    "Fields cannot be empty");
+                                                return;
+                                              }
+                                              try {
+                                                setState(() {
+                                                  _isCreatingKey = true;
+                                                });
+                                                var keycreate =
+                                                    await _fireStoreService.CreateKey(
+                                                        widget.branchId,
+                                                        widget.companyId,
+                                                        _keyNameController2
+                                                            .text,
+                                                        0,
+                                                        _DescriptionController
+                                                            .text,
+                                                        int.parse(
+                                                            _AllocateQtController2
+                                                                .text));
+                                                showSuccessToast(context,
+                                                    'Key has been Created');
+                                                setState(() {
+                                                  _AllocateQtController2
+                                                      .clear();
+                                                  _DescriptionController
+                                                      .clear();
+                                                  _keyNameController2.clear();
+                                                });
+                                                _fetchKeys();
+                                                setState(() {
+                                                  showCreate = false;
+                                                });
+                                                setState(() {
+                                                  _isCreatingKey = false;
+                                                });
+                                              } catch (e) {
+                                                showErrorToast(context,
+                                                    "Error Creating Key");
+                                              }
+                                            },
+                                      // _saveData();
+
                                       color: Theme.of(context)
                                           .textTheme
                                           .headlineMedium!

@@ -311,7 +311,8 @@ class _CreateVisitorsState extends State<CreateVisitors> {
       duration: Duration(seconds: 2),
     ));
   }
-List<Color> colors = [
+
+  List<Color> colors = [
     themeManager.themeMode == ThemeMode.dark
         ? DarkColor.color1
         : LightColor.color3,
@@ -319,11 +320,9 @@ List<Color> colors = [
         ? DarkColor.color25
         : LightColor.color2,
   ];
- 
 
   @override
   Widget build(BuildContext context) {
-    
     bool isEditMode = widget.visitorData != null;
 
     var isFieldEnabled = widget.visitorData != null;
@@ -615,12 +614,12 @@ List<Color> colors = [
                                     ),
                                     cursorColor: Theme.of(context).primaryColor,
                                     onChanged: (value) {
-                                      // final tagData = DynamicTagData(value);
-                                      // inputFieldValues.onTagChanged(tagData);
+                                      final tagData = DynamicTagData(value, "");
+                                      inputFieldValues.onTagChanged(tagData);
                                     },
                                     onSubmitted: (value) {
-                                      // final tagData = DynamicTagData(value);
-                                      // inputFieldValues.onTagSubmitted(tagData);
+                                      final tagData = DynamicTagData(value, "");
+                                      inputFieldValues.onTagSubmitted(tagData);
                                     },
                                   ),
                                 ),

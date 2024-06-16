@@ -68,6 +68,10 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
                   data['ReportLocationName'].toString().isNotEmpty)
               ? data['ReportLocationName']
               : 'Not Found',
+          'ReporFollowedUp': (data['ReportFollowedUpId'] != null &&
+                  data['ReportFollowedUpId'].toString().isNotEmpty)
+              ? data['ReportFollowedUpId']
+              : 'Not Found',
         };
       }).toList();
 

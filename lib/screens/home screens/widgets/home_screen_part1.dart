@@ -509,6 +509,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => KeysScreen(
+                                            LocationId: widget.shiftLocationId,
                                                 keyId: widget.empId,
                                                 companyId:
                                                     widget.shiftCompanyId,
