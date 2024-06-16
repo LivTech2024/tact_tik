@@ -60,14 +60,22 @@ class _ClientOpenReportState extends State<ClientOpenReport> {
                   Icon(
                     Icons.download_for_offline_sharp,
                     size: 24.sp,
-                    color: Theme.of(context).textTheme.bodyMedium!.color,
+                    color: Theme
+                        .of(context)
+                        .textTheme
+                        .bodyMedium!
+                        .color,
                   ),
                   SizedBox(
                     width: 10.w,
                   ),
                   InterMedium(
                     text: 'PDF',
-                    color: Theme.of(context).textTheme.bodyMedium!.color,
+                    color: Theme
+                        .of(context)
+                        .textTheme
+                        .bodyMedium!
+                        .color,
                     fontsize: 14.sp,
                   ),
                   SizedBox(
@@ -92,13 +100,21 @@ class _ClientOpenReportState extends State<ClientOpenReport> {
                     InterBold(
                       text: 'Report Name:',
                       fontsize: 18.sp,
-                      color: Theme.of(context).textTheme.bodyMedium!.color,
+                      color: Theme
+                          .of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .color,
                     ),
                     SizedBox(width: 20.h),
                     InterMedium(
                       text: widget.reportName,
                       fontsize: 14.sp,
-                      color: Theme.of(context).textTheme.bodyMedium!.color,
+                      color: Theme
+                          .of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .color,
                     ),
                   ],
                 ),
@@ -109,13 +125,21 @@ class _ClientOpenReportState extends State<ClientOpenReport> {
                     InterBold(
                       text: 'Report Category:',
                       fontsize: 18.sp,
-                      color: Theme.of(context).textTheme.bodyMedium!.color,
+                      color: Theme
+                          .of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .color,
                     ),
                     SizedBox(width: 20.h),
                     InterMedium(
                       text: widget.reportCategory,
                       fontsize: 14.sp,
-                      color: Theme.of(context).textTheme.bodyMedium!.color,
+                      color: Theme
+                          .of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .color,
                     ),
                   ],
                 ),
@@ -126,13 +150,21 @@ class _ClientOpenReportState extends State<ClientOpenReport> {
                     InterBold(
                       text: 'Report Date:',
                       fontsize: 18.sp,
-                      color: Theme.of(context).textTheme.bodyMedium!.color,
+                      color: Theme
+                          .of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .color,
                     ),
                     SizedBox(width: 20.h),
                     InterMedium(
                       text: widget.reportDate,
                       fontsize: 14.sp,
-                      color: Theme.of(context).textTheme.bodyMedium!.color,
+                      color: Theme
+                          .of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .color,
                     ),
                   ],
                 ),
@@ -143,30 +175,50 @@ class _ClientOpenReportState extends State<ClientOpenReport> {
                     InterBold(
                       text: 'Report Follow Up Required:',
                       fontsize: 18.sp,
-                      color: Theme.of(context).textTheme.bodyMedium!.color,
+                      color: Theme
+                          .of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .color,
                     ),
                     SizedBox(width: 20.h),
                     InterMedium(
                       text: widget.reportFollowUpRequire,
                       fontsize: 14.sp,
-                      color: Theme.of(context).textTheme.bodyMedium!.color,
+                      color: Theme
+                          .of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .color,
                     ),
                   ],
                 ),
                 SizedBox(height: 50.h),
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     InterBold(
                       text: 'Report Data:',
                       fontsize: 18.sp,
-                      color: Theme.of(context).textTheme.bodyMedium!.color,
+                      color: Theme
+                          .of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .color,
                     ),
                     SizedBox(width: 20.h),
-                    InterMedium(
-                      text: widget.reportData,
-                      fontsize: 14.sp,
-                      color: Theme.of(context).textTheme.bodyMedium!.color,
+                    Flexible(
+                      child: InterMedium(
+                        text: widget.reportData,
+                        fontsize: 14.sp,
+                        color: Theme
+                            .of(context)
+                            .textTheme
+                            .bodyMedium!
+                            .color,
+                        maxLines: 50,
+                      ),
                     ),
                   ],
                 ),
@@ -177,13 +229,21 @@ class _ClientOpenReportState extends State<ClientOpenReport> {
                     InterBold(
                       text: 'Report Status:',
                       fontsize: 18.sp,
-                      color: Theme.of(context).textTheme.bodyMedium!.color,
+                      color: Theme
+                          .of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .color,
                     ),
                     SizedBox(width: 20.h),
                     InterMedium(
                       text: widget.reportStatus,
                       fontsize: 14.sp,
-                      color: Theme.of(context).textTheme.bodyMedium!.color,
+                      color: Theme
+                          .of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .color,
                     ),
                   ],
                 ),
@@ -194,13 +254,21 @@ class _ClientOpenReportState extends State<ClientOpenReport> {
                     InterBold(
                       text: 'Employee Name:',
                       fontsize: 18.sp,
-                      color: Theme.of(context).textTheme.bodyMedium!.color,
+                      color: Theme
+                          .of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .color,
                     ),
                     SizedBox(width: 20.h),
                     InterMedium(
                       text: widget.reportEmployeeName,
                       fontsize: 14.sp,
-                      color: Theme.of(context).textTheme.bodyMedium!.color,
+                      color: Theme
+                          .of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .color,
                     ),
                   ],
                 ),
@@ -211,13 +279,21 @@ class _ClientOpenReportState extends State<ClientOpenReport> {
                     InterBold(
                       text: 'Report Location:',
                       fontsize: 18.sp,
-                      color: Theme.of(context).textTheme.bodyMedium!.color,
+                      color: Theme
+                          .of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .color,
                     ),
                     SizedBox(width: 20.h),
                     InterMedium(
                       text: widget.reportLocation,
                       fontsize: 14.sp,
-                      color: Theme.of(context).textTheme.bodyMedium!.color,
+                      color: Theme
+                          .of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .color,
                     ),
                   ],
                 ),
@@ -228,13 +304,21 @@ class _ClientOpenReportState extends State<ClientOpenReport> {
                     InterBold(
                       text: 'Followed Up Report:',
                       fontsize: 18.sp,
-                      color: Theme.of(context).textTheme.bodyMedium!.color,
+                      color: Theme
+                          .of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .color,
                     ),
                     SizedBox(width: 20.h),
                     InterMedium(
                       text: 'NOT FOUND?',
                       fontsize: 14.sp,
-                      color: Theme.of(context).textTheme.bodyMedium!.color,
+                      color: Theme
+                          .of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .color,
                     ),
                   ],
                 ),

@@ -1241,74 +1241,79 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                     : ScreenIndex == 1
                         ? SliverToBoxAdapter(
                             child: Padding(
-                              padding: EdgeInsets.all(8.w),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                              padding: EdgeInsets.symmetric(horizontal: 30.w),
+                              child: Column(
                                 children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      SelectLocationShift.showLocationDialog(
-                                        context,
-                                        _cmpId,
-                                        onLocationSelected,
-                                      );
-                                    },
-                                    child: SizedBox(
-                                      width: 150.w,
-                                      child: IconTextWidget(
-                                        space: 6.w,
-                                        icon: Icons.add,
-                                        iconSize: 20.sp,
-                                        text: 'Select Location',
-                                        useBold: true,
-                                        fontsize: 14.sp,
-                                        color: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall!
-                                            .color as Color,
-                                        Iconcolor: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium!
-                                            .color as Color,
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () {
+                                          SelectLocationShift.showLocationDialog(
+                                            context,
+                                            _cmpId,
+                                            onLocationSelected,
+                                          );
+                                        },
+                                        child: SizedBox(
+                                          width: 150.w,
+                                          child: IconTextWidget(
+                                            space: 6.w,
+                                            icon: Icons.add,
+                                            iconSize: 20.sp,
+                                            text: 'Select Location',
+                                            useBold: true,
+                                            fontsize: 14.sp,
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .bodySmall!
+                                                .color as Color,
+                                            Iconcolor: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium!
+                                                .color as Color,
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                  // SizedBox(
-                                  //   width: Platform.isIOS ? 30.w : 10.w,
-                                  // ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  SelectClientGuardsScreen(
-                                                    companyId: _cmpId,
-                                                    onGuardSelected: onGuardSelected,
-                                                  )));
+                                      // SizedBox(
+                                      //   width: Platform.isIOS ? 30.w : 10.w,
+                                      // ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      SelectClientGuardsScreen(
+                                                        companyId: _cmpId,
+                                                        onGuardSelected: onGuardSelected,
+                                                      )));
 
-                                    },
-                                    child: SizedBox(
-                                      width: 150.w,
-                                      child: IconTextWidget(
-                                        space: 6.w,
-                                        icon: Icons.add,
-                                        iconSize: 20.sp,
-                                        text: 'Select Employee',
-                                        useBold: true,
-                                        fontsize: 14.sp,
-                                        color: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall!
-                                            .color as Color,
-                                        Iconcolor: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium!
-                                            .color as Color,
+                                        },
+                                        child: SizedBox(
+                                          width: 150.w,
+                                          child: IconTextWidget(
+                                            space: 6.w,
+                                            icon: Icons.add,
+                                            iconSize: 20.sp,
+                                            text: 'Select Employee',
+                                            useBold: true,
+                                            fontsize: 14.sp,
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .bodySmall!
+                                                .color as Color,
+                                            Iconcolor: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium!
+                                                .color as Color,
+                                          ),
+                                        ),
                                       ),
-                                    ),
+                                    ],
                                   ),
+                                  SizedBox(height: 20.h,)
                                 ],
                               ),
                             ),
