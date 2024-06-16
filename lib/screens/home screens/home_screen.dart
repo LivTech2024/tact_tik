@@ -723,6 +723,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: CustomScrollView(
             slivers: [
               HomeScreenPart1(
+                isClient: false,
                 userName: _userName,
                 employeeImg: employeeImg,
                 shiftLocationName: '',

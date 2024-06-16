@@ -88,6 +88,7 @@ class _ClientDarOpenScreenState extends State<ClientDarOpenScreen> {
                           fontsize: 14.sp,
                           color: Theme.of(context).textTheme.bodySmall!.color
                               as Color,
+                              Iconcolor: Theme.of(context).textTheme.bodyMedium!.color as Color,
                         ),
                       ),
                     ),
@@ -269,7 +270,15 @@ class _ClientDarOpenScreenState extends State<ClientDarOpenScreen> {
                         width: double.maxFinite,
                         margin: EdgeInsets.only(bottom: 10.h),
                         decoration: BoxDecoration(
-                          color: DarkColor.WidgetColor,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Theme.of(context).shadowColor,
+                              blurRadius: 5,
+                              spreadRadius: 2,
+                              offset: Offset(0, 3),
+                            )
+                          ],
+                          color: Theme.of(context).cardColor,
                           borderRadius: BorderRadius.circular(10.r),
                         ),
                         padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -292,6 +301,7 @@ class _ClientDarOpenScreenState extends State<ClientDarOpenScreen> {
                                 SizedBox(width: 5.w),
                                 Icon(
                                   Icons.arrow_forward_ios,
+                                  color: Theme.of(context).textTheme.bodyMedium!.color,
                                   size: 24.sp,
                                 ),
                               ],

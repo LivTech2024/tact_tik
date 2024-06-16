@@ -369,6 +369,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
               ),
             ),
             HomeScreenPart1(
+              isClient: false,
               empId: _employeeId,
               branchId: '',
               empEmail: _empEmail,

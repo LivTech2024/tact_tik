@@ -962,6 +962,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                   drawerOnClicked: () {
                     _scaffoldKeyClient.currentState?.openEndDrawer();
                   },
+                  isClient: true,
                 ),
                 SliverToBoxAdapter(
                   child: Padding(
@@ -1574,7 +1575,12 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                                     NetworkImage(
                                                                   shifts[index][
                                                                       'members'][i],
+
                                                                 ),
+                                                                backgroundColor:
+                                                                    Theme.of(
+                                                                            context)
+                                                                        .primaryColor,
                                                               ),
                                                           if (shifts[index][
                                                                       'members'] !=
@@ -1588,9 +1594,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                               backgroundColor:
                                                                   Theme.of(
                                                                           context)
-                                                                      .textTheme
-                                                                      .titleSmall!
-                                                                      .color!,
+                                                                      .primaryColor,
                                                               child:
                                                                   InterMedium(
                                                                 text:

@@ -351,13 +351,17 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
   // return nameLower.contains(patternLower);
   // }).toList(),
   // );
-
+List<Color> colors = [
+    themeManager.themeMode == ThemeMode.dark
+        ? DarkColor.color1
+        : LightColor.color3,
+    themeManager.themeMode == ThemeMode.dark
+        ? DarkColor.color25
+        : LightColor.color2,
+  ];
   @override
   Widget build(BuildContext context) {
-    List colors = [
-      Theme.of(context).textTheme.bodyLarge!.color,
-      Theme.of(context).highlightColor
-    ];
+   
     return SafeArea(
       child: Scaffold(
         backgroundColor: Theme.of(context).canvasColor,
@@ -396,8 +400,8 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                 showCreate = true;
                                 colors[0] = Theme.of(context)
                                     .textTheme
-                                    .bodySmall!
-                                    .color;
+                                    .bodyMedium!
+                                    .color as Color;
                                 colors[1] = Theme.of(context).highlightColor;
                               });
                             },
@@ -427,8 +431,8 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                 colors[0] = Theme.of(context).highlightColor;
                                 colors[1] = Theme.of(context)
                                     .textTheme
-                                    .bodySmall!
-                                    .color;
+                                    .bodyMedium!
+                                    .color as Color;
                               });
                             },
                             child: Container(

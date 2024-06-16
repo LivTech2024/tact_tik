@@ -174,8 +174,9 @@ class _ClientDarScreenState extends State<ClientDarScreen> {
                               ? "${selectedDate!.toLocal()}".split(' ')[0]
                               : 'Select Date',
                           fontsize: 14.sp,
-                          color: Theme.of(context).textTheme.bodySmall!.color
+                          color: Theme.of(context).textTheme.bodyMedium!.color
                               as Color,
+                              Iconcolor: Theme.of(context).textTheme.bodyMedium!.color as Color,
                         ),
                       ),
                     ),
@@ -364,9 +365,10 @@ class _ClientDarScreenState extends State<ClientDarScreen> {
                                               text: (doc.data() as Map<String,
                                                   dynamic>)['EmpDarShiftName'],
                                               fontsize: 14.sp,
-                                              color: isDark
-                                                  ? DarkColor.color21
-                                                  : LightColor.color2,
+                                              color: Theme.of(context)
+                                                  .textTheme
+                                                  .displaySmall!
+                                                  .color,
                                             ),
                                             SizedBox(height: 12.h),
                                             InterMedium(

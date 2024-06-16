@@ -788,10 +788,10 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                           color: clickedIn
                               ? (Theme.of(context).brightness == Brightness.dark
                                   ? DarkColor.color3
-                                  : LightColor.color5)
+                                  : LightColor.color2)
                               : (Theme.of(context).brightness == Brightness.dark
                                   ? DarkColor.color5
-                                  : LightColor.color1),
+                                  : LightColor.color3),
                         ),
                       ),
                     ),
@@ -1098,7 +1098,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                   : LightColor.color3)
                               : (Theme.of(context).brightness == Brightness.dark
                                   ? DarkColor.color3
-                                  : LightColor.color4),
+                                  : LightColor.color2),
                         ),
                       ),
                     ),
@@ -1115,8 +1115,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                 // text: controller.isPaused.value ? 'Resume' : 'Break',
                 text: true ? 'Resume' : 'Break',
                 fontsize: 18.sp,
-                color: DarkColor.color5,
-                backgroundcolor: DarkColor.WidgetColor,
+                color: Theme.of(context).textTheme.titleSmall!.color,
+                backgroundcolor: Theme.of(context).cardColor,
                 onPressed: () async {
                   await fireStoreService.fetchPatrolData(
                       widget.ShiftId, widget.EmployeId);

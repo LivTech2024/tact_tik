@@ -261,7 +261,7 @@ class _SelectGuardsScreenState extends State<SelectClientGuardsScreen> {
                       : Center(
                           child: PoppinsBold(
                             text: 'No Guards Found',
-                            color: DarkColor.  color2,
+                            color: Theme.of(context).textTheme.bodyLarge!.color,
                             fontsize: 16.sp,
                           ),
                         )

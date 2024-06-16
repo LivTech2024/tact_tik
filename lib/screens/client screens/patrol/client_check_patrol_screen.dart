@@ -303,7 +303,7 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                   SizedBox(height: 10.h),
                                   Container(
                                     height: 140.h,
-                                    margin: EdgeInsets.only(top: 10.h),
+                                    margin: EdgeInsets.only(top: 10.h,left: 4.w,right:4.w),
                                     width: double.maxFinite,
                                     decoration: BoxDecoration(
                                       boxShadow: [
