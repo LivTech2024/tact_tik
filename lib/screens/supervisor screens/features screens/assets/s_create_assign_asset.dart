@@ -38,13 +38,14 @@ class SCreateAssignAssetScreen extends StatefulWidget {
   final bool OnlyView;
   final String equipemtAllocId;
   List selectedGuards = [];
-
+  final VoidCallback onRefresh;
   SCreateAssignAssetScreen(
       {super.key,
       required this.companyId,
       required this.empId,
       this.OnlyView = false,
-      required this.equipemtAllocId});
+      required this.equipemtAllocId,
+      required this.onRefresh});
 
   @override
   State<SCreateAssignAssetScreen> createState() =>
@@ -72,7 +73,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
   List selectedGuards = [];
   String? selectedBranchID;
   List<DocumentSnapshot> branches = [];
-
+  bool _isloading = false;
   List<Color> colors = [
     themeManager.themeMode == ThemeMode.dark
         ? DarkColor.Primarycolor
@@ -142,7 +143,6 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
           selectedGuardId = employeeId;
           selectedEquipmentName = equipmentSnapshot['EquipmentName'];
           selectedEquipmentId = equipmentId;
-          // isChecked = document['EquipmentAllocationIsReturned'];
         });
       }
     }
@@ -180,26 +180,38 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
   }
 
   Future<void> createEquipmentAllocation() async {
-    CollectionReference equipmentAllocations =
-        FirebaseFirestore.instance.collection('EquipmentAllocations');
-    DocumentReference docRef = await equipmentAllocations.add({
-      'EquipmentAllocationCreatedAt': FieldValue.serverTimestamp(),
-      'EquipmentAllocationDate': FieldValue.serverTimestamp(),
-      'EquipmentAllocationEmpId': selectedGuardId ?? '',
-      'EquipmentAllocationEndDate': EndDate,
-      'EquipmentAllocationStartDate': StartDate,
-      'EquipmentAllocationEquipId': selectedEquipmentId ?? '',
-      'EquipmentAllocationEquipQty': _allocateQtController1.text.isNotEmpty
-          ? int.parse(_allocateQtController1.text)
-          : 0,
-      'EquipmentAllocationIsReturned': isChecked,
-      'EquipmentAllocationId': '', // Initialize with an empty string
-    });
+    try {
+      CollectionReference equipmentAllocations =
+          FirebaseFirestore.instance.collection('EquipmentAllocations');
+      DocumentReference docRef = await equipmentAllocations.add({
+        'EquipmentAllocationCreatedAt': FieldValue.serverTimestamp(),
+        'EquipmentAllocationDate': FieldValue.serverTimestamp(),
+        'EquipmentAllocationEmpId': selectedGuardId ?? '',
+        'EquipmentAllocationEndDate': EndDate,
+        'EquipmentAllocationStartDate': StartDate,
+        'EquipmentAllocationEquipId': selectedEquipmentId ?? '',
+        'EquipmentAllocationEquipQty': _allocateQtController1.text.isNotEmpty
+            ? int.parse(_allocateQtController1.text)
+            : 0,
+        'EquipmentAllocationIsReturned': isChecked,
+        'EquipmentAllocationId': '', // Initialize with an empty string
+      });
 
-    // Update the document with the generated document reference ID
-    await docRef.update({
-      'EquipmentAllocationId': docRef.id,
-    });
+      // Update the document with the generated document reference ID
+      await docRef.update({
+        'EquipmentAllocationId': docRef.id,
+      });
+
+      setState(() {
+        // _titleController2.clear();
+        // _descriptionController.clear();
+        _allocateQtController1.clear();
+      });
+      showSuccessToast(context, "Success");
+      widget.onRefresh();
+    } catch (e) {
+      showErrorToast(context, "Error");
+    }
   }
 
   Future<void> createEquipment() async {
@@ -233,6 +245,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
           _descriptionController.clear();
           _allocateQtController2.clear();
         });
+        widget.onRefresh();
         showSuccessToast(context, "Equipment created");
       } else {
         showErrorToast(context, "Fields Cannot be empty");
@@ -332,6 +345,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
               Navigator.of(context).pop();
+              widget.onRefresh();
             },
           ),
           title: InterMedium(
@@ -1072,6 +1086,13 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
             ],
           ),
         ),
+        // Align(
+        //   alignment: Alignment.center,
+        //   child: Visibility(
+        //     visible: _isloading,
+        //     child: CircularProgressIndicator(),
+        //   ),
+        // ),
       ),
     );
   }

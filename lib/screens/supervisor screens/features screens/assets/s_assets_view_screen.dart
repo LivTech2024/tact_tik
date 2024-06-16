@@ -82,6 +82,7 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                     empId: '',
                     OnlyView: false,
                     equipemtAllocId: '',
+                    onRefresh: () {},
                   ),
                 ));
           },
@@ -170,6 +171,9 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                                         companyId: widget.companyId,
                                         empId: equipment['EquipmentId'],
                                         EmpName: equipment['EquipmentName'],
+                                        onRefresh: () {
+                                          fetchEquipments();
+                                        },
                                       )));
                         },
                         child: Container(

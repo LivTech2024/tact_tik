@@ -15,11 +15,13 @@ class SAssetsViewAllotedScreen extends StatefulWidget {
   final String empId;
   final String companyId;
   final String EmpName;
+  final VoidCallback onRefresh;
   const SAssetsViewAllotedScreen(
       {super.key,
       required this.empId,
       required this.companyId,
-      required this.EmpName});
+      required this.EmpName,
+      required this.onRefresh});
 
   @override
   _SAssetsViewScreenState createState() => _SAssetsViewScreenState();
@@ -31,6 +33,10 @@ class _SAssetsViewScreenState extends State<SAssetsViewAllotedScreen> {
   @override
   void initState() {
     super.initState();
+    fetchEquipments();
+  }
+
+  void refresh() {
     fetchEquipments();
   }
 
@@ -81,6 +87,10 @@ class _SAssetsViewScreenState extends State<SAssetsViewAllotedScreen> {
                     empId: '',
                     OnlyView: false,
                     equipemtAllocId: '',
+                    onRefresh: () {
+                      widget.onRefresh();
+                      fetchEquipments();
+                    },
                   ),
                 ));
           },
@@ -163,6 +173,10 @@ class _SAssetsViewScreenState extends State<SAssetsViewAllotedScreen> {
                                         empId: equipment[
                                             'EquipmentAllocationEmpId'],
                                         OnlyView: true,
+                                        onRefresh: () {
+                                          widget.onRefresh();
+                                          fetchEquipments();
+                                        },
                                       )));
                         },
                         child: Container(
