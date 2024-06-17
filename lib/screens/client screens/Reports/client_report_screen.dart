@@ -138,7 +138,7 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => ClientOpenReport(
-                              reportName: reports[index]['ReportEmployeeName'],
+                              reportName: reports[index]['ReportName'],
                               reportCategory: reports[index]['ReportCategory'],
                               reportDate: dateString,
                               reportFollowUpRequire: reports[index]
