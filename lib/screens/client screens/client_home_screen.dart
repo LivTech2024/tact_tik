@@ -910,10 +910,9 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                ClientProfileScreen(
-                                  empId: _employeeId,
-                                ),
+                            builder: (context) => ClientProfileScreen(
+                              empId: _employeeId,
+                            ),
                           ),
                         );
                       },
@@ -970,6 +969,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                     _scaffoldKeyClient.currentState?.openEndDrawer();
                   },
                   isClient: true,
+                  isEmployee: false,
                 ),
                 SliverToBoxAdapter(
                   child: Padding(
@@ -1585,7 +1585,6 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                                     NetworkImage(
                                                                   shifts[index][
                                                                       'members'][i],
-
                                                                 ),
                                                                 backgroundColor:
                                                                     Theme.of(
