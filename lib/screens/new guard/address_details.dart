@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tact_tik/common/sizes.dart';
 import 'package:tact_tik/common/widgets/setTextfieldWidget.dart';
@@ -52,111 +53,113 @@ class _AddressDetailsState extends State<AddressDetails> {
     }
 
     bool isEditMode = false;
-    return Container(
-      width: width / width50,
-      padding: EdgeInsets.symmetric(
-          horizontal: width / width20, vertical: height / height20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          InterBold(
-            text: 'Add Address Details',
-            color:  Theme.of(context).textTheme.bodySmall!.color,
-            fontsize: width / width20,
-          ),
-          SetTextfieldWidget(
-            hintText: 'Address',
-            controller: widget.AddressController,
-            enabled: !isEditMode,
-            isEditMode: isEditMode,
-          ),
-          SizedBox(
-            height: height / height5,
-          ),
-          SetTextfieldWidget(
-            hintText: 'Postal Code',
-            controller:widget. PostalCodeController,
-            enabled: !isEditMode,
-            isEditMode: isEditMode,
-          ),
-          SizedBox(
-            height: height / height5,
-          ),
-          SetTextfieldWidget(
-            hintText: 'City',
-            controller:widget. cityController,
-            enabled: !isEditMode,
-            isEditMode: isEditMode,
-          ),
-          SizedBox(
-            height: height / height5,
-          ),
-          SetTextfieldWidget(
-            hintText: 'Province',
-            controller:widget. ProvinceController,
-            enabled: !isEditMode,
-            isEditMode: isEditMode,
-          ),
-          SizedBox(
-            height: height / height25,
-          ),
-          InterBold(
-            text: 'Add Profile Photo',
-            color:  Theme.of(context).textTheme.bodySmall!.color,
-            fontsize: width / width20,
-          ),
-          GestureDetector(
-            onTap: () {
-              showModalBottomSheet(
-                context: context,
-                builder: (context) => Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ListTile(
-                      leading: Icon(Icons.camera),
-                      title: Text('Add Image'),
-                      onTap: () {
-                        _addImage();
-                        Navigator.pop(context);
-                      },
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.image),
-                      title: Text('Add from Gallery'),
-                      onTap: () {
-                        Navigator.pop(context);
-                        _addGallery();
-                      },
-                    ),
-                  ],
-                ),
-              );
-            },
-            child: Container(
-              height: height / height60,
-              // width: width - width / width10,
-              decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color:Theme.of(context).shadowColor,
-                      blurRadius: 5,
-                      spreadRadius: 2,
-                      offset: Offset(0, 3),
-                    )
-                  ],
-                  color:
-                      Theme.of(context).cardColor,
-                  borderRadius: BorderRadius.circular(width / width8)),
-              child: Center(
-                child: InterBold(
-                  text: 'Upload Profile Photo',
-                  color:  Theme.of(context).textTheme.bodySmall!.color,
-                  fontsize: width / width20,
+    return SingleChildScrollView(
+      child: Container(
+        width: 50.w,
+        padding: EdgeInsets.symmetric(
+            horizontal: width / width20, vertical: height / height20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            InterBold(
+              text: 'Add Address Details',
+              color:  Theme.of(context).textTheme.bodySmall!.color,
+              fontsize: width / width20,
+            ),
+            SetTextfieldWidget(
+              hintText: 'Address',
+              controller: widget.AddressController,
+              enabled: !isEditMode,
+              isEditMode: isEditMode,
+            ),
+            SizedBox(
+              height: height / height5,
+            ),
+            SetTextfieldWidget(
+              hintText: 'Postal Code',
+              controller:widget. PostalCodeController,
+              enabled: !isEditMode,
+              isEditMode: isEditMode,
+            ),
+            SizedBox(
+              height: height / height5,
+            ),
+            SetTextfieldWidget(
+              hintText: 'City',
+              controller:widget. cityController,
+              enabled: !isEditMode,
+              isEditMode: isEditMode,
+            ),
+            SizedBox(
+              height: height / height5,
+            ),
+            SetTextfieldWidget(
+              hintText: 'Province',
+              controller:widget. ProvinceController,
+              enabled: !isEditMode,
+              isEditMode: isEditMode,
+            ),
+            SizedBox(
+              height: height / height25,
+            ),
+            InterBold(
+              text: 'Add Profile Photo',
+              color:  Theme.of(context).textTheme.bodySmall!.color,
+              fontsize: width / width20,
+            ),
+            GestureDetector(
+              onTap: () {
+                showModalBottomSheet(
+                  context: context,
+                  builder: (context) => Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ListTile(
+                        leading: Icon(Icons.camera),
+                        title: Text('Add Image'),
+                        onTap: () {
+                          _addImage();
+                          Navigator.pop(context);
+                        },
+                      ),
+                      ListTile(
+                        leading: Icon(Icons.image),
+                        title: Text('Add from Gallery'),
+                        onTap: () {
+                          Navigator.pop(context);
+                          _addGallery();
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              },
+              child: Container(
+                height: height / height60,
+                // width: width - width / width10,
+                decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color:Theme.of(context).shadowColor,
+                        blurRadius: 5,
+                        spreadRadius: 2,
+                        offset: Offset(0, 3),
+                      )
+                    ],
+                    color:
+                        Theme.of(context).cardColor,
+                    borderRadius: BorderRadius.circular(width / width8)),
+                child: Center(
+                  child: InterBold(
+                    text: 'Upload Profile Photo',
+                    color:  Theme.of(context).textTheme.bodySmall!.color,
+                    fontsize: width / width20,
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

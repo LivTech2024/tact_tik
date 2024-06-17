@@ -443,7 +443,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                                       height: 14.h,
                                                       width: 14.w,
                                                       child: SvgPicture.asset(
-                                                          'assets/images/calendar_line.svg'),
+                                                          'assets/images/calendar_line.svg', color: Theme.of(context).primaryColor,),
                                                     ),
                                                     SizedBox(width: 6.w),
                                                     InterMedium(
@@ -480,6 +480,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                                     'assets/images/edit_square.svg',
                                                     width: 20.w,
                                                     height: 20.h,
+                                                    color: Theme.of(context).primaryColor,
                                                   ),
                                                 ),
                                               ],
