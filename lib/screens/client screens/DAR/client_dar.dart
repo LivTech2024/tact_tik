@@ -280,6 +280,9 @@ class _ClientDarScreenState extends State<ClientDarScreen> {
                                   String startTime = DateFormat('HH:mm').format(
                                       (docData['EmpDarDate'] as Timestamp)
                                           .toDate());
+                                  String startDate = DateFormat('yyyy-MM-dd').format(
+                                      (docData['EmpDarDate'] as Timestamp).toDate()
+                                  );
                                   List<dynamic> empDarTile =
                                       docData['EmpDarTile'] ?? [];
                                   Navigator.push(
@@ -290,6 +293,7 @@ class _ClientDarScreenState extends State<ClientDarScreen> {
                                                 employeeName: employeeName,
                                                 startTime: startTime,
                                                 empDarTile: empDarTile,
+                                                startDate: startDate,
                                               )));
                                 },
                                 child: Container(
