@@ -74,6 +74,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
   String? selectedBranchID;
   List<DocumentSnapshot> branches = [];
   bool _isloading = false;
+  bool alreadyChecked = false;
   List<Color> colors = [
     themeManager.themeMode == ThemeMode.dark
         ? DarkColor.Primarycolor
@@ -143,7 +144,13 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
           selectedGuardId = employeeId;
           selectedEquipmentName = equipmentSnapshot['EquipmentName'];
           selectedEquipmentId = equipmentId;
+          // alreadyChecked = true;
         });
+        if (document['EquipmentAllocationIsReturned'] == true) {
+          alreadyChecked = true;
+        } else {
+          alreadyChecked = false;
+        }
       }
     }
   }
@@ -181,36 +188,66 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
 
   Future<void> createEquipmentAllocation() async {
     try {
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+      CollectionReference equipment = firestore.collection('Equipments');
       CollectionReference equipmentAllocations =
-          FirebaseFirestore.instance.collection('EquipmentAllocations');
-      DocumentReference docRef = await equipmentAllocations.add({
-        'EquipmentAllocationCreatedAt': FieldValue.serverTimestamp(),
-        'EquipmentAllocationDate': FieldValue.serverTimestamp(),
-        'EquipmentAllocationEmpId': selectedGuardId ?? '',
-        'EquipmentAllocationEndDate': EndDate,
-        'EquipmentAllocationStartDate': StartDate,
-        'EquipmentAllocationEquipId': selectedEquipmentId ?? '',
-        'EquipmentAllocationEquipQty': _allocateQtController1.text.isNotEmpty
-            ? int.parse(_allocateQtController1.text)
-            : 0,
-        'EquipmentAllocationIsReturned': isChecked,
-        'EquipmentAllocationId': '', // Initialize with an empty string
-      });
+          firestore.collection('EquipmentAllocations');
 
-      // Update the document with the generated document reference ID
-      await docRef.update({
-        'EquipmentAllocationId': docRef.id,
+      // Fetch the equipment details
+      DocumentSnapshot equipmentDoc =
+          await equipment.doc(selectedEquipmentId).get();
+      if (!equipmentDoc.exists) {
+        showErrorToast(context, "Equipment not found");
+        return;
+      }
+
+      int currentAllotedQuantity =
+          equipmentDoc['EquipmentAllotedQuantity'] ?? 0;
+      int totalQuantity = equipmentDoc['EquipmentTotalQuantity'] ?? 0;
+      int newAllocatedQuantity = _allocateQtController1.text.isNotEmpty
+          ? int.parse(_allocateQtController1.text)
+          : 0;
+
+      // Check if the new allocated quantity exceeds the total quantity
+      if (currentAllotedQuantity + newAllocatedQuantity > totalQuantity) {
+        showErrorToast(
+            context, "Allocated quantity exceeds total available quantity");
+        return;
+      }
+
+      // Perform transaction to ensure atomic update
+      await firestore.runTransaction((transaction) async {
+        DocumentReference equipmentAllocationsDocRef =
+            equipmentAllocations.doc();
+
+        // Create the new allocation
+        transaction.set(equipmentAllocationsDocRef, {
+          'EquipmentAllocationCreatedAt': FieldValue.serverTimestamp(),
+          'EquipmentAllocationDate': FieldValue.serverTimestamp(),
+          'EquipmentAllocationEmpId': selectedGuardId ?? '',
+          'EquipmentAllocationEndDate': EndDate,
+          'EquipmentAllocationStartDate': StartDate,
+          'EquipmentAllocationEquipId': selectedEquipmentId ?? '',
+          'EquipmentAllocationEquipQty': newAllocatedQuantity,
+          'EquipmentAllocationIsReturned': isChecked,
+          'EquipmentAllocationId': equipmentAllocationsDocRef.id,
+        });
+
+        // Update the equipment's allocated quantity
+        transaction.update(equipment.doc(selectedEquipmentId), {
+          'EquipmentAllotedQuantity':
+              currentAllotedQuantity + newAllocatedQuantity,
+        });
       });
 
       setState(() {
-        // _titleController2.clear();
-        // _descriptionController.clear();
         _allocateQtController1.clear();
       });
+
       showSuccessToast(context, "Success");
       widget.onRefresh();
     } catch (e) {
-      showErrorToast(context, "Error");
+      showErrorToast(context, "Error: ${e.toString()}");
     }
   }
 
@@ -256,12 +293,53 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
   }
 
   Future<void> updateEquipmentAllocation() async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
     CollectionReference equipmentAllocations =
-        FirebaseFirestore.instance.collection('EquipmentAllocations');
-    await equipmentAllocations.doc(widget.equipemtAllocId).update({
-      'EquipmentAllocationIsReturned': isChecked,
-      'EquipmentAllocationReturnedAt': FieldValue.serverTimestamp(),
-    });
+        firestore.collection('EquipmentAllocations');
+    DocumentReference allocationDocRef =
+        equipmentAllocations.doc(widget.equipemtAllocId);
+
+    try {
+      await firestore.runTransaction((transaction) async {
+        // Fetch the current allocation details
+        DocumentSnapshot allocationSnapshot =
+            await transaction.get(allocationDocRef);
+        if (!allocationSnapshot.exists) {
+          throw Exception("Allocation not found");
+        }
+
+        int allocatedQty = allocationSnapshot['EquipmentAllocationEquipQty'];
+        String equipmentId = allocationSnapshot['EquipmentAllocationEquipId'];
+
+        // Fetch the current equipment details
+        DocumentReference equipmentDocRef =
+            firestore.collection('Equipments').doc(equipmentId);
+        DocumentSnapshot equipmentSnapshot =
+            await transaction.get(equipmentDocRef);
+        if (!equipmentSnapshot.exists) {
+          throw Exception("Equipment not found");
+        }
+
+        int currentAllotedQuantity =
+            equipmentSnapshot['EquipmentAllotedQuantity'] ?? 0;
+
+        // Update the allocation to mark it as returned
+        transaction.update(allocationDocRef, {
+          'EquipmentAllocationIsReturned': isChecked,
+          'EquipmentAllocationReturnedAt': FieldValue.serverTimestamp(),
+        });
+
+        // Update the equipment's allocated quantity
+        transaction.update(equipmentDocRef, {
+          'EquipmentAllotedQuantity': currentAllotedQuantity - allocatedQty,
+        });
+      });
+
+      showSuccessToast(context, "Allocation updated and released successfully");
+      widget.onRefresh();
+    } catch (e) {
+      showErrorToast(context, "Error: ${e.toString()}");
+    }
   }
 
   Future<void> _selectDate(BuildContext context, bool isStart) async {
@@ -952,7 +1030,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                           //     widget.OnlyView == true && isChecked == true
                           //         ? true
                           //         : false,
-                          !isChecked
+                          !alreadyChecked
                               ? Button1(
                                   text: 'Save',
                                   onPressed: () {

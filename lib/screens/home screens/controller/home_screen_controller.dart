@@ -54,12 +54,8 @@ class HomeScreenController extends GetxController {
   Future<void> initPlatformState() async {
     print('Initializing...');
     await BackgroundLocator.initialize();
-
     print('Initialization done');
-    final _isRunning = await BackgroundLocator.isServiceRunning();
-
-    isRunning = _isRunning;
-
+    isRunning = await BackgroundLocator.isServiceRunning();
     print('Running ${isRunning.toString()}');
   }
 
@@ -67,32 +63,36 @@ class HomeScreenController extends GetxController {
   Future<void> startBgLocationService() async {
     try {
       print('start Bg location service');
-      // if (await _checkLocationPermission()) {
-      await _startLocator();
-      final _isRunning = await BackgroundLocator.isServiceRunning();
-      print('Running ${_isRunning.toString()}');
-
-      // isRunning = _isRunning;
-      // lastLocation = null;
-      // } else {
-      //   print("Location permission Error");
-      //   // show error
-      // }
+      if (await _checkLocationPermission()) {
+        await _startLocator();
+        isRunning = await BackgroundLocator.isServiceRunning();
+        print('Running ${isRunning.toString()}');
+        lastLocation = null;
+      } else {
+        print("Location permission Error");
+        // customErrorToast(
+        //     "Location permission is required for background tracking.");
+      }
     } catch (e) {
       print(e);
+      // customErrorToast("An error occurred while starting location service: $e");
     }
   }
 
   Future<bool> _checkLocationPermission() async {
     var status = await Permission.locationWhenInUse.request();
-    await Permission.notification.request();
     if (status.isGranted) {
       var statusAlways = await Permission.locationAlways.request();
-      if (statusAlways.isGranted) {
-      } else {}
-    } else if (status.isDenied) {
-    } else if (status.isPermanentlyDenied) {}
-    return true;
+      return statusAlways.isGranted;
+    } else {
+      if (status.isDenied) {
+        // Handle permission denied
+      } else if (status.isPermanentlyDenied) {
+        // Handle permission permanently denied
+        await openAppSettings();
+      }
+      return false;
+    }
   }
 
   Future<void> _startLocator() async {
@@ -103,30 +103,31 @@ class HomeScreenController extends GetxController {
         initDataCallback: data,
         disposeCallback: LocationCallbackHandler.disposeCallback,
         iosSettings: const IOSSettings(
-            accuracy: LocationAccuracy.NAVIGATION,
+            accuracy: LocationAccuracy.HIGH,
             distanceFilter: 0,
-            stopWithTerminate: false),
+            stopWithTerminate: false,
+            showsBackgroundLocationIndicator: true),
         autoStop: false,
         androidSettings: const AndroidSettings(
-            accuracy: LocationAccuracy.NAVIGATION,
-            interval: 5,
-            distanceFilter: 0,
-            client: LocationClient.google,
-            androidNotificationSettings: AndroidNotificationSettings(
-                notificationChannelName: 'Location tracking',
-                notificationTitle: 'Start Location Tracking',
-                notificationMsg: 'Track location in background',
-                notificationBigMsg:
-                    'Background location is on to keep the app up-tp-date with your location. This is required for main features to work properly when the app is not running.',
-                notificationIconColor: Colors.grey,
-                notificationTapCallback:
-                    LocationCallbackHandler.notificationCallback)));
+          accuracy: LocationAccuracy.HIGH,
+          interval: 5,
+          distanceFilter: 0,
+          client: LocationClient.google,
+          androidNotificationSettings: AndroidNotificationSettings(
+              notificationChannelName: 'Location tracking',
+              notificationTitle: 'Start Location Tracking',
+              notificationMsg: 'Track location in background',
+              notificationBigMsg:
+                  'Background location is on to keep the app up-to-date with your location. This is required for main features to work properly when the app is not running.',
+              notificationIconColor: Colors.grey,
+              notificationTapCallback:
+                  LocationCallbackHandler.notificationCallback),
+        ));
   }
 
   /// stop Bg the location service
   Future<void> stopBgLocationService() async {
     await BackgroundLocator.unRegisterLocationUpdate();
-    final _isRunning = await BackgroundLocator.isServiceRunning();
-    isRunning = _isRunning;
+    isRunning = await BackgroundLocator.isServiceRunning();
   }
 }

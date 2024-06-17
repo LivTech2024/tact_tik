@@ -220,6 +220,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     });
     if (clickedIn == true) {
       updateLateTimeAndStartTimer();
+      await homeScreenController.startBgLocationService();
     }
     if (pauseState != null) {
       setState(() {

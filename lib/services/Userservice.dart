@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
+
 class UserService {
   FireStoreService fireStoreService = FireStoreService();
   String? shiftLocationId;
