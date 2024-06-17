@@ -839,14 +839,17 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
             children: [
               GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ProfileScreen(
-                        empId: _employeeId,
+                  if (_employeeId != null) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ProfileScreen(
+                          isClient: true,
+                          empId: _employeeId,
+                        ),
                       ),
-                    ),
-                  );
+                    );
+                  }
                 },
                 child: Container(
                   height: 180.h,
@@ -906,6 +909,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => ProfileScreen(
+                              isClient: true,
                               empId: _employeeId,
                             ),
                           ),
