@@ -200,8 +200,10 @@ class _SelectGuardsScreenState extends State<SelectLoogBookGuardsScreen> {
                                           SizedBox(
                                             height: 14.h,
                                             width: 24.w,
-                                            child: SvgPicture.asset(
-                                              'assets/images/arrow.svg',
+                                            child: SvgPicture.asset(themeManager.themeMode == ThemeMode.dark
+                                                ? 'assets/images/arrow.svg'
+                                                :
+                                              'assets/images/arrow_light.svg',
                                               fit: BoxFit.fitWidth,
                                             ),
                                           )

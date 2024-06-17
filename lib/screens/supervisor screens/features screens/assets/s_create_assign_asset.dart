@@ -77,7 +77,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
   bool alreadyChecked = false;
   List<Color> colors = [
     themeManager.themeMode == ThemeMode.dark
-        ? DarkColor.Primarycolor
+        ? DarkColor.color1
         : LightColor.color3,
     themeManager.themeMode == ThemeMode.dark
         ? DarkColor.color25
@@ -450,7 +450,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                         onTap: () {
                           setState(() {
                             showCreate = true;
-                            colors[0] = Theme.of(context).primaryColor;
+                            colors[0] = Theme.of(context).textTheme.bodyMedium!.color as  Color;
                             colors[1] = Theme.of(context).highlightColor;
                           });
                         },
@@ -476,7 +476,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                             setState(() {
                               showCreate = false;
                               colors[0] = Theme.of(context).highlightColor;
-                              colors[1] = Theme.of(context).primaryColor;
+                              colors[1] = Theme.of(context).textTheme.bodyMedium!.color as  Color;
                             });
                           },
                           child: SizedBox(

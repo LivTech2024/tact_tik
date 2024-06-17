@@ -462,7 +462,7 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
   // }
  List<Color> colors = [
     themeManager.themeMode == ThemeMode.dark
-        ? DarkColor.Primarycolor
+        ? DarkColor.color1
         : LightColor.color3,
     themeManager.themeMode == ThemeMode.dark
         ? DarkColor.color25
@@ -508,7 +508,7 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                           setState(() {
                             showDARS = true;
                             colors[0] =
-                                Theme.of(context).textTheme.bodySmall!.color as Color;
+                                Theme.of(context).textTheme.bodyMedium!.color as Color;
                             colors[1] = Theme.of(context).highlightColor;
                           });
                         },
@@ -530,7 +530,7 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: 10.h),
                       child: VerticalDivider(
-                        color: Theme.of(context).textTheme.bodySmall!.color,
+                        color: Theme.of(context).textTheme.bodyMedium!.color,
                       ),
                     ),
                     Expanded(

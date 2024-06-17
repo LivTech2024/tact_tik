@@ -61,7 +61,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
 
  List<Color> colors = [
     themeManager.themeMode == ThemeMode.dark
-        ? DarkColor.Primarycolor
+        ? DarkColor.color1
         : LightColor.color3,
     themeManager.themeMode == ThemeMode.dark
         ? DarkColor.color25
@@ -516,7 +516,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                         onTap: () {
                           setState(() {
                             showDARS = true;
-                            colors[0] = Theme.of(context).primaryColor;
+                            colors[0] = Theme.of(context).textTheme.bodyMedium!.color as Color;
                             colors[1] = Theme.of(context).highlightColor;
                           });
                         },
@@ -545,7 +545,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                           setState(() {
                             showDARS = false;
                             colors[0] = Theme.of(context).highlightColor;
-                            colors[1] = Theme.of(context).primaryColor;
+                            colors[1] = Theme.of(context).textTheme.bodyMedium!.color as Color;
                           });
                         },
                         child: Container(

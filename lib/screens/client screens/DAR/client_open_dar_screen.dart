@@ -116,7 +116,15 @@ class _ClientOpenDarScreenState extends State<ClientOpenDarScreen> {
                   padding: EdgeInsets.symmetric(vertical: 10.h),
                   constraints: BoxConstraints(),
                   decoration: BoxDecoration(
-                    color: DarkColor.WidgetColor,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Theme.of(context).shadowColor,
+                        blurRadius: 5,
+                        spreadRadius: 2,
+                        offset: Offset(0, 3),
+                      ),
+                    ],
+                    color: Theme.of(context).cardColor,
                     borderRadius: BorderRadius.circular(13.85.r),
                   ),
                   child: InterRegular(

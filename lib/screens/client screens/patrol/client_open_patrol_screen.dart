@@ -178,7 +178,7 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                 ),*/
                 Container(
                   height: 200.h,
-                  margin: EdgeInsets.only(top: 10.h),
+                  margin: EdgeInsets.only(top: 10.h,left: 4.w,right: 4.w),
                   width: double.maxFinite,
                   decoration: BoxDecoration(
                     boxShadow: [
@@ -466,7 +466,7 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                       child: Container(
                         height: 50.h,
                         width: double.maxFinite,
-                        margin: EdgeInsets.only(bottom: 10.h),
+                        margin: EdgeInsets.only(bottom: 10.h,left: 4.w,right: 4.w),
                         decoration: BoxDecoration(
                           boxShadow: [
                             BoxShadow(

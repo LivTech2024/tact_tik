@@ -741,7 +741,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                             ],
                           ),
                           Checkbox(
-                            activeColor: DarkColor.Primarycolor,
+                            activeColor: Theme.of(context).primaryColor,
                             checkColor: DarkColor.color1,
                             value: isChecked,
                             onChanged: (bool? value) {

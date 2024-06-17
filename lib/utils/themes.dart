@@ -105,7 +105,7 @@ var darkTheme = ThemeData(
     elevation: 0,
     iconTheme: IconThemeData(
       color: DarkColor.color5,
-      size: 24.sp,
+      size: 24.sp
     ),
     titleTextStyle: TextStyle(
       color: DarkColor.color5,

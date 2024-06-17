@@ -375,11 +375,18 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
                         height: 66.h,
                         width: 66.w,
                         decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Theme.of(context).shadowColor,
+                              blurRadius: 10.r,
+                              offset: Offset(0, 3),
+                            ),
+                          ],
                           color: Theme.of(context).cardColor,
                           borderRadius: BorderRadius.circular(8.r),
                         ),
                         child: Center(
-                          child: Icon(Icons.add, size: 24.sp),
+                          child: Icon(Icons.add, size: 24.sp, color: Theme.of(context).textTheme.bodyMedium!.color),
                         ),
                       ),
                     ),
@@ -417,8 +424,15 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
                                 width: 200.w,
                                 height: 46.h,
                                 decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Theme.of(context).shadowColor,
+                                      blurRadius: 10.r,
+                                      offset: Offset(0, 3),
+                                    ),
+                                  ],
                                   borderRadius: BorderRadius.circular(10.r),
-                                  color:  Theme.of(context).textTheme.bodySmall!.color,
+                                  color:  Theme.of(context).cardColor,
                                 ),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -440,12 +454,12 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
                                           children: [
                                             PoppinsMedium(
                                               text: otherFileName,
-                                              color:  Theme.of(context).textTheme.titleMedium!.color,
+                                              color:  Theme.of(context).textTheme.bodyMedium!.color,
                                               fontsize: 12.sp,
                                             ),
                                             PoppinsRegular(
                                               text: otherFileSize,
-                                              color:    Theme.of(context).textTheme.titleLarge!.color,
+                                              color:    Theme.of(context).textTheme.bodyMedium!.color,
                                               fontsize: 12.sp,
                                             )
                                           ],

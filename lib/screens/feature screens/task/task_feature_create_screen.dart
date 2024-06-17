@@ -118,10 +118,11 @@ class _TaskFeatureCreateScreenState extends State<TaskFeatureCreateScreen> {
                     SizedBox(height: 20.h),
                     Button1(
                       text: 'Done',
-                      color: Theme.of(context).textTheme.headlineMedium!.color,
+                      color: Colors.white,
                       onPressed: saveTaskToFirestore,
                       backgroundcolor: Theme.of(context).primaryColor,
                       borderRadius: 10.r,
+                      
                     ),
                   ],
                 ),

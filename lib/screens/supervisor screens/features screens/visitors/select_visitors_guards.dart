@@ -118,9 +118,7 @@ class _SelectGuardsScreenState extends State<SelectVisitorsGuardsScreen> {
                                       offset: Offset(0, 3),
                                     )
                                   ],
-                                  color:  Theme.of(context).brightness == Brightness.dark
-                                      ? DarkColor.color19
-                                      : LightColor.color1,
+                                  color:  Theme.of(context).cardColor,
                                   borderRadius:
                                       BorderRadius.circular(12.w),
                                 ),

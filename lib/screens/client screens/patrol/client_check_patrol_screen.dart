@@ -209,7 +209,7 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                             patrolsList.every((patrol) {
                               final patrolDate =
                                   DateTime.fromMillisecondsSinceEpoch(
-                                      patrol['PatrolLogStartedAt']
+                                      patrol['PatrolDate']
                                           .millisecondsSinceEpoch);
                               final guardId = patrol['PatrolLogGuardId'];
                               return (patrolDate.year != selectedDate!.year ||
@@ -222,7 +222,7 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                             patrolsList.every((patrol) {
                               final patrolDate =
                                   DateTime.fromMillisecondsSinceEpoch(
-                                      patrol['PatrolLogStartedAt']
+                                      patrol['PatrolDate']
                                           .millisecondsSinceEpoch);
                               return patrolDate.year != selectedDate!.year ||
                                   patrolDate.month != selectedDate!.month ||
@@ -259,7 +259,7 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                           final patrol = patrolsList[index];
                           final patrolDate =
                               DateTime.fromMillisecondsSinceEpoch(
-                            patrol['PatrolLogStartedAt'].millisecondsSinceEpoch,
+                            patrol['PatrolDate'].millisecondsSinceEpoch,
                           );
 
                           if (selectedDate == null ||
@@ -284,7 +284,7 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                     guardName:
                                         patrol['PatrolLogGuardName'] ?? '',
                                     startDate: DateFormat('dd/MM/yyyy')
-                                        .format(startTime),
+                                        .format(patrolDate),
                                     startTime:
                                         DateFormat('hh:mm a').format(startTime),
                                     endTime:
@@ -307,12 +307,12 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                 children: [
                                   SizedBox(height: 20.h),
                                   InterMedium(
-                                    text: 'Date hear',
+                                    text: DateFormat('dd/MM/yyyy').format(patrolDate),
                                   ),
                                   SizedBox(height: 10.h),
                                   Container(
                                     height: 140.h,
-                                    margin: EdgeInsets.only(top: 10.h),
+                                    margin: EdgeInsets.only(top: 10.h,left: 4.w,right:4.w),
                                     width: double.maxFinite,
                                     decoration: BoxDecoration(
                                       boxShadow: [

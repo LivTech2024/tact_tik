@@ -333,7 +333,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
 
   List<Color> colors = [
     themeManager.themeMode == ThemeMode.dark
-        ? DarkColor.Primarycolor
+        ? DarkColor.color1
         : LightColor.color3,
     themeManager.themeMode == ThemeMode.dark
         ? DarkColor.color25

@@ -463,7 +463,7 @@ class _UncheckedPatrolScreenState extends State<UncheckedPatrolScreen> {
                         height: 70.h,
                         backgroundcolor: Theme.of(context).primaryColor,
                         color:
-                            Theme.of(context).textTheme.headlineMedium!.color,
+                            Colors.white,
                         text: 'Next',
                         onPressed: () async {
                           setState(() {
@@ -552,7 +552,15 @@ class _CheckReasonState extends State<CheckReason> {
       width: double.maxFinite,
       margin: EdgeInsets.only(bottom: 10.h),
       decoration: BoxDecoration(
-        color: DarkColor.WidgetColor,
+        boxShadow: [
+          BoxShadow(
+            color: Theme.of(context).shadowColor,
+            blurRadius: 5,
+            spreadRadius: 2,
+            offset: Offset(0, 3),
+          )
+        ],
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(10.r),
       ),
       padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -599,6 +607,7 @@ class _CheckReasonState extends State<CheckReason> {
                 icon: Transform.rotate(
                   angle: isExpand ? 4.7 : -4.7, //set the angel
                   child: Icon(
+                    color: Theme.of(context).textTheme.bodyMedium!.color,
                     Icons.arrow_forward_ios,
                     size: 24.sp,
                   ),

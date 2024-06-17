@@ -655,9 +655,10 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
   }
 
   List<Color> colors = [
-    themeManager.themeMode == ThemeMode.dark
-        ? DarkColor.Primarycolor
+   themeManager.themeMode == ThemeMode.dark
+        ? DarkColor.color1
         : LightColor.color3,
+    
     themeManager.themeMode == ThemeMode.dark
         ? DarkColor.color25
         : LightColor.color2,
@@ -710,6 +711,15 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                   children: [
                     Expanded(
                       child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            colors[0] = Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .color as Color;
+                            colors[1] = Theme.of(context).highlightColor;
+                          });
+                        },
                         child: SizedBox(
                           child: Center(
                             child: InterBold(
@@ -726,6 +736,15 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                     ),
                     Expanded(
                       child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            colors[0] = Theme.of(context).highlightColor;
+                            colors[1] = Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .color as Color;
+                          });
+                        },
                         child: SizedBox(
                           child: Center(
                             child: InterBold(

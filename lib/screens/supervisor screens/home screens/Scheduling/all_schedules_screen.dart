@@ -212,7 +212,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                               style: GoogleFonts.poppins(
                                 fontWeight: FontWeight.w300,
                                 fontSize: 18.sp,
-                                color: Colors.white,
+                                color: Theme.of(context).textTheme.bodyMedium!.color,
                               ),
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
@@ -303,6 +303,14 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                             margin: EdgeInsets.only(top: 10.h),
                             width: double.maxFinite,
                             decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Theme.of(context).shadowColor,
+                                  blurRadius: 5,
+                                  spreadRadius: 2,
+                                  offset: Offset(0, 3),
+                                )
+                              ],
                               color: Theme.of(context).cardColor,
                               borderRadius: BorderRadius.circular(14.r),
                             ),
@@ -476,8 +484,10 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                                       ),
                                                     );
                                                   },
-                                                  child: SvgPicture.asset(
-                                                    'assets/images/edit_square.svg',
+                                                  child: SvgPicture.asset(themeManager.themeMode == ThemeMode.dark
+                                                      ? 'assets/images/edit_square.svg'
+                                                      :
+                                                    'assets/images/edit_square_light.svg',
                                                     width: 20.w,
                                                     height: 20.h,
                                                   ),
