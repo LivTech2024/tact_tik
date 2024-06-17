@@ -16,11 +16,13 @@ class KeysScreen extends StatefulWidget {
   final String keyId;
   final String companyId;
   final String branchId;
+  final String LocationId;
   const KeysScreen(
       {super.key,
       required this.keyId,
       required this.companyId,
-      required this.branchId});
+      required this.branchId,
+      required this.LocationId});
 
   @override
   State<KeysScreen> createState() => _KeysScreenState();
@@ -53,12 +55,14 @@ class _KeysScreenState extends State<KeysScreen> {
     return documentsByDate;
   }
 
+// KeyAllocationLocationId
   @override
   void initState() {
     super.initState();
+    print("Shift Location Id ${widget.LocationId}");
     _keyAllocationStream = FirebaseFirestore.instance
         .collection('KeyAllocations')
-        .where('KeyAllocationKeyId', isEqualTo: widget.keyId)
+        .where('KeyAllocationLocationId', isEqualTo: widget.LocationId)
         .snapshots();
   }
 
@@ -77,6 +81,8 @@ class _KeysScreenState extends State<KeysScreen> {
                     companyId: widget.companyId,
                     branchId: widget.branchId,
                     AllocationKeyId: '',
+                    guardcreation: true,
+                    locationId: widget.LocationId,
                   ),
                 ));
           },
@@ -131,7 +137,7 @@ class _KeysScreenState extends State<KeysScreen> {
                       child: Padding(
                         padding: EdgeInsets.symmetric(vertical: 20.h),
                         child: InterMedium(
-                          text: 'No Keys Assigned',
+                          text: 'No Keys Assigned at Guard',
                           fontsize: 20.sp,
                           color: Theme.of(context).textTheme.bodySmall!.color,
                         ),
@@ -190,7 +196,7 @@ class _KeysScreenState extends State<KeysScreen> {
                                   (doc['KeyAllocationDate'] as Timestamp)
                                       .toDate();
                               final keyAllocationId = doc['KeyAllocationId'];
-
+                              print("KeyAllocationId ${keyAllocationId}");
                               return Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 30.w),
                                 child: GestureDetector(
@@ -200,15 +206,9 @@ class _KeysScreenState extends State<KeysScreen> {
                                         MaterialPageRoute(
                                             builder: (context) =>
                                                 ViewKeysScreen(
-                                                  startDate: DateFormat.yMd()
-                                                      .format(startDate),
-                                                  endDate: DateFormat.yMd()
-                                                      .format(endDate),
-                                                  keyAllocationId:
-                                                      keyAllocationId,
-                                                  time: DateFormat('hh:mm:ss a')
-                                                      .format(viewTime),
-                                                  keyId: widget.keyId,
+                                                  locationid: widget.LocationId,
+                                                  branchId: widget.branchId,
+                                                  companyid: widget.companyId,
                                                 )));
                                   },
                                   child: Container(

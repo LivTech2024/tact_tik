@@ -15,7 +15,8 @@ class SelectClientGuardsScreen extends StatefulWidget {
   final String companyId;
   final Function(String) onGuardSelected;
 
-  const SelectClientGuardsScreen({super.key, required this.companyId, required this.onGuardSelected});
+  const SelectClientGuardsScreen(
+      {super.key, required this.companyId, required this.onGuardSelected});
 
   @override
   State<SelectClientGuardsScreen> createState() => _SelectGuardsScreenState();
@@ -40,34 +41,37 @@ class _SelectGuardsScreenState extends State<SelectClientGuardsScreen> {
 
   void _getUserInfo() async {
     FireStoreService fireStoreService = FireStoreService();
-    var userInfo = await fireStoreService.getUserInfoByCurrentUserEmail();
+
+    var employeeSnapshot = await FirebaseFirestore.instance
+        .collection('Employees')
+        .where('EmployeeRole', isEqualTo: "GUARD")
+        .where('EmployeeCompanyId', isEqualTo: widget.companyId)
+        .get();
+
     if (mounted) {
-      if (userInfo != null) {
-        String userName = userInfo['EmployeeName'] ?? "";
-        String EmployeeId = userInfo['EmployeeId'] ?? "";
-        String CompanyId = userInfo['EmployeeCompanyId'] ?? "";
-        var guardsInfo =
-            await fireStoreService.getGuardForSupervisor(widget.companyId);
-        var patrolInfo = await fireStoreService
-            .getPatrolsByEmployeeIdFromUserInfo(EmployeeId);
-        for (var doc in guardsInfo) {
-          print("All Guards : ${doc.data()}");
+      if (employeeSnapshot.docs.isNotEmpty) {
+        List<DocumentSnapshot> userInfoList = employeeSnapshot.docs;
+
+        for (var userInfo in userInfoList) {
+          String userName = userInfo['EmployeeName'] ?? "";
+          String EmployeeId = userInfo['EmployeeId'] ?? "";
+          String CompanyId = userInfo['EmployeeCompanyId'] ?? "";
+
+          var guardsInfo = await fireStoreService.getGuardForSupervisor(widget.companyId);
+          var patrolInfo = await fireStoreService.getPatrolsByEmployeeIdFromUserInfo(EmployeeId);
+
+          for (var doc in guardsInfo) {
+            print("All Guards : ${doc.data()}");
+          }
+
+          print('User Info: ${userInfo.data()}');
         }
-        // setState(() {
-        //   _userName = userName;
-        //   _employeeId = EmployeeId;
-        //   _CompanyId = CompanyId;
-        // });
-        if (guardsInfo != null) {
-          setState(() {
-            _guardsInfo = guardsInfo;
-          });
-        } else {
-          print('GUards Info: ${guardsInfo}');
-        }
-        print('User Info: ${userInfo.data()}');
+
+        setState(() {
+          _guardsInfo = userInfoList;
+        });
       } else {
-        print('User info not found');
+        print('No employees found for the given company ID');
       }
     }
   }
@@ -77,17 +81,14 @@ class _SelectGuardsScreenState extends State<SelectClientGuardsScreen> {
   @override
   Widget build(BuildContext context) {
     final bool isDark =
-    Theme.of(context).brightness == Brightness.dark ? true : false;
+        Theme.of(context).brightness == Brightness.dark ? true : false;
 
     return SafeArea(
       child: Scaffold(
-        
         appBar: AppBar(
-           
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -96,7 +97,6 @@ class _SelectGuardsScreenState extends State<SelectClientGuardsScreen> {
           ),
           title: InterMedium(
             text: 'Guards',
-            
           ),
           centerTitle: true,
         ),
@@ -112,9 +112,9 @@ class _SelectGuardsScreenState extends State<SelectClientGuardsScreen> {
                   DropdownButtonHideUnderline(
                     child: DropdownButton<String>(
                       iconSize: 24.w,
-                      dropdownColor:  Theme.of(context).cardColor,
-                      style: TextStyle(color: Theme.of(context).textTheme.bodyLarge!.color),
-                      
+                      dropdownColor: Theme.of(context).cardColor,
+                      style: TextStyle(
+                          color: Theme.of(context).textTheme.bodyLarge!.color),
                       borderRadius: BorderRadius.circular(10.r),
                       value: dropdownValue,
                       onChanged: (String? newValue) {
@@ -167,8 +167,7 @@ class _SelectGuardsScreenState extends State<SelectClientGuardsScreen> {
                                   //   borderRadius:
                                   //       BorderRadius.circular(width / width12),
                                   // ),
-                                  margin: EdgeInsets.only(
-                                      bottom: 10.h),
+                                  margin: EdgeInsets.only(bottom: 10.h),
                                   width: double.maxFinite,
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -222,8 +221,7 @@ class _SelectGuardsScreenState extends State<SelectClientGuardsScreen> {
                                                           ),
                                                         ),
                                                 ),
-                                                SizedBox(
-                                                    width: 20.w),
+                                                SizedBox(width: 20.w),
                                                 InterBold(
                                                   text: name,
                                                   letterSpacing: -.3,
@@ -261,7 +259,7 @@ class _SelectGuardsScreenState extends State<SelectClientGuardsScreen> {
                       : Center(
                           child: PoppinsBold(
                             text: 'No Guards Found',
-                            color: DarkColor.  color2,
+                            color: Theme.of(context).textTheme.bodyLarge!.color,
                             fontsize: 16.sp,
                           ),
                         )

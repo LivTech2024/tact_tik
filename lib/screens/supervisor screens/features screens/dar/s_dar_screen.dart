@@ -47,7 +47,7 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
 
   List<Color> colors = [
     themeManager.themeMode == ThemeMode.dark
-        ? DarkColor.Primarycolor
+        ? DarkColor.color1
         : LightColor.color3,
     themeManager.themeMode == ThemeMode.dark
         ? DarkColor.color25
@@ -291,7 +291,7 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
                               onTap: () {
                                 setState(() {
                                   showAllDARS = false;
-                                  colors[0] = Theme.of(context).primaryColor;
+                                  colors[0] = Theme.of(context).textTheme.bodyMedium!.color  as Color;
                                   colors[1] = Theme.of(context).highlightColor;
                                 });
                               },
@@ -320,7 +320,7 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
                                   // colors[0] = DarkColor.Primarycolor;
                                   // colors[1] = DarkColor.Primarycolor;
                                   colors[0] = Theme.of(context).highlightColor;
-                                  colors[1] = Theme.of(context).primaryColor;
+                                  colors[1] = Theme.of(context).textTheme.bodyMedium!.color  as Color;  
                                 });
                               },
                               child: Container(

@@ -181,7 +181,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             color:
                                 Theme.of(context).brightness == Brightness.dark
                                     ? DarkColor.color6
-                                    : LightColor.color2,
+                                    : LightColor.color3,
                           ),
                         ),
                         focusColor:

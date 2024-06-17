@@ -22,8 +22,9 @@ import '../../common/widgets/setTextfieldWidget.dart';
 import '../home screens/widgets/profile_edit_widget.dart';
 
 class ProfileScreen extends StatefulWidget {
+  bool isClient;
   final String empId;
-  const ProfileScreen({Key? key, required this.empId}) : super(key: key);
+  ProfileScreen({Key? key, required this.empId, this.isClient = false}) : super(key: key);
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
@@ -45,27 +46,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
+    print("CLIENT KA EMPLOYEE ID: ${widget.empId}");
     _fetchEmployeeData();
   }
 
   Future<void> _fetchEmployeeData() async {
-    final employeeSnapshot = await FirebaseFirestore.instance
-        .collection('Employees')
-        .where('EmployeeId', isEqualTo: widget.empId)
-        .get();
-
-    if (employeeSnapshot.docs.isNotEmpty) {
-      final employeeData = employeeSnapshot.docs.first.data();
-      setState(() {
-        _employeeName = employeeData['EmployeeName'];
-        _employeeEmail = employeeData['EmployeeEmail'];
-        _employeeRole = employeeData['EmployeeRole'];
-        _employeePhone = employeeData['EmployeePhone'];
-        _employeeImageUrl = employeeData['EmployeeImg'];
-
-        _nameController.text = _employeeName ?? '';
-        _phoneNoController.text = _employeePhone ?? '';
-      });
+    // print("CLIENT KA EMPLOYEE ID: ${widget.empId}");
+    if (widget.isClient) {
+      final clientSnapshot = await FirebaseFirestore.instance
+          .collection('Clients')
+          .where('ClientId', isEqualTo: widget.empId)
+          .get();
+      if (clientSnapshot.docs.isNotEmpty) {
+        final clientData = clientSnapshot.docs.first.data();
+        setState(() {
+          _employeeName = clientData['ClientName'];
+          _employeeEmail = clientData['ClientEmail'];
+          _employeeRole = "Client";
+          _employeePhone = clientData['ClientPhone'];
+          _employeeImageUrl = clientData['ClientHomePageBgImg'];
+          _nameController.text = _employeeName ?? '';
+          _phoneNoController.text = _employeePhone ?? '';
+        });
+      }
+    } else {
+      final employeeSnapshot = await FirebaseFirestore.instance
+          .collection('Employees')
+          .where('EmployeeId', isEqualTo: widget.empId)
+          .get();
+      if (employeeSnapshot.docs.isNotEmpty) {
+        final employeeData = employeeSnapshot.docs.first.data();
+        setState(() {
+          _employeeName = employeeData['EmployeeName'];
+          _employeeEmail = employeeData['EmployeeEmail'];
+          _employeeRole = employeeData['EmployeeRole'];
+          _employeePhone = employeeData['EmployeePhone'];
+          _employeeImageUrl = employeeData['EmployeeImg'];
+          _nameController.text = _employeeName ?? '';
+          _phoneNoController.text = _employeePhone ?? '';
+        });
+      }
     }
   }
 
@@ -76,29 +96,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
       );
       return;
     }
-
     try {
-      await FirebaseFirestore.instance
-          .collection('Employees')
-          .doc(widget.empId)
-          .update({
-        'EmployeeName': _nameController.text,
-        'EmployeePhone': _phoneNoController.text,
-      });
-
-      if (_selectedImageFile != null) {
-        final storageRef = FirebaseStorage.instance
-            .ref()
-            .child('employees/images/${_selectedImageFile!.name}');
-        await storageRef.putFile(File(_selectedImageFile!.path));
-        final downloadUrl = await storageRef.getDownloadURL();
-
+      if (widget.isClient) {
+        await FirebaseFirestore.instance
+            .collection('Clients')
+            .doc(widget.empId)
+            .update({
+          'ClientName': _nameController.text,
+          'ClientPhone': _phoneNoController.text,
+        });
+        if (_selectedImageFile != null) {
+          final storageRef = FirebaseStorage.instance
+              .ref()
+              .child('clients/images/${_selectedImageFile!.name}');
+          await storageRef.putFile(File(_selectedImageFile!.path));
+          final downloadUrl = await storageRef.getDownloadURL();
+          await FirebaseFirestore.instance
+              .collection('Clients')
+              .doc(widget.empId)
+              .update({'ClientHomePageBgImg': downloadUrl});
+        }
+      } else {
         await FirebaseFirestore.instance
             .collection('Employees')
             .doc(widget.empId)
-            .update({'EmployeeImg': downloadUrl});
+            .update({
+          'EmployeeName': _nameController.text,
+          'EmployeePhone': _phoneNoController.text,
+        });
+        if (_selectedImageFile != null) {
+          final storageRef = FirebaseStorage.instance
+              .ref()
+              .child('employees/images/${_selectedImageFile!.name}');
+          await storageRef.putFile(File(_selectedImageFile!.path));
+          final downloadUrl = await storageRef.getDownloadURL();
+          await FirebaseFirestore.instance
+              .collection('Employees')
+              .doc(widget.empId)
+              .update({'EmployeeImg': downloadUrl});
+        }
       }
-
       _fetchEmployeeData();
       setState(() {
         isEdit = false;

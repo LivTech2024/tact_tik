@@ -98,7 +98,7 @@ class _LogBookScreenState extends State<LogBookScreen> {
 
                 if (!snapshot.hasData) {
                   return SliverToBoxAdapter(
-                    child: Center(child: InterMedium(text: 'Loading...' , color:DarkColor.Primarycolor ,fontsize: 18.sp,)),
+                    child: Center(child: InterMedium(text: 'Loading...' , color:Theme.of(context).primaryColor,fontsize: 18.sp,)),
                   );
                 }
 

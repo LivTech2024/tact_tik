@@ -24,7 +24,10 @@ class ClientCheckPatrolScreen extends StatefulWidget {
   final String PatrolIdl;
   final String companyId;
   ClientCheckPatrolScreen(
-      {super.key, required this.PatrolIdl, required this.ScreenName, required this.companyId});
+      {super.key,
+      required this.PatrolIdl,
+      required this.ScreenName,
+      required this.companyId});
 
   @override
   State<ClientCheckPatrolScreen> createState() =>
@@ -84,15 +87,12 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
 
   @override
   Widget build(BuildContext context) {
-   
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-             
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -101,7 +101,6 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
           ),
           title: InterRegular(
             text: widget.ScreenName,
-     
           ),
           centerTitle: true,
         ),
@@ -150,8 +149,10 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                         child: IconTextWidget(
                           space: 6.w,
                           icon: Icons.add,
-                          Iconcolor: Theme.of(context).textTheme.bodySmall!.color
-                              as Color,
+                          Iconcolor: Theme.of(context)
+                              .textTheme
+                              .bodySmall!
+                              .color as Color,
                           iconSize: 20.sp,
                           text: 'Select Guard',
                           useBold: true,
@@ -203,48 +204,53 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                 ),
                 SizedBox(height: 20.h),
                 patrolsList.isEmpty ||
-                    (selectedDate != null &&
-                        selectedGuardId != '' &&
-                        patrolsList.every((patrol) {
-                          final patrolDate = DateTime.fromMillisecondsSinceEpoch(
-                              patrol['PatrolLogStartedAt'].millisecondsSinceEpoch);
-                          final guardId = patrol['PatrolLogGuardId'];
-                          return (patrolDate.year != selectedDate!.year ||
-                              patrolDate.month != selectedDate!.month ||
-                              patrolDate.day != selectedDate!.day) ||
-                              guardId != selectedGuardId;
-                        })) ||
-                    (selectedDate != null &&
-                        selectedGuardId == '' &&
-                        patrolsList.every((patrol) {
-                          final patrolDate = DateTime.fromMillisecondsSinceEpoch(
-                              patrol['PatrolLogStartedAt'].millisecondsSinceEpoch);
-                          return patrolDate.year != selectedDate!.year ||
-                              patrolDate.month != selectedDate!.month ||
-                              patrolDate.day != selectedDate!.day;
-                        })) ||
-                    (selectedDate == null &&
-                        selectedGuardId != '' &&
-                        patrolsList.every((patrol) {
-                          final guardId = patrol['PatrolLogGuardId'];
-                          return guardId != selectedGuardId;
-                        }))
+                        (selectedDate != null &&
+                            selectedGuardId != '' &&
+                            patrolsList.every((patrol) {
+                              final patrolDate =
+                                  DateTime.fromMillisecondsSinceEpoch(
+                                      patrol['PatrolDate']
+                                          .millisecondsSinceEpoch);
+                              final guardId = patrol['PatrolLogGuardId'];
+                              return (patrolDate.year != selectedDate!.year ||
+                                      patrolDate.month != selectedDate!.month ||
+                                      patrolDate.day != selectedDate!.day) ||
+                                  guardId != selectedGuardId;
+                            })) ||
+                        (selectedDate != null &&
+                            selectedGuardId == '' &&
+                            patrolsList.every((patrol) {
+                              final patrolDate =
+                                  DateTime.fromMillisecondsSinceEpoch(
+                                      patrol['PatrolDate']
+                                          .millisecondsSinceEpoch);
+                              return patrolDate.year != selectedDate!.year ||
+                                  patrolDate.month != selectedDate!.month ||
+                                  patrolDate.day != selectedDate!.day;
+                            })) ||
+                        (selectedDate == null &&
+                            selectedGuardId != '' &&
+                            patrolsList.every((patrol) {
+                              final guardId = patrol['PatrolLogGuardId'];
+                              return guardId != selectedGuardId;
+                            }))
                     ? Center(
-                  child: Text(
-                    patrolsList.isEmpty
-                        ? 'No Patrols Found'
-                        : selectedGuardId != '' && selectedDate != null
-                        ? 'No Patrols Found for Selected Date and Guard'
-                        : selectedDate != null
-                        ? 'No Patrols Found for Selected Date'
-                        : 'No Patrols Found for Selected Guard',
-                    style: TextStyle(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).textTheme.bodyMedium!.color,
-                    ),
-                  ),
-                )
+                        child: Text(
+                          patrolsList.isEmpty
+                              ? 'No Patrols Found'
+                              : selectedGuardId != '' && selectedDate != null
+                                  ? 'No Patrols Found for Selected Date and Guard'
+                                  : selectedDate != null
+                                      ? 'No Patrols Found for Selected Date'
+                                      : 'No Patrols Found for Selected Guard',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                            color:
+                                Theme.of(context).textTheme.bodyMedium!.color,
+                          ),
+                        ),
+                      )
                     : ListView.builder(
                         itemCount: patrolsList.length,
                         shrinkWrap: true,
@@ -253,7 +259,7 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                           final patrol = patrolsList[index];
                           final patrolDate =
                               DateTime.fromMillisecondsSinceEpoch(
-                            patrol['PatrolLogStartedAt'].millisecondsSinceEpoch,
+                            patrol['PatrolDate'].millisecondsSinceEpoch,
                           );
 
                           if (selectedDate == null ||
@@ -278,7 +284,7 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                     guardName:
                                         patrol['PatrolLogGuardName'] ?? '',
                                     startDate: DateFormat('dd/MM/yyyy')
-                                        .format(startTime),
+                                        .format(patrolDate),
                                     startTime:
                                         DateFormat('hh:mm a').format(startTime),
                                     endTime:
@@ -291,6 +297,7 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                             '',
                                     checkpoints:
                                         patrol['PatrolLogCheckPoints'] ?? [],
+                                    data: patrol,
                                   ),
                                   context,
                                 );
@@ -299,11 +306,13 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   SizedBox(height: 20.h),
-                                  InterMedium(text: 'Date hear',),
+                                  InterMedium(
+                                    text: DateFormat('dd/MM/yyyy').format(patrolDate),
+                                  ),
                                   SizedBox(height: 10.h),
                                   Container(
                                     height: 140.h,
-                                    margin: EdgeInsets.only(top: 10.h),
+                                    margin: EdgeInsets.only(top: 10.h,left: 4.w,right:4.w),
                                     width: double.maxFinite,
                                     decoration: BoxDecoration(
                                       boxShadow: [
@@ -317,7 +326,8 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                       color: Theme.of(context).cardColor,
                                       borderRadius: BorderRadius.circular(14.r),
                                     ),
-                                    padding: EdgeInsets.symmetric(vertical: 20.h),
+                                    padding:
+                                        EdgeInsets.symmetric(vertical: 20.h),
                                     child: Column(
                                       children: [
                                         Row(
@@ -333,7 +343,8 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                                   height: 30.h,
                                                   width: 4.w,
                                                   decoration: BoxDecoration(
-                                                    borderRadius: BorderRadius.only(
+                                                    borderRadius:
+                                                        BorderRadius.only(
                                                       topRight:
                                                           Radius.circular(10.r),
                                                       bottomRight:
@@ -394,8 +405,9 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                                     ),
                                                     SizedBox(height: 12.h),
                                                     InterMedium(
-                                                      text: DateFormat('hh:mm a')
-                                                          .format(
+                                                      text:
+                                                          DateFormat('hh:mm a')
+                                                              .format(
                                                         DateTime
                                                             .fromMillisecondsSinceEpoch(
                                                           patrol['PatrolLogStartedAt']
@@ -427,8 +439,9 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                                     ),
                                                     SizedBox(height: 12.h),
                                                     InterMedium(
-                                                      text: DateFormat('hh:mm a')
-                                                          .format(
+                                                      text:
+                                                          DateFormat('hh:mm a')
+                                                              .format(
                                                         DateTime
                                                             .fromMillisecondsSinceEpoch(
                                                           patrol['PatrolLogEndedAt']

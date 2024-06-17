@@ -192,7 +192,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 
   void initPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    // final homeScreenController = HomeScreenController.instance;
+    final homeScreenController = HomeScreenController.instance;
     print("Shift Status at StartTask Screen ${widget.ShiftStatus}");
 
     print("Clicked Saved PRef ${clickedIn}");
@@ -417,7 +417,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // final homeScreenController = HomeScreenController.instance;
+    final homeScreenController = HomeScreenController.instance;
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
     TextEditingController CommentController = TextEditingController();
@@ -665,47 +665,47 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                           .where('EmpRouteShiftId',
                                               isEqualTo: widget.ShiftId)
                                           .get();
-                                  // if (querySnapshot.docs.isEmpty) {
-                                  //   // If no document exists, create a new one
-                                  //   DocumentReference docRef =
-                                  //       employeeRoutes.doc();
-                                  //   // Data to be added
-                                  //   Map<String, dynamic> empRouteData = {
-                                  //     'EmpRouteCreatedAt': Timestamp.now(),
-                                  //     'EmpRouteDate': Timestamp.now(),
-                                  //     'EmpRouteEmpId': widget.EmployeId,
-                                  //     'EmployeeName': widget.EmployeeName,
-                                  //     'EmpRouteId': docRef.id,
-                                  //     'EmpRouteLocations': [],
-                                  //     'EmpRouteShiftId': widget.ShiftId,
-                                  //     'EmpRouteShiftStatus': 'started',
-                                  //     'EmployeeShiftStartTime':
-                                  //         widget.ShiftStartTime,
-                                  //     'EmployeeShiftEndTime':
-                                  //         widget.ShiftEndTime,
-                                  //     'EmployeeShiftShiftName':
-                                  //         widget.ShiftName,
-                                  //     'EmpRouteEmpRole':
-                                  //         userStorage.getItem("Role"),
-                                  //   };
-                                  //   try {
-                                  //     // Add the document to the collection
-                                  //     await docRef.set(empRouteData);
-                                  //     print(
-                                  //         'Employee route created with ID: ${docRef.id}');
-                                  //   } catch (e) {
-                                  //     print(
-                                  //         'Error creating employee route: $e');
-                                  //   }
-                                  // }
+                                  if (querySnapshot.docs.isEmpty) {
+                                    // If no document exists, create a new one
+                                    DocumentReference docRef =
+                                        employeeRoutes.doc();
+                                    // Data to be added
+                                    Map<String, dynamic> empRouteData = {
+                                      'EmpRouteCreatedAt': Timestamp.now(),
+                                      'EmpRouteDate': Timestamp.now(),
+                                      'EmpRouteEmpId': widget.EmployeId,
+                                      'EmployeeName': widget.EmployeeName,
+                                      'EmpRouteId': docRef.id,
+                                      'EmpRouteLocations': [],
+                                      'EmpRouteShiftId': widget.ShiftId,
+                                      'EmpRouteShiftStatus': 'started',
+                                      'EmployeeShiftStartTime':
+                                          widget.ShiftStartTime,
+                                      'EmployeeShiftEndTime':
+                                          widget.ShiftEndTime,
+                                      'EmployeeShiftShiftName':
+                                          widget.ShiftName,
+                                      'EmpRouteEmpRole':
+                                          userStorage.getItem("Role"),
+                                    };
+                                    try {
+                                      // Add the document to the collection
+                                      await docRef.set(empRouteData);
+                                      print(
+                                          'Employee route created with ID: ${docRef.id}');
+                                    } catch (e) {
+                                      print(
+                                          'Error creating employee route: $e');
+                                    }
+                                  }
 
                                   // start stop watch
                                   // await controller.startStopWatch();
                                   _startTimer();
                                   //
                                   // // start bg service that get locations and send it to the firebase
-                                  // await homeScreenController
-                                  //     .startBgLocationService();
+                                  await homeScreenController
+                                      .startBgLocationService();
 
                                   setState(() {
                                     _isLoading = true;
@@ -788,10 +788,10 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                           color: clickedIn
                               ? (Theme.of(context).brightness == Brightness.dark
                                   ? DarkColor.color3
-                                  : LightColor.color5)
+                                  : LightColor.color2)
                               : (Theme.of(context).brightness == Brightness.dark
                                   ? DarkColor.color5
-                                  : LightColor.color1),
+                                  : LightColor.color3),
                         ),
                       ),
                     ),
@@ -835,7 +835,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 
                       // await _sendEmailWithScreenshot(file.path);
 
-                      // await homeScreenController.stopBgLocationService();
+                      await homeScreenController.stopBgLocationService();
                       // }));
 
                       // setState(() {
@@ -925,8 +925,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 
                                           if (CommentController
                                               .text.isNotEmpty) {
-                                            // await homeScreenController
-                                            //     .stopBgLocationService();
+                                            await homeScreenController
+                                                .stopBgLocationService();
                                             widget.onRefresh();
                                             var data = await fireStoreService
                                                 .fetchDataForPdf(
@@ -1098,7 +1098,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                   : LightColor.color3)
                               : (Theme.of(context).brightness == Brightness.dark
                                   ? DarkColor.color3
-                                  : LightColor.color4),
+                                  : LightColor.color2),
                         ),
                       ),
                     ),
@@ -1115,8 +1115,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                 // text: controller.isPaused.value ? 'Resume' : 'Break',
                 text: true ? 'Resume' : 'Break',
                 fontsize: 18.sp,
-                color: DarkColor.color5,
-                backgroundcolor: DarkColor.WidgetColor,
+                color: Theme.of(context).textTheme.titleSmall!.color,
+                backgroundcolor: Theme.of(context).cardColor,
                 onPressed: () async {
                   await fireStoreService.fetchPatrolData(
                       widget.ShiftId, widget.EmployeId);

@@ -128,8 +128,8 @@ Future<void> sendShiftTemplateEmail(
   String shiftinTime,
   String shiftOutTime,
 ) async {
-  final pdfBase64 = await generateShiftReportPdf(
-      ClientName, Data, GuardName, "20:00", "06:00");
+  // final pdfBase64 = await generateShiftReportPdf(
+  //     ClientName, Data, GuardName, "20:00", "06:00");
 
   // Generate the HTML content for the email
   String patrolInfoHTML = '';
@@ -266,7 +266,7 @@ Best regards,</p>
         'attachments': [
           {
             'filename': 'security_report.pdf',
-            'content': pdfBase64,
+            'content': "",
             'contentType': 'application/pdf',
           }
         ],
@@ -652,35 +652,30 @@ Future<File> savePdfLocally(String pdfBase64, String fileName) async {
 
 FireStoreService fireStoreService = FireStoreService();
 Future<String> generateShiftReportPdf(
-  String? ClientName,
-  List<Map<String, dynamic>> Data,
   String GuardName,
-  String shiftinTime,
-  String shiftOutTime,
+  Map<String, dynamic> Data,
 ) async {
   final dateFormat = DateFormat('HH:mm'); // Define the format for time
 
   // Generate the HTML content for the report
   String patrolInfoHTML = '';
-  for (var item in Data) {
+  for (var item in Data['patrols']) {
     String checkpointImagesHTML = '';
     for (var checkpoint in item['PatrolLogCheckPoints']) {
       String checkpointImages = '';
       if (checkpoint['CheckPointImage'] != null) {
         for (var image in checkpoint['CheckPointImage']) {
           checkpointImages +=
-              '<img src="$image">'; // Set max-width to ensure responsiveness
-          // checkpointImages +=
-          //     '<p>$image</p>'; // Set max-width to ensure responsiveness
+              '<img src="$image" alt="Checkpoint Image">'; // Set max-width to ensure responsiveness
         }
       }
       checkpointImagesHTML += '''
         <div>
-          <p>Checkpoint Name: ${checkpoint['CheckPointName']}</p>
+          <p>Checkpoint Name: ${checkpoint['CheckPointName'] ?? 'N/A'}</p>
           $checkpointImages
-          <p>Comment: ${checkpoint['CheckPointComment']}</p>
-          <p>Reported At: ${dateFormat.format(checkpoint['CheckPointReportedAt'].toDate())}</p>
-          <p>Status: ${checkpoint['CheckPointStatus']}</p>
+          <p>Comment: ${checkpoint['CheckPointComment'] ?? 'N/A'}</p>
+          <p>Reported At: ${checkpoint['CheckPointReportedAt'] != null ? dateFormat.format(checkpoint['CheckPointReportedAt'].toDate()) : 'N/A'}</p>
+          <p>Status: ${checkpoint['CheckPointStatus'] ?? 'N/A'}</p>
         </div>
       ''';
     }
@@ -695,7 +690,7 @@ Future<String> generateShiftReportPdf(
     ''';
   }
 
-  final htmlcontent = """
+  final htmlContent = """
     <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -783,22 +778,13 @@ Future<String> generateShiftReportPdf(
     </header>
 
     <section>
-        <h2>Dear ${ClientName},</h2>
-        <p>I hope this email finds you well. I wanted to provide you with an update on the recent patrol activities carried out by our assigned security guard during their shift. Below is a detailed breakdown of the patrols conducted.</p>
-    </section>
-
-    <section>
         <h3>Shift Information</h3>
         <table>
             <tr>
                 <th>Guard Name</th>
-                <th>Shift Time In</th>
-                <th>Shift Time Out</th>
             </tr>
             <tr>
                 <td>${GuardName}</td>
-                <td>${shiftinTime}</td>
-                <td>${shiftOutTime}</td>
             </tr>
         </table>
     </section>
@@ -836,17 +822,17 @@ Future<String> generateShiftReportPdf(
 
   // Generate the PDF
   final pdfResponse = await http.post(
-    Uri.parse('https://backend-sceurity-app.onrender.com/api/html_to_pdf'),
+    Uri.parse('https://backend-security-app.onrender.com/api/html_to_pdf'),
     headers: {'Content-Type': 'application/json'},
     body: json.encode({
-      'html': htmlcontent,
+      'html': htmlContent,
       'file_name': 'security_report.pdf',
     }),
   );
 
   if (pdfResponse.statusCode == 200) {
     print('PDF generated successfully');
-    final pdfBase64 = await base64Encode(pdfResponse.bodyBytes);
+    final pdfBase64 = base64Encode(pdfResponse.bodyBytes);
     return pdfBase64;
   } else {
     print('Failed to generate PDF. Status code: ${pdfResponse.statusCode}');
@@ -951,8 +937,8 @@ Future<void> sendShiftEmail(
   String shiftinTime,
   String shiftOutTime,
 ) async {
-  final pdfBase64 = await generateShiftReportPdf(
-      ClientName, Data, GuardName, shiftinTime, shiftOutTime);
+  // final pdfBase64 = await generateShiftReportPdf(
+  //     ClientName, Data, GuardName, shiftinTime, shiftOutTime);
 
   // Generate the HTML content for the email
   String patrolInfoHTML = '';
@@ -1089,7 +1075,7 @@ Best regards,</p>
         'attachments': [
           {
             'filename': 'security_report.pdf',
-            'content': pdfBase64,
+            'content': "",
             'contentType': 'application/pdf',
           }
         ],
@@ -1121,8 +1107,8 @@ Best regards,</p>
     String shiftinTime,
     String shiftOutTime,
   ) async {
-    final pdfBase64 = await generateShiftReportPdf(
-        ClientName, Data, GuardName, shiftinTime, shiftOutTime);
+    // final pdfBase64 = await generateShiftReportPdf(
+    //     ClientName, Data, GuardName, shiftinTime, shiftOutTime);
 
     // Generate the HTML content for the email
     String patrolInfoHTML = '';
@@ -1259,7 +1245,7 @@ Best regards,</p>
           'attachments': [
             {
               'filename': 'security_report.pdf',
-              'content': pdfBase64,
+              'content': "",
               'contentType': 'application/pdf',
             }
           ],

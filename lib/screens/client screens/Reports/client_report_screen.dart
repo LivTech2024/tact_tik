@@ -69,6 +69,10 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
                   data['ReportLocationName'].toString().isNotEmpty)
               ? data['ReportLocationName']
               : 'Not Found',
+          'ReporFollowedUp': (data['ReportFollowedUpId'] != null &&
+                  data['ReportFollowedUpId'].toString().isNotEmpty)
+              ? data['ReportFollowedUpId']
+              : 'Not Found',
         };
       }).toList();
 
@@ -224,7 +228,7 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => ClientOpenReport(
-                              reportName: reports[index]['ReportEmployeeName'],
+                              reportName: reports[index]['ReportName'],
                               reportCategory: reports[index]['ReportCategory'],
                               reportDate: dateString,
                               reportFollowUpRequire: reports[index]

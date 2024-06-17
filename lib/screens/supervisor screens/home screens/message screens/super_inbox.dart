@@ -64,8 +64,8 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
 
   String dropdownValue = 'All Guards'; // Initialize default value
   List<Color> colors = [
-    themeManager.themeMode == ThemeMode.dark
-        ? DarkColor.Primarycolor
+   themeManager.themeMode == ThemeMode.dark
+        ? DarkColor.color1
         : LightColor.color3,
     themeManager.themeMode == ThemeMode.dark
         ? DarkColor.color25
@@ -106,7 +106,7 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                     offset: Offset(0, 3),
                   )
                 ],
-                color: Theme.of(context).textTheme.bodyMedium!.color,
+                color: Theme.of(context).cardColor,
               ),
               padding: EdgeInsets.symmetric(vertical: 16.h),
               child: Row(
@@ -119,7 +119,7 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                           showGuards = true;
                           colors[0] = Theme.of(context)
                               .textTheme
-                              .bodySmall!
+                              .bodyMedium!
                               .color as Color;
                           colors[1] = Theme.of(context).highlightColor;
                         });
@@ -146,7 +146,7 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                           colors[0] = Theme.of(context).highlightColor;
                           colors[1] = Theme.of(context)
                               .textTheme
-                              .bodySmall!
+                              .bodyMedium!
                               .color as Color;
                         });
                       },

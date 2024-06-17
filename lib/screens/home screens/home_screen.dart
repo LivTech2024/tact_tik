@@ -26,6 +26,7 @@ import 'package:tact_tik/login_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/Log%20Book/logbook_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/Report/report_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/dar/dar_screen.dart';
+import 'package:tact_tik/screens/feature%20screens/keys/view_keys_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/site_tours/site_tour_screen.dart';
 import 'package:tact_tik/screens/get%20started/getstarted_screen.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/custom_calendar.dart';
@@ -723,6 +724,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: CustomScrollView(
             slivers: [
               HomeScreenPart1(
+                isClient: false,
                 userName: _userName,
                 employeeImg: employeeImg,
                 shiftLocationName: '',
@@ -1010,12 +1012,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) => KeysScreen(
-                                                    keyId: _employeeId,
-                                                    companyId:
-                                                        _employeeCompanyID,
-                                                    branchId:
-                                                        _employeeCompanyBranchID,
+                                              builder: (context) =>
+                                                  ViewKeysScreen(
+                                                    locationid:
+                                                        _shiftLocationId,
+                                                    branchId: _branchId,
+                                                    companyid: _ShiftCompanyId
+                                                        as String,
                                                   )
                                               // AssetsScreen(
                                               //     assetEmpId:

@@ -30,6 +30,7 @@ class TaskFeatureScreen extends StatelessWidget {
              Theme.of(context).primaryColor,
           shape: CircleBorder(),
           child: Icon(
+            color: Colors.white,
             Icons.add,
             size: 24.sp,
           ),

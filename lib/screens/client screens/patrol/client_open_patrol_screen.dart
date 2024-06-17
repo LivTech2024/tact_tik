@@ -8,6 +8,7 @@ import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/client%20screens/patrol/view_checkpoint_screen.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/icon_text_widget.dart';
+import 'package:tact_tik/services/EmailService/EmailJs_fucntion.dart';
 import '../../../fonts/inter_medium.dart';
 import '../../../fonts/inter_regular.dart';
 import '../../../fonts/inter_semibold.dart';
@@ -23,7 +24,7 @@ class ClientOpenPatrolScreen extends StatefulWidget {
   final String status;
   final String feedback;
   final List<dynamic> checkpoints;
-
+  final Map<String, dynamic> data;
   ClientOpenPatrolScreen({
     super.key,
     required this.guardName,
@@ -34,6 +35,7 @@ class ClientOpenPatrolScreen extends StatefulWidget {
     required this.status,
     required this.feedback,
     required this.checkpoints,
+    required this.data,
   });
 
   @override
@@ -176,7 +178,7 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                 ),*/
                 Container(
                   height: 200.h,
-                  margin: EdgeInsets.only(top: 10.h),
+                  margin: EdgeInsets.only(top: 10.h,left: 4.w,right: 4.w),
                   width: double.maxFinite,
                   decoration: BoxDecoration(
                     boxShadow: [
@@ -208,7 +210,7 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                                     topRight: Radius.circular(10.r),
                                     bottomRight: Radius.circular(10.r),
                                   ),
-                                  color:Theme.of(context).primaryColor,
+                                  color: Theme.of(context).primaryColor,
                                 ),
                               ),
                             ],
@@ -365,7 +367,7 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                                 Flexible(
                                     child: InterRegular(
                                   text: widget.feedback,
-                                 color: Theme.of(context)
+                                  color: Theme.of(context)
                                       .textTheme
                                       .labelMedium!
                                       .color,
@@ -378,21 +380,32 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                               width: 100.w,
                               child: TextButton(
                                 clipBehavior: Clip.none,
-                                onPressed: () {},
+                                onPressed: () async {
+                                  await generateShiftReportPdf(
+                                    "Vaibhav",
+                                    widget.data,
+                                  );
+                                },
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Icon(
                                       Icons.download_for_offline_sharp,
                                       size: 24.sp,
-                                      color: Theme.of(context).textTheme.bodyMedium!.color,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .color,
                                     ),
                                     SizedBox(
                                       width: 10.w,
                                     ),
                                     InterMedium(
                                       text: 'PDF',
-                                      color: Theme.of(context).textTheme.bodyMedium!.color,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .color,
                                       fontsize: 14.sp,
                                     ),
                                     SizedBox(
@@ -411,8 +424,9 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                 SizedBox(height: 30.h),
                 InterBold(
                   text: 'Checkpoints',
-                 fontsize: 18.sp,
-                  color: Theme.of(context).textTheme.displaySmall!.color as Color,
+                  fontsize: 18.sp,
+                  color:
+                      Theme.of(context).textTheme.displaySmall!.color as Color,
                 ),
                 SizedBox(height: 20.h),
                 ListView.builder(
@@ -452,7 +466,7 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                       child: Container(
                         height: 50.h,
                         width: double.maxFinite,
-                        margin: EdgeInsets.only(bottom: 10.h),
+                        margin: EdgeInsets.only(bottom: 10.h,left: 4.w,right: 4.w),
                         decoration: BoxDecoration(
                           boxShadow: [
                             BoxShadow(
@@ -499,8 +513,11 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                             ),
                             Icon(
                               Icons.arrow_forward_ios_outlined,
-                            size: 24.sp,
-                              color: Theme.of(context).textTheme.displayMedium!.color as Color,
+                              size: 24.sp,
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .displayMedium!
+                                  .color as Color,
                             )
                           ],
                         ),

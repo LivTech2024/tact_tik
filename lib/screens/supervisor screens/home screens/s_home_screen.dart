@@ -369,6 +369,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
               ),
             ),
             HomeScreenPart1(
+              isClient: false,
               empId: _employeeId,
               branchId: '',
               empEmail: _empEmail,
@@ -581,7 +582,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                       MaterialPageRoute(
                                         builder: (context) =>
                                             SelectReportsGuardsScreen(
-                                          companyId: _CompanyId,
+                                          EmpId: _employeeId,
                                         ),
                                       ),
                                     );
@@ -632,10 +633,10 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) =>
-                                            SAssetsViewScreen(
+                                        builder: (context) => SAssetsViewScreen(
                                           companyId: _CompanyId,
                                           empId: _employeeId,
+                                          EmpName: _employeeId,
                                         ),
                                       ),
                                     );
