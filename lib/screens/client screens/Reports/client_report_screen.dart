@@ -69,10 +69,15 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
                   data['ReportLocationName'].toString().isNotEmpty)
               ? data['ReportLocationName']
               : 'Not Found',
-          'ReporFollowedUp': (data['ReportFollowedUpId'] != null &&
+          'ReportFollowedUp': (data['ReportFollowedUpId'] != null &&
                   data['ReportFollowedUpId'].toString().isNotEmpty)
               ? data['ReportFollowedUpId']
               : 'Not Found',
+          'ReportImages': (data['ReportImage'] != null &&
+              data['ReportImage'] is List &&
+              data['ReportImage'].isNotEmpty)
+              ? List<String>.from(data['ReportImage'])
+              : [],
         };
       }).toList();
 
@@ -239,6 +244,8 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
                               reportEmployeeName: reports[index]
                                   ['ReportEmployeeName'],
                               reportLocation: reports[index]['ReportLocation'],
+                              reportImages: reports[index]['ReportImages'] ?? [],
+                              reportFollowUpId: reports[index]['ReportFollowedUp'],
                             ),
                           ),
                         );
