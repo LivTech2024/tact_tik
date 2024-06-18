@@ -433,6 +433,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                                       MaterialPageRoute(
                                         builder: (context) =>
                                             ClientReportScreen(
+                                              companyId: widget.shiftCompanyId,
                                           employeeId: widget.empId,
                                         ),
                                       ));

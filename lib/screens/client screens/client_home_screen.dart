@@ -1359,6 +1359,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                 MaterialPageRoute(
                                                   builder: (context) =>
                                                       ClientReportScreen(
+                                                        companyId: _cmpId,
                                                     employeeId: _employeeId,
                                                   ),
                                                 ));

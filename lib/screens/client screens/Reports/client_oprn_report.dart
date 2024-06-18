@@ -21,7 +21,7 @@ class ClientOpenReport extends StatefulWidget {
   final String reportStatus;
   final String reportEmployeeName;
   final String reportLocation;
-  final List<String> reportImages;
+  final List<dynamic> reportImages;
   final String reportFollowUpId;
 
   const ClientOpenReport({
@@ -134,7 +134,7 @@ class _ClientOpenReportState extends State<ClientOpenReport> {
       String GuardName,
       String reportDate,
       String reportLocation,
-      List<String> reportImages,
+      List<dynamic> reportImages,
       ) async {
 
     final htmlcontent = """
