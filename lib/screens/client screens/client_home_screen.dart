@@ -38,6 +38,8 @@ import 'Reports/client_oprn_report.dart';
 import 'Reports/client_report_screen.dart';
 import 'package:http/http.dart' as http;
 
+import 'client_profile_screen.dart';
+
 class ClientHomeScreen extends StatefulWidget {
   const ClientHomeScreen({super.key});
 
@@ -839,14 +841,17 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
             children: [
               GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ProfileScreen(
-                        empId: _employeeId,
+                  if (_employeeId != null) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ProfileScreen(
+                          isClient: true,
+                          empId: _employeeId,
+                        ),
                       ),
-                    ),
-                  );
+                    );
+                  }
                 },
                 child: Container(
                   height: 180.h,
@@ -905,7 +910,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => ProfileScreen(
+                            builder: (context) => ClientProfileScreen(
                               empId: _employeeId,
                             ),
                           ),
@@ -964,6 +969,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                     _scaffoldKeyClient.currentState?.openEndDrawer();
                   },
                   isClient: true,
+                  isEmployee: false,
                 ),
                 SliverToBoxAdapter(
                   child: Padding(
@@ -1579,7 +1585,6 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                                     NetworkImage(
                                                                   shifts[index][
                                                                       'members'][i],
-
                                                                 ),
                                                                 backgroundColor:
                                                                     Theme.of(

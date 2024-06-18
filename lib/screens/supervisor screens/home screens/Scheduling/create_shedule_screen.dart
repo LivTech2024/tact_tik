@@ -89,10 +89,12 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
   final TextEditingController _searchController = TextEditingController();
   List<Map<String, dynamic>> guards = [];
   String? selectedPatrol;
+
   // ValueItem<String>(label: 'Patrol 1', value: 'Patrol 1'),
   // ValueItem<String>(label: 'Patrol 2', value: 'Patrol 2'),
   // ValueItem<String>(label: 'Patrol 3', value: 'Patrol 3'),
   List<String> patrolItems = [];
+
   // print(patrol);
   bool isLoading = false;
 
@@ -664,9 +666,98 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
         : LightColor.color2,
   ];
 
+  final NumberEditingTextController _textController =
+      NumberEditingTextController.integer();
+  String? _selectedOption;
+  List<String> options = ['Option 1', 'Option 2', 'Option 3'];
+  List<Map<dynamic, dynamic>> AsignedPatrol = [];
+
+  void _showInputDialog(BuildContext context) {
+    // final TextEditingController _textController = TextEditingController();
+    // String _selectedOption;
+    // List<String> options = ['Option 1', 'Option 2', 'Option 3'];
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: InterBold(
+            text: 'Assign new patrol',
+            fontsize: 16.sp,
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                height: 60.h,
+                width: double.maxFinite,
+                padding: EdgeInsets.symmetric(horizontal: 10.w),
+                decoration: BoxDecoration(
+                  // color: Colors.redAccent,
+                  borderRadius: BorderRadius.circular(10.r),
+                  border: Border(
+                    bottom: BorderSide(
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? DarkColor.color19
+                          : LightColor.color3,
+                    ),
+                  ),
+                ),
+                child: DropdownButton<String>(
+                  hint: Text('Select an option'),
+                  value: _selectedOption,
+                  onChanged: (newValue) {
+                    _selectedOption = newValue!;
+                    (context as Element).markNeedsBuild();
+                  },
+                  items: options.map((String option) {
+                    return DropdownMenuItem<String>(
+                      value: option,
+                      child: Text(option),
+                    );
+                  }).toList(),
+                ),
+              ),
+              TextField(
+                controller: _textController,
+                decoration: InputDecoration(
+                  labelText: 'Enter text',
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                // Handle save action
+                AsignedPatrol.add({
+                  "patrol": _selectedOption,
+                  "count": _textController.number
+                });
+                setState(() {});
+                // print('Selected option: $_selectedOption');
+                // print('Entered text: ${_textController.text}');
+                Navigator.of(context).pop();
+              },
+              child: InterMedium(
+                text: 'Save',
+                color: Theme.of(context).textTheme.bodyMedium!.color,
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-   
     int requiredEmp = 0;
     return SafeArea(
       child: Scaffold(
@@ -1343,7 +1434,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                           ),
                           SizedBox(height: 10.h),
                           // Select Patrols
-                          Container(
+                          /*Container(
                             child: DropdownButtonHideUnderline(
                               child: DropdownButton<String>(
                                 isExpanded: true,
@@ -1468,6 +1559,59 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                             //     ),
                             //   ],
                             // ),
+                          ),*/
+
+                          SizedBox(
+                            width: 100.w,
+                            child: Button1(
+                              borderRadius: 10.r,
+                              backgroundcolor: Theme.of(context).primaryColor,
+                              height: 40.h,
+                              onPressed: () {
+                                _showInputDialog(context);
+                              },
+                              text: 'patrol asign',
+                              fontsize: 14.sp,
+                            ),
+                          ),
+
+                          Container(
+                            margin: EdgeInsets.only(top: 10.h),
+                            height: 40.h,
+                            width: double.maxFinite,
+                            child: ListView.builder(
+                              itemCount: AsignedPatrol.length,
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (context, index) => Container(
+                                margin: EdgeInsets.only(right: 10.w),
+                                decoration: BoxDecoration(
+                                    color: Theme.of(context).cardColor,
+                                    borderRadius: BorderRadius.circular(10.r)),
+                                padding: EdgeInsets.symmetric(horizontal: 10.w),
+                                height: 20.h,
+                                // width: 100,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    InterMedium(
+                                        text:
+                                            '${AsignedPatrol[index]['patrol']},${AsignedPatrol[index]['count']}'),
+                                    IconButton(
+                                        padding: EdgeInsets.zero,
+                                        onPressed: () {
+                                          AsignedPatrol.remove(index);
+                                          setState(() {});
+                                        },
+                                        icon: Icon(
+                                          Icons.close,
+                                          color: Colors.white,
+                                        ))
+                                  ],
+                                ),
+                              ),
+                            ),
                           ),
 
                           // TODO ${_selectedOptions[index].label} Hit Count
@@ -1995,3 +2139,23 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
     );
   }
 }
+
+class ChipItem {
+  final String label;
+  final int value;
+
+  ChipItem(this.label, this.value);
+
+  @override
+  String toString() {
+    return '$label ($value)';
+  }
+}
+
+final List<ChipItem> mockResults = [
+  ChipItem('Alice', 1),
+  ChipItem('Bob', 2),
+  ChipItem('Charlie', 3),
+  ChipItem('David', 4),
+  ChipItem('Eve', 5),
+];
