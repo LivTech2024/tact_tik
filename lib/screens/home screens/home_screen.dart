@@ -236,6 +236,7 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {
           _userName = userName;
           _employeeId = EmployeeId;
+          print('Employee Id ===> $_employeeId');
           _empEmail = empEmail;
           employeeImg = empImage;
           _employeeCompanyID = empCompanyId;

@@ -287,7 +287,7 @@ class _CalendarPageState extends State<CalendarPage> {
               ids: otherUserIds,
               startTime: shiftStartTime,
               endTime: shiftEndTime),
-          name: name,
+          name: isAssignedToCurrentUser ? name : "",
           begin: begin,
           end: end,
           startTime: shiftStartTime,
@@ -295,7 +295,8 @@ class _CalendarPageState extends State<CalendarPage> {
           shiftId: shiftId,
           isAssignedToCurrentUser: isAssignedToCurrentUser,
           isShiftAcknowledgedByEmployee: isShiftAcknowledgedByEmployee,
-          eventColor: isShiftAcknowledgedByEmployee ? Colors.green : Colors.red,
+          eventColor:
+              isAssignedToCurrentUser ? Colors.green : Colors.transparent,
           location: shiftLocationName);
     }).toList();
 
