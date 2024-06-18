@@ -19,6 +19,7 @@ import '../../../utils/colors.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 import '../../SideBar Screens/profile_screen.dart';
+import '../../client screens/client_profile_screen.dart';
 import '../../feature screens/Log Book/logbook_screen.dart';
 import '../../feature screens/Report/report_screen.dart';
 import '../../feature screens/assets/assets_screen.dart';
@@ -47,6 +48,7 @@ class HomeScreenPart1 extends StatefulWidget {
   final String shiftClientId;
   final String shiftLocationId;
   final String shiftLocationName;
+  final bool isEmployee;
 
   // final String url;
   final VoidCallback drawerOnClicked;
@@ -60,6 +62,7 @@ class HomeScreenPart1 extends StatefulWidget {
     required this.employeeImg,
     required this.drawerOnClicked,
     this.showWish = true,
+    this.isEmployee = true,
     required this.empId,
     required this.empEmail,
     required this.shiftCompanyId,
@@ -84,7 +87,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
 
   int hour = DateTime.now().hour;
 
-  String greeting = 'Good ';
+  String greeting = 'Loading..';
 
   final TextEditingController _controller = TextEditingController();
 
@@ -98,6 +101,11 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
     Screens('Visitors Screen', Icons.ac_unit_outlined),
     Screens('Assets Screen', Icons.ac_unit_outlined),
     Screens('Key Screen', Icons.ac_unit_outlined),
+  ];
+
+  final List<Screens> _ClientScreens = [
+    Screens('Dar Screen', Icons.ac_unit_outlined),
+    Screens('Report Screen', Icons.ac_unit_outlined),
   ];
 
   Widget gridLayoutBuilder(
@@ -135,6 +143,19 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
         }).toList(),
       );
 
+  Future<List<Screens>> ClientsuggestionsCallback(String pattern) async =>
+      Future<List<Screens>>.delayed(
+        Duration(milliseconds: 300),
+        () => _ClientScreens.where((product) {
+          // print(product.name);
+          final nameLower = product.name.toLowerCase().split(' ').join('');
+          final patternLower = pattern.toLowerCase().split(' ').join('');
+          return nameLower.contains(patternLower);
+        }).toList(),
+      );
+
+  /*_ClientScreens*/
+
   @override
   Widget build(BuildContext context) {
     // final double height = MediaQuery.of(context).size.height;
@@ -167,9 +188,13 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ProfileScreen(
-                            empId: widget.empId,
-                          ),
+                          builder: (context) => widget.isEmployee
+                              ? ProfileScreen(
+                                  empId: widget.empId,
+                                )
+                              : ClientProfileScreen(
+                                  empId: widget.empId,
+                                ),
                         ),
                       );
                     },
@@ -268,7 +293,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                       PoppinsLight(
                         text: widget.userName != ''
                             ? widget.userName
-                            : 'User not found',
+                            : 'Loading..',
                         color: Theme.of(context).textTheme.bodySmall!.color,
                         fontsize: 30.sp,
                       ),
@@ -349,7 +374,9 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                             ),
                             cursorColor: Theme.of(context).primaryColor,
                           ),
-                          suggestionsCallback: suggestionsCallback,
+                          suggestionsCallback: widget.isEmployee
+                              ? suggestionsCallback
+                              : ClientsuggestionsCallback,
                           itemBuilder: (context, Screens screen) {
                             return ListTile(
                               leading:

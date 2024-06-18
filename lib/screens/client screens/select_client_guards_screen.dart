@@ -41,34 +41,37 @@ class _SelectGuardsScreenState extends State<SelectClientGuardsScreen> {
 
   void _getUserInfo() async {
     FireStoreService fireStoreService = FireStoreService();
-    var userInfo = await fireStoreService.getUserInfoByCurrentUserEmail();
+
+    var employeeSnapshot = await FirebaseFirestore.instance
+        .collection('Employees')
+        .where('EmployeeRole', isEqualTo: "GUARD")
+        .where('EmployeeCompanyId', isEqualTo: widget.companyId)
+        .get();
+
     if (mounted) {
-      if (userInfo != null) {
-        String userName = userInfo['EmployeeName'] ?? "";
-        String EmployeeId = userInfo['EmployeeId'] ?? "";
-        String CompanyId = userInfo['EmployeeCompanyId'] ?? "";
-        var guardsInfo =
-            await fireStoreService.getGuardForSupervisor(widget.companyId);
-        var patrolInfo = await fireStoreService
-            .getPatrolsByEmployeeIdFromUserInfo(EmployeeId);
-        for (var doc in guardsInfo) {
-          print("All Guards : ${doc.data()}");
+      if (employeeSnapshot.docs.isNotEmpty) {
+        List<DocumentSnapshot> userInfoList = employeeSnapshot.docs;
+
+        for (var userInfo in userInfoList) {
+          String userName = userInfo['EmployeeName'] ?? "";
+          String EmployeeId = userInfo['EmployeeId'] ?? "";
+          String CompanyId = userInfo['EmployeeCompanyId'] ?? "";
+
+          var guardsInfo = await fireStoreService.getGuardForSupervisor(widget.companyId);
+          var patrolInfo = await fireStoreService.getPatrolsByEmployeeIdFromUserInfo(EmployeeId);
+
+          for (var doc in guardsInfo) {
+            print("All Guards : ${doc.data()}");
+          }
+
+          print('User Info: ${userInfo.data()}');
         }
-        // setState(() {
-        //   _userName = userName;
-        //   _employeeId = EmployeeId;
-        //   _CompanyId = CompanyId;
-        // });
-        if (guardsInfo != null) {
-          setState(() {
-            _guardsInfo = guardsInfo;
-          });
-        } else {
-          print('GUards Info: ${guardsInfo}');
-        }
-        print('User Info: ${userInfo.data()}');
+
+        setState(() {
+          _guardsInfo = userInfoList;
+        });
       } else {
-        print('User info not found');
+        print('No employees found for the given company ID');
       }
     }
   }
