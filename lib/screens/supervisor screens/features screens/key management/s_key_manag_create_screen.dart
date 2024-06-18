@@ -86,6 +86,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
   bool editKeyMode = true;
   bool showReturnBtn = false;
   bool _isLoading = false;
+  bool hideSubmit = false;
   bool buttonClicked = false;
   bool _isCreatingKey = false;
   @override
@@ -180,12 +181,14 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
         print("KeyAllocationIsReturned is true");
         setState(() {
           editKeyMode = false;
-          // showReturnBtn = true;
+          showReturnBtn = true;
+          hideSubmit = true;
         });
       } else {
         setState(() {
           editKeyMode = false;
           showReturnBtn = true;
+          hideSubmit = false;
         });
       }
     }
@@ -407,7 +410,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
   // return nameLower.contains(patternLower);
   // }).toList(),
   // );
-List<Color> colors = [
+  List<Color> colors = [
     themeManager.themeMode == ThemeMode.dark
         ? DarkColor.color1
         : LightColor.color3,
@@ -417,7 +420,6 @@ List<Color> colors = [
   ];
   @override
   Widget build(BuildContext context) {
-   
     return SafeArea(
       child: Scaffold(
         backgroundColor: Theme.of(context).canvasColor,
@@ -1157,7 +1159,8 @@ List<Color> colors = [
                               SizedBox(height: 20.h),
                               Visibility(
                                 // visible: widget.editKeyMode,
-                                visible: !showReturnBtn,
+                                // visible: !showReturnBtn &&
+                                //     widget.AllocationKeyId.isEmpty,
                                 child: Container(
                                   height: 60.h,
                                   padding:
@@ -1212,7 +1215,7 @@ List<Color> colors = [
                                     ),
                                   ),
                                 ),
-                              showReturnBtn == true || editKeyMode == true
+                              hideSubmit == false || editKeyMode == true
                                   ? Button1(
                                       text: 'Save',
                                       onPressed: () {
@@ -1313,7 +1316,7 @@ List<Color> colors = [
                               SizedBox(
                                 height: 40.h,
                               ),
-                              editKeyMode == true
+                              hideSubmit == false
                                   ? Button1(
                                       text: 'Save',
                                       onPressed: _isCreatingKey

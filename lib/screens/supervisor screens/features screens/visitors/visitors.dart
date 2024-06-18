@@ -54,6 +54,7 @@ class _VisiTorsScreenState extends State<SVisiTorsScreen> {
                 builder: (context) => CreateVisitors(
                   visitorData: null,
                   isCompleted: false,
+                  showButton: true,
                 ),
               ),
             );

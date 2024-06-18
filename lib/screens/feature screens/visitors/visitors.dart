@@ -55,6 +55,7 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
                 builder: (context) => CreateVisitors(
                   visitorData: null,
                   isCompleted: false,
+                  showButton: false,
                 ),
               ),
             );
@@ -182,7 +183,8 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
                                   MaterialPageRoute(
                                     builder: (context) => CreateVisitors(
                                       visitorData: documentData,
-                                      isCompleted: visitorCompleted,
+                                      isCompleted: true,
+                                      showButton: visitorCompleted,
                                     ),
                                   ),
                                 );

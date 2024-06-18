@@ -27,7 +27,12 @@ import '../widgets/custome_textfield.dart';
 class CreateVisitors extends StatefulWidget {
   final Map<String, dynamic>? visitorData;
   final bool isCompleted;
-  CreateVisitors({super.key, this.visitorData, required this.isCompleted});
+  final bool showButton;
+  CreateVisitors(
+      {super.key,
+      this.visitorData,
+      required this.isCompleted,
+      required this.showButton});
 
   @override
   State<CreateVisitors> createState() => _CreateVisitorsState();
@@ -476,7 +481,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                             enabled: !isEditMode,
                             isEditMode: isEditMode,
                           ),*/
-                          widget.isCompleted
+                          !widget.isCompleted
                               ? TextFieldTags<DynamicTagData>(
                                   textfieldTagsController:
                                       _dynamicTagController,
@@ -675,14 +680,14 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                                         } else {
                                           // If it's not, add it
                                           String value = val.first;
-
                                           options.add(value);
                                         }
                                       });
                                     },
                                     choiceItems:
                                         C2Choice.listFrom<String, String>(
-                                      source: tags,
+                                      source:
+                                          tags.isNotEmpty ? tags : Emptyoptions,
                                       value: (i, v) => v,
                                       label: (i, v) => v,
                                       tooltip: (i, v) => v,
@@ -807,7 +812,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                           SizedBox(
                             height: 30.h,
                           ),
-                          !widget.isCompleted
+                          widget.showButton == false
                               ? Button1(
                                   text: 'Save',
                                   onPressed: () async {

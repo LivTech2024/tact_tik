@@ -450,7 +450,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                         onTap: () {
                           setState(() {
                             showCreate = true;
-                            colors[0] = Theme.of(context).textTheme.bodyMedium!.color as  Color;
+                            colors[0] = Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .color as Color;
                             colors[1] = Theme.of(context).highlightColor;
                           });
                         },
@@ -476,7 +479,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                             setState(() {
                               showCreate = false;
                               colors[0] = Theme.of(context).highlightColor;
-                              colors[1] = Theme.of(context).textTheme.bodyMedium!.color as  Color;
+                              colors[1] = Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .color as Color;
                             });
                           },
                           child: SizedBox(
