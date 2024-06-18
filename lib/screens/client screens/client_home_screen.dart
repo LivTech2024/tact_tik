@@ -95,7 +95,6 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
   List<Map<String, dynamic>> patrolsList = [];
   bool _showWish = true;
   bool NewMessage = false;
-  DateTime? selectedDate;
 
   void NavigateScreen(Widget screen, BuildContext context) {
     void NavigateScreen(Widget screen, BuildContext context) {
@@ -131,11 +130,13 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
 
   //TODO IMPLEMENT THIS WITH BUTTON
   //TODO PASTE THIS: generateShiftReportPdf(_userName, fetchedPatrols, shifts[index]['ShiftName'], shifts[index]['ShiftStartTime'], shifts[index]['ShiftEndTime']);
-  Future<String> generateShiftReportPdf(String? ClientName,
-      List<Map<String, dynamic>> Data,
-      String GuardName,
-      String shiftinTime,
-      String shiftOutTime,) async {
+  Future<String> generateShiftReportPdf(
+    String? ClientName,
+    List<Map<String, dynamic>> Data,
+    String GuardName,
+    String shiftinTime,
+    String shiftOutTime,
+  ) async {
     final dateFormat = DateFormat('HH:mm'); // Define the format for time
     String patrolInfoHTML = '';
     for (var item in Data) {
@@ -145,7 +146,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
         if (checkpoint['CheckPointImage'] != null) {
           for (var image in checkpoint['CheckPointImage']) {
             checkpointImages +=
-            '<img src="$image">'; // Set max-width to ensure responsiveness
+                '<img src="$image">'; // Set max-width to ensure responsiveness
             // checkpointImages +=
             //     '<p>$image</p>'; // Set max-width to ensure responsiveness
           }
@@ -155,8 +156,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
           <p>Checkpoint Name: ${checkpoint['CheckPointName']}</p>
           $checkpointImages
           <p>Comment: ${checkpoint['CheckPointComment']}</p>
-          <p>Reported At: ${dateFormat.format(
-            checkpoint['CheckPointReportedAt'].toDate())}</p>
+          <p>Reported At: ${dateFormat.format(checkpoint['CheckPointReportedAt'].toDate())}</p>
           <p>Status: ${checkpoint['CheckPointStatus']}</p>
         </div>
       ''';
@@ -372,9 +372,9 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
         String companyId = userInfo['ClientCompanyId'];
         print("Employee Id ${EmployeeId}");
         var shiftInfo =
-        await fireStoreService.getShiftByEmployeeIdFromUserInfo(EmployeeId);
+            await fireStoreService.getShiftByEmployeeIdFromUserInfo(EmployeeId);
         var patrolInfo =
-        await fireStoreService.getPatrolsByClientId(EmployeeId);
+            await fireStoreService.getPatrolsByClientId(EmployeeId);
         print("User Info ${userName}");
         print("Patrol Info ${patrolInfo}");
 
@@ -607,46 +607,32 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
               ? data['ReportCreatedAt'].toDate()
               : DateTime.now(), // default to now if missing or null
           'ReportName': (data['ReportName'] != null &&
-              data['ReportName']
-                  .toString()
-                  .isNotEmpty)
+                  data['ReportName'].toString().isNotEmpty)
               ? data['ReportName']
               : 'Not Found',
           'ReportGuardName': (data['ReportEmployeeName'] != null &&
-              data['ReportEmployeeName']
-                  .toString()
-                  .isNotEmpty)
+                  data['ReportEmployeeName'].toString().isNotEmpty)
               ? data['ReportEmployeeName']
               : 'Not Found',
           'ReportEmployeeName': (data['ReportEmployeeName'] != null &&
-              data['ReportEmployeeName']
-                  .toString()
-                  .isNotEmpty)
+                  data['ReportEmployeeName'].toString().isNotEmpty)
               ? data['ReportEmployeeName']
               : 'Not Found',
           'ReportStatus': (data['ReportStatus'] != null &&
-              data['ReportStatus']
-                  .toString()
-                  .isNotEmpty)
+                  data['ReportStatus'].toString().isNotEmpty)
               ? data['ReportStatus']
               : 'Not Found',
           'ReportCategory': (data['ReportCategoryName'] != null &&
-              data['ReportCategoryName']
-                  .toString()
-                  .isNotEmpty)
+                  data['ReportCategoryName'].toString().isNotEmpty)
               ? data['ReportCategoryName']
               : 'Not Found',
           'ReportFollowUpRequire': data['ReportIsFollowUpRequired'] ?? false,
           'ReportData': (data['ReportData'] != null &&
-              data['ReportData']
-                  .toString()
-                  .isNotEmpty)
+                  data['ReportData'].toString().isNotEmpty)
               ? data['ReportData']
               : 'Not Found',
           'ReportLocation': (data['ReportLocationName'] != null &&
-              data['ReportLocationName']
-                  .toString()
-                  .isNotEmpty)
+                  data['ReportLocationName'].toString().isNotEmpty)
               ? data['ReportLocationName']
               : 'Not Found',
         };
@@ -737,22 +723,6 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
         date1.day == date2.day;
   }
 
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(2015, 8),
-        lastDate: DateTime(2101)
-    );
-    setState(() {
-      if (picked != null) {
-        selectedDate = picked;
-        // fetchDARData();  // Fetch data for the selected date
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     void ChangeIconColor(int index) {
@@ -830,8 +800,8 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
       });
     }
 
-    ListTile buildListTile(IconData icon, String title, int index,
-        VoidCallback onPressed,
+    ListTile buildListTile(
+        IconData icon, String title, int index, VoidCallback onPressed,
         {bool isLogout = false}) {
       final bool isSelected = _selectedIndex == index;
 
@@ -839,27 +809,18 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
         leading: Icon(
           icon,
           color: isSelected
-              ? Theme
-              .of(context)
-              .primaryColor
-              : Theme
-              .of(context)
-              .textTheme
-              .headlineSmall!
-              .color, // Change color based on selection
+              ? Theme.of(context).primaryColor
+              : Theme.of(context)
+                  .textTheme
+                  .headlineSmall!
+                  .color, // Change color based on selection
           size: 24.w,
         ),
         title: PoppinsBold(
           text: title,
           color: isSelected
-              ? Theme
-              .of(context)
-              .primaryColor
-              : Theme
-              .of(context)
-              .textTheme
-              .headlineSmall!
-              .color,
+              ? Theme.of(context).primaryColor
+              : Theme.of(context).textTheme.headlineSmall!.color,
           fontsize: 14.sp,
         ),
         onTap: onPressed,
@@ -876,9 +837,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
       child: Scaffold(
         key: _scaffoldKeyClient, // Assign the GlobalKey to the Scaffold
         endDrawer: Drawer(
-          backgroundColor: Theme
-              .of(context)
-              .canvasColor,
+          backgroundColor: Theme.of(context).canvasColor,
           child: Column(
             children: [
               GestureDetector(
@@ -887,11 +846,10 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            ProfileScreen(
-                              isClient: true,
-                              empId: _employeeId,
-                            ),
+                        builder: (context) => ProfileScreen(
+                          isClient: true,
+                          empId: _employeeId,
+                        ),
                       ),
                     );
                   }
@@ -901,8 +859,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                   width: double.maxFinite,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15.r),
-                    color: Theme
-                        .of(context)
+                    color: Theme.of(context)
                         .primaryColor, // Background color for the drawer header
                   ),
                   child: Center(
@@ -927,18 +884,14 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                         SizedBox(height: 10.h),
                         PoppinsSemibold(
                           text: _userName,
-                          color: Theme
-                              .of(context)
-                              .cardColor,
+                          color: Theme.of(context).cardColor,
                           fontsize: 16.sp,
                           letterSpacing: -.3,
                         ),
                         SizedBox(height: 5.h),
                         PoppinsRegular(
                           text: _empEmail,
-                          color: Theme
-                              .of(context)
-                              .cardColor,
+                          color: Theme.of(context).cardColor,
                           fontsize: 16.sp,
                           letterSpacing: -.3,
                         )
@@ -954,14 +907,13 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                       Icons.account_circle_outlined,
                       'Profile',
                       1,
-                          () {
+                      () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                ClientProfileScreen(
-                                  empId: _employeeId,
-                                ),
+                            builder: (context) => ClientProfileScreen(
+                              empId: _employeeId,
+                            ),
                           ),
                         );
                       },
@@ -1038,18 +990,14 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                 icon: Icons.map,
                                 color: ScreenIndex == 0
                                     ? ThemeMode.dark == themeManager.themeMode
-                                    ? DarkColor.color1
-                                    : LightColor.Primarycolor
-                                    : Theme
-                                    .of(context)
-                                    .focusColor,
+                                        ? DarkColor.color1
+                                        : LightColor.Primarycolor
+                                    : Theme.of(context).focusColor,
                                 textcolor: ScreenIndex == 0
                                     ? ThemeMode.dark == themeManager.themeMode
-                                    ? DarkColor.color1
-                                    : LightColor.Primarycolor
-                                    : Theme
-                                    .of(context)
-                                    .focusColor,
+                                        ? DarkColor.color1
+                                        : LightColor.Primarycolor
+                                    : Theme.of(context).focusColor,
                               ),
                             ),
                             Bounce(
@@ -1059,18 +1007,14 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                 icon: Icons.add_task,
                                 color: ScreenIndex == 1
                                     ? ThemeMode.dark == themeManager.themeMode
-                                    ? DarkColor.color1
-                                    : LightColor.Primarycolor
-                                    : Theme
-                                    .of(context)
-                                    .focusColor,
+                                        ? DarkColor.color1
+                                        : LightColor.Primarycolor
+                                    : Theme.of(context).focusColor,
                                 textcolor: ScreenIndex == 1
                                     ? ThemeMode.dark == themeManager.themeMode
-                                    ? DarkColor.color1
-                                    : LightColor.Primarycolor
-                                    : Theme
-                                    .of(context)
-                                    .focusColor,
+                                        ? DarkColor.color1
+                                        : LightColor.Primarycolor
+                                    : Theme.of(context).focusColor,
                               ),
                             ),
                             Bounce(
@@ -1080,18 +1024,14 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                 icon: Icons.grid_view_rounded,
                                 color: ScreenIndex == 2
                                     ? ThemeMode.dark == themeManager.themeMode
-                                    ? DarkColor.color1
-                                    : LightColor.Primarycolor
-                                    : Theme
-                                    .of(context)
-                                    .focusColor,
+                                        ? DarkColor.color1
+                                        : LightColor.Primarycolor
+                                    : Theme.of(context).focusColor,
                                 textcolor: ScreenIndex == 2
                                     ? ThemeMode.dark == themeManager.themeMode
-                                    ? DarkColor.color1
-                                    : LightColor.Primarycolor
-                                    : Theme
-                                    .of(context)
-                                    .focusColor,
+                                        ? DarkColor.color1
+                                        : LightColor.Primarycolor
+                                    : Theme.of(context).focusColor,
                               ),
                             ),
                             Bounce(
@@ -1100,27 +1040,23 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                 useSVG: true,
                                 SVG: NewMessage
                                     ? ScreenIndex == 3
-                                    ? 'assets/images/message_dot.svg'
-                                    : 'assets/images/no_message_dot.svg'
+                                        ? 'assets/images/message_dot.svg'
+                                        : 'assets/images/no_message_dot.svg'
                                     : ScreenIndex == 3
-                                    ? 'assets/images/message.svg'
-                                    : 'assets/images/no_message.svg',
+                                        ? 'assets/images/message.svg'
+                                        : 'assets/images/no_message.svg',
                                 text: 'Message',
                                 icon: Icons.chat_bubble_outline,
                                 color: ScreenIndex == 3
                                     ? ThemeMode.dark == themeManager.themeMode
-                                    ? DarkColor.color1
-                                    : LightColor.Primarycolor
-                                    : Theme
-                                    .of(context)
-                                    .focusColor,
+                                        ? DarkColor.color1
+                                        : LightColor.Primarycolor
+                                    : Theme.of(context).focusColor,
                                 textcolor: ScreenIndex == 3
                                     ? ThemeMode.dark == themeManager.themeMode
-                                    ? DarkColor.color1
-                                    : LightColor.Primarycolor
-                                    : Theme
-                                    .of(context)
-                                    .focusColor,
+                                        ? DarkColor.color1
+                                        : LightColor.Primarycolor
+                                    : Theme.of(context).focusColor,
                               ),
                             ),
                           ],
@@ -1444,118 +1380,110 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                       ),
                                     ],
                                   ),
+                                  SizedBox(
+                                    height: 20.h,
+                                  )
+                                ],
+                              ),
+                            ),
+                          )
+                        : ScreenIndex == 2
+                            ? SliverGrid(
+                                gridDelegate:
+                                    const SliverGridDelegateWithMaxCrossAxisExtent(
+                                  maxCrossAxisExtent: 200.0,
+                                  // mainAxisSpacing: 10.0,
+                                  // crossAxisSpacing: 10.0,
+                                  // childAspectRatio: 4.0,
                                 ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 20.h,
-                        )
-                      ],
-                    ),
-                  ),
-                )
-                    : ScreenIndex == 2
-                    ? SliverGrid(
-                  gridDelegate:
-                  const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 200.0,
-                    // mainAxisSpacing: 10.0,
-                    // crossAxisSpacing: 10.0,
-                    // childAspectRatio: 4.0,
-                  ),
-                  delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
-                      return Bounce(
-                        onTap: () {
-                          switch (index) {
-                            case 0:
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        ClientDarScreen(
-                                            clientId: _employeeId,
-                                            companyId: _cmpId),
-                                  ));
-                              break;
-                            case 1:
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        ClientReportScreen(
-                                          employeeId: _employeeId,
-                                        ),
-                                  ));
-                              break;
-                          // case 2:
-                          //   Navigator.push(
-                          //       context,
-                          //       MaterialPageRoute(
-                          //         builder: (context) =>
-                          //             ClientDarScreen(
-                          //                 clientId: _employeeId,
-                          //                 companyId: _cmpId),
-                          //       ));
-                          //   break;
-                          }
-                        },
-                        child: gridWidget(
-                          img: data[index][0],
-                          tittle: data[index][1],
-                        ),
-                      );
-                    },
-                    childCount: data.length,
-                  ),
-                )
-                    : ScreenIndex == 3
-                    ? SliverToBoxAdapter(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 30.w,
-                    ),
-                    child: Row(
-                      mainAxisAlignment:
-                      MainAxisAlignment.spaceBetween,
-                      children: [
-                        InterBold(
-                          text: 'Received Message ',
-                          color:
-                          Theme
-                              .of(context)
-                              .primaryColor,
-                          fontsize: 14.sp,
-                        ),
-                        Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment.start,
-                          children: [
-                            Icon(
-                              Icons.add,
-                              color: Theme
-                                  .of(context)
-                                  .primaryColor,
-                              size: 20.sp,
-                            ),
-                            SizedBox(width: 4.w),
-                            InterBold(
-                              text: 'Create Message',
-                              fontsize: 14.sp,
-                              color: Theme
-                                  .of(context)
-                                  .primaryColor,
-                              maxLine: 2,
-                            )
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                )
-                    : const SliverToBoxAdapter(),
+                                delegate: SliverChildBuilderDelegate(
+                                  (BuildContext context, int index) {
+                                    return Bounce(
+                                      onTap: () {
+                                        switch (index) {
+                                          case 0:
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ClientDarScreen(
+                                                          clientId: _employeeId,
+                                                          companyId: _cmpId),
+                                                ));
+                                            break;
+                                          case 1:
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ClientReportScreen(
+                                                        companyId: _cmpId,
+                                                    employeeId: _employeeId,
+                                                  ),
+                                                ));
+                                            break;
+                                          // case 2:
+                                          //   Navigator.push(
+                                          //       context,
+                                          //       MaterialPageRoute(
+                                          //         builder: (context) =>
+                                          //             ClientDarScreen(
+                                          //                 clientId: _employeeId,
+                                          //                 companyId: _cmpId),
+                                          //       ));
+                                          //   break;
+                                        }
+                                      },
+                                      child: gridWidget(
+                                        img: data[index][0],
+                                        tittle: data[index][1],
+                                      ),
+                                    );
+                                  },
+                                  childCount: data.length,
+                                ),
+                              )
+                            : ScreenIndex == 3
+                                ? SliverToBoxAdapter(
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 30.w,
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          InterBold(
+                                            text: 'Received Message ',
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                            fontsize: 14.sp,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Icon(
+                                                Icons.add,
+                                                color: Theme.of(context)
+                                                    .primaryColor,
+                                                size: 20.sp,
+                                              ),
+                                              SizedBox(width: 4.w),
+                                              InterBold(
+                                                text: 'Create Message',
+                                                fontsize: 14.sp,
+                                                color: Theme.of(context)
+                                                    .primaryColor,
+                                                maxLine: 2,
+                                              )
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                : const SliverToBoxAdapter(),
                 ScreenIndex == 1
                     ? SliverList(
                   delegate: SliverChildBuilderDelegate(
@@ -1835,157 +1763,151 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                     : SliverToBoxAdapter(),
                 ScreenIndex == 3
                     ? SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                      return Padding(
-                        padding: EdgeInsets.only(
-                          left: 30.w,
-                          right: 30.w,
-                        ),
-                        child: GestureDetector(
-                          onTap: () {
-                            NavigateScreen(
-                                ClientOpenPatrolScreen(
-                                  guardName: '',
-                                  startDate: '',
-                                  startTime: '',
-                                  endTime: '',
-                                  patrolLogCount: 0,
-                                  status: '',
-                                  feedback: '',
-                                  checkpoints: [],
-                                  data: {},
-                                ),
-                                context);
-                          },
-                          child: Container(
-                            height: 76.h,
-                            margin: EdgeInsets.only(
-                              bottom: 23.h,
-                            ),
-                            width: double.maxFinite,
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  width: 1,
-                                  color: Theme
-                                      .of(context)
-                                      .primaryColor,
-                                ),
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            return Padding(
+                              padding: EdgeInsets.only(
+                                left: 30.w,
+                                right: 30.w,
                               ),
-                              // color: WidgetColor,
-                            ),
-                            padding: EdgeInsets.symmetric(
-                              vertical: 7.h,
-                            ),
-                            child: Row(
-                              crossAxisAlignment:
-                              CrossAxisAlignment.center,
-                              // mainAxisAlignment:
-                              //     MainAxisAlignment
-                              //         .spaceBetween,
-                              children: [
-                                NewMessage
-                                    ? Container(
-                                  height: 11.h,
-                                  width: 11.w,
-                                  decoration: BoxDecoration(
-                                    color: Colors.green,
-                                    shape: BoxShape.circle,
-                                  ),
-                                )
-                                    : SizedBox(),
-                                Container(
-                                  margin: EdgeInsets.only(left: 9.w),
-                                  height: 45.h,
-                                  width: 45.w,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    image: DecorationImage(
-                                      image: NetworkImage(
-                                        'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg',
+                              child: GestureDetector(
+                                onTap: () {
+                                  NavigateScreen(
+                                      ClientOpenPatrolScreen(
+                                        guardName: '',
+                                        startDate: '',
+                                        startTime: '',
+                                        endTime: '',
+                                        patrolLogCount: 0,
+                                        status: '',
+                                        feedback: '',
+                                        checkpoints: [],
+                                        data: {},
                                       ),
-                                      fit: BoxFit.cover,
-                                    ),
+                                      context);
+                                },
+                                child: Container(
+                                  height: 76.h,
+                                  margin: EdgeInsets.only(
+                                    bottom: 23.h,
                                   ),
-                                ),
-                                SizedBox(
-                                  width: 12.w,
-                                ),
-                                SizedBox(
-                                  width: 300.w,
-                                  child: Column(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.center,
-                                    children: [
-                                      Row(
-                                        crossAxisAlignment:
+                                  width: double.maxFinite,
+                                  decoration: BoxDecoration(
+                                    border: Border(
+                                      bottom: BorderSide(
+                                        width: 1,
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                    ),
+                                    // color: WidgetColor,
+                                  ),
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 7.h,
+                                  ),
+                                  child: Row(
+                                    crossAxisAlignment:
                                         CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                        MainAxisAlignment
-                                            .spaceBetween,
-                                        children: [
-                                          InterRegular(
-                                            text: 'Supervisor',
-                                            fontsize: 17.sp,
-                                            color: Theme
-                                                .of(context)
-                                                .textTheme
-                                                .headlineSmall!
-                                                .color,
+                                    // mainAxisAlignment:
+                                    //     MainAxisAlignment
+                                    //         .spaceBetween,
+                                    children: [
+                                      NewMessage
+                                          ? Container(
+                                              height: 11.h,
+                                              width: 11.w,
+                                              decoration: BoxDecoration(
+                                                color: Colors.green,
+                                                shape: BoxShape.circle,
+                                              ),
+                                            )
+                                          : SizedBox(),
+                                      Container(
+                                        margin: EdgeInsets.only(left: 9.w),
+                                        height: 45.h,
+                                        width: 45.w,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          image: DecorationImage(
+                                            image: NetworkImage(
+                                              'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg',
+                                            ),
+                                            fit: BoxFit.cover,
                                           ),
-                                          Row(
-                                            // mainAxisAlignment: MainAxisAlignment.end,
-                                            children: [
-                                              PoppinsRegular(
-                                                text: '9:36 AM',
-                                                color: Theme
-                                                    .of(context)
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 12.w,
+                                      ),
+                                      SizedBox(
+                                        width: 300.w,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                InterRegular(
+                                                  text: 'Supervisor',
+                                                  fontsize: 17.sp,
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .headlineSmall!
+                                                      .color,
+                                                ),
+                                                Row(
+                                                  // mainAxisAlignment: MainAxisAlignment.end,
+                                                  children: [
+                                                    PoppinsRegular(
+                                                      text: '9:36 AM',
+                                                      color: Theme.of(context)
+                                                          .textTheme
+                                                          .headlineSmall!
+                                                          .color,
+                                                      fontsize: 15.sp,
+                                                    ),
+                                                    Icon(
+                                                      Icons.arrow_forward_ios,
+                                                      color: Theme.of(context)
+                                                          .textTheme
+                                                          .bodyMedium!
+                                                          .color,
+                                                      size: 15.sp,
+                                                    )
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(
+                                              height: 4.h,
+                                            ),
+                                            Flexible(
+                                              child: InterRegular(
+                                                text:
+                                                    'Nice. I don\'t know why people get all worked up about hawaiian pizza. I ...',
+                                                fontsize: 15.sp,
+                                                color: Theme.of(context)
                                                     .textTheme
                                                     .headlineSmall!
                                                     .color,
-                                                fontsize: 15.sp,
                                               ),
-                                              Icon(
-                                                Icons.arrow_forward_ios,
-                                                color: Theme
-                                                    .of(context)
-                                                    .textTheme
-                                                    .bodyMedium!
-                                                    .color,
-                                                size: 15.sp,
-                                              )
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 4.h,
-                                      ),
-                                      Flexible(
-                                        child: InterRegular(
-                                          text:
-                                          'Nice. I don\'t know why people get all worked up about hawaiian pizza. I ...',
-                                          fontsize: 15.sp,
-                                          color: Theme
-                                              .of(context)
-                                              .textTheme
-                                              .headlineSmall!
-                                              .color,
+                                            ),
+                                          ],
                                         ),
-                                      ),
+                                      )
                                     ],
                                   ),
-                                )
-                              ],
-                            ),
-                          ),
+                                ),
+                              ),
+                            );
+                          },
+                          childCount: 8,
                         ),
-                      );
-                    },
-                    childCount: 8,
-                  ),
-                )
+                      )
                     : SliverToBoxAdapter(),
               ],
             ),
