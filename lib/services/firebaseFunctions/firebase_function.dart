@@ -3812,24 +3812,27 @@ class FireStoreService {
 
   Future<Map<String, dynamic>?> getReportWithSearchId(String reportId) async {
     try {
-      final QuerySnapshot<Map<String, dynamic>> querySnapshot =
-          await FirebaseFirestore.instance
-              .collection('Reports')
-              .where('ReportSearchId', isEqualTo: reportId)
-              .get();
+      if (reportId.isNotEmpty || reportId != null) {
+        final QuerySnapshot<Map<String, dynamic>> querySnapshot =
+            await FirebaseFirestore.instance
+                .collection('Reports')
+                .where('ReportSearchId', isEqualTo: reportId)
+                .get();
 
-      if (querySnapshot.docs.isNotEmpty) {
-        // Assuming there's only one document with the given ReportSearchId
-        final data = querySnapshot.docs.first.data();
-        if (data != null && data['ReportSearchId'] == reportId) {
-          return data;
+        if (querySnapshot.docs.isNotEmpty) {
+          // Assuming there's only one document with the given ReportSearchId
+          final data = querySnapshot.docs.first.data();
+          if (data != null && data['ReportSearchId'] == reportId) {
+            return data;
+          } else {
+            print(
+                "Document with ID $reportId does not match the ReportSearchId");
+            return null;
+          }
         } else {
-          print("Document with ID $reportId does not match the ReportSearchId");
+          print("No document with ReportSearchId $reportId found");
           return null;
         }
-      } else {
-        print("No document with ReportSearchId $reportId found");
-        return null;
       }
     } catch (e) {
       print("Error fetching report data: $e");

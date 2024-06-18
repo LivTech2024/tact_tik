@@ -50,19 +50,18 @@ class _ProfileScreenState extends State<ClientProfileScreen> {
 
   Future<void> _fetchEmployeeData() async {
     final employeeSnapshot = await FirebaseFirestore.instance
-        .collection('Employees')
-        .where('EmployeeId', isEqualTo: widget.empId)
+        .collection('Clients')
+        .where('ClientId', isEqualTo: widget.empId)
         .get();
 
     if (employeeSnapshot.docs.isNotEmpty) {
       final employeeData = employeeSnapshot.docs.first.data();
       setState(() {
-        _employeeName = employeeData['EmployeeName'];
-        _employeeEmail = employeeData['EmployeeEmail'];
-        _employeeRole = employeeData['EmployeeRole'];
-        _employeePhone = employeeData['EmployeePhone'];
-        _employeeImageUrl = employeeData['EmployeeImg'];
-
+        _employeeName = employeeData['ClientName'];
+        _employeeEmail = employeeData['ClientEmail'];
+        _employeeRole = "CLIENT";
+        _employeePhone = employeeData['ClientPhone'];
+        _employeeImageUrl = employeeData['ClientHomePageBgImg'];
         _nameController.text = _employeeName ?? '';
         _phoneNoController.text = _employeePhone ?? '';
       });

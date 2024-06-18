@@ -650,7 +650,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       'History',
                       4,
                       () async {
-                        List<String> emails = [];
+                        // List<String> emails = [];
+
                         // emails.add("sutarvaibhav37@gmail.com");
                         // // emails.add("pankaj.kumar1312@yahoo.com");
                         // // emails.add("alerts.tactik@gmail.com");
@@ -672,6 +673,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         //   "formattedEndTime",
                         // );
                         // customEmail();
+                        // await fireStoreService.copyAndCreateDocument(
+                        //     "EmployeesDAR", "yVFsI8DFMbhxIJfZWUyX");
                         Navigator.push(
                           context,
                           MaterialPageRoute(
