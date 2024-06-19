@@ -425,6 +425,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                                     MaterialPageRoute(
                                       builder: (context) => ClientReportScreen(
                                         employeeId: widget.empId,
+                                        companyId: widget.shiftCompanyId,
                                       ),
                                     ));
                                 break;
@@ -531,129 +532,127 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                                               keyId: widget.empId,
                                               companyId: widget.shiftCompanyId,
                                               branchId: widget.branchId,
+                                            )));
+                              // AssetsScreen(
+                              //     assetEmpId:
+                              //         _employeeId)
+                              case 'Reports Screen':
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ClientReportScreen(
+                                        companyId: widget.shiftCompanyId,
+                                        employeeId: widget.empId,
+                                      ),
+                                    ));
+                                break;
+                            }
+
+                            switch (value) {
+                              case 'Site Tours':
+                                // showDialog(
+                                //   context: context,
+                                //   builder: (BuildContext context) {
+                                //     return SiteTourScreen(
+                                //       height: height,
+                                //       width: width,
+                                //       schedulesList: schedules_list,
+                                //     );
+                                //   },
+                                // );
+                                break;
+                              case 'DAR Screen':
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => DarDisplayScreen(
+                                              EmpEmail: widget.empEmail,
+                                              EmpID: widget.empId,
+                                              EmpDarCompanyId:
+                                                  widget.shiftCompanyId ?? "",
+                                              EmpDarCompanyBranchId:
+                                                  widget.branchId,
+                                              EmpDarShiftID: widget.shiftId,
+                                              EmpDarClientID:
+                                                  widget.shiftClientId,
+                                              Username: widget.userName,
+                                            )));
+                                break;
+                              case 'Reports Screen':
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ReportScreen(
+                                              locationId:
+                                                  widget.shiftLocationId,
+                                              locationName:
+                                                  widget.shiftLocationId,
+                                              companyId:
+                                                  widget.shiftCompanyId ?? "",
+                                              empId: widget.empId,
+                                              empName: widget.userName,
+                                              clientId: widget.shiftClientId,
+                                              ShiftId: widget.shiftId,
+                                            )));
+                                break;
+                              case 'Post Screen':
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => PostOrder(
+                                              locationId:
+                                                  widget.shiftLocationId,
+                                            )));
+                                break;
+                              case 'Task Screen':
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            TaskFeatureScreen()));
+                                break;
+                              case 'LogBook Screen':
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => LogBookScreen(
+                                              EmpId: widget.empId,
+                                            )));
+                                break;
+                              case 'Visitors Screen':
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => VisiTorsScreen(
+                                              locationId:
+                                                  widget.shiftLocationId,
+                                            )));
+                                break;
+                              case 'Assets Screen':
+                              case 'Assets Screen':
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            // KeysScreen(
+                                            //     keyId: _employeeId)
+                                            AssetsScreen(
+                                                assetEmpId: widget.empId)));
+                                break;
+                              case 'Key Screen':
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => KeysScreen(
+                                              LocationId:
+                                                  widget.shiftLocationId,
+                                              keyId: widget.empId,
+                                              companyId: widget.shiftCompanyId,
+                                              branchId: widget.branchId,
                                             )
                                         // AssetsScreen(
                                         //     assetEmpId:
                                         //         _employeeId)
-                                case 'Reports Screen':
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            ClientReportScreen(
-                                              companyId: widget.shiftCompanyId,
-                                          employeeId: widget.empId,
-                                        ),
-                                      ));
-                                  break;
-                              }
-                            } else {
-                              switch (value) {
-                                case 'Site Tours':
-                                  // showDialog(
-                                  //   context: context,
-                                  //   builder: (BuildContext context) {
-                                  //     return SiteTourScreen(
-                                  //       height: height,
-                                  //       width: width,
-                                  //       schedulesList: schedules_list,
-                                  //     );
-                                  //   },
-                                  // );
-                                  break;
-                                case 'DAR Screen':
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              DarDisplayScreen(
-                                                EmpEmail: widget.empEmail,
-                                                EmpID: widget.empId,
-                                                EmpDarCompanyId:
-                                                    widget.shiftCompanyId ?? "",
-                                                EmpDarCompanyBranchId:
-                                                    widget.branchId,
-                                                EmpDarShiftID: widget.shiftId,
-                                                EmpDarClientID:
-                                                    widget.shiftClientId,
-                                                Username: widget.userName,
-                                              )));
-                                  break;
-                                case 'Reports Screen':
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => ReportScreen(
-                                                locationId:
-                                                    widget.shiftLocationId,
-                                                locationName:
-                                                    widget.shiftLocationId,
-                                                companyId:
-                                                    widget.shiftCompanyId ?? "",
-                                                empId: widget.empId,
-                                                empName: widget.userName,
-                                                clientId: widget.shiftClientId,
-                                                ShiftId: widget.shiftId,
-                                              )));
-                                  break;
-                                case 'Post Screen':
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => PostOrder(
-                                                locationId:
-                                                    widget.shiftLocationId,
-                                              )));
-                                  break;
-                                case 'Task Screen':
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              TaskFeatureScreen()));
-                                  break;
-                                case 'LogBook Screen':
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => LogBookScreen(
-                                                EmpId: widget.empId,
-                                              )));
-                                  break;
-                                case 'Visitors Screen':
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => VisiTorsScreen(
-                                                locationId:
-                                                    widget.shiftLocationId,
-                                              )));
-                                  break;
-                                case 'Assets Screen':
-                                case 'Assets Screen':
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              // KeysScreen(
-                                              //     keyId: _employeeId)
-                                              AssetsScreen(
-                                                  assetEmpId: widget.empId)));
-                                  break;
-                                case 'Key Screen':
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => KeysScreen(
-                                            LocationId: widget.shiftLocationId,
-                                                keyId: widget.empId,
-                                                companyId:
-                                                    widget.shiftCompanyId,
-                                                branchId: widget.branchId,
-                                              )
-                                          // AssetsScreen(
-                                          //     assetEmpId:
-                                          //         _employeeId)
 
                                         ));
                                 break;
