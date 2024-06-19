@@ -1430,6 +1430,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                                       buttonEnable: true,
                                                                                       ShiftId: widget.p.ShiftId,
                                                                                       SearchId: '',
+                                                                                      isRoleGuard: false,
                                                                                     )));
                                                                       },
                                                                       child: InterRegular(

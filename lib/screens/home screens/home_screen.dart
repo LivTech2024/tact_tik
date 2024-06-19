@@ -127,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
   GlobalKey<ScaffoldState> _scaffoldKey1 = GlobalKey();
   bool _showWish = true;
   bool NewMessage = false;
-
+  bool isRoleGuard = false;
   @override
   void refreshHomeScreen() {
     _getUserInfo();
@@ -229,6 +229,14 @@ class _HomeScreenState extends State<HomeScreen> {
         String empImage = userInfo['EmployeeImg'] ?? "";
         String empCompanyId = userInfo['EmployeeCompanyId'] ?? "";
         String empBranchId = userInfo['EmployeeCompanyBranchId'] ?? "";
+        String empRole = userInfo['EmployeeRole'] ?? "";
+        if (empRole.isNotEmpty) {
+          if (empRole == "GUARD") {
+            isRoleGuard = true;
+          } else {
+            isRoleGuard = false;
+          }
+        }
         var shiftInfo =
             await fireStoreService.getShiftByEmployeeIdFromUserInfo(EmployeeId);
         var patrolInfo = await fireStoreService
@@ -674,7 +682,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         // );
                         // customEmail();
                         // await fireStoreService.copyAndCreateDocument(
-                        //     "PatrolLogs", "jc4z2ft9tVeJTt7I6myb");
+                        //     "PatrolLogs", "vSUJs6G6WBT4xRTIAZVR");
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -960,6 +968,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     empName: _userName,
                                                     clientId: _shiftCLientId,
                                                     ShiftId: _shiftId,
+                                                    isguard: isRoleGuard,
                                                   )));
                                       break;
                                     case 4:

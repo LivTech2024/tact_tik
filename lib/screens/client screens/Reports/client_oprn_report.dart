@@ -21,7 +21,7 @@ class ClientOpenReport extends StatefulWidget {
   final String reportStatus;
   final String reportEmployeeName;
   final String reportLocation;
-  final List<String> reportImages;
+  final List<dynamic> reportImages;
   final String reportFollowUpId;
 
   const ClientOpenReport({
@@ -127,16 +127,17 @@ class _ClientOpenReportState extends State<ClientOpenReport> {
   }
 
   Future<String> generateReportPdf(
-    String reportName,
-    String reportCategory,
-    String reportFollowUp,
-    String reportData,
-    String reportStatus,
-    String GuardName,
-    String reportDate,
-    String reportLocation,
-    List<String> reportImages,
-  ) async {
+      String reportName,
+      String reportCategory,
+      String reportFollowUp,
+      String reportData,
+      String reportStatus,
+      String GuardName,
+      String reportDate,
+      String reportLocation,
+      List<dynamic> reportImages,
+      ) async {
+
     final htmlcontent = """
   <!DOCTYPE html>
   <html lang="en">

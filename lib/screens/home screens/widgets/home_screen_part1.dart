@@ -433,6 +433,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                                       MaterialPageRoute(
                                         builder: (context) =>
                                             ClientReportScreen(
+                                          companyId: widget.shiftCompanyId,
                                           employeeId: widget.empId,
                                         ),
                                       ));
@@ -485,6 +486,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                                                 empName: widget.userName,
                                                 clientId: widget.shiftClientId,
                                                 ShiftId: widget.shiftId,
+                                                isguard: false,
                                               )));
                                   break;
                                 case 'Post Screen':
@@ -536,7 +538,8 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => KeysScreen(
-                                            LocationId: widget.shiftLocationId,
+                                                LocationId:
+                                                    widget.shiftLocationId,
                                                 keyId: widget.empId,
                                                 companyId:
                                                     widget.shiftCompanyId,

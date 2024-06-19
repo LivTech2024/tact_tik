@@ -42,7 +42,7 @@ class DarOpenAllScreen extends StatefulWidget {
 class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
   bool showDARS = true;
   List<Map<String, dynamic>> hourlyShiftDetails = [];
-  
+
   List<Map<String, dynamic>> hourlyShiftDetails2 = [];
 
   final _userService = UserService(firestoreService: FireStoreService());
@@ -59,7 +59,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
     _fetchShiftDetails();
   }
 
- List<Color> colors = [
+  List<Color> colors = [
     themeManager.themeMode == ThemeMode.dark
         ? DarkColor.color1
         : LightColor.color3,
@@ -516,7 +516,10 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                         onTap: () {
                           setState(() {
                             showDARS = true;
-                            colors[0] = Theme.of(context).textTheme.bodyMedium!.color as Color;
+                            colors[0] = Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .color as Color;
                             colors[1] = Theme.of(context).highlightColor;
                           });
                         },
@@ -545,7 +548,10 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                           setState(() {
                             showDARS = false;
                             colors[0] = Theme.of(context).highlightColor;
-                            colors[1] = Theme.of(context).textTheme.bodyMedium!.color as Color;
+                            colors[1] = Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .color as Color;
                           });
                         },
                         child: Container(
@@ -937,8 +943,9 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                               reportId: '',
                                               buttonEnable: false,
                                               ShiftId: "",
-                                              SearchId:
-                                                  ReportSerachID, //Need to Work Here
+                                              SearchId: ReportSerachID,
+                                              isRoleGuard:
+                                                  false, //Need to Work Here
                                             ),
                                           ));
                                     },

@@ -34,6 +34,7 @@ class CreateReportScreen extends StatefulWidget {
   final String reportId;
   bool buttonEnable;
   final String SearchId;
+  final bool isRoleGuard;
 
   CreateReportScreen({
     Key? key,
@@ -47,6 +48,7 @@ class CreateReportScreen extends StatefulWidget {
     required this.buttonEnable,
     required this.ShiftId,
     required this.SearchId,
+    required this.isRoleGuard,
   }) : super(key: key);
 
   @override
