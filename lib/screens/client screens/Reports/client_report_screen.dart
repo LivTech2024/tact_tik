@@ -1,17 +1,23 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
+import 'package:tact_tik/screens/client%20screens/Reports/select_location_report.dart';
 
 import '../../../fonts/inter_bold.dart';
 import '../../../fonts/inter_medium.dart';
 import '../../../fonts/inter_semibold.dart';
 import '../../home screens/widgets/icon_text_widget.dart';
+import '../DAR/select_location_dar.dart';
 import 'client_oprn_report.dart';
 
 class ClientReportScreen extends StatefulWidget {
   final String employeeId;
+  final String companyId;
 
-  const ClientReportScreen({super.key, required this.employeeId});
+  const ClientReportScreen({super.key, required this.employeeId, required this.companyId});
 
   @override
   State<ClientReportScreen> createState() => _ClientReportScreenState();
@@ -20,6 +26,8 @@ class ClientReportScreen extends StatefulWidget {
 class _ClientReportScreenState extends State<ClientReportScreen> {
   List<Map<String, dynamic>> reports = [];
   bool isLoading = true;
+  String selectedGuardId = '';
+  List<String> selectedLocationId = [];
 
   @override
   void initState() {
@@ -31,50 +39,76 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
     try {
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection('Reports')
-          .orderBy('ReportCreatedAt', descending: true)
           .where('ReportClientId', isEqualTo: widget.employeeId)
+          .orderBy('ReportCreatedAt', descending: true)
           .get();
-      List<Map<String, dynamic>> fetchedReports = querySnapshot.docs.map((doc) {
-        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-        return {
-          'ReportDate': (data['ReportCreatedAt'] != null)
-              ? data['ReportCreatedAt'].toDate()
-              : DateTime.now(), // default to now if missing or null
-          'ReportName': (data['ReportName'] != null &&
-                  data['ReportName'].toString().isNotEmpty)
-              ? data['ReportName']
-              : 'Not Found',
-          'ReportGuardName': (data['ReportEmployeeName'] != null &&
-                  data['ReportEmployeeName'].toString().isNotEmpty)
-              ? data['ReportEmployeeName']
-              : 'Not Found',
-          'ReportEmployeeName': (data['ReportEmployeeName'] != null &&
-                  data['ReportEmployeeName'].toString().isNotEmpty)
-              ? data['ReportEmployeeName']
-              : 'Not Found',
-          'ReportStatus': (data['ReportStatus'] != null &&
-                  data['ReportStatus'].toString().isNotEmpty)
-              ? data['ReportStatus']
-              : 'Not Found',
-          'ReportCategory': (data['ReportCategoryName'] != null &&
-                  data['ReportCategoryName'].toString().isNotEmpty)
-              ? data['ReportCategoryName']
-              : 'Not Found',
-          'ReportFollowUpRequire': data['ReportIsFollowUpRequired'] ?? false,
-          'ReportData': (data['ReportData'] != null &&
-                  data['ReportData'].toString().isNotEmpty)
-              ? data['ReportData']
-              : 'Not Found',
-          'ReportLocation': (data['ReportLocationName'] != null &&
-                  data['ReportLocationName'].toString().isNotEmpty)
-              ? data['ReportLocationName']
-              : 'Not Found',
-          'ReporFollowedUp': (data['ReportFollowedUpId'] != null &&
-                  data['ReportFollowedUpId'].toString().isNotEmpty)
-              ? data['ReportFollowedUpId']
-              : 'Not Found',
-        };
-      }).toList();
+
+      Map<String, List<DocumentSnapshot>> dataByDate = {};
+      for (var doc in querySnapshot.docs) {
+        var data = doc.data() as Map<String, dynamic>;
+        var date = (data['ReportCreatedAt'] as Timestamp).toDate();
+        var formattedDate = DateFormat('dd/MM/yyyy').format(date);
+
+        if (selectedLocationId != null && selectedLocationId.isNotEmpty) {
+          var reportLocationId = data['ReportLocationId'] as String?;
+          if (reportLocationId == null || !selectedLocationId.contains(reportLocationId)) {
+            continue;
+          }
+        }
+
+        if (selectedGuardId != null && selectedGuardId.isNotEmpty) {
+          var reportEmployeeId = data['ReportEmployeeId'] as String?;
+          if (reportEmployeeId == null || reportEmployeeId != selectedGuardId) {
+            continue;
+          }
+        }
+
+        if (dataByDate.containsKey(formattedDate)) {
+          dataByDate[formattedDate]!.add(doc);
+        } else {
+          dataByDate[formattedDate] = [doc];
+        }
+      }
+
+      List<Map<String, dynamic>> fetchedReports = [];
+      for (var entry in dataByDate.entries) {
+        for (var doc in entry.value) {
+          var data = doc.data() as Map<String, dynamic>;
+          fetchedReports.add({
+            'ReportDate': (data['ReportCreatedAt'] != null)
+                ? data['ReportCreatedAt'].toDate()
+                : DateTime.now(), // default to now if missing or null
+            'ReportName': (data['ReportName'] != null && data['ReportName'].toString().isNotEmpty)
+                ? data['ReportName']
+                : 'Not Found',
+            'ReportGuardName': (data['ReportEmployeeName'] != null && data['ReportEmployeeName'].toString().isNotEmpty)
+                ? data['ReportEmployeeName']
+                : 'Not Found',
+            'ReportEmployeeName': (data['ReportEmployeeName'] != null && data['ReportEmployeeName'].toString().isNotEmpty)
+                ? data['ReportEmployeeName']
+                : 'Not Found',
+            'ReportStatus': (data['ReportStatus'] != null && data['ReportStatus'].toString().isNotEmpty)
+                ? data['ReportStatus']
+                : 'Not Found',
+            'ReportCategory': (data['ReportCategoryName'] != null && data['ReportCategoryName'].toString().isNotEmpty)
+                ? data['ReportCategoryName']
+                : 'Not Found',
+            'ReportFollowUpRequire': data['ReportIsFollowUpRequired'] ?? false,
+            'ReportData': (data['ReportData'] != null && data['ReportData'].toString().isNotEmpty)
+                ? data['ReportData']
+                : 'Not Found',
+            'ReportLocation': (data['ReportLocationName'] != null && data['ReportLocationName'].toString().isNotEmpty)
+                ? data['ReportLocationName']
+                : 'Not Found',
+            'ReportFollowedUp': (data['ReportFollowedUpId'] != null && data['ReportFollowedUpId'].toString().isNotEmpty)
+                ? data['ReportFollowedUpId']
+                : 'Not Found',
+            'ReportImages': (data['ReportImage'] != null && data['ReportImage'] is List && data['ReportImage'].isNotEmpty)
+                ? List<dynamic>.from(data['ReportImage'])
+                : [],
+          });
+        }
+      }
 
       setState(() {
         reports = fetchedReports;
@@ -134,12 +168,11 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            // SelectLocationShift
-                            //     .showLocationDialog(
-                            //   context,
-                            //   _cmpId,
-                            //   onLocationSelected,
-                            // );
+                            SelectLocationReport.showLocationDialog(
+                              context,
+                              widget.companyId,
+                              onLocationSelected,
+                            );
                           },
                           child: SizedBox(
                             width: 150.w,
@@ -168,15 +201,14 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
                         // ),
                         GestureDetector(
                           onTap: () {
-                            // Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //         builder: (context) =>
-                            //             SelectClientGuardsScreen(
-                            //               companyId: _cmpId,
-                            //               onGuardSelected:
-                            //               onGuardSelected,
-                            //             )));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        SelectClientGuardsScreen(
+                                          companyId: widget.companyId,
+                                          onGuardSelected: onGuardSelected,
+                                        )));
                           },
                           child: SizedBox(
                             width: 150.w,
@@ -209,9 +241,20 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
                 ),
               )
             ),
-            SliverList(
+            reports.isEmpty
+                ? SliverFillRemaining(
+              hasScrollBody: false,
+              child: Center(
+                child: InterMedium(
+                  text: 'NO DATA FOUND',
+                  fontsize: 16.sp,
+                  color: Theme.of(context).textTheme.bodyMedium!.color!,
+                ),
+              ),
+            )
+            : SliverList(
               delegate: SliverChildBuilderDelegate(
-                (context, index) {
+                    (context, index) {
                   DateTime reportDate = reports[index]['ReportDate'];
                   String dateString = (isSameDate(reportDate, DateTime.now()))
                       ? 'Today'
@@ -232,13 +275,15 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
                               reportCategory: reports[index]['ReportCategory'],
                               reportDate: dateString,
                               reportFollowUpRequire: reports[index]
-                                      ['ReportFollowUpRequire']
+                              ['ReportFollowUpRequire']
                                   .toString(),
                               reportData: reports[index]['ReportData'],
                               reportStatus: reports[index]['ReportStatus'],
                               reportEmployeeName: reports[index]
-                                  ['ReportEmployeeName'],
+                              ['ReportEmployeeName'],
                               reportLocation: reports[index]['ReportLocation'],
+                              reportImages: reports[index]['ReportImages'] ?? [],
+                              reportFollowUpId: reports[index]['ReportFollowedUp'],
                             ),
                           ),
                         );
@@ -258,7 +303,7 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
                           Column(
                             children: List.generate(
                               1,
-                              (innerIndex) => Container(
+                                  (innerIndex) => Container(
                                 constraints: BoxConstraints(
                                   minHeight: 200.h,
                                 ),
@@ -288,7 +333,7 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
                                   children: [
                                     InterSemibold(
                                       text: reports[index]
-                                          ['ReportEmployeeName'],
+                                      ['ReportEmployeeName'],
                                       fontsize: 18.sp,
                                       color: Theme.of(context)
                                           .textTheme
