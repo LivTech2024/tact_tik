@@ -151,6 +151,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
         .collection('KeyAllocations')
         .where('KeyAllocationId', isEqualTo: allocationId)
         .get();
+
     var data = querySnapshot.docs;
 
     // Iterate over each document and print its fields
@@ -360,7 +361,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
         // 'KeyAllocationEndTime': EndDate,
         // 'KeyAllocationStartTime': StartDate,
         'KeyAllocationId': docRef.id,
-        // 'KeyAllocationIsReturned': isChecked,
+        'KeyAllocationIsReturned': isChecked,
         // 'KeyAllocationKeyId': selectedKeyId ?? '',
         // 'KeyAllocationKeyQty': int.tryParse(_AllocateQtController1.text) ?? 0,
         // 'KeyAllocationPurpose': _AllocationPurposeController.text,
@@ -1219,7 +1220,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                   ? Button1(
                                       text: 'Save',
                                       onPressed: () {
-                                        //                                   'KeyAllocationCreatedAt': FieldValue.serverTimestamp(),
+                                        // 'KeyAllocationCreatedAt': FieldValue.serverTimestamp(),
                                         // 'KeyAllocationDate': SelectedDate,
                                         // 'KeyAllocationEndTime': EndDate,
                                         // 'KeyAllocationStartTime': StartDate,
@@ -1231,6 +1232,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                         // 'KeyAllocationRecipientCompany': _CompanyNameController.text,
                                         // 'KeyAllocationRecipientContact': _ContactController.text,
                                         // 'KeyAllocationRecipientName': _recipientController.text,
+
                                         if (_AllocateQtController1
                                                 .text.isEmpty ||
                                             _AllocationPurposeController
@@ -1242,6 +1244,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                               "Fields cannot be empty");
                                           return;
                                         }
+
                                         if (showReturnBtn == true) {
                                           _updateData();
                                         } else {

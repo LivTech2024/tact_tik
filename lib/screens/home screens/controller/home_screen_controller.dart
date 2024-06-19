@@ -7,6 +7,7 @@ import 'package:background_locator_2/settings/ios_settings.dart';
 import 'package:background_locator_2/settings/locator_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tact_tik/common/widgets/customErrorToast.dart';
 import '../../../services/BackgroundLocationService/location_callback_handler.dart';
@@ -87,8 +88,10 @@ class HomeScreenController extends GetxController {
     } else {
       if (status.isDenied) {
         // Handle permission denied
+        print("Location permission denied.");
       } else if (status.isPermanentlyDenied) {
         // Handle permission permanently denied
+        print("Location permission permanently denied. Open app settings.");
         await openAppSettings();
       }
       return false;
@@ -103,10 +106,10 @@ class HomeScreenController extends GetxController {
         initDataCallback: data,
         disposeCallback: LocationCallbackHandler.disposeCallback,
         iosSettings: const IOSSettings(
-            accuracy: LocationAccuracy.HIGH,
-            distanceFilter: 0,
-            stopWithTerminate: false,
-            showsBackgroundLocationIndicator: true),
+          accuracy: LocationAccuracy.HIGH,
+          distanceFilter: 0,
+          stopWithTerminate: false,
+        ),
         autoStop: false,
         androidSettings: const AndroidSettings(
           accuracy: LocationAccuracy.HIGH,
@@ -119,7 +122,7 @@ class HomeScreenController extends GetxController {
               notificationMsg: 'Track location in background',
               notificationBigMsg:
                   'Background location is on to keep the app up-to-date with your location. This is required for main features to work properly when the app is not running.',
-              notificationIconColor: Colors.grey,
+              notificationIconColor: Color.fromARGB(255, 186, 121, 121),
               notificationTapCallback:
                   LocationCallbackHandler.notificationCallback),
         ));

@@ -65,48 +65,49 @@ class _ClientOpenReportState extends State<ClientOpenReport> {
           .where('ReportId', isEqualTo: widget.reportFollowUpId)
           .get();
 
-      List<Map<String, dynamic>> fetchedFollowUp = querySnapshot.docs.map((doc) {
+      List<Map<String, dynamic>> fetchedFollowUp =
+          querySnapshot.docs.map((doc) {
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
         return {
           'ReportDate': (data['ReportCreatedAt'] != null)
               ? data['ReportCreatedAt'].toDate()
               : DateTime.now(), // default to now if missing or null
           'ReportName': (data['ReportName'] != null &&
-              data['ReportName'].toString().isNotEmpty)
+                  data['ReportName'].toString().isNotEmpty)
               ? data['ReportName']
               : 'Not Found',
           'ReportGuardName': (data['ReportEmployeeName'] != null &&
-              data['ReportEmployeeName'].toString().isNotEmpty)
+                  data['ReportEmployeeName'].toString().isNotEmpty)
               ? data['ReportEmployeeName']
               : 'Not Found',
           'ReportEmployeeName': (data['ReportEmployeeName'] != null &&
-              data['ReportEmployeeName'].toString().isNotEmpty)
+                  data['ReportEmployeeName'].toString().isNotEmpty)
               ? data['ReportEmployeeName']
               : 'Not Found',
           'ReportStatus': (data['ReportStatus'] != null &&
-              data['ReportStatus'].toString().isNotEmpty)
+                  data['ReportStatus'].toString().isNotEmpty)
               ? data['ReportStatus']
               : 'Not Found',
           'ReportCategory': (data['ReportCategoryName'] != null &&
-              data['ReportCategoryName'].toString().isNotEmpty)
+                  data['ReportCategoryName'].toString().isNotEmpty)
               ? data['ReportCategoryName']
               : 'Not Found',
           'ReportFollowUpRequire': data['ReportIsFollowUpRequired'] ?? false,
           'ReportData': (data['ReportData'] != null &&
-              data['ReportData'].toString().isNotEmpty)
+                  data['ReportData'].toString().isNotEmpty)
               ? data['ReportData']
               : 'Not Found',
           'ReportLocation': (data['ReportLocationName'] != null &&
-              data['ReportLocationName'].toString().isNotEmpty)
+                  data['ReportLocationName'].toString().isNotEmpty)
               ? data['ReportLocationName']
               : 'Not Found',
           'ReportFollowedUp': (data['ReportFollowedUpId'] != null &&
-              data['ReportFollowedUpId'].toString().isNotEmpty)
+                  data['ReportFollowedUpId'].toString().isNotEmpty)
               ? data['ReportFollowedUpId']
               : 'Not Found',
           'ReportImages': (data['ReportImage'] != null &&
-              data['ReportImage'] is List &&
-              data['ReportImage'].isNotEmpty)
+                  data['ReportImage'] is List &&
+                  data['ReportImage'].isNotEmpty)
               ? List<String>.from(data['ReportImage'])
               : [],
         };
@@ -126,17 +127,16 @@ class _ClientOpenReportState extends State<ClientOpenReport> {
   }
 
   Future<String> generateReportPdf(
-      String reportName,
-      String reportCategory,
-      String reportFollowUp,
-      String reportData,
-      String reportStatus,
-      String GuardName,
-      String reportDate,
-      String reportLocation,
-      List<String> reportImages,
-      ) async {
-
+    String reportName,
+    String reportCategory,
+    String reportFollowUp,
+    String reportData,
+    String reportStatus,
+    String GuardName,
+    String reportDate,
+    String reportLocation,
+    List<String> reportImages,
+  ) async {
     final htmlcontent = """
   <!DOCTYPE html>
   <html lang="en">
@@ -290,28 +290,31 @@ class _ClientOpenReportState extends State<ClientOpenReport> {
           ),
           actions: [
             TextButton(
-              onPressed: () {generateReportPdf(widget.reportName, widget.reportCategory, widget.reportFollowUpRequire, widget.reportData, widget.reportStatus, widget.reportEmployeeName, widget.reportDate, widget.reportLocation, widget.reportImages);},
+              onPressed: () {
+                generateReportPdf(
+                    widget.reportName,
+                    widget.reportCategory,
+                    widget.reportFollowUpRequire,
+                    widget.reportData,
+                    widget.reportStatus,
+                    widget.reportEmployeeName,
+                    widget.reportDate,
+                    widget.reportLocation,
+                    widget.reportImages);
+              },
               child: Row(
                 children: [
                   Icon(
                     Icons.download_for_offline_sharp,
                     size: 24.sp,
-                    color: Theme
-                        .of(context)
-                        .textTheme
-                        .bodyMedium!
-                        .color,
+                    color: Theme.of(context).textTheme.bodyMedium!.color,
                   ),
                   SizedBox(
                     width: 10.w,
                   ),
                   InterMedium(
                     text: 'PDF',
-                    color: Theme
-                        .of(context)
-                        .textTheme
-                        .bodyMedium!
-                        .color,
+                    color: Theme.of(context).textTheme.bodyMedium!.color,
                     fontsize: 14.sp,
                   ),
                   SizedBox(
@@ -336,21 +339,13 @@ class _ClientOpenReportState extends State<ClientOpenReport> {
                     InterBold(
                       text: 'Report Name:',
                       fontsize: 18.sp,
-                      color: Theme
-                          .of(context)
-                          .textTheme
-                          .bodyMedium!
-                          .color,
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
                     ),
                     SizedBox(width: 20.h),
                     InterMedium(
                       text: widget.reportName,
                       fontsize: 14.sp,
-                      color: Theme
-                          .of(context)
-                          .textTheme
-                          .bodyMedium!
-                          .color,
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
                     ),
                   ],
                 ),
@@ -361,21 +356,13 @@ class _ClientOpenReportState extends State<ClientOpenReport> {
                     InterBold(
                       text: 'Report Category:',
                       fontsize: 18.sp,
-                      color: Theme
-                          .of(context)
-                          .textTheme
-                          .bodyMedium!
-                          .color,
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
                     ),
                     SizedBox(width: 20.h),
                     InterMedium(
                       text: widget.reportCategory,
                       fontsize: 14.sp,
-                      color: Theme
-                          .of(context)
-                          .textTheme
-                          .bodyMedium!
-                          .color,
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
                     ),
                   ],
                 ),
@@ -386,21 +373,13 @@ class _ClientOpenReportState extends State<ClientOpenReport> {
                     InterBold(
                       text: 'Report Date:',
                       fontsize: 18.sp,
-                      color: Theme
-                          .of(context)
-                          .textTheme
-                          .bodyMedium!
-                          .color,
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
                     ),
                     SizedBox(width: 20.h),
                     InterMedium(
                       text: widget.reportDate,
                       fontsize: 14.sp,
-                      color: Theme
-                          .of(context)
-                          .textTheme
-                          .bodyMedium!
-                          .color,
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
                     ),
                   ],
                 ),
@@ -411,21 +390,13 @@ class _ClientOpenReportState extends State<ClientOpenReport> {
                     InterBold(
                       text: 'Report Follow Up Required:',
                       fontsize: 18.sp,
-                      color: Theme
-                          .of(context)
-                          .textTheme
-                          .bodyMedium!
-                          .color,
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
                     ),
                     SizedBox(width: 20.h),
                     InterMedium(
                       text: widget.reportFollowUpRequire,
                       fontsize: 14.sp,
-                      color: Theme
-                          .of(context)
-                          .textTheme
-                          .bodyMedium!
-                          .color,
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
                     ),
                   ],
                 ),
@@ -437,22 +408,14 @@ class _ClientOpenReportState extends State<ClientOpenReport> {
                     InterBold(
                       text: 'Report Data:',
                       fontsize: 18.sp,
-                      color: Theme
-                          .of(context)
-                          .textTheme
-                          .bodyMedium!
-                          .color,
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
                     ),
                     SizedBox(width: 20.h),
                     Flexible(
                       child: InterMedium(
                         text: widget.reportData,
                         fontsize: 14.sp,
-                        color: Theme
-                            .of(context)
-                            .textTheme
-                            .bodyMedium!
-                            .color,
+                        color: Theme.of(context).textTheme.bodyMedium!.color,
                         maxLines: 50,
                       ),
                     ),
@@ -465,21 +428,13 @@ class _ClientOpenReportState extends State<ClientOpenReport> {
                     InterBold(
                       text: 'Report Status:',
                       fontsize: 18.sp,
-                      color: Theme
-                          .of(context)
-                          .textTheme
-                          .bodyMedium!
-                          .color,
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
                     ),
                     SizedBox(width: 20.h),
                     InterMedium(
                       text: widget.reportStatus,
                       fontsize: 14.sp,
-                      color: Theme
-                          .of(context)
-                          .textTheme
-                          .bodyMedium!
-                          .color,
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
                     ),
                   ],
                 ),
@@ -490,21 +445,13 @@ class _ClientOpenReportState extends State<ClientOpenReport> {
                     InterBold(
                       text: 'Employee Name:',
                       fontsize: 18.sp,
-                      color: Theme
-                          .of(context)
-                          .textTheme
-                          .bodyMedium!
-                          .color,
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
                     ),
                     SizedBox(width: 20.h),
                     InterMedium(
                       text: widget.reportEmployeeName,
                       fontsize: 14.sp,
-                      color: Theme
-                          .of(context)
-                          .textTheme
-                          .bodyMedium!
-                          .color,
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
                     ),
                   ],
                 ),
@@ -515,21 +462,13 @@ class _ClientOpenReportState extends State<ClientOpenReport> {
                     InterBold(
                       text: 'Report Location:',
                       fontsize: 18.sp,
-                      color: Theme
-                          .of(context)
-                          .textTheme
-                          .bodyMedium!
-                          .color,
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
                     ),
                     SizedBox(width: 20.h),
                     InterMedium(
                       text: widget.reportLocation,
                       fontsize: 14.sp,
-                      color: Theme
-                          .of(context)
-                          .textTheme
-                          .bodyMedium!
-                          .color,
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
                     ),
                   ],
                 ),
@@ -540,77 +479,82 @@ class _ClientOpenReportState extends State<ClientOpenReport> {
                     InterBold(
                       text: 'Followed Up Report:',
                       fontsize: 18.sp,
-                      color: Theme
-                          .of(context)
-                          .textTheme
-                          .bodyMedium!
-                          .color,
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
                     ),
                     SizedBox(width: 20.h),
                     widget.reportFollowUpId == "Not Found"
                         ? InterMedium(
-                      text: 'NOT FOUND',
-                      fontsize: 14.sp,
-                      color: Theme.of(context).textTheme.bodyMedium!.color,
-                    )
+                            text: 'NOT FOUND',
+                            fontsize: 14.sp,
+                            color:
+                                Theme.of(context).textTheme.bodyMedium!.color,
+                          )
                         : ElevatedButton(
-                      onPressed: () {
-                        if (followUp.isNotEmpty) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ClientOpenReport(
-                                reportName: followUp[0]['ReportName'],
-                                reportCategory: followUp[0]['ReportCategory'],
-                                reportDate: followUp[0]['ReportDate'].toString(),
-                                reportFollowUpRequire: followUp[0]['ReportFollowUpRequire'].toString(),
-                                reportData: followUp[0]['ReportData'],
-                                reportStatus: followUp[0]['ReportStatus'],
-                                reportEmployeeName: followUp[0]['ReportEmployeeName'],
-                                reportLocation: followUp[0]['ReportLocation'],
-                                reportImages: followUp[0]['ReportImages'] ?? [],
-                                reportFollowUpId: followUp[0]['ReportFollowedUp'],
-                              ),
-                            ),
-                          );
-                        }
-                      },
-                      child: Text('See Report'),
-                    ),
+                            onPressed: () {
+                              if (followUp.isNotEmpty) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ClientOpenReport(
+                                      reportName: followUp[0]['ReportName'],
+                                      reportCategory: followUp[0]
+                                          ['ReportCategory'],
+                                      reportDate:
+                                          followUp[0]['ReportDate'].toString(),
+                                      reportFollowUpRequire: followUp[0]
+                                              ['ReportFollowUpRequire']
+                                          .toString(),
+                                      reportData: followUp[0]['ReportData'],
+                                      reportStatus: followUp[0]['ReportStatus'],
+                                      reportEmployeeName: followUp[0]
+                                          ['ReportEmployeeName'],
+                                      reportLocation: followUp[0]
+                                          ['ReportLocation'],
+                                      reportImages:
+                                          followUp[0]['ReportImages'] ?? [],
+                                      reportFollowUpId: followUp[0]
+                                          ['ReportFollowedUp'],
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
+                            child: Text('See Report'),
+                          ),
                   ],
                 ),
                 SizedBox(height: 50.h),
                 widget.reportImages == null || widget.reportImages.isEmpty
                     ? Center(
-                  child: Text(
-                    "No Images Associated",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey,
-                    ),
-                  ),
-                )
-                    : GridView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    mainAxisSpacing: 8.0,
-                    crossAxisSpacing: 8.0,
-                  ),
-                  itemCount: widget.reportImages.length,
-                  itemBuilder: (context, index) {
-                    String imageUrl = widget.reportImages[index];
-                    return Container(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: NetworkImage(imageUrl),
-                          fit: BoxFit.cover,
+                        child: Text(
+                          "No Images Associated",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey,
+                          ),
                         ),
+                      )
+                    : GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          mainAxisSpacing: 8.0,
+                          crossAxisSpacing: 8.0,
+                        ),
+                        itemCount: widget.reportImages.length,
+                        itemBuilder: (context, index) {
+                          String imageUrl = widget.reportImages[index];
+                          return Container(
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: NetworkImage(imageUrl),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          );
+                        },
                       ),
-                    );
-                  },
-                ),
               ],
             ),
           ),

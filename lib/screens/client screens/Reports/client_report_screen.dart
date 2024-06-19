@@ -74,8 +74,8 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
               ? data['ReportFollowedUpId']
               : 'Not Found',
           'ReportImages': (data['ReportImage'] != null &&
-              data['ReportImage'] is List &&
-              data['ReportImage'].isNotEmpty)
+                  data['ReportImage'] is List &&
+                  data['ReportImage'].isNotEmpty)
               ? List<String>.from(data['ReportImage'])
               : [],
         };
@@ -114,9 +114,7 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
                 padding: EdgeInsets.only(left: 20.w),
                 onPressed: () {
                   Navigator.pop(context);
-                  print(
-                      "Navigtor debug: ${Navigator.of(context)
-                          .toString()}");
+                  print("Navigtor debug: ${Navigator.of(context).toString()}");
                 },
               ),
               title: InterMedium(
@@ -126,94 +124,84 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
               floating: true, // Makes the app bar float above the content
             ),
             SliverToBoxAdapter(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 30.w),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 30.h,
-                    ),
-                    Row(
-                      mainAxisAlignment:
-                      MainAxisAlignment.spaceBetween,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            // SelectLocationShift
-                            //     .showLocationDialog(
-                            //   context,
-                            //   _cmpId,
-                            //   onLocationSelected,
-                            // );
-                          },
-                          child: SizedBox(
-                            width: 150.w,
-                            child: IconTextWidget(
-                              space: 6.w,
-                              icon: Icons.add,
-                              iconSize: 20.sp,
-                              text: 'Select Location',
-                              useBold: true,
-                              fontsize: 14.sp,
-                              color: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .bodySmall!
-                                  .color as Color,
-                              Iconcolor: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .bodyMedium!
-                                  .color as Color,
-                            ),
+                child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 30.w),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 30.h,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          // SelectLocationShift
+                          //     .showLocationDialog(
+                          //   context,
+                          //   _cmpId,
+                          //   onLocationSelected,
+                          // );
+                        },
+                        child: SizedBox(
+                          width: 150.w,
+                          child: IconTextWidget(
+                            space: 6.w,
+                            icon: Icons.add,
+                            iconSize: 20.sp,
+                            text: 'Select Location',
+                            useBold: true,
+                            fontsize: 14.sp,
+                            color: Theme.of(context).textTheme.bodySmall!.color
+                                as Color,
+                            Iconcolor: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .color as Color,
                           ),
                         ),
-                        // SizedBox(
-                        //   width: Platform.isIOS ? 30.w : 10.w,
-                        // ),
-                        GestureDetector(
-                          onTap: () {
-                            // Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //         builder: (context) =>
-                            //             SelectClientGuardsScreen(
-                            //               companyId: _cmpId,
-                            //               onGuardSelected:
-                            //               onGuardSelected,
-                            //             )));
-                          },
-                          child: SizedBox(
-                            width: 150.w,
-                            child: IconTextWidget(
-                              space: 6.w,
-                              icon: Icons.add,
-                              iconSize: 20.sp,
-                              text: 'Select Employee',
-                              useBold: true,
-                              fontsize: 14.sp,
-                              color: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .bodySmall!
-                                  .color as Color,
-                              Iconcolor: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .bodyMedium!
-                                  .color as Color,
-                            ),
+                      ),
+                      // SizedBox(
+                      //   width: Platform.isIOS ? 30.w : 10.w,
+                      // ),
+                      GestureDetector(
+                        onTap: () {
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //         builder: (context) =>
+                          //             SelectClientGuardsScreen(
+                          //               companyId: _cmpId,
+                          //               onGuardSelected:
+                          //               onGuardSelected,
+                          //             )));
+                        },
+                        child: SizedBox(
+                          width: 150.w,
+                          child: IconTextWidget(
+                            space: 6.w,
+                            icon: Icons.add,
+                            iconSize: 20.sp,
+                            text: 'Select Employee',
+                            useBold: true,
+                            fontsize: 14.sp,
+                            color: Theme.of(context).textTheme.bodySmall!.color
+                                as Color,
+                            Iconcolor: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .color as Color,
                           ),
                         ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 10.h,
-                    )
-                  ],
-                ),
-              )
-            ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10.h,
+                  )
+                ],
+              ),
+            )),
             SliverList(
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
@@ -244,8 +232,10 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
                               reportEmployeeName: reports[index]
                                   ['ReportEmployeeName'],
                               reportLocation: reports[index]['ReportLocation'],
-                              reportImages: reports[index]['ReportImages'] ?? [],
-                              reportFollowUpId: reports[index]['ReportFollowedUp'],
+                              reportImages:
+                                  reports[index]['ReportImages'] ?? [],
+                              reportFollowUpId: reports[index]
+                                  ['ReportFollowedUp'],
                             ),
                           ),
                         );

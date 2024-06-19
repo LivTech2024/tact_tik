@@ -176,7 +176,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     // inTime = DateTime.now();
     // startStopwatch();
     initPrefs();
-    print("Shift id at StartTask Screen ${widget.ShiftId}");
+    print("Shift id at Star.tTask Screen ${widget.ShiftId}");
+    // _stopwatchTimer;
     // initStopwatch();
     // startStopwatch();
 
@@ -192,24 +193,11 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 
   void initPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    final homeScreenController = HomeScreenController.instance;
+    // final homeScreenController = HomeScreenController.instance;
     print("Shift Status at StartTask Screen ${widget.ShiftStatus}");
 
     print("Clicked Saved PRef ${clickedIn}");
 
-    // if (widget.ShiftStatus == 'started') {
-    //   setState(() {
-    //     clickedIn = true;
-    //     prefs.setBool('clickedIn', clickedIn);
-    //   });
-    // await homeScreenController.startBgLocationService();
-    // updateLateTimeAndStartTimer();
-    // } else {
-    //   setState(() {
-    //     prefs.setBool('clickedIn', clickedIn);
-    //     clickedIn = false;
-    //   });
-    // }
     bool? savedClickedIn = prefs.getBool('clickedIn');
     print("saved Clicked in values: ${savedClickedIn}");
     bool? pauseState = prefs.getBool('paused');
@@ -220,7 +208,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     });
     if (clickedIn == true) {
       updateLateTimeAndStartTimer();
-      await homeScreenController.startBgLocationService();
+      // _startTimer();
+      // await homeScreenController.startBgLocationService();
     }
     if (pauseState != null) {
       setState(() {
@@ -254,55 +243,55 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     }
   }
 
-  void initStopwatch() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _elapsedTime = prefs.getInt('elapsedTime') ?? 0;
-    });
-    print("ELapsedTime: ${_elapsedTime}");
-  }
+  // void initStopwatch() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   setState(() {
+  //     _elapsedTime = prefs.getInt('elapsedTime') ?? 0;
+  //   });
+  //   print("ELapsedTime: ${_elapsedTime}");
+  // }
 
-  void startStopwatch() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+  // void startStopwatch() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    if (clickedIn && !isPaused) {
-      _stopwatchTimer = Timer.periodic(Duration(seconds: 1), (Timer timer) {
-        setState(() {
-          _stopwatchSeconds++;
-          prefs.setInt('stopwatchSeconds', _stopwatchSeconds);
-          prefs.setBool("stopwatchKey", true);
-        });
-      });
-    }
-  }
+  //   if (clickedIn && !isPaused) {
+  //     _stopwatchTimer = Timer.periodic(Duration(seconds: 1), (Timer timer) {
+  //       setState(() {
+  //         _stopwatchSeconds++;
+  //         prefs.setInt('stopwatchSeconds', _stopwatchSeconds);
+  //         prefs.setBool("stopwatchKey", true);
+  //       });
+  //     });
+  //   }
+  // }
 
-  void resetStopwatch() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+  // void resetStopwatch() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    setState(() {
-      _stopwatchSeconds = 0;
-      prefs.setInt('stopwatchSeconds', _stopwatchSeconds);
-    });
-  }
+  //   setState(() {
+  //     _stopwatchSeconds = 0;
+  //     prefs.setInt('stopwatchSeconds', _stopwatchSeconds);
+  //   });
+  // }
 
-  void resetClickedState() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      clickedIn = false;
-      prefs.setBool('clickedIn', clickedIn);
-      isPaused = false;
-      prefs.setBool('pauseState', isPaused);
-      _stopwatchSeconds = 0;
-      prefs.setInt('savedInTime', _stopwatchSeconds);
+  // void resetClickedState() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   setState(() {
+  //     clickedIn = false;
+  //     prefs.setBool('clickedIn', clickedIn);
+  //     isPaused = false;
+  //     prefs.setBool('pauseState', isPaused);
+  //     _stopwatchSeconds = 0;
+  //     prefs.setInt('savedInTime', _stopwatchSeconds);
 
-      // Reset clickedIn state
-      resetStopwatch(); // Reset the stopwatch
-    });
-  }
+  //     // Reset clickedIn state
+  //     resetStopwatch(); // Reset the stopwatch
+  //   });
+  // }
 
-  void stopStopwatch() {
-    _stopwatchTimer.cancel(); // Stop the stopwatch timer
-  }
+  // void stopStopwatch() {
+  //   _stopwatchTimer.cancel(); // Stop the stopwatch timer
+  // }
 
   @override
   void dispose() {
@@ -415,10 +404,69 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
       });
     });
   }
+  // void updateLateTimeAndStartTimer() {
+  //   print('update late time and start timer function');
+  //   DateTime now = DateTime.now();
+
+  //   /// -- update late time
+  //   DateFormat dateFormat = DateFormat("HH:mm");
+
+  //   DateTime shiftStartTime = dateFormat.parse(widget.ShiftStartTime);
+  //   shiftStartTime = DateTime(now.year, now.month, now.day, shiftStartTime.hour,
+  //       shiftStartTime.minute);
+
+  //   DateTime shiftEndTime = dateFormat.parse(widget.ShiftEndTime);
+  //   shiftEndTime = DateTime(
+  //       now.year, now.month, now.day, shiftEndTime.hour, shiftEndTime.minute);
+
+  //   DateTime deadline = shiftStartTime.add(const Duration(minutes: 10));
+
+  //   Duration remainingTimeToStart = deadline.difference(now);
+
+  //   if (remainingTimeToStart.isNegative) {
+  //     print("The user is already late.");
+  //     Duration lateDuration = now.difference(deadline);
+  //     if (!clickedIn) {
+  //       setState(() {
+  //         isLate = true;
+  //         lateTime =
+  //             "${lateDuration.inHours}h : ${lateDuration.inMinutes % 60}m";
+  //         print("Late time: $lateTime");
+  //       });
+  //     }
+  //   } else {
+  //     print(
+  //         "Remaining time to start the shift: ${remainingTimeToStart.inMinutes} minutes.");
+  //   }
+
+  //   /// -- start timer
+  //   remainingTime = shiftEndTime.difference(now);
+  //   _startTimer();
+  // }
+
+  // void _startTimer() {
+  //   print('start timer');
+  //   if (_timer != null) {
+  //     _timer!.cancel();
+  //   }
+
+  //   _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+  //     setState(() {
+  //       if (remainingTime.inSeconds > 0) {
+  //         remainingTime = remainingTime - Duration(seconds: 1);
+  //         remainingTimeFormatted =
+  //             "${remainingTime.inHours}h : ${remainingTime.inMinutes % 60}m : ${remainingTime.inSeconds % 60}s";
+  //         print("Timer $remainingTimeFormatted");
+  //       } else {
+  //         _timer!.cancel();
+  //       }
+  //     });
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
-    final homeScreenController = HomeScreenController.instance;
+    // final homeScreenController = HomeScreenController.instance;
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
     TextEditingController CommentController = TextEditingController();
@@ -705,8 +753,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                   _startTimer();
                                   //
                                   // // start bg service that get locations and send it to the firebase
-                                  await homeScreenController
-                                      .startBgLocationService();
+                                  // await homeScreenController
+                                  //     .startBgLocationService();
 
                                   setState(() {
                                     _isLoading = true;
@@ -755,7 +803,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                     }
                                     fireStoreService
                                         .fetchreturnShiftTasks(widget.ShiftId);
-                                    startStopwatch();
+                                    // startStopwatch();
                                     // } else {
                                     print('already clicked');
                                     // }
@@ -836,7 +884,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 
                       // await _sendEmailWithScreenshot(file.path);
 
-                      await homeScreenController.stopBgLocationService();
+                      // await homeScreenController.stopBgLocationService();
                       // }));
 
                       // setState(() {
@@ -926,8 +974,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 
                                           if (CommentController
                                               .text.isNotEmpty) {
-                                            await homeScreenController
-                                                .stopBgLocationService();
+                                            // await homeScreenController
+                                            //     .stopBgLocationService();
                                             widget.onRefresh();
                                             var data = await fireStoreService
                                                 .fetchDataForPdf(
@@ -939,8 +987,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                               // isPaused = !isPaused;
                                               // prefs.setBool("pauseState", isPaused);
                                               clickedIn = false;
-                                              resetStopwatch();
-                                              resetClickedState();
+                                              // resetStopwatch();
+                                              // resetClickedState();
                                               widget.resetShiftStarted();
                                               prefs.setBool(
                                                   'ShiftStarted', false);
@@ -1070,7 +1118,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                             // prefs.setBool("pauseState", isPaused);
                             clickedIn = false;
                             // resetStopwatch();
-                            resetClickedState();
+                            // resetClickedState();
                             widget.resetShiftStarted();
                             prefs.setBool('ShiftStarted', false);
                           });
@@ -1171,7 +1219,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         widget.ShiftLocationId,
                         widget.ShiftName);
                     prefs.setBool('onBreak', onBreak);
-                    startStopwatch();
+                    // startStopwatch();
                     fireStoreService.ResumeShiftLog(widget.EmployeId);
                   }
                 },
