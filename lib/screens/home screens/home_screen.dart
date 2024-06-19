@@ -724,23 +724,25 @@ class _HomeScreenState extends State<HomeScreen> {
           onRefresh: _refreshData,
           child: CustomScrollView(
             slivers: [
-              HomeScreenPart1(
-                isClient: false,
-                userName: _userName,
-                employeeImg: employeeImg,
-                shiftLocationName: '',
-                shiftLocationId: _shiftLocationId,
-                shiftId: _shiftId,
-                shiftCompanyId: '',
-                shiftClientId: _shiftCLientId,
-                empEmail: _employeeEmail,
-                branchId: _branchId,
-                empId: _employeeId,
-                // employeeImg: _employeeImg,
-                showWish: _showWish,
-                drawerOnClicked: () {
-                  _scaffoldKey1.currentState?.openEndDrawer();
-                },
+              SliverToBoxAdapter(
+                child: HomeScreenPart1(
+                  isClient: false,
+                  userName: _userName,
+                  employeeImg: employeeImg,
+                  shiftLocationName: '',
+                  shiftLocationId: _shiftLocationId,
+                  shiftId: _shiftId,
+                  shiftCompanyId: '',
+                  shiftClientId: _shiftCLientId,
+                  empEmail: _employeeEmail,
+                  branchId: _branchId,
+                  empId: _employeeId,
+                  // employeeImg: _employeeImg,
+                  showWish: _showWish,
+                  drawerOnClicked: () {
+                    _scaffoldKey1.currentState?.openEndDrawer();
+                  },
+                ),
               ),
               SliverToBoxAdapter(
                 child: Padding(

@@ -308,7 +308,7 @@ class _ShiftInformationState extends State<ShiftInformation> {
                               )
                             // ],
                             // )
-                            : SizedBox(),
+                            : const SizedBox(),
                         SizedBox(height: 100.h),
                       ],
                     )

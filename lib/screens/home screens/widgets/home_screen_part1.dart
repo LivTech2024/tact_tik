@@ -49,13 +49,12 @@ class HomeScreenPart1 extends StatefulWidget {
   final String shiftLocationId;
   final String shiftLocationName;
   final bool isEmployee;
-
   // final String url;
   final VoidCallback drawerOnClicked;
-  bool? showWish;
+  final bool? showWish;
   final bool isClient;
 
-  HomeScreenPart1({
+  const HomeScreenPart1({
     Key? key,
     required this.userName,
     // required this.url,
@@ -168,431 +167,420 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
       greeting = 'Good Evening,';
     }
 
-    return SliverToBoxAdapter(
-      child: Padding(
-        padding: EdgeInsets.only(
-          left: 30.w,
-          right: 30.w,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 10.h),
-            SizedBox(
-              height: 55.h,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => widget.isEmployee
-                              ? ProfileScreen(
-                                  empId: widget.empId,
-                                )
-                              : ClientProfileScreen(
-                                  empId: widget.empId,
-                                ),
-                        ),
-                      );
-                    },
-                    child: Container(
-                      height: 55.h,
-                      width: 55.w,
-                      decoration: widget.employeeImg != ""
-                          ? BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                image: NetworkImage(widget.employeeImg ?? ""),
-                                filterQuality: FilterQuality.high,
-                                fit: BoxFit.cover,
+    return Padding(
+      padding: EdgeInsets.only(
+        left: 30.w,
+        right: 30.w,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 10.h),
+          SizedBox(
+            height: 55.h,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => widget.isEmployee
+                            ? ProfileScreen(
+                                empId: widget.empId,
+                              )
+                            : ClientProfileScreen(
+                                empId: widget.empId,
                               ),
-                            )
-                          : BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Theme.of(context).primaryColor,
-                              image: DecorationImage(
-                                image: AssetImage('assets/images/default.png'),
-                                filterQuality: FilterQuality.high,
-                                fit: BoxFit.cover,
-                              ),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    height: 55.h,
+                    width: 55.w,
+                    decoration: widget.employeeImg != ""
+                        ? BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              image: NetworkImage(widget.employeeImg ?? ""),
+                              filterQuality: FilterQuality.high,
+                              fit: BoxFit.cover,
                             ),
-                    ),
+                          )
+                        : BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Theme.of(context).primaryColor,
+                            image: DecorationImage(
+                              image: AssetImage('assets/images/default.png'),
+                              filterQuality: FilterQuality.high,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                   ),
-                  Row(
-                    children: [
-                      Stack(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => WriteMsgScreen()));
-                            },
-                            child: Icon(
-                              Icons.notifications,
-                              // Use the notifications_active icon
-                              color: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall!
-                                  .color, // Change color if unread
-                              size: 28.sp,
-                            ),
-                          ),
-                          if (isUnread)
-                            Positioned(
-                              top: 0,
-                              right: 0,
-                              child: Container(
-                                padding: EdgeInsets.all(2.sp),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall
-                                      ?.color, // Background color for unread indicator
-                                ),
-                              ),
-                            ),
-                        ],
-                      ),
-                      SizedBox(
-                        width: 26.w,
-                      ),
-                      GestureDetector(
-                        onTap: widget.drawerOnClicked,
-                        child: Transform.scale(
-                          scaleX: -1,
+                ),
+                Row(
+                  children: [
+                    Stack(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => WriteMsgScreen()));
+                          },
                           child: Icon(
-                            Icons.short_text_rounded,
-                            color: Theme.of(context).textTheme.bodySmall!.color,
-                            size: 40.sp,
+                            Icons.notifications,
+                            // Use the notifications_active icon
+                            color: Theme.of(context)
+                                .textTheme
+                                .bodySmall!
+                                .color, // Change color if unread
+                            size: 28.sp,
                           ),
                         ),
+                        if (isUnread)
+                          Positioned(
+                            top: 0,
+                            right: 0,
+                            child: Container(
+                              padding: EdgeInsets.all(2.sp),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall
+                                    ?.color, // Background color for unread indicator
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                    SizedBox(
+                      width: 26.w,
+                    ),
+                    GestureDetector(
+                      onTap: widget.drawerOnClicked,
+                      child: Transform.scale(
+                        scaleX: -1,
+                        child: Icon(
+                          Icons.short_text_rounded,
+                          color: Theme.of(context).textTheme.bodySmall!.color,
+                          size: 40.sp,
+                        ),
                       ),
-                    ],
-                  )
-                ],
-              ),
+                    ),
+                  ],
+                )
+              ],
             ),
-            SizedBox(height: widget.showWish! ? 40.h : 57.h),
-            widget.showWish!
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      PoppinsSemibold(
-                        text: '${greeting}',
-                        color: Theme.of(context).textTheme.bodySmall!.color,
-                        letterSpacing: -.5,
-                        fontsize: 35.sp,
-                      ),
-                      SizedBox(height: 2.h),
-                      PoppinsLight(
-                        text: widget.userName != ''
-                            ? widget.userName
-                            : 'Loading..',
-                        color: Theme.of(context).textTheme.bodySmall!.color,
-                        fontsize: 30.sp,
-                      ),
-                      SizedBox(height: 46.h),
-                    ],
-                  )
-                : const SizedBox(),
-            Container(
-              constraints: BoxConstraints(
-                minHeight: cleartext ? 64.h : 64.h,
-              ),
-              padding: EdgeInsets.symmetric(horizontal: 10.w),
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Theme.of(context).shadowColor,
-                    blurRadius: 5,
-                    spreadRadius: 2,
-                    offset: Offset(0, 3),
-                  )
-                ],
-                color: Theme.of(context).cardColor,
-                borderRadius: BorderRadius.circular(13.r),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: TypeAheadField<Screens>(
-                          autoFlipDirection: true,
+          ),
+          SizedBox(height: widget.showWish! ? 40.h : 57.h),
+          widget.showWish!
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    PoppinsSemibold(
+                      text: '${greeting}',
+                      color: Theme.of(context).textTheme.bodySmall!.color,
+                      letterSpacing: -.5,
+                      fontsize: 35.sp,
+                    ),
+                    SizedBox(height: 2.h),
+                    PoppinsLight(
+                      text:
+                          widget.userName != '' ? widget.userName : 'Loading..',
+                      color: Theme.of(context).textTheme.bodySmall!.color,
+                      fontsize: 30.sp,
+                    ),
+                    SizedBox(height: 46.h),
+                  ],
+                )
+              : const SizedBox(),
+          Container(
+            constraints: BoxConstraints(
+              minHeight: cleartext ? 64.h : 64.h,
+            ),
+            padding: EdgeInsets.symmetric(horizontal: 10.w),
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Theme.of(context).shadowColor,
+                  blurRadius: 5,
+                  spreadRadius: 2,
+                  offset: Offset(0, 3),
+                )
+              ],
+              color: Theme.of(context).cardColor,
+              borderRadius: BorderRadius.circular(13.r),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: TypeAheadField<Screens>(
+                        autoFlipDirection: true,
+                        controller: _controller,
+                        direction: VerticalDirection.down,
+                        builder: (context, _controller, focusNode) => TextField(
+                          maxLength: 20,
+                          maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                          onChanged: (text) {
+                            setState(() {
+                              if (text != '') {
+                                cleartext = true;
+                              } else {
+                                cleartext = false;
+                              }
+                            });
+                          },
                           controller: _controller,
-                          direction: VerticalDirection.down,
-                          builder: (context, _controller, focusNode) =>
-                              TextField(
-                            maxLength: 20,
-                            maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                            onChanged: (text) {
-                              setState(() {
-                                if (text != '') {
-                                  cleartext = true;
-                                } else {
-                                  cleartext = false;
-                                }
-                              });
-                            },
-                            controller: _controller,
-                            focusNode: focusNode,
-                            autofocus: false,
-                            style: GoogleFonts.poppins(
+                          focusNode: focusNode,
+                          autofocus: false,
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w300,
+                            fontSize: 18.sp,
+                            color:
+                                Theme.of(context).textTheme.titleLarge!.color,
+                          ),
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10.r),
+                              ),
+                            ),
+                            focusedBorder: InputBorder.none,
+                            hintStyle: GoogleFonts.poppins(
                               fontWeight: FontWeight.w300,
                               fontSize: 18.sp,
                               color:
-                                  Theme.of(context).textTheme.titleLarge!.color,
+                                  Theme.of(context).textTheme.bodyLarge!.color,
                             ),
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide.none,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10.r),
-                                ),
-                              ),
-                              focusedBorder: InputBorder.none,
-                              hintStyle: GoogleFonts.poppins(
-                                fontWeight: FontWeight.w300,
-                                fontSize: 18.sp,
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge!
-                                    .color,
-                              ),
-                              hintText: 'Search screen',
-                              contentPadding: EdgeInsets.zero,
-                              counterText: "",
-                            ),
-                            cursorColor: Theme.of(context).primaryColor,
+                            hintText: 'Search screen',
+                            contentPadding: EdgeInsets.zero,
+                            counterText: "",
                           ),
-                          suggestionsCallback: widget.isEmployee
-                              ? suggestionsCallback
-                              : ClientsuggestionsCallback,
-                          itemBuilder: (context, Screens screen) {
-                            return ListTile(
-                              leading:
-                                  Icon(screen.icon, color: Colors.blueAccent),
-                              title: InterRegular(
-                                text: screen.name,
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium!
-                                    .color,
-                              ),
-                            );
-                          },
-                          emptyBuilder: (context) => Padding(
-                            padding: EdgeInsets.symmetric(
-                              vertical: 10.h,
-                              horizontal: 10.w,
-                            ),
-                            child: InterRegular(
-                              text: 'No Such Screen found',
+                          cursorColor: Theme.of(context).primaryColor,
+                        ),
+                        suggestionsCallback: widget.isEmployee
+                            ? suggestionsCallback
+                            : ClientsuggestionsCallback,
+                        itemBuilder: (context, Screens screen) {
+                          return ListTile(
+                            leading:
+                                Icon(screen.icon, color: Colors.blueAccent),
+                            title: InterRegular(
+                              text: screen.name,
                               color:
                                   Theme.of(context).textTheme.bodyMedium!.color,
-                              fontsize: 18.sp,
                             ),
+                          );
+                        },
+                        emptyBuilder: (context) => Padding(
+                          padding: EdgeInsets.symmetric(
+                            vertical: 10.h,
+                            horizontal: 10.w,
                           ),
-                          decorationBuilder: (context, child) => Material(
-                            type: MaterialType.card,
-                            elevation: 4,
-                            borderRadius: BorderRadius.circular(10.r),
-                            child: child,
+                          child: InterRegular(
+                            text: 'No Such Screen found',
+                            color:
+                                Theme.of(context).textTheme.bodyMedium!.color,
+                            fontsize: 18.sp,
                           ),
-                          debounceDuration: const Duration(milliseconds: 300),
-                          onSelected: (Screens value) {
-                            print(
-                                'home screen search bar############################################');
+                        ),
+                        decorationBuilder: (context, child) => Material(
+                          type: MaterialType.card,
+                          elevation: 4,
+                          borderRadius: BorderRadius.circular(10.r),
+                          child: child,
+                        ),
+                        debounceDuration: const Duration(milliseconds: 300),
+                        onSelected: (Screens value) {
+                          print(
+                              'home screen search bar############################################');
 
-                            print(value.name);
-                            if (widget.isClient) {
-                              switch (value) {
-                                case 'DAR Screen':
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => ClientDarScreen(
-                                            clientId: widget.empId,
-                                            companyId:
-                                                widget.shiftCompanyId ?? ""),
-                                      ));
-                                  break;
+                          print(value.name);
+                          if (widget.isClient) {
+                            switch (value) {
+                              case 'DAR Screen':
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ClientDarScreen(
+                                          clientId: widget.empId,
+                                          companyId:
+                                              widget.shiftCompanyId ?? ""),
+                                    ));
+                                break;
 
-                                case 'Reports Screen':
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            ClientReportScreen(
-                                          employeeId: widget.empId,
-                                        ),
-                                      ));
-                                  break;
-                              }
-                            } else {
-                              switch (value) {
-                                case 'Site Tours':
-                                  // showDialog(
-                                  //   context: context,
-                                  //   builder: (BuildContext context) {
-                                  //     return SiteTourScreen(
-                                  //       height: height,
-                                  //       width: width,
-                                  //       schedulesList: schedules_list,
-                                  //     );
-                                  //   },
-                                  // );
-                                  break;
-                                case 'DAR Screen':
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              DarDisplayScreen(
-                                                EmpEmail: widget.empEmail,
-                                                EmpID: widget.empId,
-                                                EmpDarCompanyId:
-                                                    widget.shiftCompanyId ?? "",
-                                                EmpDarCompanyBranchId:
-                                                    widget.branchId,
-                                                EmpDarShiftID: widget.shiftId,
-                                                EmpDarClientID:
-                                                    widget.shiftClientId,
-                                                Username: widget.userName,
-                                              )));
-                                  break;
-                                case 'Reports Screen':
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => ReportScreen(
-                                                locationId:
-                                                    widget.shiftLocationId,
-                                                locationName:
-                                                    widget.shiftLocationId,
-                                                companyId:
-                                                    widget.shiftCompanyId ?? "",
-                                                empId: widget.empId,
-                                                empName: widget.userName,
-                                                clientId: widget.shiftClientId,
-                                                ShiftId: widget.shiftId,
-                                              )));
-                                  break;
-                                case 'Post Screen':
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => PostOrder(
-                                                locationId:
-                                                    widget.shiftLocationId,
-                                              )));
-                                  break;
-                                case 'Task Screen':
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              TaskFeatureScreen()));
-                                  break;
-                                case 'LogBook Screen':
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => LogBookScreen(
-                                                EmpId: widget.empId,
-                                              )));
-                                  break;
-                                case 'Visitors Screen':
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => VisiTorsScreen(
-                                                locationId:
-                                                    widget.shiftLocationId,
-                                              )));
-                                  break;
-                                case 'Assets Screen':
-                                case 'Assets Screen':
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              // KeysScreen(
-                                              //     keyId: _employeeId)
-                                              AssetsScreen(
-                                                  assetEmpId: widget.empId)));
-                                  break;
-                                case 'Key Screen':
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => KeysScreen(
-                                                LocationId:
-                                                    widget.shiftLocationId,
-                                                keyId: widget.empId,
-                                                companyId:
-                                                    widget.shiftCompanyId,
-                                                branchId: widget.branchId,
-                                              )
-                                          // AssetsScreen(
-                                          //     assetEmpId:
-                                          //         _employeeId)
-
-                                          ));
-                                  break;
-                              }
+                              case 'Reports Screen':
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ClientReportScreen(
+                                        employeeId: widget.empId,
+                                      ),
+                                    ));
+                                break;
                             }
-                          },
-                          listBuilder: gridLayoutBuilder,
+                          } else {
+                            switch (value) {
+                              case 'Site Tours':
+                                // showDialog(
+                                //   context: context,
+                                //   builder: (BuildContext context) {
+                                //     return SiteTourScreen(
+                                //       height: height,
+                                //       width: width,
+                                //       schedulesList: schedules_list,
+                                //     );
+                                //   },
+                                // );
+                                break;
+                              case 'DAR Screen':
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => DarDisplayScreen(
+                                              EmpEmail: widget.empEmail,
+                                              EmpID: widget.empId,
+                                              EmpDarCompanyId:
+                                                  widget.shiftCompanyId ?? "",
+                                              EmpDarCompanyBranchId:
+                                                  widget.branchId,
+                                              EmpDarShiftID: widget.shiftId,
+                                              EmpDarClientID:
+                                                  widget.shiftClientId,
+                                              Username: widget.userName,
+                                            )));
+                                break;
+                              case 'Reports Screen':
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ReportScreen(
+                                              locationId:
+                                                  widget.shiftLocationId,
+                                              locationName:
+                                                  widget.shiftLocationId,
+                                              companyId:
+                                                  widget.shiftCompanyId ?? "",
+                                              empId: widget.empId,
+                                              empName: widget.userName,
+                                              clientId: widget.shiftClientId,
+                                              ShiftId: widget.shiftId,
+                                            )));
+                                break;
+                              case 'Post Screen':
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => PostOrder(
+                                              locationId:
+                                                  widget.shiftLocationId,
+                                            )));
+                                break;
+                              case 'Task Screen':
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            TaskFeatureScreen()));
+                                break;
+                              case 'LogBook Screen':
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => LogBookScreen(
+                                              EmpId: widget.empId,
+                                            )));
+                                break;
+                              case 'Visitors Screen':
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => VisiTorsScreen(
+                                              locationId:
+                                                  widget.shiftLocationId,
+                                            )));
+                                break;
+                              case 'Assets Screen':
+                              case 'Assets Screen':
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            // KeysScreen(
+                                            //     keyId: _employeeId)
+                                            AssetsScreen(
+                                                assetEmpId: widget.empId)));
+                                break;
+                              case 'Key Screen':
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => KeysScreen(
+                                              LocationId:
+                                                  widget.shiftLocationId,
+                                              keyId: widget.empId,
+                                              companyId: widget.shiftCompanyId,
+                                              branchId: widget.branchId,
+                                            )
+                                        // AssetsScreen(
+                                        //     assetEmpId:
+                                        //         _employeeId)
+
+                                        ));
+                                break;
+                            }
+                          }
+                        },
+                        listBuilder: gridLayoutBuilder,
+                      ),
+                    ),
+                    Container(
+                      height: 43.h,
+                      width: 43.w,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).primaryColor,
+                        borderRadius: BorderRadius.circular(9.r),
+                      ),
+                      child: Center(
+                        child: Icon(
+                          Icons.search,
+                          size: 19.sp,
+                          color: Theme.of(context).iconTheme.color,
                         ),
                       ),
-                      Container(
-                        height: 43.h,
-                        width: 43.w,
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor,
-                          borderRadius: BorderRadius.circular(9.r),
-                        ),
-                        child: Center(
-                          child: Icon(
-                            Icons.search,
-                            size: 19.sp,
-                            color: Theme.of(context).iconTheme.color,
-                          ),
+                    )
+                  ],
+                ),
+                cleartext
+                    ? TextButton(
+                        onPressed: () {
+                          setState(() {
+                            cleartext = false;
+                            _controller.text = '';
+                          });
+                        },
+                        child: InterRegular(
+                          text: 'CLEAR',
+                          fontsize: 14.sp,
+                          color: Theme.of(context).textTheme.bodySmall!.color,
                         ),
                       )
-                    ],
-                  ),
-                  cleartext
-                      ? TextButton(
-                          onPressed: () {
-                            setState(() {
-                              cleartext = false;
-                              _controller.text = '';
-                            });
-                          },
-                          child: InterRegular(
-                            text: 'CLEAR',
-                            fontsize: 14.sp,
-                            color: Theme.of(context).textTheme.bodySmall!.color,
-                          ),
-                        )
-                      : SizedBox()
-                ],
-              ),
+                    : SizedBox()
+              ],
             ),
-            SizedBox(height: 30.h),
-          ],
-        ),
+          ),
+          SizedBox(height: 30.h),
+        ],
       ),
     );
   }
