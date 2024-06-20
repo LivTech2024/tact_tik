@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -143,6 +145,23 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
         date1.day == date2.day;
   }
 
+  DateTime? selectedDate;
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101)
+    );
+    setState(() {
+      if (picked != null) {
+        selectedDate = picked;
+        // fetchDARData();  // Fetch data for the selected date
+      }
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -169,91 +188,114 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
               floating: true, // Makes the app bar float above the content
             ),
             SliverToBoxAdapter(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 30.w),
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: 30.h,
-                      ),
-                      Row(
-                        mainAxisAlignment:
-                        MainAxisAlignment.spaceBetween,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              SelectLocationReport.showLocationDialog(
-                                context,
-                                widget.companyId,
-                                onLocationSelected,
-                              );
-                            },
-                            child: SizedBox(
-                              width: 150.w,
-                              child: IconTextWidget(
-                                space: 6.w,
-                                icon: Icons.add,
-                                iconSize: 20.sp,
-                                text: 'Select Location',
-                                useBold: true,
-                                fontsize: 14.sp,
-                                color: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodySmall!
-                                    .color as Color,
-                                Iconcolor: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodyMedium!
-                                    .color as Color,
-                              ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 30.w),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 30.h,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        GestureDetector(
+                          // onTap: () => _selectDate(context),
+                          child: SizedBox(
+                            width: 140.w,
+                            child: IconTextWidget(
+                              icon: Icons.calendar_today,
+                              text: selectedDate != null
+                                  ? "${selectedDate!.toLocal()}".split(' ')[0]
+                                  : 'Select Date',
+                              fontsize: 14.sp,
+                              color: Theme.of(context).textTheme.bodyMedium!.color
+                              as Color,
+                              Iconcolor: Theme.of(context).textTheme.bodyMedium!.color as Color,
                             ),
                           ),
-                          // SizedBox(
-                          //   width: Platform.isIOS ? 30.w : 10.w,
-                          // ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          SelectClientGuardsScreen(
-                                            companyId: widget.companyId,
-                                            onGuardSelected: onGuardSelected,
-                                          )));
-                            },
-                            child: SizedBox(
-                              width: 150.w,
-                              child: IconTextWidget(
-                                space: 6.w,
-                                icon: Icons.add,
-                                iconSize: 20.sp,
-                                text: 'Select Employee',
-                                useBold: true,
-                                fontsize: 14.sp,
-                                color: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodySmall!
-                                    .color as Color,
-                                Iconcolor: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodyMedium!
-                                    .color as Color,
+                        ),
+                        Row(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                // SelectLocationDar.showLocationDialog(
+                                //   context,
+                                //   widget.companyId,
+                                //   onLocationSelected,
+                                // );
+                              },
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    width: 80.w,
+                                    child: IconTextWidget(
+                                      space: 6.w,
+                                      icon: Icons.add,
+                                      iconSize: 20.sp,
+                                      text: 'Select',
+                                      useBold: true,
+                                      fontsize: 14.sp,
+                                      color: Theme.of(context).textTheme.bodySmall!.color as Color,
+                                      Iconcolor:
+                                      Theme.of(context).textTheme.bodyMedium!.color as Color,
+                                    ),
+                                  ),
+                                  InterBold(
+                                    text: 'Location',
+                                    fontsize: 16.sp,
+                                  ),
+                                ],
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10.h,
-                      )
-                    ],
-                  ),
-                )
+                            SizedBox(
+                              width: Platform.isIOS ? 30.w : 10.w,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                // Navigator.push(
+                                //   context,
+                                //   MaterialPageRoute(
+                                //     builder: (context) => SelectClientGuardsScreen(
+                                //       companyId: widget.companyId,
+                                //       onGuardSelected: onGuardSelected,
+                                //     ),
+                                //   ),
+                                // );
+                              },
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                    width: 80.w,
+                                    child: IconTextWidget(
+                                      space: 6.w,
+                                      icon: Icons.add,
+                                      iconSize: 20.sp,
+                                      text: 'Select',
+                                      useBold: true,
+                                      fontsize: 14.sp,
+                                      color: Theme.of(context).textTheme.bodySmall!.color as Color,
+                                      Iconcolor:
+                                      Theme.of(context).textTheme.bodyMedium!.color as Color,
+                                    ),
+                                  ),
+                                  InterBold(
+                                    text: 'Employee',
+                                    fontsize: 16.sp,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10.h,
+                    )
+                  ],
+                ),
+              )
             ),
             reports.isEmpty
                 ? SliverFillRemaining(
@@ -266,7 +308,7 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
                 ),
               ),
             )
-                : SliverList(
+            : SliverList(
               delegate: SliverChildBuilderDelegate(
                     (context, index) {
                   DateTime reportDate = reports[index]['ReportDate'];
@@ -359,7 +401,7 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
                                       children: [
                                         Row(
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                           children: [
                                             InterMedium(
                                               text: 'Report Name:',
@@ -373,7 +415,7 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
                                             Flexible(
                                               child: InterMedium(
                                                 text: reports[index]
-                                                ['ReportName'],
+                                                    ['ReportName'],
                                                 fontsize: 16.sp,
                                                 color: Theme.of(context)
                                                     .textTheme
@@ -386,7 +428,7 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
                                         SizedBox(height: 10.h),
                                         Row(
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                           children: [
                                             InterMedium(
                                               text: 'Category:',
@@ -400,7 +442,7 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
                                             Flexible(
                                               child: InterMedium(
                                                 text: reports[index]
-                                                ['ReportCategory'],
+                                                    ['ReportCategory'],
                                                 fontsize: 16.sp,
                                                 color: Theme.of(context)
                                                     .textTheme
@@ -413,7 +455,7 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
                                         SizedBox(height: 10.h),
                                         Row(
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                           children: [
                                             InterMedium(
                                               text: 'Emp Name:',
@@ -426,7 +468,7 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
                                             SizedBox(width: 20.w),
                                             InterMedium(
                                               text: reports[index]
-                                              ['ReportEmployeeName'],
+                                                  ['ReportEmployeeName'],
                                               fontsize: 16.sp,
                                               color: Theme.of(context)
                                                   .textTheme
@@ -438,7 +480,7 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
                                         SizedBox(height: 10.h),
                                         Row(
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                           children: [
                                             InterMedium(
                                               text: 'Status:',
@@ -451,7 +493,7 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
                                             SizedBox(width: 20.w),
                                             InterMedium(
                                               text: reports[index]
-                                              ['ReportStatus'],
+                                                  ['ReportStatus'],
                                               fontsize: 16.sp,
                                               color: Theme.of(context)
                                                   .textTheme

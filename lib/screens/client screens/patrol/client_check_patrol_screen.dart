@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:filter_list/filter_list.dart';
 import 'package:flutter/cupertino.dart';
@@ -85,6 +87,7 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
     Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
   }
 
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -114,92 +117,95 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     GestureDetector(
-                      onTap: () => _selectDate(context),
+                      // onTap: () => _selectDate(context),
                       child: SizedBox(
-                        width: 190.w,
+                        width: 140.w,
                         child: IconTextWidget(
                           icon: Icons.calendar_today,
-                          Iconcolor: Theme.of(context)
-                              .textTheme
-                              .bodySmall!
-                              .color as Color,
                           text: selectedDate != null
-                              ? DateFormat('dd/MM/yyyy').format(selectedDate!)
+                              ? "${selectedDate!.toLocal()}".split(' ')[0]
                               : 'Select Date',
                           fontsize: 14.sp,
-                          color: Theme.of(context).textTheme.bodySmall!.color
-                              as Color,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 140.w,
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SelectClientGuardsScreen(
-                                companyId: widget.companyId,
-                                onGuardSelected: onGuardSelected,
-                              ),
-                            ),
-                          );
-                        },
-                        child: IconTextWidget(
-                          space: 6.w,
-                          icon: Icons.add,
-                          Iconcolor: Theme.of(context)
-                              .textTheme
-                              .bodySmall!
-                              .color as Color,
-                          iconSize: 20.sp,
-                          text: 'Select Guard',
-                          useBold: true,
-                          fontsize: 14.sp,
                           color: Theme.of(context).textTheme.bodyMedium!.color
-                              as Color,
-                          // Iconcolor: DarkColor.color1,
+                          as Color,
+                          Iconcolor: Theme.of(context).textTheme.bodyMedium!.color as Color,
                         ),
                       ),
                     ),
-                    // Expanded(
-                    //   child: FilterListWidget<String>(
-                    //     listData: [
-                    //       "Apple",
-                    //       "Banana",
-                    //       "Cherry",
-                    //       "Date",
-                    //       "Fig",
-                    //       "Grape"
-                    //     ],
-                    //     selectedListData: ["Apple", "Cherry"],
-                    //     hideHeader: false,
-                    //     onApplyButtonClick: (selectedItems) {
-                    //       // Handle the selected items
-                    //       print('Selected items: $selectedItems');
-                    //     },
-                    //     choiceChipLabel: (item) {
-                    //       // Display text on the choice chip
-                    //       return item;
-                    //     },
-                    //     validateSelectedItem: (List<String>? list, String val) {
-                    //       // Check if the item is selected
-                    //       return list?.contains(val) ?? false;
-                    //     },
-                    //     onItemSearch: (list, query) {
-                    //       // Filter and return list based on search text
-                    //       if (list != null) {
-                    //         return list
-                    //             // .where((element) => element
-                    //             //     .toLowerCase()
-                    //             //     .contains(query.toLowerCase()))
-                    //             // .toList();
-                    //       }
-                    //       // return [];
-                    //     },
-                    //   ),
-                    // ),
+                    Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            // SelectLocationDar.showLocationDialog(
+                            //   context,
+                            //   widget.companyId,
+                            //   onLocationSelected,
+                            // );
+                          },
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                width: 80.w,
+                                child: IconTextWidget(
+                                  space: 6.w,
+                                  icon: Icons.add,
+                                  iconSize: 20.sp,
+                                  text: 'Select',
+                                  useBold: true,
+                                  fontsize: 14.sp,
+                                  color: Theme.of(context).textTheme.bodySmall!.color as Color,
+                                  Iconcolor:
+                                  Theme.of(context).textTheme.bodyMedium!.color as Color,
+                                ),
+                              ),
+                              InterBold(
+                                text: 'Location',
+                                fontsize: 16.sp,
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          width: Platform.isIOS ? 30.w : 10.w,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) => SelectClientGuardsScreen(
+                            //       companyId: widget.companyId,
+                            //       onGuardSelected: onGuardSelected,
+                            //     ),
+                            //   ),
+                            // );
+                          },
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                width: 80.w,
+                                child: IconTextWidget(
+                                  space: 6.w,
+                                  icon: Icons.add,
+                                  iconSize: 20.sp,
+                                  text: 'Select',
+                                  useBold: true,
+                                  fontsize: 14.sp,
+                                  color: Theme.of(context).textTheme.bodySmall!.color as Color,
+                                  Iconcolor:
+                                  Theme.of(context).textTheme.bodyMedium!.color as Color,
+                                ),
+                              ),
+                              InterBold(
+                                text: 'Employee',
+                                fontsize: 16.sp,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
                 SizedBox(height: 20.h),

@@ -1,6 +1,7 @@
 import 'package:cr_calendar/cr_calendar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tact_tik/common/sizes.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
@@ -57,12 +58,23 @@ class DayEventsBottomSheet extends StatelessWidget {
                         top: height / height16,
                         bottom: height / height16,
                       ),
-                      child: InterMedium(
-                        text: day.format('dd/MM/yy'),
-                        color: Theme.of(context).textTheme.bodyMedium!.color,
-                        fontsize: width / width20,
+                      child: Column(
+                        children: [
+                          InterMedium(
+                            text: day.format('dd/MM/yy'),
+                            color: Theme.of(context).textTheme.bodyMedium!.color,
+                            fontsize: width / width20,
+                          ),
+                          SizedBox(height: 30.h),
+                          InterMedium(
+                            text: 'My shifts',
+                            color: Theme.of(context).textTheme.bodyMedium!.color,
+                            fontsize: width / width20,
+                          )
+                        ],
                       ),
                     ),
+
                     ListView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
@@ -127,7 +139,7 @@ class DayEventsBottomSheet extends StatelessWidget {
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         color: Theme.of(context).primaryColor,
-                                        image: DecorationImage(
+                                        image: const DecorationImage(
                                           image: AssetImage(
                                               'assets/images/default.png'),
                                           filterQuality: FilterQuality.high,
@@ -260,6 +272,7 @@ class DayEventsBottomSheet extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => ShiftInformation(
+                                    toAccept: event.others.isExchangeRequested!,
                                     startTime: event.others.startTime!,
                                     endTime: event.others.endTime!,
                                     toRequest: true,
@@ -281,7 +294,7 @@ class DayEventsBottomSheet extends StatelessWidget {
                           );
                         }),
                     SizedBox(
-                      height: height / height100,
+                      height: 100.h,
                     )
                   ],
                 ),
@@ -302,6 +315,7 @@ class DayEventsBottomSheet extends StatelessWidget {
             itemBuilder: (context, index) {
               final id = event.others.ids[index];
               return createAnotherWidget(
+                event.others.isExchangeRequested!,
                 context,
                 id,
                 event.eventColor,
@@ -332,7 +346,9 @@ class DayEventsBottomSheet extends StatelessWidget {
 
             /// TODO : Change the border color to red if the shift exchange is not assigned
             border: Border.all(
-                color: false ? Colors.redAccent : Colors.transparent),
+                color: event.others.isExchangeRequested!
+                    ? Colors.redAccent
+                    : Colors.transparent),
           ),
           clipBehavior: Clip.antiAlias,
           child: Row(
@@ -354,7 +370,7 @@ class DayEventsBottomSheet extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: Theme.of(context).primaryColor,
-                  image: DecorationImage(
+                  image: const DecorationImage(
                     image: AssetImage('assets/images/default.png'),
                     filterQuality: FilterQuality.high,
                     fit: BoxFit.cover,
@@ -456,6 +472,7 @@ class DayEventsBottomSheet extends StatelessWidget {
   }
 
   Widget createAnotherWidget(
+      bool isExchangeRequested,
       BuildContext context,
       String id,
       Color eventColor,
@@ -479,7 +496,9 @@ class DayEventsBottomSheet extends StatelessWidget {
 
             /// TODO : Change the border color to red if the shift exchange is not assigned
             border: Border.all(
-                color: false ? Colors.redAccent : Colors.transparent),
+                color: isExchangeRequested
+                    ? Colors.redAccent
+                    : Colors.transparent),
           ),
           clipBehavior: Clip.antiAlias,
           child: Row(
@@ -501,7 +520,7 @@ class DayEventsBottomSheet extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: Theme.of(context).primaryColor,
-                  image: DecorationImage(
+                  image: const DecorationImage(
                     image: AssetImage('assets/images/default.png'),
                     filterQuality: FilterQuality.high,
                     fit: BoxFit.cover,

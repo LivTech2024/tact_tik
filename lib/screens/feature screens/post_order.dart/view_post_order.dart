@@ -243,7 +243,6 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
           ),
           centerTitle: true,
         ),
-       
         body: Container(
           height: MediaQuery.of(context).size.height - kToolbarHeight,
           padding: EdgeInsets.symmetric(horizontal: 30.w),
@@ -268,7 +267,7 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
                 isExpanded: true,
                 controller: _explainController,
               ),
-              SizedBox(height: 30.h),
+             /* SizedBox(height: 30.h),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
@@ -392,7 +391,7 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
                     ),
                   ],
                 ),
-              ),
+              ),*/
               SizedBox(height: 30.h),
               ListView(
                 physics: NeverScrollableScrollPhysics(),
