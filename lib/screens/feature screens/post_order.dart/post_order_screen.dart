@@ -360,51 +360,16 @@ class _PostOrderState extends State<PostOrder> {
                                                         color: Theme.of(context)
                                                             .cardColor,
                                                       ),
-                                                      child: Row(
-                                                        children: [
-                                                          Padding(
-                                                            padding: EdgeInsets
-                                                                .symmetric(
-                                                                    horizontal:
-                                                                        6.w),
-                                                            child: SvgPicture
-                                                                .asset(
-                                                              'assets/images/pdf.svg',
-                                                              width: 32.sp,
-                                                            ),
-                                                          ),
-                                                          Column(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            children: [
-                                                              PoppinsMedium(
-                                                                text:
-                                                                    otherFileName,
-                                                                color: Theme.of(
-                                                                        context)
-                                                                    .textTheme
-                                                                    .titleLarge!
-                                                                    .color,
-                                                                fontsize: 12.sp,
-                                                              ),
-                                                              PoppinsRegular(
-                                                                text:
-                                                                    otherFileSize,
-                                                                color: Theme.of(
-                                                                        context)
-                                                                    .textTheme
-                                                                    .titleLarge!
-                                                                    .color,
-                                                                fontsize: 10.sp,
-                                                                
-                                                              )
-                                                            ],
-                                                          )
-                                                        ],
+                                                      child: Padding(
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                                horizontal:
+                                                                    6.w),
+                                                        child: SvgPicture
+                                                            .asset(
+                                                          'assets/images/pdf.svg',
+                                                          width: 32.sp,
+                                                        ),
                                                       ),
                                                     );
                                                   },
