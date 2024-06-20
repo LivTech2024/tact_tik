@@ -86,7 +86,7 @@ class _SKeyManagementViewScreenState extends State<SKeyManagementViewScreen> {
           backgroundColor: Theme.of(context).primaryColor,
           shape: CircleBorder(),
           child: Icon(
-            Icons.add,
+            Icons.add,color: Colors.white,
           ),
         ),
         body: CustomScrollView(

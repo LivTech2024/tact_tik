@@ -19,9 +19,9 @@ class DatePickerTitle extends StatelessWidget {
         alignment: Alignment.centerLeft,
         child: Text(
           date.format(kMonthFormatWidthYear),
-          style: const TextStyle(
+          style:  TextStyle(
             fontSize: 21,
-            color: violet,
+            color: Theme.of(context).textTheme.bodyMedium!.color,
             fontWeight: FontWeight.w500,
           ),
         ));

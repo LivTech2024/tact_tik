@@ -508,7 +508,7 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
                 text: 'Done',
                 onPressed: _uploadFiles,
                 backgroundcolor: Theme.of(context).primaryColor,
-                color: Theme.of(context).textTheme.headlineMedium!.color,
+                color: Colors.white,
                 borderRadius: 10.r,
               ),
             ],
