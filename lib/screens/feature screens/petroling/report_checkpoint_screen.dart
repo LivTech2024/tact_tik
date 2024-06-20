@@ -42,11 +42,12 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
   late Map<String, bool> _expandCategoryMap;
   TextEditingController Controller = TextEditingController();
   bool _isLoading = false;
-
+  List<String> imageUrls = [];
   @override
   void initState() {
     super.initState();
     _loadShiftStartedState();
+    fetchImages();
     // // Initialize expand state for each category
     // _expandCategoryMap = Map.fromIterable(widget.p.categories,
     //     key: (category) => category.title, value: (_) => false);
@@ -57,6 +58,19 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
     setState(() {
       _expand = prefs.getBool('expand') ?? false;
     });
+  }
+
+  void fetchImages() async {
+    try {
+      List<String> img = await fireStoreService.getCheckpointImages(
+          widget.PatrolID, widget.CheckpointID, widget.empId, widget.ShiftId);
+      if (img.isNotEmpty) {
+        setState(() {
+          imageUrls = img;
+        });
+      }
+      print("checkpoint IMages ${img}");
+    } catch (e) {}
   }
 
   List<Map<String, dynamic>> uploads = [];
@@ -361,6 +375,56 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                     ),
                   ),
                 ),
+              imageUrls.isNotEmpty
+                  ? GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        mainAxisSpacing: 8.0,
+                        crossAxisSpacing: 8.0,
+                      ),
+                      itemCount: imageUrls.length,
+                      itemBuilder: (context, index) {
+                        return Stack(
+                          children: [
+                            /* Image.network(
+                                imageUrls[index],
+                                fit: BoxFit.cover,
+                              ),*/
+                            Container(
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                image: NetworkImage(imageUrls[index]),
+                                fit: BoxFit.cover,
+                              )),
+                            ),
+                            Positioned(
+                              top: -5.h,
+                              right: -5.w,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  // IconButton(
+                                  //   onPressed: () {
+                                  //     _removeImage(index);
+                                  //   },
+                                  //   icon: Icon(
+                                  //     Icons.delete,
+                                  //     color: Theme.of(context)
+                                  //         .textTheme
+                                  //         .bodyMedium!
+                                  //         .color,
+                                  //   ),
+                                  // ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    )
+                  : SizedBox(),
               Align(
                 // bottom: 10,
                 alignment: Alignment.bottomCenter,

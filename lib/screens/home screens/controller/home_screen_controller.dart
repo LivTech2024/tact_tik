@@ -81,7 +81,7 @@ class HomeScreenController extends GetxController {
   }
 
   Future<bool> _checkLocationPermission() async {
-    _requestLocationPermission();
+    // _requestLocationPermission();
     // await Permission.location.request();\
 
     // Check the current status of locationWhenInUse permission
