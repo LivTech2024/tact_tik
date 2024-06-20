@@ -97,12 +97,12 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: DarkColor.  AppBarcolor,
+         
           elevation: 0,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.white,
+            
             ),
             padding: EdgeInsets.only(left: width / width20),
             onPressed: () {
@@ -111,9 +111,7 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
           ),
           title: InterMedium(
             text: 'Wellness Check',
-            fontsize: width / width18,
-            color: Colors.white,
-            letterSpacing: -.3,
+            
           ),
           centerTitle: true,
         ),
@@ -126,18 +124,27 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
               InterBold(
                 text: formattedTime,
                 fontsize: width / width18,
-                color: DarkColor.Primarycolor,
+                color: Theme.of(context).textTheme.bodySmall!.color,
               ),
               SizedBox(height: height / height30),
               Container(
                 height: height / height70,
                 padding: EdgeInsets.symmetric(
+
                   horizontal: width / width20,
                   vertical: height / height11,
                 ),
                 margin: EdgeInsets.only(top: height / height10),
                 decoration: BoxDecoration(
-                  color: DarkColor.color15,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Theme.of(context).shadowColor,
+                      blurRadius: 5,
+                      spreadRadius: 2,
+                      offset: Offset(0, 3),
+                    )
+                  ],
+                  color: Theme.of(context).cardColor,
                   borderRadius: BorderRadius.circular(width / width10),
                 ),
                 child: Row(
@@ -146,14 +153,14 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
                       height: height / height48,
                       width: width / width48,
                       decoration: BoxDecoration(
-                        color: DarkColor.color16,
+                        color: Theme.of(context).cardColor,
                         borderRadius: BorderRadius.circular(width / width10),
                       ),
                       child: Center(
                         child: Icon(
                           Icons.add_a_photo,
                           size: width / width24,
-                          color: DarkColor.  Primarycolor,
+                          color: Theme.of(context).primaryColor,
                         ),
                       ),
                     ),
@@ -166,7 +173,7 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
                         style: GoogleFonts.poppins(
                           fontWeight: FontWeight.w300,
                           fontSize: width / width18,
-                          color: Colors.white, // Change text color to white
+                          color: Theme.of(context).textTheme.bodyMedium!.color, // Change text color to white
                         ),
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
@@ -179,12 +186,12 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
                           hintStyle: GoogleFonts.poppins(
                             fontWeight: FontWeight.w300,
                             fontSize: width / width18,
-                            color: DarkColor.color2, // Change text color to white
+                            color: Theme.of(context).textTheme.bodyLarge!.color, // Change text color to white
                           ),
                           hintText: 'Upload Img / Comment',
                           contentPadding: EdgeInsets.zero, // Remove padding
                         ),
-                        cursorColor: DarkColor.Primarycolor,
+                        cursorColor: Theme.of(context).primaryColor,
                       ),
                     )
                   ],
@@ -277,9 +284,9 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: _uploadImages,
-          backgroundColor: DarkColor.  Primarycolor,
+          backgroundColor: Theme.of(context).primaryColor,
           shape: CircleBorder(),
-          child: Icon(Icons.check),
+          child: Icon(Icons.check, color: Colors.white),
         ),
       ),
     );

@@ -10,7 +10,6 @@ import '../../../fonts/inter_bold.dart';
 import '../../../fonts/inter_medium.dart';
 import '../../../fonts/inter_semibold.dart';
 import '../../home screens/widgets/icon_text_widget.dart';
-import '../DAR/select_location_dar.dart';
 import '../select_client_guards_screen.dart';
 import 'client_oprn_report.dart';
 
@@ -33,6 +32,22 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
   @override
   void initState() {
     super.initState();
+    fetchReports();
+  }
+
+  void onGuardSelected(String guardId) {
+    setState(() {
+      selectedGuardId = guardId;
+    });
+    print('Selected Guard ID: $selectedGuardId');
+    fetchReports();
+  }
+
+  void onLocationSelected(List<dynamic> locationId) {
+    setState(() {
+      selectedLocationId = List<String>.from(locationId);
+    });
+    print('Selected Location Id: $selectedLocationId');
     fetchReports();
   }
 
