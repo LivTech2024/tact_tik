@@ -94,6 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String _employeeCompanyBranchID = "";
   bool ShiftStarted = false;
   bool ShiftExist = false;
+  late DateTime ShiftStartedTime;
   String _shiftLocationId = "";
   String _shiftId = "";
   String _empEmail = "";
@@ -311,8 +312,24 @@ class _HomeScreenState extends State<HomeScreen> {
                   .map((status) => status['Status'] as String)
                   .join(', ') ??
               "";
-
+          DateTime statusStartedTime;
+          if (filteredStatus.isNotEmpty &&
+              filteredStatus.first.containsKey('StatusStartedTime')) {
+            statusStartedTime =
+                (filteredStatus.first['StatusStartedTime'] as Timestamp)
+                    .toDate();
+            setState(() {
+              ShiftStartedTime = statusStartedTime;
+            });
+          } else {
+            setState(() {
+              ShiftStartedTime = Timestamp.now().toDate();
+            });
+            // statusStartedTime = DateTime.now(); // or handle this case as needed
+          }
           print("Shift CUrrent Status ${statusString}");
+          // print("statusStartedTimeStringDateTIme ${statusStartedTime}");
+
           if (statusString == "started") {
             SharedPreferences prefs = await SharedPreferences.getInstance();
             prefs.setBool('ShiftStarted', true);
@@ -872,6 +889,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         onRefresh: refreshHomeScreen,
                                         ShiftName: _ShiftName,
                                         ShiftStatus: _ShiftStatus,
+                                        shiftStartedTime: ShiftStartedTime,
                                       )
                                     : Center(
                                         child: InterMedium(

@@ -44,11 +44,12 @@ class TaskScreen extends StatefulWidget {
   final String EmpEmail;
   final String EmpName;
   final String ShiftLocationName;
-
   final Function() onRefreshHomeScreen;
   final Function() onEndTask;
   final VoidCallback onRefreshStartTaskScreen;
   final String ShiftStatus;
+
+  DateTime shiftStartedTime;
 
   TaskScreen({
     required this.ShiftDate,
@@ -80,6 +81,7 @@ class TaskScreen extends StatefulWidget {
     required this.onEndTask,
     required this.onRefreshStartTaskScreen,
     required this.ShiftStatus,
+    required this.shiftStartedTime,
   });
 
   @override
@@ -248,6 +250,7 @@ class _TaskScreenState extends State<TaskScreen> {
                           onRefresh: refreshStartTaskScreen,
                           ShiftName: widget.ShiftName,
                           ShiftStatus: widget.ShiftStatus,
+                          shiftStartedTime: widget.shiftStartedTime,
                           // onRefreshStartTaskScreen: widget.onRefreshStartTaskScreen,
                         )
                       : Center(
@@ -345,7 +348,10 @@ class _TaskScreenState extends State<TaskScreen> {
                                                       InterMedium(
                                                         text:
                                                             widget.ShiftEndTime,
-                                                        color:Theme.of(context).textTheme.bodyMedium!.color,
+                                                        color: Theme.of(context)
+                                                            .textTheme
+                                                            .bodyMedium!
+                                                            .color,
                                                         fontsize:
                                                             width / width16,
                                                       )
@@ -455,11 +461,11 @@ class _TaskScreenState extends State<TaskScreen> {
                       Button1(
                         text: 'Start Shift',
                         fontsize: width / width18,
-                        color:
-                            Colors.white,
-                        backgroundcolor: Theme.of(context).brightness == Brightness.dark
-                            ? DarkColor.WidgetColor
-                            : LightColor.Primarycolor /*.withOpacity(50)*/,
+                        color: Colors.white,
+                        backgroundcolor:
+                            Theme.of(context).brightness == Brightness.dark
+                                ? DarkColor.WidgetColor
+                                : LightColor.Primarycolor /*.withOpacity(50)*/,
                         onPressed: () async {
                           print(widget.CheckUserRadius);
                           // if (isShiftStartTimeWithinRange(

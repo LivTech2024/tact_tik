@@ -81,8 +81,9 @@ class HomeScreenController extends GetxController {
   }
 
   Future<bool> _checkLocationPermission() async {
-    // _requestLocationPermission();
-    // await Permission.location.request();
+    _requestLocationPermission();
+    // await Permission.location.request();\
+
     // Check the current status of locationWhenInUse permission
     var statusWhenInUse = await Permission.locationWhenInUse.status;
 
@@ -125,7 +126,7 @@ class HomeScreenController extends GetxController {
         }
       } else if (requestStatusWhenInUse.isPermanentlyDenied) {
         print("Location permission permanently denied. Open app settings  2.");
-        await openAppSettings();
+        // await openAppSettings();
         return false;
       }
     } else if (statusWhenInUse.isPermanentlyDenied) {

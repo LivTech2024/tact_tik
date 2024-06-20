@@ -64,7 +64,9 @@ class StartTaskScreen extends StatefulWidget {
   // final String ShiftLocation;
   final String ShiftStatus;
 
+  DateTime shiftStartedTime;
   StartTaskScreen({
+    super.key,
     required this.ShiftDate,
     required this.ShiftClientID,
     required this.ShiftEndTime,
@@ -80,7 +82,9 @@ class StartTaskScreen extends StatefulWidget {
     required this.ShiftIN,
     required this.onRefresh,
     required this.ShiftName,
-    required this.ShiftStatus, //refresh the homescreen
+    required this.ShiftStatus,
+    required this.shiftStartedTime, //refresh the homescreen
+    //refresh the homescreen
 
     // required this.ShiftLocation,
     // required this.ShiftName,
@@ -188,6 +192,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
   void reload() {
     initPrefs();
     initState();
+    // _stopwatchTimer = Timer();
     // _loadState();
   }
 
@@ -207,8 +212,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
       clickedIn = savedClickedIn!;
     });
     if (clickedIn == true) {
+      print("Clicked in is true Start Screem");
       updateLateTimeAndStartTimer();
-      // _startTimer();
+      _startTimer();
       await homeScreenController.startBgLocationService();
     }
     if (pauseState != null) {
@@ -251,19 +257,19 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
   //   print("ELapsedTime: ${_elapsedTime}");
   // }
 
-  // void startStopwatch() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  void startStopwatch() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
 
-  //   if (clickedIn && !isPaused) {
-  //     _stopwatchTimer = Timer.periodic(Duration(seconds: 1), (Timer timer) {
-  //       setState(() {
-  //         _stopwatchSeconds++;
-  //         prefs.setInt('stopwatchSeconds', _stopwatchSeconds);
-  //         prefs.setBool("stopwatchKey", true);
-  //       });
-  //     });
-  //   }
-  // }
+    if (clickedIn && !isPaused) {
+      _stopwatchTimer = Timer.periodic(Duration(seconds: 1), (Timer timer) {
+        setState(() {
+          _stopwatchSeconds++;
+          prefs.setInt('stopwatchSeconds', _stopwatchSeconds);
+          prefs.setBool("stopwatchKey", true);
+        });
+      });
+    }
+  }
 
   // void resetStopwatch() async {
   //   SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -295,7 +301,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 
   @override
   void dispose() {
-    _stopwatchTimer?.cancel();
+    _stopwatchTimer.cancel();
     super.dispose();
   }
 
@@ -310,13 +316,15 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title:  Text(
+              title: Text(
                 'Wellness Report',
-                style: TextStyle(color: Theme.of(context).textTheme.bodyMedium!.color ),
+                style: TextStyle(
+                    color: Theme.of(context).textTheme.bodyMedium!.color),
               ),
-              content:  Text(
+              content: Text(
                 'Please upload your wellness report.',
-                style: TextStyle(color:  Theme.of(context).textTheme.bodyMedium!.color),
+                style: TextStyle(
+                    color: Theme.of(context).textTheme.bodyMedium!.color),
               ),
               actions: <Widget>[
                 TextButton(
@@ -345,65 +353,6 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     }
   }
 
-  void updateLateTimeAndStartTimer() {
-    print('update late time and start timer function');
-    DateTime now = DateTime.now();
-
-    /// -- update late time
-    DateFormat dateFormat = DateFormat("HH:mm");
-
-    DateTime shiftStartTime = dateFormat.parse(widget.ShiftStartTime);
-    shiftStartTime = DateTime(now.year, now.month, now.day, shiftStartTime.hour,
-        shiftStartTime.minute);
-
-    DateTime shiftEndTime = dateFormat.parse(widget.ShiftEndTime);
-    shiftEndTime = DateTime(
-        now.year, now.month, now.day, shiftEndTime.hour, shiftEndTime.minute);
-
-    DateTime deadline = shiftStartTime.add(const Duration(minutes: 10));
-
-    Duration remainingTimeToStart = deadline.difference(now);
-
-    if (remainingTimeToStart.isNegative) {
-      print("The user is already late.");
-      Duration lateDuration = now.difference(deadline);
-      if (!clickedIn) {
-        setState(() {
-          isLate = true;
-          lateTime =
-              "${lateDuration.inHours}h : ${lateDuration.inMinutes % 60}m";
-          print("Late time: $lateTime");
-        });
-      }
-    } else {
-      print(
-          "Remaining time to start the shift: ${remainingTimeToStart.inMinutes} minutes.");
-    }
-
-    /// -- start timer
-    remainingTime = shiftEndTime.difference(now);
-    _startTimer();
-  }
-
-  void _startTimer() {
-    print('start timer');
-    if (_timer != null) {
-      _timer!.cancel();
-    }
-
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      setState(() {
-        if (remainingTime.inSeconds > 0) {
-          remainingTime = remainingTime - Duration(seconds: 1);
-          remainingTimeFormatted =
-              "${remainingTime.inHours}h : ${remainingTime.inMinutes % 60}m : ${remainingTime.inSeconds % 60}s";
-          print("Timer $remainingTimeFormatted");
-        } else {
-          _timer!.cancel();
-        }
-      });
-    });
-  }
   // void updateLateTimeAndStartTimer() {
   //   print('update late time and start timer function');
   //   DateTime now = DateTime.now();
@@ -423,10 +372,15 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 
   //   Duration remainingTimeToStart = deadline.difference(now);
 
+  //   print("Shift start time: $shiftStartTime");
+  //   print("Current time: $now");
+  //   print("Deadline: $deadline");
+  //   print("Remaining time to start: ${remainingTimeToStart.inMinutes} minutes");
+
   //   if (remainingTimeToStart.isNegative) {
   //     print("The user is already late.");
   //     Duration lateDuration = now.difference(deadline);
-  //     if (!clickedIn) {
+  //     if (widget.ShiftStatus == false) {
   //       setState(() {
   //         isLate = true;
   //         lateTime =
@@ -464,6 +418,136 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
   //   });
   // }
 
+  // void updateLateTimeAndStartTimer() {
+  //   print('update late time and start timer function');
+  //   DateTime now = DateTime.now();
+
+  //   /// -- update late time
+  //   DateFormat dateFormat = DateFormat("HH:mm");
+
+  //   DateTime shiftStartTime = dateFormat.parse(widget.ShiftStartTime);
+  //   shiftStartTime = DateTime(now.year, now.month, now.day, shiftStartTime.hour,
+  //       shiftStartTime.minute);
+
+  //   DateTime shiftEndTime = dateFormat.parse(widget.ShiftEndTime);
+  //   shiftEndTime = DateTime(
+  //       now.year, now.month, now.day, shiftEndTime.hour, shiftEndTime.minute);
+
+  //   DateTime deadline = shiftStartTime.add(const Duration(minutes: 10));
+
+  //   Duration remainingTimeToStart = deadline.difference(now);
+
+  //   if (remainingTimeToStart.isNegative) {
+  //     print("The user is already late.");
+  //     Duration lateDuration = now.difference(deadline);
+  //     if (!clickedIn) {
+  //       setState(() {
+  //         isLate = true;
+  //         lateTime =
+  //             "${lateDuration.inHours}h : ${lateDuration.inMinutes % 60}m";
+  //         print("Late time: $lateTime");
+  //         print(
+  //             "Late time 2:${lateDuration.inHours}h : ${lateDuration.inMinutes % 60}m");
+  //       });
+  //     }
+  //   } else {
+  //     print(
+  //         "Remaining time to start the shift: ${remainingTimeToStart.inMinutes} minutes.");
+  //   }
+
+  //   /// -- start timer
+  //   ///
+  //   setState(() {
+  //     remainingTime = shiftEndTime.difference(now);
+  //   });
+  //   _startTimer();
+  // }
+
+  // void _startTimer() {
+  //   print('start timer');
+  //   if (_timer != null) {
+  //     _timer!.cancel();
+  //   }
+
+  //   _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+  //     setState(() {
+  //       if (remainingTime.inSeconds > 0) {
+  //         remainingTime = remainingTime - Duration(seconds: 1);
+  //         remainingTimeFormatted =
+  //             "${remainingTime.inHours}h : ${remainingTime.inMinutes % 60}m : ${remainingTime.inSeconds % 60}s";
+  //         print("Timer $remainingTimeFormatted");
+  //       } else {
+  //         _timer!.cancel();
+  //       }
+  //     });
+  //   });
+  // }
+
+  void updateLateTimeAndStartTimer() {
+    print('update late time and start timer function');
+    DateTime now = DateTime.now();
+
+    /// -- update late time
+    DateFormat dateFormat = DateFormat("HH:mm");
+
+    DateTime shiftStartTime = dateFormat.parse(widget.ShiftStartTime);
+    shiftStartTime = DateTime(now.year, now.month, now.day, shiftStartTime.hour,
+        shiftStartTime.minute);
+
+    DateTime shiftEndTime = dateFormat.parse(widget.ShiftEndTime);
+    shiftEndTime = DateTime(
+        now.year, now.month, now.day, shiftEndTime.hour, shiftEndTime.minute);
+
+    DateTime deadline = shiftStartTime.add(const Duration(minutes: 10));
+
+    Duration remainingTimeToStart =
+        deadline.difference(widget.shiftStartedTime);
+
+    if (remainingTimeToStart.isNegative) {
+      print("The user is already late.");
+      Duration lateDuration = widget.shiftStartedTime.difference(deadline);
+
+      if (clickedIn) {
+        setState(() {
+          isLate = true;
+          lateTime =
+              "${lateDuration.inHours}h : ${lateDuration.inMinutes % 60}m";
+          print("Late time: $lateTime");
+        });
+      }
+    } else {
+      print(
+          "Remaining time to start the shift: ${remainingTimeToStart.inMinutes} minutes.");
+    }
+    remainingTime = shiftEndTime.difference(now);
+    // _startTimer();
+  }
+
+  void _startTimer() {
+    print('start timer');
+    print('timer ${_timer}');
+    print('remainingTime ${remainingTime}');
+
+    if (_timer != null) {
+      _timer!.cancel();
+    }
+
+    DateTime now = DateTime.now();
+
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        if (remainingTime.inSeconds > 0) {
+          remainingTime = remainingTime - Duration(seconds: 1);
+          remainingTimeFormatted =
+              "${remainingTime.inHours}h : ${remainingTime.inMinutes % 60}m : ${remainingTime.inSeconds % 60}s";
+          print("Timer $remainingTimeFormatted");
+        } else {
+          _timer!.cancel();
+        }
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final homeScreenController = HomeScreenController.instance;
@@ -473,7 +557,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     // Get the current time
 
 // Convert shift start time to current date for comparison
-    String lateTime = ""; // Example start time// Get current time
+    // String lateTime = ""; // Example start time// Get current time
 
     print("IN Time : ${inTime}");
     print("Elapsed  : ${_elapsedTime}");
@@ -582,7 +666,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         ),
                         SizedBox(height: 10.h),
                         InterSemibold(
-                          text: remainingTimeFormatted,
+                          text: remainingTimeFormatted.isEmpty
+                              ? ""
+                              : remainingTimeFormatted,
                           // '${(_stopwatchSeconds ~/ 3600).toString().padLeft(2, '0')} : ${((_stopwatchSeconds ~/ 60) % 60).toString().padLeft(2, '0')} : ${(_stopwatchSeconds % 60).toString().padLeft(2, '0')}',
                           color: DarkColor.color8,
                           fontsize: 14.sp,
@@ -695,8 +781,6 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                   showErrorToast(
                                       context, "Start shift on Time");
                                 } else {
-                                  updateLateTimeAndStartTimer();
-
                                   ///TODO paste this code to start timer and start locations fetch before you start to push new locations clear previous locations
                                   FirebaseFirestore firestore =
                                       FirebaseFirestore.instance;
@@ -747,7 +831,6 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                           'Error creating employee route: $e');
                                     }
                                   }
-
                                   // start stop watch
                                   // await controller.startStopWatch();
                                   _startTimer();
@@ -785,6 +868,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                       widget.EmployeId,
                                       widget.ShiftId,
                                       widget.EmployeeName);
+                                  widget.onRefresh();
+                                  updateLateTimeAndStartTimer();
                                   setState(() {
                                     // if (!clickedIn) {
                                     clickedIn = true;
