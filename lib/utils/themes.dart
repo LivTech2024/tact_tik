@@ -100,6 +100,7 @@ var darkTheme = ThemeData(
     shape: CircleBorder(),
   ),
   iconTheme: IconThemeData(color: DarkColor.color11),
+  
   appBarTheme: AppBarTheme(
     backgroundColor: DarkColor.AppBarcolor,
     elevation: 0,

@@ -273,7 +273,9 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
                           color: Theme.of(context).cardColor,
                           borderRadius: BorderRadius.circular(width / width8)),
                       child: Center(
-                        child: Icon(Icons.add),
+                        child: Icon(Icons.add,
+                            color: Colors.white
+                        ),
                       ),
                     ),
                   )

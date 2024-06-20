@@ -283,12 +283,13 @@ class _ShiftInformationState extends State<ShiftInformation> {
                               onAcceptShift(widget.empId, widget.shiftId);
                             }
                           },
+                          
                           backgroundcolor: Theme.of(context).primaryColor,
                           borderRadius: 10.r,
                           fontsize: 18.sp,
-                          color: Theme.of(context).textTheme.bodyMedium!.color,
+                          color: Colors.white,
                         ),
-                        // SizedBox(height: 50.h),
+                        SizedBox(height: 20.h),
                         widget.toRequest
                             ?
                             // ? Column(

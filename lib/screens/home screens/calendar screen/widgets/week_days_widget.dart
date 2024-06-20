@@ -22,7 +22,9 @@ class WeekDaysWidget extends StatelessWidget {
       child: Center(
         child: InterMedium(
           text: describeEnum(day).substring(0, 1).toUpperCase(),
-          color: violet.withOpacity(0.9),
+          color: Theme.of(context).brightness == Brightness.dark
+              ? Colors.white
+              : Colors.black,
         ),
       ),
     );
