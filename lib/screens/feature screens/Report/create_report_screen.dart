@@ -96,6 +96,8 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
     super.initState();
     shouldShowButton = widget.buttonEnable;
     print("Shift Id at Create Report ${widget.ShiftId}");
+    print("Shift Id at Create Report ${widget.companyID}");
+    print("Shift Id at Client Report ${widget.ClientId}");
   }
 
   void getAllTitles() async {
@@ -541,171 +543,183 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                       ),
                     ),
                     SizedBox(height: 20.h),
-                    Container(
-                      height: 60.h,
-                      padding: EdgeInsets.symmetric(horizontal: 10.w),
-                      decoration: BoxDecoration(
-                        // color: Colors.redAccent,
-                        borderRadius: BorderRadius.circular(10.w),
-                        border: Border(
-                          bottom: BorderSide(
-                            color:
-                                Theme.of(context).brightness == Brightness.dark
-                                    ? DarkColor.color19
-                                    : LightColor.color3,
-                          ),
-                        ),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<String>(
-                          isExpanded: true,
-                          iconSize: 24.w,
-                          hint: Text(
-                            "Select Client",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          icon: Icon(Icons.arrow_drop_down),
-                          iconEnabledColor:
-                              Theme.of(context).textTheme.bodyMedium!.color,
-                          // Set icon color for enabled state
-                          dropdownColor: Theme.of(context).cardColor,
-                          style: TextStyle(
-                              color: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium!
-                                  .color),
-                          value: selectedClientName,
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              selectedClientName = newValue!;
-                              selectedClientId = clientMap.entries
-                                  .firstWhere(
-                                      (entry) => entry.value == newValue)
-                                  .key;
-                              print(
-                                  '$selectedClientName selected with ID: $selectedClientId');
-                            });
-                          },
-                          items: clientMap.entries
-                              .map<DropdownMenuItem<String>>((entry) {
-                            return DropdownMenuItem<String>(
-                              value: entry.value,
-                              child: Row(
-                                children: [
-                                  selectedClientName == entry.value
-                                      ? Icon(Icons.account_circle_outlined,
-                                          color: Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium!
-                                              .color)
-                                      : Icon(Icons.account_circle_outlined,
-                                          color: Theme.of(context)
-                                              .textTheme
-                                              .bodyLarge!
-                                              .color),
-                                  // Conditional icon color based on selection
-                                  SizedBox(width: 10.w),
-                                  InterRegular(
-                                      text: entry.value,
-                                      color: selectedClientName == entry.value
-                                          ? Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium!
-                                              .color
-                                          : Theme.of(context)
-                                              .textTheme
-                                              .bodyLarge!
-                                              .color),
-                                  // Conditional text color based on selection
-                                ],
+                    !widget.isRoleGuard
+                        ? Container(
+                            height: 60.h,
+                            padding: EdgeInsets.symmetric(horizontal: 10.w),
+                            decoration: BoxDecoration(
+                              // color: Colors.redAccent,
+                              borderRadius: BorderRadius.circular(10.w),
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? DarkColor.color19
+                                      : LightColor.color3,
+                                ),
                               ),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 20.h),
-                    Container(
-                      height: 60.h,
-                      padding: EdgeInsets.symmetric(horizontal: 10.w),
-                      decoration: BoxDecoration(
-                        // color: Colors.redAccent,
-                        borderRadius: BorderRadius.circular(10.r),
-                        border: Border(
-                          bottom: BorderSide(
-                            color:
-                                Theme.of(context).brightness == Brightness.dark
-                                    ? DarkColor.color19
-                                    : LightColor.color3,
-                          ),
-                        ),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<String>(
-                          isExpanded: true,
-                          hint: Text(
-                            "Select Location",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          iconSize: 24.w,
-                          icon: Icon(Icons.arrow_drop_down),
-                          iconEnabledColor:
-                              Theme.of(context).textTheme.bodyMedium!.color,
-                          dropdownColor: Theme.of(context).cardColor,
-                          style: TextStyle(
-                              color: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium!
-                                  .color),
-                          value: selectedLocationName,
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              selectedLocationName = newValue!;
-                              selectedLocationId = locationMap.entries
-                                  .firstWhere(
-                                      (entry) => entry.value == newValue)
-                                  .key;
-                              print(
-                                  '$selectedLocationName selected with ID: $selectedLocationId');
-                            });
-                          },
-                          items: locationMap.entries
-                              .map<DropdownMenuItem<String>>((entry) {
-                            return DropdownMenuItem<String>(
-                              value: entry.value,
-                              child: Row(
-                                children: [
-                                  selectedLocationName == entry.value
-                                      ? Icon(Icons.location_on_outlined,
-                                          color: Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium!
-                                              .color)
-                                      : Icon(Icons.location_on_outlined,
-                                          color: Theme.of(context)
-                                              .textTheme
-                                              .bodyLarge!
-                                              .color),
-                                  SizedBox(width: 10.w),
-                                  InterRegular(
-                                      text: entry.value,
-                                      color: selectedLocationName == entry.value
-                                          ? Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium!
-                                              .color
-                                          : Theme.of(context)
-                                              .textTheme
-                                              .bodyLarge!
-                                              .color),
-                                ],
+                            ),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<String>(
+                                isExpanded: true,
+                                iconSize: 24.w,
+                                hint: Text(
+                                  "Select Client",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                icon: Icon(Icons.arrow_drop_down),
+                                iconEnabledColor: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color,
+                                // Set icon color for enabled state
+                                dropdownColor: Theme.of(context).cardColor,
+                                style: TextStyle(
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .color),
+                                value: selectedClientName,
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    selectedClientName = newValue!;
+                                    selectedClientId = clientMap.entries
+                                        .firstWhere(
+                                            (entry) => entry.value == newValue)
+                                        .key;
+                                    print(
+                                        '$selectedClientName selected with ID: $selectedClientId');
+                                  });
+                                },
+                                items: clientMap.entries
+                                    .map<DropdownMenuItem<String>>((entry) {
+                                  return DropdownMenuItem<String>(
+                                    value: entry.value,
+                                    child: Row(
+                                      children: [
+                                        selectedClientName == entry.value
+                                            ? Icon(
+                                                Icons.account_circle_outlined,
+                                                color: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyMedium!
+                                                    .color)
+                                            : Icon(
+                                                Icons.account_circle_outlined,
+                                                color: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyLarge!
+                                                    .color),
+                                        // Conditional icon color based on selection
+                                        SizedBox(width: 10.w),
+                                        InterRegular(
+                                            text: entry.value,
+                                            color: selectedClientName ==
+                                                    entry.value
+                                                ? Theme.of(context)
+                                                    .textTheme
+                                                    .bodyMedium!
+                                                    .color
+                                                : Theme.of(context)
+                                                    .textTheme
+                                                    .bodyLarge!
+                                                    .color),
+                                        // Conditional text color based on selection
+                                      ],
+                                    ),
+                                  );
+                                }).toList(),
                               ),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 20.h),
+                            ),
+                          )
+                        : SizedBox(),
+                    SizedBox(height: widget.isRoleGuard ? 0 : 20.h),
+                    !widget.isRoleGuard
+                        ? Container(
+                            height: 60.h,
+                            padding: EdgeInsets.symmetric(horizontal: 10.w),
+                            decoration: BoxDecoration(
+                              // color: Colors.redAccent,
+                              borderRadius: BorderRadius.circular(10.r),
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? DarkColor.color19
+                                      : LightColor.color3,
+                                ),
+                              ),
+                            ),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<String>(
+                                isExpanded: true,
+                                hint: Text(
+                                  "Select Location",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                iconSize: 24.w,
+                                icon: Icon(Icons.arrow_drop_down),
+                                iconEnabledColor: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color,
+                                dropdownColor: Theme.of(context).cardColor,
+                                style: TextStyle(
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .color),
+                                value: selectedLocationName,
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    selectedLocationName = newValue!;
+                                    selectedLocationId = locationMap.entries
+                                        .firstWhere(
+                                            (entry) => entry.value == newValue)
+                                        .key;
+                                    print(
+                                        '$selectedLocationName selected with ID: $selectedLocationId');
+                                  });
+                                },
+                                items: locationMap.entries
+                                    .map<DropdownMenuItem<String>>((entry) {
+                                  return DropdownMenuItem<String>(
+                                    value: entry.value,
+                                    child: Row(
+                                      children: [
+                                        selectedLocationName == entry.value
+                                            ? Icon(Icons.location_on_outlined,
+                                                color: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyMedium!
+                                                    .color)
+                                            : Icon(Icons.location_on_outlined,
+                                                color: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyLarge!
+                                                    .color),
+                                        SizedBox(width: 10.w),
+                                        InterRegular(
+                                            text: entry.value,
+                                            color: selectedLocationName ==
+                                                    entry.value
+                                                ? Theme.of(context)
+                                                    .textTheme
+                                                    .bodyMedium!
+                                                    .color
+                                                : Theme.of(context)
+                                                    .textTheme
+                                                    .bodyLarge!
+                                                    .color),
+                                      ],
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                          )
+                        : SizedBox(),
+                    SizedBox(height: widget.isRoleGuard ? 0 : 20.h),
                     Container(
                       height: 60.h,
                       padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -926,10 +940,12 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                               return {'type': upload['type']};
                             }));
                             await fireStoreService.createReport(
-                                locationId:
-                                    selectedLocationId ?? widget.locationId,
-                                locationName:
-                                    selectedLocationName ?? widget.locationName,
+                                locationId: !widget.isRoleGuard
+                                    ? selectedLocationId ?? ""
+                                    : widget.locationId,
+                                locationName: !widget.isRoleGuard
+                                    ? selectedLocationName ?? ""
+                                    : widget.locationName,
                                 isFollowUpRequired: isChecked,
                                 companyId: widget.companyID,
                                 employeeId: widget.empId,
@@ -941,7 +957,9 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                                 categoryId: id ?? "",
                                 data: explainController.text,
                                 status: "completed",
-                                clientId: selectedClientId ?? widget.ClientId,
+                                clientId: !widget.isRoleGuard
+                                    ? selectedClientId ?? ""
+                                    : widget.ClientId,
                                 followedUpId: widget.reportId,
                                 image: imageUrls,
                                 createdAt: SelectedDate,
@@ -976,10 +994,12 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                               return {'type': upload['type']};
                             }));
                             await fireStoreService.createReport(
-                                locationId:
-                                    selectedLocationId ?? widget.locationId,
-                                locationName:
-                                    selectedLocationName ?? widget.locationName,
+                                locationId: !widget.isRoleGuard
+                                    ? selectedLocationId ?? ""
+                                    : widget.locationId,
+                                locationName: !widget.isRoleGuard
+                                    ? selectedLocationName ?? ""
+                                    : widget.locationName,
                                 isFollowUpRequired: isChecked,
                                 companyId: widget.companyID,
                                 employeeId: widget.empId,
@@ -989,7 +1009,9 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                                 categoryId: newId ?? "",
                                 data: explainController.text,
                                 status: "pending",
-                                clientId: selectedClientId ?? widget.ClientId,
+                                clientId: !widget.isRoleGuard
+                                    ? selectedClientId ?? ""
+                                    : widget.ClientId,
                                 image: imageUrls,
                                 createdAt: SelectedDate,
                                 shiftId: widget.ShiftId);
@@ -1045,10 +1067,12 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                               return {'type': upload['type']};
                             }));
                             await fireStoreService.createReport(
-                                locationId:
-                                    selectedLocationId ?? widget.locationId,
-                                locationName:
-                                    selectedLocationName ?? widget.locationName,
+                                locationId: !widget.isRoleGuard
+                                    ? selectedLocationId ?? ""
+                                    : widget.locationId,
+                                locationName: !widget.isRoleGuard
+                                    ? selectedLocationName ?? ""
+                                    : widget.locationName,
                                 isFollowUpRequired: isChecked,
                                 companyId: widget.companyID,
                                 employeeId: widget.empId,
@@ -1058,7 +1082,9 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                                 categoryId: id ?? "",
                                 data: explainController.text,
                                 status: "pending",
-                                clientId: selectedClientId ?? widget.ClientId,
+                                clientId: !widget.isRoleGuard
+                                    ? selectedClientId ?? ""
+                                    : widget.ClientId,
                                 image: imageUrls,
                                 createdAt: SelectedDate,
                                 shiftId: widget.ShiftId);

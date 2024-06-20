@@ -32,14 +32,14 @@
 	<true/>
 	<key>MGLMapboxAccessToken</key>
 	<string>pk.eyJ1IjoidGFjdHRpazMyMSIsImEiOiJjbHcxMDZlajkwMG93MmlvMGRreWhyN3FiIn0._iByDFnmPCMQy3Lxgj1kxQ</string>
-	<key>NSCameraUsageDescription</key>
-	<string>This app needs camera access to scan QR codes</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>This app requires location access when in use</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>This app requires location access when in use</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>We need access to your location data to provide you with accurate navigation. while using our app.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>This app requires location access when in use</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>This app requires location access when in use</string>
+	<key>NSCameraUsageDescription</key>
+	<string>This app needs camera access to scan QR codes</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>This app does not require access to the microphone.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
