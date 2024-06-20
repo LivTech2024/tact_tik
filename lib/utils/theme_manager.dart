@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ThemeManager extends ChangeNotifier {
-  ThemeMode _themeMode = ThemeMode.light;
+  ThemeMode _themeMode = ThemeMode.dark;
   late SharedPreferences storage;
 
   get themeMode => _themeMode;
@@ -21,7 +21,7 @@ class ThemeManager extends ChangeNotifier {
 
   init() async {
     storage = await SharedPreferences.getInstance();
-    bool isDark = storage.getBool('isDark') ?? false;
+    bool isDark = storage.getBool('isDark') ?? true;
     _themeMode = isDark ? ThemeMode.dark : ThemeMode.light;
     notifyListeners();
   }

@@ -43,6 +43,7 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
   TextEditingController Controller = TextEditingController();
   bool _isLoading = false;
   List<String> imageUrls = [];
+
   @override
   void initState() {
     super.initState();
@@ -193,24 +194,24 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
           ),
           centerTitle: true,
         ),
-        body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: width / width30),
-          child: Stack(
-            children: [
-              SingleChildScrollView(
+        body: Stack(
+          children: [
+            SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 30.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: height / height30),
+                    SizedBox(height: 30.h),
                     Text(
                       'Add Image/Comment',
                       style: TextStyle(
-                        fontSize: width / width14,
+                        fontSize: 14.sp,
                         color: Theme.of(context).textTheme.bodyMedium!.color,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: height / height10),
+                    // SizedBox(height: 10.h),
                     // Row(
                     //   children: [
                     //     Radio(
@@ -249,16 +250,20 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                     //     )
                     //   ],
                     // ),
-                    SizedBox(height: height / height10),
+                    SizedBox(height: 10.h),
                     TextField(
                       controller: Controller,
                       decoration: InputDecoration(
-                        hintText: 'Add Comment',
-                      ),
+                          hintText: 'Add Comment',
+                          hintStyle: TextStyle(
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .color)),
                       style: TextStyle(
                           color: Theme.of(context).textTheme.bodyMedium!.color),
                     ),
-                    SizedBox(height: height / height20),
+                    SizedBox(height: 20.h),
                     GridView.builder(
                       physics: NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
@@ -362,72 +367,77 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                         }
                       },
                     ),
-                    SizedBox(height: height / height100)
-                  ],
-                ),
-              ),
-              if (_isLoading)
-                Container(
-                  color: Colors.black.withOpacity(0.5),
-                  child: Center(
-                    child: CircularProgressIndicator(
-                      color: DarkColor.Primarycolor,
-                    ),
-                  ),
-                ),
-              imageUrls.isNotEmpty
-                  ? GridView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        mainAxisSpacing: 8.0,
-                        crossAxisSpacing: 8.0,
-                      ),
-                      itemCount: imageUrls.length,
-                      itemBuilder: (context, index) {
-                        return Stack(
-                          children: [
-                            /* Image.network(
+                    SizedBox(height: 20.h),
+                    imageUrls.isNotEmpty
+                        ? GridView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3,
+                              mainAxisSpacing: 8.0,
+                              crossAxisSpacing: 8.0,
+                            ),
+                            itemCount: imageUrls.length,
+                            itemBuilder: (context, index) {
+                              return Stack(
+                                children: [
+                                  /* Image.network(
                                 imageUrls[index],
                                 fit: BoxFit.cover,
                               ),*/
-                            Container(
-                              decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                image: NetworkImage(imageUrls[index]),
-                                fit: BoxFit.cover,
-                              )),
-                            ),
-                            Positioned(
-                              top: -5.h,
-                              right: -5.w,
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  // IconButton(
-                                  //   onPressed: () {
-                                  //     _removeImage(index);
-                                  //   },
-                                  //   icon: Icon(
-                                  //     Icons.delete,
-                                  //     color: Theme.of(context)
-                                  //         .textTheme
-                                  //         .bodyMedium!
-                                  //         .color,
-                                  //   ),
-                                  // ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                      image: NetworkImage(imageUrls[index]),
+                                      fit: BoxFit.cover,
+                                    )),
+                                  ),
+                                  Positioned(
+                                    top: -5.h,
+                                    right: -5.w,
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        // IconButton(
+                                        //   onPressed: () {
+                                        //     _removeImage(index);
+                                        //   },
+                                        //   icon: Icon(
+                                        //     Icons.delete,
+                                        //     color: Theme.of(context)
+                                        //         .textTheme
+                                        //         .bodyMedium!
+                                        //         .color,
+                                        //   ),
+                                        // ),
+                                      ],
+                                    ),
+                                  ),
                                 ],
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                    )
-                  : SizedBox(),
-              Align(
-                // bottom: 10,
-                alignment: Alignment.bottomCenter,
+                              );
+                            },
+                          )
+                        : SizedBox(),
+                    SizedBox(height: 100.h)
+                  ],
+                ),
+              ),
+            ),
+            if (_isLoading)
+              Container(
+                color: Colors.black.withOpacity(0.5),
+                child: Center(
+                  child: CircularProgressIndicator(
+                    color: DarkColor.Primarycolor,
+                  ),
+                ),
+              ),
+            Align(
+              // bottom: 10,
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 30.w),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -474,9 +484,9 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                     ),
                   ],
                 ),
-              )
-            ],
-          ),
+              ),
+            )
+          ],
         ),
       ),
     );
