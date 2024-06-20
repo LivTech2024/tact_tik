@@ -272,21 +272,60 @@ class _CalendarPageState extends State<CalendarPage> {
       final isShiftAcknowledgedByEmployee =
           shiftAcknowledgedUserIds.contains(currentUserId);
       final shiftId = data['ShiftId'];
+      print('shift Id : $shiftId');
 
-      if (today.isAtSameMomentAs(end)) {
-        print(shiftId);
+      if (shiftId == 'jUUFd7ksx05WpWcZmJk8') {
+        print(
+            '=========================================================================');
       }
 
       final otherUserIds =
           assignedUserIds.where((id) => id != currentUserId).toList();
-      var result = false;
-      if (otherUserIds.isNotEmpty) {
-        result = await isExchangeRequested(currentUserId, shiftId);
+
+      print('other user ids: $otherUserIds');
+      List<bool> isExchangeRequestedList = [];
+      int ind = 0;
+      String? outputId = '';
+      do {
+        if (otherUserIds.isNotEmpty) {
+          outputId = await getShiftExchangeId(
+            currentUserId,
+            shiftId,
+            otherUserIds[ind],
+          );
+          if (outputId != null && outputId.isNotEmpty) {
+            isExchangeRequestedList.add(true);
+          } else {
+            isExchangeRequestedList.add(false);
+          }
+          ind++;
+        }
+      } while (ind < otherUserIds.length);
+      print('isExchangeRequestedList: $isExchangeRequestedList');
+
+      List<bool> isShiftRequestedList = [];
+      int index = 0;
+      String? shiftRequestId = '';
+
+      shiftRequestId = await getShiftRequestId(
+        currentUserId,
+        shiftId,
+      );
+      if (shiftRequestId != null && shiftRequestId.isNotEmpty) {
+        isShiftRequestedList.add(true);
+      } else {
+        isShiftRequestedList.add(false);
       }
+      index++;
+
+      print('isShiftRequestedList: $isShiftRequestedList');
 
       return CalendarEventModel(
           others: OtherUsersModel(
-              isExchangeRequested: result,
+              isShiftRequested: isShiftRequestedList,
+              shiftRequestId: shiftRequestId,
+              isExchangeRequested: isExchangeRequestedList,
+              exchangeId: outputId,
               othersShiftName: name,
               othersShiftId: shiftId,
               othersShiftLocation: shiftLocationName,
@@ -316,7 +355,11 @@ class _CalendarPageState extends State<CalendarPage> {
     });
   }
 
-  Future<bool> isExchangeRequested(String employeeId, String shiftId) async {
+  Future<String?> getShiftExchangeId(
+    String employeeId,
+    String shiftId,
+    String senderId,
+  ) async {
     // Reference to the ShiftExchange collection
     final CollectionReference shiftExchangeCollection =
         FirebaseFirestore.instance.collection('ShiftExchange');
@@ -324,28 +367,62 @@ class _CalendarPageState extends State<CalendarPage> {
     // Query the collection
     QuerySnapshot querySnapshot = await shiftExchangeCollection
         .where('ShiftExchReqReceiverId', isEqualTo: employeeId)
-        .where('ShiftExchReqShiftId', isEqualTo: shiftId)
+        .where('ShiftExchReqSenderId', isEqualTo: senderId)
+        .where('ShiftExchSenderShiftId', isEqualTo: shiftId)
         .where('ShiftExchReqStatus', isEqualTo: 'pending')
         .get();
 
     // Check if any documents exist
     if (querySnapshot.docs.isNotEmpty) {
-      print('receiver id: $employeeId');
-      print('shift id: $shiftId');
-      return true; // Exchange request exists
+      for (var doc in querySnapshot.docs) {
+        print('ShiftExchReqId==>: ${doc['ShiftExchReqId']}');
+        print('====== doc found ====');
+        print('receiver id: $employeeId');
+        // print('sender id: $senderId');
+        print('shift id: $shiftId');
+        return doc['ShiftExchReqId'];
+      }
+
+      // Exchange request exists
     } else {
-      return false; // No exchange request
+      return ''; // No exchange request
     }
   }
 
-  Color getRandomEventColor() {
-    final random = Random();
-    return Color.fromARGB(
-      255,
-      random.nextInt(200),
-      random.nextInt(200),
-      random.nextInt(200),
-    );
+  Future<String?> getShiftRequestId(
+    String employeeId,
+    String shiftId,
+  ) async {
+    print('Receiver id: $employeeId');
+    print('shift id: $shiftId');
+
+    // Reference to the ShiftExchange collection
+    final CollectionReference shiftExchangeCollection =
+        FirebaseFirestore.instance.collection('ShiftRequests');
+
+    // Query the collection
+    QuerySnapshot querySnapshot = await shiftExchangeCollection
+        .where('ShiftReqReceiverId', isEqualTo: employeeId)
+        // .where('ShiftReqSenderId', isEqualTo: senderId)
+        .where('ShiftReqShiftId', isEqualTo: shiftId)
+        .where('ShiftReqStatus', isEqualTo: 'pending')
+        .get();
+
+    // Check if any documents exist
+    if (querySnapshot.docs.isNotEmpty) {
+      for (var doc in querySnapshot.docs) {
+        print('ShiftExchReqId==>: ${doc['ShiftRequestId']}');
+        print('====== doc found ====');
+        print('receiver id: $employeeId');
+        // print('sender id: $senderId');
+        print('shift id: $shiftId');
+        return doc['ShiftRequestId'];
+      }
+
+      // Exchange request exists
+    } else {
+      return ''; // No exchange request
+    }
   }
 
   void _showDayEventsInModalSheet(

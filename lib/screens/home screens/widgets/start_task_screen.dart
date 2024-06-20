@@ -100,7 +100,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
   ReceivePort? _receivePort;
   bool clickedIn = false;
   bool issShift = true;
-  late Timer _stopwatchTimer;
+  Timer _stopwatchTimer = Timer(Duration.zero, () {});
   int _stopwatchSeconds = 0;
   String stopwatchtime = "";
   bool isPaused = false;
@@ -320,13 +320,15 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title:  Text(
+              title: Text(
                 'Wellness Report',
-                style: TextStyle(color: Theme.of(context).textTheme.bodyMedium!.color ),
+                style: TextStyle(
+                    color: Theme.of(context).textTheme.bodyMedium!.color),
               ),
-              content:  Text(
+              content: Text(
                 'Please upload your wellness report.',
-                style: TextStyle(color:  Theme.of(context).textTheme.bodyMedium!.color),
+                style: TextStyle(
+                    color: Theme.of(context).textTheme.bodyMedium!.color),
               ),
               actions: <Widget>[
                 TextButton(

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
+import 'package:tact_tik/common/widgets/customErrorToast.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
@@ -22,13 +23,15 @@ class ShiftInformation extends StatefulWidget {
       required this.shiftId,
       required this.startTime,
       required this.endTime,
-      required this.currentUserId});
+      required this.currentUserId,
+      this.sendersShiftId = ''});
   final bool toRequest;
   final String empId;
   final String shiftId;
   final String startTime;
   final String endTime;
   final String currentUserId;
+  final String? sendersShiftId;
   final bool? toAccept;
 
   @override
@@ -42,7 +45,7 @@ class _ShiftInformationState extends State<ShiftInformation> {
   String supervisorName = '';
   String location = '';
   bool isLoading = true;
-
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
   @override
   void initState() {
     super.initState();
@@ -52,10 +55,8 @@ class _ShiftInformationState extends State<ShiftInformation> {
   Future<void> _getUsersAndShiftInfo(String empId, String shiftId) async {
     try {
       // Fetch user info from Employees collection
-      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
-          .collection('Employees')
-          .doc(empId)
-          .get();
+      DocumentSnapshot userSnapshot =
+          await firestore.collection('Employees').doc(empId).get();
       print('shift information screen');
       print('empId: $empId');
       print('shiftId: $shiftId');
@@ -63,10 +64,8 @@ class _ShiftInformationState extends State<ShiftInformation> {
         guardName = userSnapshot['EmployeeName'];
         final supervisorId = userSnapshot['EmployeeSupervisorId'][0];
         if (supervisorId != null) {
-          DocumentSnapshot supervisorSnapshot = await FirebaseFirestore.instance
-              .collection('Employees')
-              .doc(supervisorId)
-              .get();
+          DocumentSnapshot supervisorSnapshot =
+              await firestore.collection('Employees').doc(supervisorId).get();
           if (supervisorSnapshot.exists) {
             supervisorName = supervisorSnapshot['EmployeeName'];
           }
@@ -74,10 +73,8 @@ class _ShiftInformationState extends State<ShiftInformation> {
       }
 
       // Fetch shift info from Shifts collection
-      DocumentSnapshot shiftSnapshot = await FirebaseFirestore.instance
-          .collection('Shifts')
-          .doc(shiftId)
-          .get();
+      DocumentSnapshot shiftSnapshot =
+          await firestore.collection('Shifts').doc(shiftId).get();
       if (shiftSnapshot.exists) {
         // TODO from employee EmployeeSupervisorId gets name SupervisorName
         shiftName = shiftSnapshot['ShiftName'];
@@ -276,7 +273,8 @@ class _ShiftInformationState extends State<ShiftInformation> {
                       ),
                     ),
                     IgnorePointer(
-                      ignoring: /**condition clicked true* */ false /*Todo pass the bool of true and false*/,
+                      ignoring:
+                          /**condition clicked true* */ false /*Todo pass the bool of true and false*/,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -284,7 +282,10 @@ class _ShiftInformationState extends State<ShiftInformation> {
                             text: widget.toRequest ? 'Request' : 'Acknowledge ',
                             onPressed: () {
                               if (widget.toRequest) {
-                                onExchangeShift(widget.empId, widget.shiftId);
+                                onShiftRequest(
+                                    senderId: widget.currentUserId,
+                                    receiverId: widget.empId,
+                                    shiftId: widget.shiftId);
                               } else {
                                 onAcceptShift(widget.empId, widget.shiftId);
                               }
@@ -294,9 +295,10 @@ class _ShiftInformationState extends State<ShiftInformation> {
                             // backgroundcolor: *condition clicked true* ? Theme.of(context).primaryColorLight :Theme.of(context).primaryColor,
                             borderRadius: 10.r,
                             fontsize: 18.sp,
-                            color: Theme.of(context).textTheme.bodyMedium!.color,
+                            color:
+                                Theme.of(context).textTheme.bodyMedium!.color,
                           ),
-                          // SizedBox(height: 50.h),
+                          SizedBox(height: 20.h),
                           widget.toRequest
                               ?
                               // ? Column(
@@ -304,8 +306,15 @@ class _ShiftInformationState extends State<ShiftInformation> {
                               // SizedBox(height: 20.h),
                               Button1(
                                   text: 'Exchange',
-                                  onPressed: () {},
-                                  backgroundcolor: Theme.of(context).primaryColor,
+                                  onPressed: () {
+                                    onExchangeShift(
+                                        widget.currentUserId,
+                                        widget.empId,
+                                        widget.shiftId,
+                                        widget.sendersShiftId!);
+                                  },
+                                  backgroundcolor:
+                                      Theme.of(context).primaryColor,
                                   // Todo apply this to the buttons when one of the button is clicked
                                   // backgroundcolor: *condition clicked true* ? Theme.of(context).primaryColorLight :Theme.of(context).primaryColor,
                                   borderRadius: 10.r,
@@ -330,10 +339,39 @@ class _ShiftInformationState extends State<ShiftInformation> {
     );
   }
 
+  Future<void> onShiftRequest({
+    required String senderId,
+    required String receiverId,
+    required String shiftId,
+  }) async {
+    print('sender id: $senderId');
+    print('receiver id: $receiverId');
+    print('shift id: $shiftId');
+    try {
+      // Define the fields for the new document
+      Map<String, dynamic> shiftRequestData = {
+        'ShiftReqCreatedAt': Timestamp.now(),
+        'ShiftReqReceiverId': receiverId, // Replace with actual receiver ID
+        'ShiftReqSenderId': senderId, // Replace with actual sender ID
+        'ShiftReqShiftId': shiftId, // Replace with actual shift ID
+        'ShiftReqStatus': 'pending', // Replace with actual status if needed
+      };
+
+      // Add a new document to the ShiftRequests collection
+      DocumentReference docRef =
+          await firestore.collection('ShiftRequests').add(shiftRequestData);
+
+      // Update the document with the generated ID
+      await docRef.update({'ShiftRequestId': docRef.id});
+      showSuccessToast(context, "Shift request created successfully");
+      print('Shift request created with ID: ${docRef.id}');
+    } catch (e) {
+      print('Error creating shift request: $e');
+    }
+  }
+
   Future<void> onExchangeAcceptShift(
       String currentUserId, String empId, String shiftId) async {
-    FirebaseFirestore firestore = FirebaseFirestore.instance;
-
     try {
       // Query to find the document with the specified fields
       QuerySnapshot querySnapshot = await firestore
@@ -365,10 +403,10 @@ class _ShiftInformationState extends State<ShiftInformation> {
 
   Future<void> onAcceptShift(String empId, String shiftId) async {
     try {
-      final shiftsCollection = FirebaseFirestore.instance.collection('Shifts');
+      final shiftsCollection = firestore.collection('Shifts');
       final shiftDoc = shiftsCollection.doc(shiftId);
 
-      await FirebaseFirestore.instance.runTransaction((transaction) async {
+      await firestore.runTransaction((transaction) async {
         DocumentSnapshot snapshot = await transaction.get(shiftDoc);
 
         if (!snapshot.exists) {
@@ -393,34 +431,48 @@ class _ShiftInformationState extends State<ShiftInformation> {
     }
   }
 
-  Future<void> onExchangeShift(String empId, String shiftId) async {
+  Future<void> onExchangeShift(String currentUserId, String empId,
+      String shiftId, String sendersShiftId) async {
     try {
-      final shiftsCollection = FirebaseFirestore.instance.collection('Shifts');
-      final exchangeCollection =
-          FirebaseFirestore.instance.collection('ShiftExchange');
+      print('on exchange shift');
+      if (sendersShiftId.isEmpty) {
+        showErrorToast(context, "You dont have any shift to exchange");
+        return;
+      }
+
+      final shiftsCollection = firestore.collection('Shifts');
+      final exchangeCollection = firestore.collection('ShiftExchange');
 
       final shiftDoc = shiftsCollection.doc(shiftId);
 
-      await FirebaseFirestore.instance.runTransaction((transaction) async {
+      await firestore.runTransaction((transaction) async {
         final snapshot = await transaction.get(shiftDoc);
 
         if (!snapshot.exists) {
           throw Exception("Shift does not exist!");
         }
 
+        if (sendersShiftId.isEmpty) {
+          sendersShiftId = shiftId;
+        }
+
         final exchangeDoc = exchangeCollection.doc();
         Map<String, dynamic> dataJson = snapshot.data() ?? {};
         transaction.set(exchangeDoc, {
           'ShiftExchReqId': exchangeDoc.id,
-          'ShiftExchReqSenderId': widget.currentUserId,
-          'ShiftExchReqReceiverId':
-              (dataJson['ShiftAssignedUserId'] ?? []).first,
-          'ShiftExchReqShiftId': shiftId,
+          'ShiftExchReqSenderId': currentUserId,
+          'ShiftExchReqReceiverId': empId,
+          'ShiftExchReceiverShiftId': shiftId,
           'ShiftExchReqStatus': 'pending',
+          'ShiftExchSenderShiftId': sendersShiftId,
           'ShiftExchReqCreatedAt': DateTime.now(),
           'ShiftExchReqModifiedAt': DateTime.now(),
         });
       });
+      print('sender\'s id : $currentUserId');
+      print('receiver\'s id : $empId');
+      print('receivers shift id : $shiftId');
+      print('senders shift id : $sendersShiftId');
 
       showSuccessToast(context, "Shift exchange request sent successfully");
 
