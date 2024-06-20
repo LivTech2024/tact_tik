@@ -106,7 +106,6 @@ class _ShiftInformationState extends State<ShiftInformation> {
     return SafeArea(
       child: isLoading
           ? Scaffold(
-              backgroundColor: Theme.of(context).canvasColor,
               body: Center(
                 child: CircularProgressIndicator(
                   color: Theme.of(context).primaryColor,
@@ -116,7 +115,7 @@ class _ShiftInformationState extends State<ShiftInformation> {
           : Scaffold(
               appBar: AppBar(
                 leading: IconButton(
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.arrow_back_ios,
                   ),
                   padding: EdgeInsets.only(left: width / width20),
@@ -130,57 +129,57 @@ class _ShiftInformationState extends State<ShiftInformation> {
                 centerTitle: widget.toRequest,
               ),
               body: Padding(
-                padding: EdgeInsets.symmetric(horizontal: width / width30),
+                padding: EdgeInsets.symmetric(horizontal: 30.w),
                 child: Stack(
                   children: [
                     SingleChildScrollView(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(height: height / height30),
+                          SizedBox(height: 30.h),
                           InterBold(
                             text: "Guard Name : $guardName",
-                            fontsize: width / width18,
+                            fontsize: 18.sp,
                             color:
                                 Theme.of(context).textTheme.bodyMedium!.color,
                           ),
-                          SizedBox(height: height / height30),
+                          SizedBox(height: 30.h),
                           InterBold(
                             text: 'Shift Name : $shiftName',
-                            fontsize: width / width18,
+                            fontsize: 18.sp,
                             color:
                                 Theme.of(context).textTheme.bodyMedium!.color,
                           ),
-                          SizedBox(height: height / height30),
+                          SizedBox(height: 30.h),
                           InterBold(
                             text: 'Details',
-                            fontsize: width / width16,
+                            fontsize: 16.sp,
                             color:
                                 Theme.of(context).textTheme.bodyMedium!.color,
                           ),
-                          SizedBox(height: height / height14),
+                          SizedBox(height: 14.h),
                           InterRegular(
                             text: shiftDetails,
-                            fontsize: width / width14,
+                            fontsize: 14.sp,
                             color: Theme.of(context).textTheme.bodyLarge!.color,
                             maxLines: 3,
                           ),
-                          SizedBox(height: height / height30),
+                          SizedBox(height: 30.h),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               InterBold(
                                 text: 'Supervisor :',
-                                fontsize: width / width16,
+                                fontsize: 16.sp,
                                 color: Theme.of(context)
                                     .textTheme
                                     .bodyMedium!
                                     .color,
                               ),
-                              SizedBox(width: width / width4),
+                              SizedBox(width: 4.w),
                               InterRegular(
                                 text: supervisorName,
-                                fontsize: width / width14,
+                                fontsize: 14.sp,
                                 color: Theme.of(context)
                                     .textTheme
                                     .bodyLarge!
@@ -188,22 +187,22 @@ class _ShiftInformationState extends State<ShiftInformation> {
                               )
                             ],
                           ),
-                          SizedBox(height: height / height30),
+                          SizedBox(height: 30.h),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               InterBold(
                                 text: 'Time :',
-                                fontsize: width / width16,
+                                fontsize: 16.sp,
                                 color: Theme.of(context)
                                     .textTheme
                                     .bodyMedium!
                                     .color,
                               ),
-                              SizedBox(width: width / width4),
+                              SizedBox(width: 4.w),
                               InterRegular(
                                 text: '${widget.startTime}-${widget.endTime}',
-                                fontsize: width / width14,
+                                fontsize: 14.sp,
                                 color: Theme.of(context)
                                     .textTheme
                                     .bodyLarge!
@@ -211,22 +210,22 @@ class _ShiftInformationState extends State<ShiftInformation> {
                               ),
                             ],
                           ),
-                          SizedBox(height: height / height30),
+                          SizedBox(height: 30.h),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Icon(
                                 Icons.location_on,
-                                size: width / width24,
+                                size: 24.sp,
                                 color: Theme.of(context)
                                     .textTheme
                                     .bodyMedium!
                                     .color,
                               ),
-                              SizedBox(width: width / width4),
+                              SizedBox(width: 4.w),
                               InterRegular(
                                 text: location,
-                                fontsize: width / width14,
+                                fontsize: 14.sp,
                                 color: Theme.of(context)
                                     .textTheme
                                     .bodyLarge!
@@ -238,16 +237,16 @@ class _ShiftInformationState extends State<ShiftInformation> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                SizedBox(height: height / height50),
+                                SizedBox(height: 50.h),
                                 InterBold(
                                   text: '*Shift already taken',
-                                  fontsize: width / width18,
+                                  fontsize: 18.sp,
                                   color: Theme.of(context)
                                       .textTheme
                                       .bodyMedium!
                                       .color,
                                 ),
-                                SizedBox(height: height / height30),
+                                SizedBox(height: 30.h),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
@@ -276,54 +275,53 @@ class _ShiftInformationState extends State<ShiftInformation> {
                         ],
                       ),
                     ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Button1(
-                          text: widget.toRequest
-                              ? widget.toAccept!
-                                  ? 'Accept'
-                                  : 'Exchange'
-                              : 'Accept',
-                          onPressed: () {
-                            if (widget.toAccept!) {
-                              onExchangeAcceptShift(widget.currentUserId,
-                                  widget.empId, widget.shiftId);
-                            } else if (widget.toRequest) {
-                              onExchangeShift(widget.currentUserId,
-                                  widget.empId, widget.shiftId);
-                            } else {
-                              onAcceptShift(widget.empId, widget.shiftId);
-                            }
-                          },
-                          backgroundcolor: Theme.of(context).primaryColor,
-                          borderRadius: 10.r,
-                          fontsize: 18.sp,
-                          color: Theme.of(context).textTheme.bodyMedium!.color,
-                        ),
-                        // SizedBox(height: 50.h),
-                        widget.toRequest
-                            ?
-                            // ? Column(
-                            //     children: [
-                            // SizedBox(height: 20.h),
-                            Button1(
-                                text: 'Reject',
-                                onPressed: () {},
-                                backgroundcolor: Theme.of(context).primaryColor,
-                                borderRadius: 10.r,
-                                fontsize: 18.sp,
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium!
-                                    .color,
-                                useBorder: true,
-                              )
-                            // ],
-                            // )
-                            : const SizedBox(),
-                        SizedBox(height: 100.h),
-                      ],
+                    IgnorePointer(
+                      ignoring: /**condition clicked true* */ false /*Todo pass the bool of true and false*/,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Button1(
+                            text: widget.toRequest ? 'Request' : 'Acknowledge ',
+                            onPressed: () {
+                              if (widget.toRequest) {
+                                onExchangeShift(widget.empId, widget.shiftId);
+                              } else {
+                                onAcceptShift(widget.empId, widget.shiftId);
+                              }
+                            },
+                            backgroundcolor: Theme.of(context).primaryColor,
+                            // Todo apply this to the buttons when one of the button is clicked
+                            // backgroundcolor: *condition clicked true* ? Theme.of(context).primaryColorLight :Theme.of(context).primaryColor,
+                            borderRadius: 10.r,
+                            fontsize: 18.sp,
+                            color: Theme.of(context).textTheme.bodyMedium!.color,
+                          ),
+                          // SizedBox(height: 50.h),
+                          widget.toRequest
+                              ?
+                              // ? Column(
+                              //     children: [
+                              // SizedBox(height: 20.h),
+                              Button1(
+                                  text: 'Exchange',
+                                  onPressed: () {},
+                                  backgroundcolor: Theme.of(context).primaryColor,
+                                  // Todo apply this to the buttons when one of the button is clicked
+                                  // backgroundcolor: *condition clicked true* ? Theme.of(context).primaryColorLight :Theme.of(context).primaryColor,
+                                  borderRadius: 10.r,
+                                  fontsize: 18.sp,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .color,
+                                  useBorder: true,
+                                )
+                              // ],
+                              // )
+                              : SizedBox(),
+                          SizedBox(height: 100.h),
+                        ],
+                      ),
                     )
                   ],
                 ),
@@ -395,8 +393,7 @@ class _ShiftInformationState extends State<ShiftInformation> {
     }
   }
 
-  Future<void> onExchangeShift(
-      String currentId, String empId, String shiftId) async {
+  Future<void> onExchangeShift(String empId, String shiftId) async {
     try {
       final shiftsCollection = FirebaseFirestore.instance.collection('Shifts');
       final exchangeCollection =
@@ -411,15 +408,13 @@ class _ShiftInformationState extends State<ShiftInformation> {
           throw Exception("Shift does not exist!");
         }
 
-        print(
-            "Shift exchange request by $currentId to $empId for shift $shiftId");
-
         final exchangeDoc = exchangeCollection.doc();
         Map<String, dynamic> dataJson = snapshot.data() ?? {};
         transaction.set(exchangeDoc, {
           'ShiftExchReqId': exchangeDoc.id,
-          'ShiftExchReqSenderId': currentId,
-          'ShiftExchReqReceiverId': empId,
+          'ShiftExchReqSenderId': widget.currentUserId,
+          'ShiftExchReqReceiverId':
+              (dataJson['ShiftAssignedUserId'] ?? []).first,
           'ShiftExchReqShiftId': shiftId,
           'ShiftExchReqStatus': 'pending',
           'ShiftExchReqCreatedAt': DateTime.now(),
