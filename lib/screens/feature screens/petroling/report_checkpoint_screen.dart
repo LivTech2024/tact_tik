@@ -254,11 +254,12 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                     TextField(
                       controller: Controller,
                       decoration: InputDecoration(
-                        hintText: 'Add Comment',
-                        hintStyle: TextStyle(
-                          color: Theme.of(context).textTheme.bodyMedium!.color
-                        )
-                      ),
+                          hintText: 'Add Comment',
+                          hintStyle: TextStyle(
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .color)),
                       style: TextStyle(
                           color: Theme.of(context).textTheme.bodyMedium!.color),
                     ),
