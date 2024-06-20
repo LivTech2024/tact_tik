@@ -12,7 +12,6 @@ import 'package:tact_tik/screens/home%20screens/calendar%20screen/utills/extensi
 import 'package:tact_tik/screens/home%20screens/calendar%20screen/widgets/calendar_shimmer_widget.dart';
 
 import '../../../../common/sizes.dart';
-import '../controller/calender_page_controller.dart';
 import '../res/colors.dart';
 import '../utills/constants.dart';
 import '../widgets/create_event_dialog.dart';
@@ -36,7 +35,6 @@ class CalendarPage extends StatefulWidget {
 }
 
 class _CalendarPageState extends State<CalendarPage> {
-  final controller = Get.put(CalenderPageController());
   final _currentDate = DateTime.now();
   final _appbarTitleNotifier = ValueNotifier<String>('');
   final _monthNameNotifier = ValueNotifier<String>('');
@@ -51,8 +49,9 @@ class _CalendarPageState extends State<CalendarPage> {
   @override
   void initState() {
     super.initState();
-    _setTexts(_currentDate.year, _currentDate.month);
     currentUserId = widget.employeeId;
+
+    _setTexts(_currentDate.year, _currentDate.month);
     _fetchAndCreateEventsFromFirestore();
   }
 
@@ -256,8 +255,9 @@ class _CalendarPageState extends State<CalendarPage> {
     final snapshot = await shiftsCollection
         .where('ShiftCompanyId', isEqualTo: widget.companyId)
         .get();
+
     DateTime today = DateTime.now();
-    final events = snapshot.docs.map((doc) {
+    final events = await Future.wait(snapshot.docs.map((doc) async {
       final data = doc.data();
       final name = data['ShiftName'] as String;
       final begin = (data['ShiftDate'] as Timestamp).toDate();
@@ -279,16 +279,21 @@ class _CalendarPageState extends State<CalendarPage> {
 
       final otherUserIds =
           assignedUserIds.where((id) => id != currentUserId).toList();
+      var result = false;
+      if (otherUserIds.isNotEmpty) {
+        result = await isExchangeRequested(currentUserId, shiftId);
+      }
 
       return CalendarEventModel(
           others: OtherUsersModel(
+              isExchangeRequested: result,
               othersShiftName: name,
               othersShiftId: shiftId,
               othersShiftLocation: shiftLocationName,
               ids: otherUserIds,
               startTime: shiftStartTime,
               endTime: shiftEndTime),
-          name: name,
+          name: isAssignedToCurrentUser ? name : "",
           begin: begin,
           end: end,
           startTime: shiftStartTime,
@@ -296,9 +301,10 @@ class _CalendarPageState extends State<CalendarPage> {
           shiftId: shiftId,
           isAssignedToCurrentUser: isAssignedToCurrentUser,
           isShiftAcknowledgedByEmployee: isShiftAcknowledgedByEmployee,
-          eventColor: isShiftAcknowledgedByEmployee ? Colors.green : Colors.red,
+          eventColor:
+              isAssignedToCurrentUser ? Colors.green : Colors.transparent,
           location: shiftLocationName);
-    }).toList();
+    }).toList());
 
     await Future.delayed(const Duration(seconds: 1));
     setState(() {
@@ -308,6 +314,27 @@ class _CalendarPageState extends State<CalendarPage> {
         events: events,
       );
     });
+  }
+
+  Future<bool> isExchangeRequested(String employeeId, String shiftId) async {
+    // Reference to the ShiftExchange collection
+    final CollectionReference shiftExchangeCollection =
+        FirebaseFirestore.instance.collection('ShiftExchange');
+
+    // Query the collection
+    QuerySnapshot querySnapshot = await shiftExchangeCollection
+        .where('ShiftExchReqReceiverId', isEqualTo: employeeId)
+        .where('ShiftExchReqShiftId', isEqualTo: shiftId)
+        .get();
+
+    // Check if any documents exist
+    if (querySnapshot.docs.isNotEmpty) {
+      print('receiver id: $employeeId');
+      print('shift id: $shiftId');
+      return true; // Exchange request exists
+    } else {
+      return false; // No exchange request
+    }
   }
 
   Color getRandomEventColor() {

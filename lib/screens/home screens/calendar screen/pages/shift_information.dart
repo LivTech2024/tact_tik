@@ -17,18 +17,19 @@ class ShiftInformation extends StatefulWidget {
   const ShiftInformation(
       {super.key,
       this.toRequest = false,
+      this.toAccept = false,
       required this.empId,
       required this.shiftId,
       required this.startTime,
       required this.endTime,
       required this.currentUserId});
-
   final bool toRequest;
   final String empId;
   final String shiftId;
   final String startTime;
   final String endTime;
   final String currentUserId;
+  final bool? toAccept;
 
   @override
   State<ShiftInformation> createState() => _ShiftInformationState();
@@ -55,6 +56,9 @@ class _ShiftInformationState extends State<ShiftInformation> {
           .collection('Employees')
           .doc(empId)
           .get();
+      print('shift information screen');
+      print('empId: $empId');
+      print('shiftId: $shiftId');
       if (userSnapshot.exists) {
         guardName = userSnapshot['EmployeeName'];
         final supervisorId = userSnapshot['EmployeeSupervisorId'][0];
@@ -324,6 +328,39 @@ class _ShiftInformationState extends State<ShiftInformation> {
               ),
             ),
     );
+  }
+
+  Future<void> onExchangeAcceptShift(
+      String currentUserId, String empId, String shiftId) async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    try {
+      // Query to find the document with the specified fields
+      QuerySnapshot querySnapshot = await firestore
+          .collection('ShiftExchange')
+          .where('ShiftExchReqReceiverId', isEqualTo: currentUserId)
+          .where('ShiftExchReqShiftId', isEqualTo: shiftId)
+          .limit(1)
+          .get();
+
+      // Check if a document is found
+      if (querySnapshot.docs.isNotEmpty) {
+        // Get the document id
+        DocumentReference documentReference =
+            querySnapshot.docs.first.reference;
+
+        // Update the document's status to 'accepted'
+        await documentReference.update({
+          'ShiftExchReqStatus': 'accepted',
+        });
+
+        print('Shift exchange request accepted successfully.');
+      } else {
+        print('No matching shift exchange request found.');
+      }
+    } catch (e) {
+      print('Error accepting shift exchange request: $e');
+    }
   }
 
   Future<void> onAcceptShift(String empId, String shiftId) async {
