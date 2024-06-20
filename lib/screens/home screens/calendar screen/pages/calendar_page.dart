@@ -324,6 +324,7 @@ class _CalendarPageState extends State<CalendarPage> {
     QuerySnapshot querySnapshot = await shiftExchangeCollection
         .where('ShiftExchReqReceiverId', isEqualTo: employeeId)
         .where('ShiftExchReqShiftId', isEqualTo: shiftId)
+        .where('ShiftExchReqStatus', isEqualTo: 'pending')
         .get();
 
     // Check if any documents exist
