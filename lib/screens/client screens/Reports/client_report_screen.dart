@@ -11,6 +11,7 @@ import '../../../fonts/inter_medium.dart';
 import '../../../fonts/inter_semibold.dart';
 import '../../home screens/widgets/icon_text_widget.dart';
 import '../DAR/select_location_dar.dart';
+import '../select_client_guards_screen.dart';
 import 'client_oprn_report.dart';
 
 class ClientReportScreen extends StatefulWidget {
@@ -129,6 +130,23 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
         date1.day == date2.day;
   }
 
+  DateTime? selectedDate;
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101)
+    );
+    setState(() {
+      if (picked != null) {
+        selectedDate = picked;
+        // fetchDARData();  // Fetch data for the selected date
+      }
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -163,74 +181,97 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
                       height: 30.h,
                     ),
                     Row(
-                      mainAxisAlignment:
-                      MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         GestureDetector(
-                          onTap: () {
-                            SelectLocationReport.showLocationDialog(
-                              context,
-                              widget.companyId,
-                              onLocationSelected,
-                            );
-                          },
+                          // onTap: () => _selectDate(context),
                           child: SizedBox(
-                            width: 150.w,
+                            width: 140.w,
                             child: IconTextWidget(
-                              space: 6.w,
-                              icon: Icons.add,
-                              iconSize: 20.sp,
-                              text: 'Select Location',
-                              useBold: true,
+                              icon: Icons.calendar_today,
+                              text: selectedDate != null
+                                  ? "${selectedDate!.toLocal()}".split(' ')[0]
+                                  : 'Select Date',
                               fontsize: 14.sp,
-                              color: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .bodySmall!
-                                  .color as Color,
-                              Iconcolor: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .bodyMedium!
-                                  .color as Color,
+                              color: Theme.of(context).textTheme.bodyMedium!.color
+                              as Color,
+                              Iconcolor: Theme.of(context).textTheme.bodyMedium!.color as Color,
                             ),
                           ),
                         ),
-                        // SizedBox(
-                        //   width: Platform.isIOS ? 30.w : 10.w,
-                        // ),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        SelectClientGuardsScreen(
-                                          companyId: widget.companyId,
-                                          onGuardSelected: onGuardSelected,
-                                        )));
-                          },
-                          child: SizedBox(
-                            width: 150.w,
-                            child: IconTextWidget(
-                              space: 6.w,
-                              icon: Icons.add,
-                              iconSize: 20.sp,
-                              text: 'Select Employee',
-                              useBold: true,
-                              fontsize: 14.sp,
-                              color: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .bodySmall!
-                                  .color as Color,
-                              Iconcolor: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .bodyMedium!
-                                  .color as Color,
+                        Row(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                // SelectLocationDar.showLocationDialog(
+                                //   context,
+                                //   widget.companyId,
+                                //   onLocationSelected,
+                                // );
+                              },
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    width: 80.w,
+                                    child: IconTextWidget(
+                                      space: 6.w,
+                                      icon: Icons.add,
+                                      iconSize: 20.sp,
+                                      text: 'Select',
+                                      useBold: true,
+                                      fontsize: 14.sp,
+                                      color: Theme.of(context).textTheme.bodySmall!.color as Color,
+                                      Iconcolor:
+                                      Theme.of(context).textTheme.bodyMedium!.color as Color,
+                                    ),
+                                  ),
+                                  InterBold(
+                                    text: 'Location',
+                                    fontsize: 16.sp,
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
+                            SizedBox(
+                              width: Platform.isIOS ? 30.w : 10.w,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                // Navigator.push(
+                                //   context,
+                                //   MaterialPageRoute(
+                                //     builder: (context) => SelectClientGuardsScreen(
+                                //       companyId: widget.companyId,
+                                //       onGuardSelected: onGuardSelected,
+                                //     ),
+                                //   ),
+                                // );
+                              },
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                    width: 80.w,
+                                    child: IconTextWidget(
+                                      space: 6.w,
+                                      icon: Icons.add,
+                                      iconSize: 20.sp,
+                                      text: 'Select',
+                                      useBold: true,
+                                      fontsize: 14.sp,
+                                      color: Theme.of(context).textTheme.bodySmall!.color as Color,
+                                      Iconcolor:
+                                      Theme.of(context).textTheme.bodyMedium!.color as Color,
+                                    ),
+                                  ),
+                                  InterBold(
+                                    text: 'Employee',
+                                    fontsize: 16.sp,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
