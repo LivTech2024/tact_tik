@@ -150,7 +150,7 @@ class _ReportScreenState extends State<SReportScreen> {
           shape: CircleBorder(),
           child: Icon(
             Icons.add,
-            color: Theme.of(context).textTheme.bodyMedium!.color,
+            color: Colors.white,
           ),
         ),
         body: Padding(
@@ -199,7 +199,7 @@ class _ReportScreenState extends State<SReportScreen> {
                             child: InterRegular(
                               text: tittles[index],
                               fontsize: 16.sp,
-                              color:
+                              color:currentIndex==index?Colors.white:
                                   Theme.of(context).textTheme.bodyMedium!.color,
                             ),
                           ),

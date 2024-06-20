@@ -955,6 +955,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                           !isChecked
                               ? Button1(
                                   text: 'Save',
+                                  color: Colors.white,
                                   onPressed: () {
                                     print("clicked");
                                     if (isChecked == false) {
@@ -1074,6 +1075,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                           SizedBox(height: 40.h),
                           Button1(
                             text: 'Save',
+                            color: Colors.white,
                             onPressed: () {
                               createEquipment();
                             },

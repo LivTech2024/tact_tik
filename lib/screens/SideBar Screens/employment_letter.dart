@@ -131,7 +131,7 @@ class EmploymentLetterScreen extends StatelessWidget {
                       ),
                       InterSemibold(
                         text: 'Download',
-                        color: Theme.of(context).textTheme.headlineMedium!.color,
+                        color: Colors.white,
                         fontsize: 16.sp,
                       )
                     ],

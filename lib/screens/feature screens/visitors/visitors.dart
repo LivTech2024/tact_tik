@@ -62,6 +62,7 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
           child: Icon(
             Icons.add,
             size: 24.sp,
+            color: Colors.white,
           ),
         ),
         body: FutureBuilder<QuerySnapshot>(

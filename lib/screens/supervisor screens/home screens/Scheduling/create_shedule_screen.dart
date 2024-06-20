@@ -1567,6 +1567,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                               borderRadius: 10.r,
                               backgroundcolor: Theme.of(context).primaryColor,
                               height: 40.h,
+                              color: Colors.white,
                               onPressed: () {
                                 _showInputDialog(context);
                               },
@@ -1813,10 +1814,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                               }
                             },
                             backgroundcolor: Theme.of(context).primaryColor,
-                            color: Theme.of(context)
-                                .textTheme
-                                .headlineMedium!
-                                .color,
+                            color: Colors.white,
                             borderRadius: 10.r,
                             fontsize: 14.sp,
                           ),

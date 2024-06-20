@@ -205,7 +205,7 @@ class _ReportScreenState extends State<ReportScreen> {
                               text: tittles[index],
                               fontsize: 16.sp,
                               color: currentIndex == index
-                                  ? Theme.of(context).cardColor
+                                  ? Colors.white
                                   : Theme.of(context).primaryColor,
                             ),
                           ),

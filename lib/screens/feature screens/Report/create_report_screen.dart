@@ -851,10 +851,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                               ),
                               child: Center(
                                 child: Icon(
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium!
-                                      .color,
+                                  color: Colors.white,
                                   Icons.add,
                                   size: 20.sp,
                                 ),
@@ -893,7 +890,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                         height: 50.h,
                         text: 'Submit',
                         color:
-                            Theme.of(context).textTheme.headlineMedium!.color,
+                            Colors.white,
                         onPressed: () async {
                           setState(() {
                             _isLoading = true;

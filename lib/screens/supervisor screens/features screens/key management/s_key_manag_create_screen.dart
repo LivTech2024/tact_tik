@@ -1313,6 +1313,7 @@ List<Color> colors = [
                               editKeyMode == true
                                   ? Button1(
                                       text: 'Save',
+                                      
                                       onPressed: _isCreatingKey
                                           ? () {
                                               showErrorToast(
@@ -1367,10 +1368,7 @@ List<Color> colors = [
                                             },
                                       // _saveData();
 
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .headlineMedium!
-                                          .color,
+                                      color:Colors.white,
                                       borderRadius: 10.r,
                                       backgroundcolor:
                                           Theme.of(context).primaryColor,
