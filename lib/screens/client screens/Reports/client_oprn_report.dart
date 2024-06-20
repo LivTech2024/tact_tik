@@ -45,7 +45,7 @@ class ClientOpenReport extends StatefulWidget {
 class _ClientOpenReportState extends State<ClientOpenReport> {
   bool isLoading = true;
   List<Map<String, dynamic>> followUp = [];
-
+bool loading = false;
   @override
   void initState() {
     super.initState();
@@ -127,17 +127,16 @@ class _ClientOpenReportState extends State<ClientOpenReport> {
   }
 
   Future<String> generateReportPdf(
-      String reportName,
-      String reportCategory,
-      String reportFollowUp,
-      String reportData,
-      String reportStatus,
-      String GuardName,
-      String reportDate,
-      String reportLocation,
-      List<dynamic> reportImages,
-      ) async {
-
+    String reportName,
+    String reportCategory,
+    String reportFollowUp,
+    String reportData,
+    String reportStatus,
+    String GuardName,
+    String reportDate,
+    String reportLocation,
+    List<dynamic> reportImages,
+  ) async {
     final htmlcontent = """
   <!DOCTYPE html>
   <html lang="en">
@@ -327,238 +326,257 @@ class _ClientOpenReportState extends State<ClientOpenReport> {
           ],
           centerTitle: true,
         ),
-        body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 30.w),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 30.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    InterBold(
-                      text: 'Report Name:',
-                      fontsize: 18.sp,
-                      color: Theme.of(context).textTheme.bodyMedium!.color,
-                    ),
-                    SizedBox(width: 20.h),
-                    InterMedium(
-                      text: widget.reportName,
-                      fontsize: 14.sp,
-                      color: Theme.of(context).textTheme.bodyMedium!.color,
-                    ),
-                  ],
-                ),
-                SizedBox(height: 50.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    InterBold(
-                      text: 'Report Category:',
-                      fontsize: 18.sp,
-                      color: Theme.of(context).textTheme.bodyMedium!.color,
-                    ),
-                    SizedBox(width: 20.h),
-                    InterMedium(
-                      text: widget.reportCategory,
-                      fontsize: 14.sp,
-                      color: Theme.of(context).textTheme.bodyMedium!.color,
-                    ),
-                  ],
-                ),
-                SizedBox(height: 50.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    InterBold(
-                      text: 'Report Date:',
-                      fontsize: 18.sp,
-                      color: Theme.of(context).textTheme.bodyMedium!.color,
-                    ),
-                    SizedBox(width: 20.h),
-                    InterMedium(
-                      text: widget.reportDate,
-                      fontsize: 14.sp,
-                      color: Theme.of(context).textTheme.bodyMedium!.color,
-                    ),
-                  ],
-                ),
-                SizedBox(height: 50.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    InterBold(
-                      text: 'Report Follow Up Required:',
-                      fontsize: 18.sp,
-                      color: Theme.of(context).textTheme.bodyMedium!.color,
-                    ),
-                    SizedBox(width: 20.h),
-                    InterMedium(
-                      text: widget.reportFollowUpRequire,
-                      fontsize: 14.sp,
-                      color: Theme.of(context).textTheme.bodyMedium!.color,
-                    ),
-                  ],
-                ),
-                SizedBox(height: 50.h),
-                Row(
+        body: Stack(
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 30.w),
+              child: SingleChildScrollView(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    InterBold(
-                      text: 'Report Data:',
-                      fontsize: 18.sp,
-                      color: Theme.of(context).textTheme.bodyMedium!.color,
-                    ),
-                    SizedBox(width: 20.h),
-                    Flexible(
-                      child: InterMedium(
-                        text: widget.reportData,
-                        fontsize: 14.sp,
-                        color: Theme.of(context).textTheme.bodyMedium!.color,
-                        maxLines: 50,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 50.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    InterBold(
-                      text: 'Report Status:',
-                      fontsize: 18.sp,
-                      color: Theme.of(context).textTheme.bodyMedium!.color,
-                    ),
-                    SizedBox(width: 20.h),
-                    InterMedium(
-                      text: widget.reportStatus,
-                      fontsize: 14.sp,
-                      color: Theme.of(context).textTheme.bodyMedium!.color,
-                    ),
-                  ],
-                ),
-                SizedBox(height: 50.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    InterBold(
-                      text: 'Employee Name:',
-                      fontsize: 18.sp,
-                      color: Theme.of(context).textTheme.bodyMedium!.color,
-                    ),
-                    SizedBox(width: 20.h),
-                    InterMedium(
-                      text: widget.reportEmployeeName,
-                      fontsize: 14.sp,
-                      color: Theme.of(context).textTheme.bodyMedium!.color,
-                    ),
-                  ],
-                ),
-                SizedBox(height: 50.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    InterBold(
-                      text: 'Report Location:',
-                      fontsize: 18.sp,
-                      color: Theme.of(context).textTheme.bodyMedium!.color,
-                    ),
-                    SizedBox(width: 20.h),
-                    InterMedium(
-                      text: widget.reportLocation,
-                      fontsize: 14.sp,
-                      color: Theme.of(context).textTheme.bodyMedium!.color,
-                    ),
-                  ],
-                ),
-                SizedBox(height: 50.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    InterBold(
-                      text: 'Followed Up Report:',
-                      fontsize: 18.sp,
-                      color: Theme.of(context).textTheme.bodyMedium!.color,
-                    ),
-                    SizedBox(width: 20.h),
-                    widget.reportFollowUpId == "Not Found"
-                        ? InterMedium(
-                            text: 'NOT FOUND',
+                    SizedBox(height: 30.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        InterBold(
+                          text: 'Report Name:',
+                          fontsize: 18.sp,
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
+                        ),
+                        SizedBox(width: 20.h),
+                        Flexible(
+                          child: InterMedium(
+                            text: widget.reportName,
                             fontsize: 14.sp,
                             color:
                                 Theme.of(context).textTheme.bodyMedium!.color,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 50.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        InterBold(
+                          text: 'Report Category:',
+                          fontsize: 18.sp,
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
+                        ),
+                        SizedBox(width: 20.h),
+                        InterMedium(
+                          text: widget.reportCategory,
+                          fontsize: 14.sp,
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 50.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        InterBold(
+                          text: 'Report Date:',
+                          fontsize: 18.sp,
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
+                        ),
+                        SizedBox(width: 20.h),
+                        InterMedium(
+                          text: widget.reportDate,
+                          fontsize: 14.sp,
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 50.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        InterBold(
+                          text: 'Report Follow Up Required:',
+                          fontsize: 18.sp,
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
+                        ),
+                        SizedBox(width: 20.h),
+                        InterMedium(
+                          text: widget.reportFollowUpRequire,
+                          fontsize: 14.sp,
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 50.h),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        InterBold(
+                          text: 'Report Data:',
+                          fontsize: 18.sp,
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
+                        ),
+                        SizedBox(width: 20.h),
+                        Flexible(
+                          child: InterMedium(
+                            text: widget.reportData,
+                            fontsize: 14.sp,
+                            color:
+                                Theme.of(context).textTheme.bodyMedium!.color,
+                            maxLines: 50,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 50.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        InterBold(
+                          text: 'Report Status:',
+                          fontsize: 18.sp,
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
+                        ),
+                        SizedBox(width: 20.h),
+                        InterMedium(
+                          text: widget.reportStatus,
+                          fontsize: 14.sp,
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 50.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        InterBold(
+                          text: 'Employee Name:',
+                          fontsize: 18.sp,
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
+                        ),
+                        SizedBox(width: 20.h),
+                        InterMedium(
+                          text: widget.reportEmployeeName,
+                          fontsize: 14.sp,
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 50.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        InterBold(
+                          text: 'Report Location:',
+                          fontsize: 18.sp,
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
+                        ),
+                        SizedBox(width: 20.h),
+                        InterMedium(
+                          text: widget.reportLocation,
+                          fontsize: 14.sp,
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 50.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        InterBold(
+                          text: 'Followed Up Report:',
+                          fontsize: 18.sp,
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
+                        ),
+                        SizedBox(width: 20.h),
+                        widget.reportFollowUpId == "Not Found"
+                            ? InterMedium(
+                                text: 'NOT FOUND',
+                                fontsize: 14.sp,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color,
+                              )
+                            : ElevatedButton(
+                                onPressed: () {
+                                  if (followUp.isNotEmpty) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ClientOpenReport(
+                                          reportName: followUp[0]['ReportName'],
+                                          reportCategory: followUp[0]
+                                              ['ReportCategory'],
+                                          reportDate: followUp[0]['ReportDate']
+                                              .toString(),
+                                          reportFollowUpRequire: followUp[0]
+                                                  ['ReportFollowUpRequire']
+                                              .toString(),
+                                          reportData: followUp[0]['ReportData'],
+                                          reportStatus: followUp[0]
+                                              ['ReportStatus'],
+                                          reportEmployeeName: followUp[0]
+                                              ['ReportEmployeeName'],
+                                          reportLocation: followUp[0]
+                                              ['ReportLocation'],
+                                          reportImages:
+                                              followUp[0]['ReportImages'] ?? [],
+                                          reportFollowUpId: followUp[0]
+                                              ['ReportFollowedUp'],
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                },
+                                child: Text('See Report'),
+                              ),
+                      ],
+                    ),
+                    SizedBox(height: 50.h),
+                    widget.reportImages == null || widget.reportImages.isEmpty
+                        ? Center(
+                            child: Text(
+                              "No Images Associated",
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey,
+                              ),
+                            ),
                           )
-                        : ElevatedButton(
-                            onPressed: () {
-                              if (followUp.isNotEmpty) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ClientOpenReport(
-                                      reportName: followUp[0]['ReportName'],
-                                      reportCategory: followUp[0]
-                                          ['ReportCategory'],
-                                      reportDate:
-                                          followUp[0]['ReportDate'].toString(),
-                                      reportFollowUpRequire: followUp[0]
-                                              ['ReportFollowUpRequire']
-                                          .toString(),
-                                      reportData: followUp[0]['ReportData'],
-                                      reportStatus: followUp[0]['ReportStatus'],
-                                      reportEmployeeName: followUp[0]
-                                          ['ReportEmployeeName'],
-                                      reportLocation: followUp[0]
-                                          ['ReportLocation'],
-                                      reportImages:
-                                          followUp[0]['ReportImages'] ?? [],
-                                      reportFollowUpId: followUp[0]
-                                          ['ReportFollowedUp'],
-                                    ),
+                        : GridView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3,
+                              mainAxisSpacing: 8.0,
+                              crossAxisSpacing: 8.0,
+                            ),
+                            itemCount: widget.reportImages.length,
+                            itemBuilder: (context, index) {
+                              String imageUrl = widget.reportImages[index];
+                              return Container(
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: NetworkImage(imageUrl),
+                                    fit: BoxFit.cover,
                                   ),
-                                );
-                              }
+                                ),
+                              );
                             },
-                            child: Text('See Report'),
                           ),
                   ],
                 ),
-                SizedBox(height: 50.h),
-                widget.reportImages == null || widget.reportImages.isEmpty
-                    ? Center(
-                        child: Text(
-                          "No Images Associated",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      )
-                    : GridView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          mainAxisSpacing: 8.0,
-                          crossAxisSpacing: 8.0,
-                        ),
-                        itemCount: widget.reportImages.length,
-                        itemBuilder: (context, index) {
-                          String imageUrl = widget.reportImages[index];
-                          return Container(
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: NetworkImage(imageUrl),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-              ],
+              ),
             ),
-          ),
+            Center(
+                child: SizedBox(
+              child: Visibility(
+                visible: loading,
+                child: CircularProgressIndicator(),
+              ),
+            ))
+          ],
         ),
       ),
     );

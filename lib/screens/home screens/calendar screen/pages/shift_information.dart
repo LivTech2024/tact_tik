@@ -17,6 +17,7 @@ class ShiftInformation extends StatefulWidget {
   const ShiftInformation(
       {super.key,
       this.toRequest = false,
+      this.toAccept = false,
       required this.empId,
       required this.shiftId,
       required this.startTime,
@@ -28,6 +29,7 @@ class ShiftInformation extends StatefulWidget {
   final String startTime;
   final String endTime;
   final String currentUserId;
+  final bool? toAccept;
 
   @override
   State<ShiftInformation> createState() => _ShiftInformationState();
@@ -54,6 +56,9 @@ class _ShiftInformationState extends State<ShiftInformation> {
           .collection('Employees')
           .doc(empId)
           .get();
+      print('shift information screen');
+      print('empId: $empId');
+      print('shiftId: $shiftId');
       if (userSnapshot.exists) {
         guardName = userSnapshot['EmployeeName'];
         final supervisorId = userSnapshot['EmployeeSupervisorId'][0];
@@ -111,7 +116,7 @@ class _ShiftInformationState extends State<ShiftInformation> {
           : Scaffold(
               appBar: AppBar(
                 leading: IconButton(
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.arrow_back_ios,
                   ),
                   padding: EdgeInsets.only(left: width / width20),
@@ -275,10 +280,18 @@ class _ShiftInformationState extends State<ShiftInformation> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Button1(
-                          text: widget.toRequest ? 'Exchange' : 'Accept',
+                          text: widget.toRequest
+                              ? widget.toAccept!
+                                  ? 'Accept'
+                                  : 'Exchange'
+                              : 'Accept',
                           onPressed: () {
-                            if (widget.toRequest) {
-                              onExchangeShift(widget.empId, widget.shiftId);
+                            if (widget.toAccept!) {
+                              onExchangeAcceptShift(widget.currentUserId,
+                                  widget.empId, widget.shiftId);
+                            } else if (widget.toRequest) {
+                              onExchangeShift(widget.currentUserId,
+                                  widget.empId, widget.shiftId);
                             } else {
                               onAcceptShift(widget.empId, widget.shiftId);
                             }
@@ -308,7 +321,7 @@ class _ShiftInformationState extends State<ShiftInformation> {
                               )
                             // ],
                             // )
-                            : SizedBox(),
+                            : const SizedBox(),
                         SizedBox(height: 100.h),
                       ],
                     )
@@ -317,6 +330,39 @@ class _ShiftInformationState extends State<ShiftInformation> {
               ),
             ),
     );
+  }
+
+  Future<void> onExchangeAcceptShift(
+      String currentUserId, String empId, String shiftId) async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    try {
+      // Query to find the document with the specified fields
+      QuerySnapshot querySnapshot = await firestore
+          .collection('ShiftExchange')
+          .where('ShiftExchReqReceiverId', isEqualTo: currentUserId)
+          .where('ShiftExchReqShiftId', isEqualTo: shiftId)
+          .limit(1)
+          .get();
+
+      // Check if a document is found
+      if (querySnapshot.docs.isNotEmpty) {
+        // Get the document id
+        DocumentReference documentReference =
+            querySnapshot.docs.first.reference;
+
+        // Update the document's status to 'accepted'
+        await documentReference.update({
+          'ShiftExchReqStatus': 'accepted',
+        });
+
+        print('Shift exchange request accepted successfully.');
+      } else {
+        print('No matching shift exchange request found.');
+      }
+    } catch (e) {
+      print('Error accepting shift exchange request: $e');
+    }
   }
 
   Future<void> onAcceptShift(String empId, String shiftId) async {
@@ -349,7 +395,8 @@ class _ShiftInformationState extends State<ShiftInformation> {
     }
   }
 
-  Future<void> onExchangeShift(String empId, String shiftId) async {
+  Future<void> onExchangeShift(
+      String currentId, String empId, String shiftId) async {
     try {
       final shiftsCollection = FirebaseFirestore.instance.collection('Shifts');
       final exchangeCollection =
@@ -364,13 +411,15 @@ class _ShiftInformationState extends State<ShiftInformation> {
           throw Exception("Shift does not exist!");
         }
 
+        print(
+            "Shift exchange request by $currentId to $empId for shift $shiftId");
+
         final exchangeDoc = exchangeCollection.doc();
         Map<String, dynamic> dataJson = snapshot.data() ?? {};
         transaction.set(exchangeDoc, {
           'ShiftExchReqId': exchangeDoc.id,
-          'ShiftExchReqSenderId': widget.currentUserId,
-          'ShiftExchReqReceiverId':
-              (dataJson['ShiftAssignedUserId'] ?? []).first,
+          'ShiftExchReqSenderId': currentId,
+          'ShiftExchReqReceiverId': empId,
           'ShiftExchReqShiftId': shiftId,
           'ShiftExchReqStatus': 'pending',
           'ShiftExchReqCreatedAt': DateTime.now(),
