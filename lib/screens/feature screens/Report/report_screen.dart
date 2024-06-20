@@ -22,6 +22,7 @@ class ReportScreen extends StatefulWidget {
   final String empName;
   final String clientId;
   final String ShiftId;
+  final bool isguard;
   const ReportScreen(
       {super.key,
       required this.locationId,
@@ -30,7 +31,8 @@ class ReportScreen extends StatefulWidget {
       required this.empId,
       required this.empName,
       required this.clientId,
-      required this.ShiftId});
+      required this.ShiftId,
+      required this.isguard});
 
   @override
   State<ReportScreen> createState() => _ReportScreenState();
@@ -62,50 +64,57 @@ class _ReportScreenState extends State<ReportScreen> {
   }
 
   void getAllReports() async {
-    reportData = await fireStoreService.getReportWithCompanyID(
-        widget.companyId, widget.locationId);
-    groupedReportData.clear(); // Clear existing data before adding new data
-    reportData.forEach((report) {
-      String reportDate =
-          DateFormat.yMMMMd().format(report['ReportCreatedAt'].toDate());
-      bool found = false;
-      for (int i = 0; i < groupedReportData.length; i++) {
-        if (groupedReportData[i]['date'] == reportDate) {
-          // Check if the report already exists in this group
-          if (!groupedReportData[i]['reports'].any((existingReport) =>
-              existingReport['ReportId'] == report['ReportId'])) {
-            // Add the report if it doesn't already exist
-            groupedReportData[i]['reports'].add(report);
+    try {
+      if (widget.companyId.isNotEmpty || widget.locationId.isNotEmpty) {
+        reportData = await fireStoreService.getReportWithCompanyID(
+            widget.companyId, widget.locationId);
+        groupedReportData.clear(); // Clear existing data before adding new data
+        reportData.forEach((report) {
+          if (report['ReportCreatedAt'] != null) {
+            String reportDate =
+                DateFormat.yMMMMd().format(report['ReportCreatedAt'].toDate());
+            bool found = false;
+            for (int i = 0; i < groupedReportData.length; i++) {
+              if (groupedReportData[i]['date'] == reportDate) {
+                // Check if the report already exists in this group
+                if (!groupedReportData[i]['reports'].any((existingReport) =>
+                    existingReport['ReportId'] == report['ReportId'])) {
+                  // Add the report if it doesn't already exist
+                  groupedReportData[i]['reports'].add(report);
+                }
+                found = true;
+                break;
+              }
+            }
+            if (!found) {
+              groupedReportData.add({
+                'date': reportDate,
+                'reports': [report]
+              });
+            }
           }
-          found = true;
-          break;
-        }
-      }
-      if (!found) {
-        groupedReportData.add({
-          'date': reportDate,
-          'reports': [report]
         });
-      }
-    });
 
-    // Sort groupedReportData by date in descending order
-    groupedReportData.sort((a, b) => DateFormat.yMMMMd()
-        .parse(b['date'])
-        .compareTo(DateFormat.yMMMMd().parse(a['date'])));
+        // Sort groupedReportData by date in descending order
+        groupedReportData.sort((a, b) => DateFormat.yMMMMd()
+            .parse(b['date'])
+            .compareTo(DateFormat.yMMMMd().parse(a['date'])));
 
-    setState(() {
-      if (currentIndex > 0 && currentIndex < tittles.length) {
-        String selectedTitle = tittles[currentIndex];
-        groupedReportData.forEach((group) {
-          group['reports'] = group['reports']
-              .where((report) => report['ReportCategoryName'] == selectedTitle)
-              .toList();
+        setState(() {
+          if (currentIndex > 0 && currentIndex < tittles.length) {
+            String selectedTitle = tittles[currentIndex];
+            groupedReportData.forEach((group) {
+              group['reports'] = group['reports']
+                  .where(
+                      (report) => report['ReportCategoryName'] == selectedTitle)
+                  .toList();
+            });
+          }
         });
-      }
-    });
 
-    print("Report Data $groupedReportData");
+        print("Report Data $groupedReportData");
+      }
+    } catch (e) {}
   }
 
   @override
@@ -144,6 +153,7 @@ class _ReportScreenState extends State<ReportScreen> {
                           buttonEnable: true,
                           ShiftId: widget.ShiftId,
                           SearchId: '',
+                          isRoleGuard: widget.isguard,
                         ))).then((value) {
               if (value == true) {
                 getAllReports();
@@ -265,6 +275,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                         reportId: report['ReportId'],
                                         buttonEnable: false,
                                         ShiftId: widget.ShiftId, SearchId: '',
+                                        isRoleGuard: widget.isguard,
                                       ),
                                     ),
                                   );

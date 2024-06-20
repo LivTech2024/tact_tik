@@ -55,18 +55,14 @@ class _LogBookScreenState extends State<LogBookScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return SafeArea(
       child: Scaffold(
-        
         body: CustomScrollView(
           slivers: [
             SliverAppBar(
-              
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back_ios,
-                  
                 ),
                 padding: EdgeInsets.only(left: 20.w),
                 onPressed: () {
@@ -76,8 +72,6 @@ class _LogBookScreenState extends State<LogBookScreen> {
               ),
               title: InterMedium(
                 text: 'LogBook',
-               
-             
               ),
               centerTitle: true,
               floating: true, // Makes the app bar float above the content
@@ -98,7 +92,12 @@ class _LogBookScreenState extends State<LogBookScreen> {
 
                 if (!snapshot.hasData) {
                   return SliverToBoxAdapter(
-                    child: Center(child: InterMedium(text: 'Loading...' , color:Theme.of(context).primaryColor,fontsize: 18.sp,)),
+                    child: Center(
+                        child: InterMedium(
+                      text: 'Loading...',
+                      color: Theme.of(context).primaryColor,
+                      fontsize: 18.sp,
+                    )),
                   );
                 }
 
@@ -210,7 +209,6 @@ class _LogBookWidgetState extends State<LogBookWidget> {
 
   @override
   Widget build(BuildContext context) {
-
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 30.w),
       child: Column(
@@ -252,7 +250,7 @@ class _LogBookWidgetState extends State<LogBookWidget> {
                     expand
                         ? Icons.arrow_circle_up_outlined
                         : Icons.arrow_circle_down_outlined,
-                      size: 24.sp,
+                    size: 24.sp,
                     color: Theme.of(context).textTheme.bodyMedium!.color,
                   )
                 ],
@@ -266,7 +264,7 @@ class _LogBookWidgetState extends State<LogBookWidget> {
               child: InterBold(
                 text: widget.shiftName,
                 fontsize: 18.sp,
-                 color:  Theme.of(context).textTheme.bodySmall!.color,
+                color: Theme.of(context).textTheme.bodySmall!.color,
               ),
             ),
           // ),

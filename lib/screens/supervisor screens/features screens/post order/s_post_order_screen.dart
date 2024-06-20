@@ -80,11 +80,8 @@ class _SPostOrderState extends State<SPostOrder> {
 
   @override
   Widget build(BuildContext context) {
-   
-
     return SafeArea(
       child: Scaffold(
-       
         body: FutureBuilder<Map<String, List<Map<String, dynamic>>>>(
           future: _locationDataFuture,
           builder: (context, snapshot) {
@@ -98,43 +95,44 @@ class _SPostOrderState extends State<SPostOrder> {
               return Center(child: Text('No data available'));
             }
 
-            Map<String, List<Map<String, dynamic>>> locationData = snapshot.data!;
-
-            List<String> sortedDates = locationData.keys.toList()..sort((a, b) => b.compareTo(a));
+            Map<String, List<Map<String, dynamic>>> locationData =
+                snapshot.data!;
+            print('LocationData ${locationData}');
+            List<String> sortedDates = locationData.keys.toList()
+              ..sort((a, b) => b.compareTo(a));
 
             return CustomScrollView(
               slivers: [
                 SliverAppBar(
-                  
                   leading: IconButton(
                     icon: Icon(
                       Icons.arrow_back_ios,
-                   
                     ),
                     padding: EdgeInsets.only(left: 20.w),
                     onPressed: () {
                       Navigator.pop(context);
-                      print("Navigator debug: ${Navigator.of(context).toString()}");
+                      print(
+                          "Navigator debug: ${Navigator.of(context).toString()}");
                     },
                   ),
                   title: InterMedium(
                     text: 'Post Orders',
-                   
                   ),
                   centerTitle: true,
                   floating: true,
                 ),
                 SliverList(
                   delegate: SliverChildBuilderDelegate(
-                        (context, index) {
+                    (context, index) {
                       String date = sortedDates[index];
                       List<Map<String, dynamic>> posts = locationData[date]!;
-
+                      // String locationID = locationData[index]['LocationId'];
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 30.h),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 30.w, vertical: 30.h),
                             child: InterSemibold(
                               text: date,
                               fontsize: 20.sp,
@@ -145,15 +143,19 @@ class _SPostOrderState extends State<SPostOrder> {
                           ...posts.map((postOrder) {
                             String postOrderTitle = postOrder['PostOrderTitle'];
                             String postOrderPdf = postOrder['PostOrderPdf'];
-                            List<dynamic> postOrderOtherData = postOrder['PostOrderOtherData'] ?? [];
-
+                            List<dynamic> postOrderOtherData =
+                                postOrder['PostOrderOtherData'] ?? [];
+                            String locationId = postOrder['LocationId'] ??
+                                'Unknown Location ID';
                             return FutureBuilder<Map<String, dynamic>>(
                               future: _fetchFileMetadata(postOrderPdf),
                               builder: (context, snapshot) {
                                 String fileName = 'Loading...';
                                 String fileSize = 'Loading...';
 
-                                if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
+                                if (snapshot.connectionState ==
+                                        ConnectionState.done &&
+                                    snapshot.hasData) {
                                   fileName = snapshot.data!['name'];
                                   fileSize = snapshot.data!['size'];
                                 }
@@ -173,7 +175,8 @@ class _SPostOrderState extends State<SPostOrder> {
                                     );
                                   },
                                   child: Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 30.w),
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 30.w),
                                     child: Container(
                                       constraints: BoxConstraints(
                                         minHeight: 250.h,
@@ -185,55 +188,71 @@ class _SPostOrderState extends State<SPostOrder> {
                                       width: double.maxFinite,
                                       margin: EdgeInsets.only(bottom: 10.h),
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10.r),
+                                        borderRadius:
+                                            BorderRadius.circular(10.r),
                                         color: Theme.of(context).cardColor,
                                       ),
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           InterBold(
                                             text: postOrderTitle,
-                                            color: Theme.of(context).textTheme.bodyLarge!.color,
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .bodyLarge!
+                                                .color,
                                             fontsize: 14.sp,
                                           ),
                                           SizedBox(
                                             height: 16.h,
                                           ),
                                           Container(
-                                            constraints: BoxConstraints(minWidth: 200.w),
+                                            constraints:
+                                                BoxConstraints(minWidth: 200.w),
                                             height: 46.h,
-
                                             decoration: BoxDecoration(
                                               boxShadow: [
                                                 BoxShadow(
-                                                  color: Theme.of(context).shadowColor,
+                                                  color: Theme.of(context)
+                                                      .shadowColor,
                                                   blurRadius: 10.r,
                                                   offset: Offset(0, 5),
                                                 ),
                                               ],
-                                              borderRadius: BorderRadius.circular(10.r),
-                                              color:Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(10.r),
+                                              color: Colors.white,
                                             ),
                                             child: Row(
                                               children: [
                                                 Padding(
-                                                  padding: EdgeInsets.symmetric(horizontal: 6.w),
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 6.w),
                                                   child: SvgPicture.asset(
                                                       'assets/images/pdf.svg',
                                                       width: 32.w),
                                                 ),
                                                 Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
                                                   children: [
                                                     PoppinsMedium(
                                                       text: fileName,
-                                                      color: Theme.of(context).textTheme.titleMedium!.color,
+                                                      color: Theme.of(context)
+                                                          .textTheme
+                                                          .titleMedium!
+                                                          .color,
                                                       fontsize: 14.sp,
                                                     ),
                                                     PoppinsRegular(
                                                       text: fileSize,
-                                                      color: Theme.of(context).textTheme.titleLarge!.color,
+                                                      color: Theme.of(context)
+                                                          .textTheme
+                                                          .titleLarge!
+                                                          .color,
                                                       fontsize: 14.sp,
                                                     )
                                                   ],
@@ -246,15 +265,21 @@ class _SPostOrderState extends State<SPostOrder> {
                                           ),
                                           GridView.builder(
                                             shrinkWrap: true,
-                                            physics: NeverScrollableScrollPhysics(),
-                                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                            physics:
+                                                NeverScrollableScrollPhysics(),
+                                            gridDelegate:
+                                                SliverGridDelegateWithFixedCrossAxisCount(
                                               crossAxisCount: 3,
                                               crossAxisSpacing: 10.0,
                                               mainAxisSpacing: 10.0,
                                             ),
-                                            itemCount: postOrderOtherData.length < 3 ? postOrderOtherData.length : 3,
+                                            itemCount:
+                                                postOrderOtherData.length < 3
+                                                    ? postOrderOtherData.length
+                                                    : 3,
                                             itemBuilder: (context, index) {
-                                              String url = postOrderOtherData[index];
+                                              String url =
+                                                  postOrderOtherData[index];
                                               /*if (url.contains('.pdf')) {
                                                 return FutureBuilder<Map<String, dynamic>>(
                                                   future: _fetchFileMetadata(url),
@@ -304,11 +329,11 @@ class _SPostOrderState extends State<SPostOrder> {
                                                   },
                                                 );
                                               } else {*/
-                                                return SizedBox(
-                                                  height: 20.h,
-                                                  width: 20.w,
-                                                  child: Image.network(url),
-                                                );
+                                              return SizedBox(
+                                                height: 20.h,
+                                                width: 20.w,
+                                                child: Image.network(url),
+                                              );
                                               // }
                                             },
                                           ),

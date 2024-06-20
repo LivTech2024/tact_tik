@@ -345,29 +345,99 @@ class SupervisorTrackingScreenController extends GetxController
     }
   }
 
+  // Future<void> drawRouteLowLevel(List<Position> polyline) async {
+  //   print('drawRouteLowLevel called');
+
+  //   // Add new start marker annotation
+  //   // final bytesStartMarker =
+  //   //     await rootBundle.load('assets/images/start_marker.png');
+  //   // Uint8List? imageDataStartMarker = bytesStartMarker.buffer.asUint8List();
+  //   // var newAnnotations = <PointAnnotationOptions>[];
+  //   // newAnnotations.add(PointAnnotationOptions(
+  //   //   geometry: Point(coordinates: polyline.first),
+  //   //   iconSize: 2.0,
+  //   //   iconOffset: [0.0, -5.0],
+  //   //   symbolSortKey: 10,
+  //   //   image: imageDataStartMarker,
+  //   // ));
+  //   // var currentAnno =
+  //   //     await pointAnnotationManager?.createMulti(newAnnotations) ?? [];
+  //   // currentAnnotations = currentAnno.whereType<PointAnnotation>().toList();
+
+  //   print('draw route called');
+
+  //   if (mapboxMapController == null) {
+  //     print('maboxMapController is null');
+  //     return;
+  //   }
+
+  //   final line = LineString(coordinates: polyline);
+  //   mapboxMapController!.style.styleSourceExists("source").then((exists) async {
+  //     if (exists) {
+  //       // if source exists - just update it
+  //       final source = await mapboxMapController!.style.getSource("source");
+  //       (source as GeoJsonSource).updateGeoJSON(json.encode(line));
+  //     } else {
+  //       await mapboxMapController!.style.addSource(GeoJsonSource(
+  //           id: "source", data: json.encode(line), lineMetrics: true));
+
+  //       await mapboxMapController!.style.addLayer(LineLayer(
+  //         id: 'layer',
+  //         sourceId: 'source',
+  //         lineCap: LineCap.ROUND,
+  //         lineJoin: LineJoin.ROUND,
+  //         lineColor: Colors.black.value, // Set the line color to black
+  //         lineWidth: 5.0,
+  //       ));
+  //     }
+
+  //     // query line layer
+  //     final lineLayer =
+  //         await mapboxMapController!.style.getLayer('layer') as LineLayer;
+
+  //     // draw layer with gradient
+  //     // mapboxMapController!.style.setStyleLayerProperty("layer", "line-gradient",
+  //     //     '["interpolate",["linear"],["line-progress"],0.0,["rgb",255,0,0],0.4,["rgb",0,255,0],1.0,["rgb",0,0,255]]');
+
+  //     // animate layer to reveal it from start to end
+  //     // animate layer to reveal it from start to end
+  //     if (controller!.isAnimating) {
+  //       controller?.stop();
+  //     }
+  //     animation = Tween<double>(begin: 0, end: 1.0).animate(controller!)
+  //       ..addListener(() async {
+  //         // set the animated value of lineTrim and update the layer
+  //         lineLayer.lineTrimOffset = [animation?.value, 1.0];
+  //         mapboxMapController!.style.updateLayer(lineLayer);
+  //       });
+  //     controller?.forward();
+  //   });
+  // }
   Future<void> drawRouteLowLevel(List<Position> polyline) async {
     print('drawRouteLowLevel called');
 
     // Add new start marker annotation
-    // final bytesStartMarker =
-    //     await rootBundle.load('assets/images/start_marker.png');
-    // Uint8List? imageDataStartMarker = bytesStartMarker.buffer.asUint8List();
-    // var newAnnotations = <PointAnnotationOptions>[];
-    // newAnnotations.add(PointAnnotationOptions(
-    //   geometry: Point(coordinates: polyline.first),
-    //   iconSize: 2.0,
-    //   iconOffset: [0.0, -5.0],
-    //   symbolSortKey: 10,
-    //   image: imageDataStartMarker,
-    // ));
-    // var currentAnno =
-    //     await pointAnnotationManager?.createMulti(newAnnotations) ?? [];
-    // currentAnnotations = currentAnno.whereType<PointAnnotation>().toList();
+    final bytesStartMarker =
+        await rootBundle.load('assets/images/start_marker.png');
+    Uint8List? imageDataStartMarker = bytesStartMarker.buffer.asUint8List();
+    var newAnnotations = <PointAnnotationOptions>[];
+    newAnnotations.add(PointAnnotationOptions(
+      geometry: Point(
+          coordinates:
+              polyline.first), // Set the start marker at the first coordinate
+      iconSize: 2.0,
+      iconOffset: [0.0, -5.0],
+      symbolSortKey: 10,
+      image: imageDataStartMarker,
+    ));
+    var currentAnno =
+        await pointAnnotationManager?.createMulti(newAnnotations) ?? [];
+    currentAnnotations = currentAnno.whereType<PointAnnotation>().toList();
 
     print('draw route called');
 
     if (mapboxMapController == null) {
-      print('maboxMapController is null');
+      print('mapboxMapController is null');
       return;
     }
 
@@ -399,7 +469,6 @@ class SupervisorTrackingScreenController extends GetxController
       // mapboxMapController!.style.setStyleLayerProperty("layer", "line-gradient",
       //     '["interpolate",["linear"],["line-progress"],0.0,["rgb",255,0,0],0.4,["rgb",0,255,0],1.0,["rgb",0,0,255]]');
 
-      // animate layer to reveal it from start to end
       // animate layer to reveal it from start to end
       if (controller!.isAnimating) {
         controller?.stop();

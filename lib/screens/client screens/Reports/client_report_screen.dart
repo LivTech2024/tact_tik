@@ -17,7 +17,8 @@ class ClientReportScreen extends StatefulWidget {
   final String employeeId;
   final String companyId;
 
-  const ClientReportScreen({super.key, required this.employeeId, required this.companyId});
+  const ClientReportScreen(
+      {super.key, required this.employeeId, required this.companyId});
 
   @override
   State<ClientReportScreen> createState() => _ClientReportScreenState();
@@ -67,7 +68,8 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
 
         if (selectedLocationId != null && selectedLocationId.isNotEmpty) {
           var reportLocationId = data['ReportLocationId'] as String?;
-          if (reportLocationId == null || !selectedLocationId.contains(reportLocationId)) {
+          if (reportLocationId == null ||
+              !selectedLocationId.contains(reportLocationId)) {
             continue;
           }
         }
@@ -94,32 +96,42 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
             'ReportDate': (data['ReportCreatedAt'] != null)
                 ? data['ReportCreatedAt'].toDate()
                 : DateTime.now(), // default to now if missing or null
-            'ReportName': (data['ReportName'] != null && data['ReportName'].toString().isNotEmpty)
+            'ReportName': (data['ReportName'] != null &&
+                    data['ReportName'].toString().isNotEmpty)
                 ? data['ReportName']
                 : 'Not Found',
-            'ReportGuardName': (data['ReportEmployeeName'] != null && data['ReportEmployeeName'].toString().isNotEmpty)
+            'ReportGuardName': (data['ReportEmployeeName'] != null &&
+                    data['ReportEmployeeName'].toString().isNotEmpty)
                 ? data['ReportEmployeeName']
                 : 'Not Found',
-            'ReportEmployeeName': (data['ReportEmployeeName'] != null && data['ReportEmployeeName'].toString().isNotEmpty)
+            'ReportEmployeeName': (data['ReportEmployeeName'] != null &&
+                    data['ReportEmployeeName'].toString().isNotEmpty)
                 ? data['ReportEmployeeName']
                 : 'Not Found',
-            'ReportStatus': (data['ReportStatus'] != null && data['ReportStatus'].toString().isNotEmpty)
+            'ReportStatus': (data['ReportStatus'] != null &&
+                    data['ReportStatus'].toString().isNotEmpty)
                 ? data['ReportStatus']
                 : 'Not Found',
-            'ReportCategory': (data['ReportCategoryName'] != null && data['ReportCategoryName'].toString().isNotEmpty)
+            'ReportCategory': (data['ReportCategoryName'] != null &&
+                    data['ReportCategoryName'].toString().isNotEmpty)
                 ? data['ReportCategoryName']
                 : 'Not Found',
             'ReportFollowUpRequire': data['ReportIsFollowUpRequired'] ?? false,
-            'ReportData': (data['ReportData'] != null && data['ReportData'].toString().isNotEmpty)
+            'ReportData': (data['ReportData'] != null &&
+                    data['ReportData'].toString().isNotEmpty)
                 ? data['ReportData']
                 : 'Not Found',
-            'ReportLocation': (data['ReportLocationName'] != null && data['ReportLocationName'].toString().isNotEmpty)
+            'ReportLocation': (data['ReportLocationName'] != null &&
+                    data['ReportLocationName'].toString().isNotEmpty)
                 ? data['ReportLocationName']
                 : 'Not Found',
-            'ReportFollowedUp': (data['ReportFollowedUpId'] != null && data['ReportFollowedUpId'].toString().isNotEmpty)
+            'ReportFollowedUp': (data['ReportFollowedUpId'] != null &&
+                    data['ReportFollowedUpId'].toString().isNotEmpty)
                 ? data['ReportFollowedUpId']
                 : 'Not Found',
-            'ReportImages': (data['ReportImage'] != null && data['ReportImage'] is List && data['ReportImage'].isNotEmpty)
+            'ReportImages': (data['ReportImage'] != null &&
+                    data['ReportImage'] is List &&
+                    data['ReportImage'].isNotEmpty)
                 ? List<dynamic>.from(data['ReportImage'])
                 : [],
           });
@@ -176,9 +188,7 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
                 padding: EdgeInsets.only(left: 20.w),
                 onPressed: () {
                   Navigator.pop(context);
-                  print(
-                      "Navigtor debug: ${Navigator.of(context)
-                          .toString()}");
+                  print("Navigtor debug: ${Navigator.of(context).toString()}");
                 },
               ),
               title: InterMedium(

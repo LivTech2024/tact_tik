@@ -476,6 +476,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                                               empName: widget.userName,
                                               clientId: widget.shiftClientId,
                                               ShiftId: widget.shiftId,
+                                              isguard: false,
                                             )));
                                 break;
                               case 'Post Screen':
@@ -593,6 +594,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                                               empName: widget.userName,
                                               clientId: widget.shiftClientId,
                                               ShiftId: widget.shiftId,
+                                              isguard: false,
                                             )));
                                 break;
                               case 'Post Screen':

@@ -1311,6 +1311,55 @@ class FireStoreService {
     }
   }
 
+  Future<List<String>> getCheckpointImages(String patrolId, String checkpointId,
+      String reportedById, String shiftId) async {
+    final CollectionReference patrolsCollection =
+        FirebaseFirestore.instance.collection('Patrols');
+
+    try {
+      final patrolDocument = await patrolsCollection.doc(patrolId).get();
+      if (patrolDocument.exists) {
+        final patrolData = patrolDocument.data();
+
+        // Check if PatrolCheckPoints is a map
+        if (patrolData is Map && patrolData.containsKey('PatrolCheckPoints')) {
+          final checkpoints = patrolData['PatrolCheckPoints'] as List;
+
+          // Find the checkpoint with matching ID
+          final checkpoint = checkpoints.firstWhere(
+              (checkpoint) => checkpoint['CheckPointId'] == checkpointId);
+
+          if (checkpoint != null) {
+            // Extract image URLs from checkpoint status with reportedById check
+            final statusArray = checkpoint['CheckPointStatus'] as List;
+            final images = statusArray
+                .where((status) =>
+                    status['StatusReportedById'] == reportedById &&
+                    status["StatusShiftId"] == shiftId)
+                .map((status) => status['StatusImage'] as List)
+                .expand((imageArray) => imageArray)
+                .toList()
+                .cast<String>();
+            return images;
+          } else {
+            // Checkpoint not found in patrol
+            return [];
+          }
+        } else {
+          // Patrol doesn't have PatrolCheckPoints data
+          return [];
+        }
+      } else {
+        // Patrol document not found
+        return [];
+      }
+    } catch (error) {
+      // Handle errors
+      print('Error fetching checkpoint images: $error');
+      return [];
+    }
+  }
+
 // fetch the patrol checkpoints that are unchecked
 //using the patrol id, empid and shiftid
   Future<void> uncheckedCheckpointsFetch(
@@ -3812,24 +3861,27 @@ class FireStoreService {
 
   Future<Map<String, dynamic>?> getReportWithSearchId(String reportId) async {
     try {
-      final QuerySnapshot<Map<String, dynamic>> querySnapshot =
-          await FirebaseFirestore.instance
-              .collection('Reports')
-              .where('ReportSearchId', isEqualTo: reportId)
-              .get();
+      if (reportId.isNotEmpty || reportId != null) {
+        final QuerySnapshot<Map<String, dynamic>> querySnapshot =
+            await FirebaseFirestore.instance
+                .collection('Reports')
+                .where('ReportSearchId', isEqualTo: reportId)
+                .get();
 
-      if (querySnapshot.docs.isNotEmpty) {
-        // Assuming there's only one document with the given ReportSearchId
-        final data = querySnapshot.docs.first.data();
-        if (data != null && data['ReportSearchId'] == reportId) {
-          return data;
+        if (querySnapshot.docs.isNotEmpty) {
+          // Assuming there's only one document with the given ReportSearchId
+          final data = querySnapshot.docs.first.data();
+          if (data != null && data['ReportSearchId'] == reportId) {
+            return data;
+          } else {
+            print(
+                "Document with ID $reportId does not match the ReportSearchId");
+            return null;
+          }
         } else {
-          print("Document with ID $reportId does not match the ReportSearchId");
+          print("No document with ReportSearchId $reportId found");
           return null;
         }
-      } else {
-        print("No document with ReportSearchId $reportId found");
-        return null;
       }
     } catch (e) {
       print("Error fetching report data: $e");

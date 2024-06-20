@@ -64,7 +64,9 @@ class StartTaskScreen extends StatefulWidget {
   // final String ShiftLocation;
   final String ShiftStatus;
 
+  DateTime shiftStartedTime;
   StartTaskScreen({
+    super.key,
     required this.ShiftDate,
     required this.ShiftClientID,
     required this.ShiftEndTime,
@@ -80,7 +82,9 @@ class StartTaskScreen extends StatefulWidget {
     required this.ShiftIN,
     required this.onRefresh,
     required this.ShiftName,
-    required this.ShiftStatus, //refresh the homescreen
+    required this.ShiftStatus,
+    required this.shiftStartedTime, //refresh the homescreen
+    //refresh the homescreen
 
     // required this.ShiftLocation,
     // required this.ShiftName,
@@ -176,7 +180,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     // inTime = DateTime.now();
     // startStopwatch();
     initPrefs();
-    print("Shift id at StartTask Screen ${widget.ShiftId}");
+    print("Shift id at Star.tTask Screen ${widget.ShiftId}");
+    // _stopwatchTimer;
     // initStopwatch();
     // startStopwatch();
 
@@ -187,6 +192,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
   void reload() {
     initPrefs();
     initState();
+    // _stopwatchTimer = Timer();
     // _loadState();
   }
 
@@ -197,19 +203,6 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 
     print("Clicked Saved PRef ${clickedIn}");
 
-    // if (widget.ShiftStatus == 'started') {
-    //   setState(() {
-    //     clickedIn = true;
-    //     prefs.setBool('clickedIn', clickedIn);
-    //   });
-    // await homeScreenController.startBgLocationService();
-    // updateLateTimeAndStartTimer();
-    // } else {
-    //   setState(() {
-    //     prefs.setBool('clickedIn', clickedIn);
-    //     clickedIn = false;
-    //   });
-    // }
     bool? savedClickedIn = prefs.getBool('clickedIn');
     print("saved Clicked in values: ${savedClickedIn}");
     bool? pauseState = prefs.getBool('paused');
@@ -219,7 +212,10 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
       clickedIn = savedClickedIn!;
     });
     if (clickedIn == true) {
+      print("Clicked in is true Start Screem");
       updateLateTimeAndStartTimer();
+      _startTimer();
+      await homeScreenController.startBgLocationService();
     }
     if (pauseState != null) {
       setState(() {
@@ -253,13 +249,13 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     }
   }
 
-  void initStopwatch() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _elapsedTime = prefs.getInt('elapsedTime') ?? 0;
-    });
-    print("ELapsedTime: ${_elapsedTime}");
-  }
+  // void initStopwatch() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   setState(() {
+  //     _elapsedTime = prefs.getInt('elapsedTime') ?? 0;
+  //   });
+  //   print("ELapsedTime: ${_elapsedTime}");
+  // }
 
   void startStopwatch() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -275,37 +271,37 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     }
   }
 
-  void resetStopwatch() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+  // void resetStopwatch() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    setState(() {
-      _stopwatchSeconds = 0;
-      prefs.setInt('stopwatchSeconds', _stopwatchSeconds);
-    });
-  }
+  //   setState(() {
+  //     _stopwatchSeconds = 0;
+  //     prefs.setInt('stopwatchSeconds', _stopwatchSeconds);
+  //   });
+  // }
 
-  void resetClickedState() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      clickedIn = false;
-      prefs.setBool('clickedIn', clickedIn);
-      isPaused = false;
-      prefs.setBool('pauseState', isPaused);
-      _stopwatchSeconds = 0;
-      prefs.setInt('savedInTime', _stopwatchSeconds);
+  // void resetClickedState() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   setState(() {
+  //     clickedIn = false;
+  //     prefs.setBool('clickedIn', clickedIn);
+  //     isPaused = false;
+  //     prefs.setBool('pauseState', isPaused);
+  //     _stopwatchSeconds = 0;
+  //     prefs.setInt('savedInTime', _stopwatchSeconds);
 
-      // Reset clickedIn state
-      resetStopwatch(); // Reset the stopwatch
-    });
-  }
+  //     // Reset clickedIn state
+  //     resetStopwatch(); // Reset the stopwatch
+  //   });
+  // }
 
-  void stopStopwatch() {
-    _stopwatchTimer.cancel(); // Stop the stopwatch timer
-  }
+  // void stopStopwatch() {
+  //   _stopwatchTimer.cancel(); // Stop the stopwatch timer
+  // }
 
   @override
   void dispose() {
-    _stopwatchTimer?.cancel();
+    _stopwatchTimer.cancel();
     super.dispose();
   }
 
@@ -320,13 +316,15 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title:  Text(
+              title: Text(
                 'Wellness Report',
-                style: TextStyle(color: Theme.of(context).textTheme.bodyMedium!.color ),
+                style: TextStyle(
+                    color: Theme.of(context).textTheme.bodyMedium!.color),
               ),
-              content:  Text(
+              content: Text(
                 'Please upload your wellness report.',
-                style: TextStyle(color:  Theme.of(context).textTheme.bodyMedium!.color),
+                style: TextStyle(
+                    color: Theme.of(context).textTheme.bodyMedium!.color),
               ),
               actions: <Widget>[
                 TextButton(
@@ -355,6 +353,136 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     }
   }
 
+  // void updateLateTimeAndStartTimer() {
+  //   print('update late time and start timer function');
+  //   DateTime now = DateTime.now();
+
+  //   /// -- update late time
+  //   DateFormat dateFormat = DateFormat("HH:mm");
+
+  //   DateTime shiftStartTime = dateFormat.parse(widget.ShiftStartTime);
+  //   shiftStartTime = DateTime(now.year, now.month, now.day, shiftStartTime.hour,
+  //       shiftStartTime.minute);
+
+  //   DateTime shiftEndTime = dateFormat.parse(widget.ShiftEndTime);
+  //   shiftEndTime = DateTime(
+  //       now.year, now.month, now.day, shiftEndTime.hour, shiftEndTime.minute);
+
+  //   DateTime deadline = shiftStartTime.add(const Duration(minutes: 10));
+
+  //   Duration remainingTimeToStart = deadline.difference(now);
+
+  //   print("Shift start time: $shiftStartTime");
+  //   print("Current time: $now");
+  //   print("Deadline: $deadline");
+  //   print("Remaining time to start: ${remainingTimeToStart.inMinutes} minutes");
+
+  //   if (remainingTimeToStart.isNegative) {
+  //     print("The user is already late.");
+  //     Duration lateDuration = now.difference(deadline);
+  //     if (widget.ShiftStatus == false) {
+  //       setState(() {
+  //         isLate = true;
+  //         lateTime =
+  //             "${lateDuration.inHours}h : ${lateDuration.inMinutes % 60}m";
+  //         print("Late time: $lateTime");
+  //       });
+  //     }
+  //   } else {
+  //     print(
+  //         "Remaining time to start the shift: ${remainingTimeToStart.inMinutes} minutes.");
+  //   }
+
+  //   /// -- start timer
+  //   remainingTime = shiftEndTime.difference(now);
+  //   _startTimer();
+  // }
+
+  // void _startTimer() {
+  //   print('start timer');
+  //   if (_timer != null) {
+  //     _timer!.cancel();
+  //   }
+
+  //   _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+  //     setState(() {
+  //       if (remainingTime.inSeconds > 0) {
+  //         remainingTime = remainingTime - Duration(seconds: 1);
+  //         remainingTimeFormatted =
+  //             "${remainingTime.inHours}h : ${remainingTime.inMinutes % 60}m : ${remainingTime.inSeconds % 60}s";
+  //         print("Timer $remainingTimeFormatted");
+  //       } else {
+  //         _timer!.cancel();
+  //       }
+  //     });
+  //   });
+  // }
+
+  // void updateLateTimeAndStartTimer() {
+  //   print('update late time and start timer function');
+  //   DateTime now = DateTime.now();
+
+  //   /// -- update late time
+  //   DateFormat dateFormat = DateFormat("HH:mm");
+
+  //   DateTime shiftStartTime = dateFormat.parse(widget.ShiftStartTime);
+  //   shiftStartTime = DateTime(now.year, now.month, now.day, shiftStartTime.hour,
+  //       shiftStartTime.minute);
+
+  //   DateTime shiftEndTime = dateFormat.parse(widget.ShiftEndTime);
+  //   shiftEndTime = DateTime(
+  //       now.year, now.month, now.day, shiftEndTime.hour, shiftEndTime.minute);
+
+  //   DateTime deadline = shiftStartTime.add(const Duration(minutes: 10));
+
+  //   Duration remainingTimeToStart = deadline.difference(now);
+
+  //   if (remainingTimeToStart.isNegative) {
+  //     print("The user is already late.");
+  //     Duration lateDuration = now.difference(deadline);
+  //     if (!clickedIn) {
+  //       setState(() {
+  //         isLate = true;
+  //         lateTime =
+  //             "${lateDuration.inHours}h : ${lateDuration.inMinutes % 60}m";
+  //         print("Late time: $lateTime");
+  //         print(
+  //             "Late time 2:${lateDuration.inHours}h : ${lateDuration.inMinutes % 60}m");
+  //       });
+  //     }
+  //   } else {
+  //     print(
+  //         "Remaining time to start the shift: ${remainingTimeToStart.inMinutes} minutes.");
+  //   }
+
+  //   /// -- start timer
+  //   ///
+  //   setState(() {
+  //     remainingTime = shiftEndTime.difference(now);
+  //   });
+  //   _startTimer();
+  // }
+
+  // void _startTimer() {
+  //   print('start timer');
+  //   if (_timer != null) {
+  //     _timer!.cancel();
+  //   }
+
+  //   _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+  //     setState(() {
+  //       if (remainingTime.inSeconds > 0) {
+  //         remainingTime = remainingTime - Duration(seconds: 1);
+  //         remainingTimeFormatted =
+  //             "${remainingTime.inHours}h : ${remainingTime.inMinutes % 60}m : ${remainingTime.inSeconds % 60}s";
+  //         print("Timer $remainingTimeFormatted");
+  //       } else {
+  //         _timer!.cancel();
+  //       }
+  //     });
+  //   });
+  // }
+
   void updateLateTimeAndStartTimer() {
     print('update late time and start timer function');
     DateTime now = DateTime.now();
@@ -372,12 +500,14 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 
     DateTime deadline = shiftStartTime.add(const Duration(minutes: 10));
 
-    Duration remainingTimeToStart = deadline.difference(now);
+    Duration remainingTimeToStart =
+        deadline.difference(widget.shiftStartedTime);
 
     if (remainingTimeToStart.isNegative) {
       print("The user is already late.");
-      Duration lateDuration = now.difference(deadline);
-      if (!clickedIn) {
+      Duration lateDuration = widget.shiftStartedTime.difference(deadline);
+
+      if (clickedIn) {
         setState(() {
           isLate = true;
           lateTime =
@@ -389,17 +519,20 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
       print(
           "Remaining time to start the shift: ${remainingTimeToStart.inMinutes} minutes.");
     }
-
-    /// -- start timer
     remainingTime = shiftEndTime.difference(now);
-    _startTimer();
+    // _startTimer();
   }
 
   void _startTimer() {
     print('start timer');
+    print('timer ${_timer}');
+    print('remainingTime ${remainingTime}');
+
     if (_timer != null) {
       _timer!.cancel();
     }
+
+    DateTime now = DateTime.now();
 
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       setState(() {
@@ -424,7 +557,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     // Get the current time
 
 // Convert shift start time to current date for comparison
-    String lateTime = ""; // Example start time// Get current time
+    // String lateTime = ""; // Example start time// Get current time
 
     print("IN Time : ${inTime}");
     print("Elapsed  : ${_elapsedTime}");
@@ -533,7 +666,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         ),
                         SizedBox(height: 10.h),
                         InterSemibold(
-                          text: remainingTimeFormatted,
+                          text: remainingTimeFormatted.isEmpty
+                              ? ""
+                              : remainingTimeFormatted,
                           // '${(_stopwatchSeconds ~/ 3600).toString().padLeft(2, '0')} : ${((_stopwatchSeconds ~/ 60) % 60).toString().padLeft(2, '0')} : ${(_stopwatchSeconds % 60).toString().padLeft(2, '0')}',
                           color: DarkColor.color8,
                           fontsize: 14.sp,
@@ -646,8 +781,6 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                   showErrorToast(
                                       context, "Start shift on Time");
                                 } else {
-                                  updateLateTimeAndStartTimer();
-
                                   ///TODO paste this code to start timer and start locations fetch before you start to push new locations clear previous locations
                                   FirebaseFirestore firestore =
                                       FirebaseFirestore.instance;
@@ -698,7 +831,6 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                           'Error creating employee route: $e');
                                     }
                                   }
-
                                   // start stop watch
                                   // await controller.startStopWatch();
                                   _startTimer();
@@ -736,6 +868,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                       widget.EmployeId,
                                       widget.ShiftId,
                                       widget.EmployeeName);
+                                  widget.onRefresh();
+                                  updateLateTimeAndStartTimer();
                                   setState(() {
                                     // if (!clickedIn) {
                                     clickedIn = true;
@@ -754,7 +888,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                     }
                                     fireStoreService
                                         .fetchreturnShiftTasks(widget.ShiftId);
-                                    startStopwatch();
+                                    // startStopwatch();
                                     // } else {
                                     print('already clicked');
                                     // }
@@ -938,8 +1072,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                               // isPaused = !isPaused;
                                               // prefs.setBool("pauseState", isPaused);
                                               clickedIn = false;
-                                              resetStopwatch();
-                                              resetClickedState();
+                                              // resetStopwatch();
+                                              // resetClickedState();
                                               widget.resetShiftStarted();
                                               prefs.setBool(
                                                   'ShiftStarted', false);
@@ -1069,7 +1203,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                             // prefs.setBool("pauseState", isPaused);
                             clickedIn = false;
                             // resetStopwatch();
-                            resetClickedState();
+                            // resetClickedState();
                             widget.resetShiftStarted();
                             prefs.setBool('ShiftStarted', false);
                           });
@@ -1170,7 +1304,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         widget.ShiftLocationId,
                         widget.ShiftName);
                     prefs.setBool('onBreak', onBreak);
-                    startStopwatch();
+                    // startStopwatch();
                     fireStoreService.ResumeShiftLog(widget.EmployeId);
                   }
                 },

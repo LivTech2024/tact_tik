@@ -64,10 +64,11 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
     if (docSnapshot.exists) {
       var postOrder = docSnapshot.data()!['LocationPostOrder'];
       setState(() {
-        postOrderOtherData = List<dynamic>.from(postOrder['PostOrderOtherData'] ?? []);
+        postOrderOtherData =
+            List<dynamic>.from(postOrder['PostOrderOtherData'] ?? []);
         postOrderPdfUrl = postOrder['PostOrderPdf'] ?? '';
       });
-
+      print('postOrder Data : ${postOrder}');
       if (postOrderPdfUrl.isNotEmpty) {
         final metadata = await _fetchFileMetadata(postOrderPdfUrl);
         setState(() {
@@ -97,7 +98,8 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
   }
 
   Future<void> _addImage() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.camera);
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.camera);
     if (pickedFile != null) {
       setState(() {
         uploads.add({'type': 'image', 'file': File(pickedFile.path)});
@@ -106,7 +108,8 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
   }
 
   Future<void> _addGallery() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
         uploads.add({'type': 'image', 'file': File(pickedFile.path)});
@@ -175,7 +178,9 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
     }
 
     // Update Firestore with the new URLs
-    final docRef = FirebaseFirestore.instance.collection('Locations').doc(widget.locationId);
+    final docRef = FirebaseFirestore.instance
+        .collection('Locations')
+        .doc(widget.locationId);
     await docRef.update({
       'LocationPostOrder.PostOrderOtherData': FieldValue.arrayUnion(urls),
     });
@@ -188,7 +193,7 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
 
     try {
       final firebase_storage.Reference ref =
-      firebase_storage.FirebaseStorage.instance.refFromURL(url);
+          firebase_storage.FirebaseStorage.instance.refFromURL(url);
 
       final Directory tempDir = await getTemporaryDirectory();
       final File file = File('${tempDir.path}/$pdfFileName');
@@ -213,8 +218,6 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
 
   @override
   Widget build(BuildContext context) {
-    
-
     // Combine postOrderPdfUrl and postOrderOtherData for display
     List<String> allUrls = [];
     if (postOrderPdfUrl.isNotEmpty) {
@@ -224,13 +227,10 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
 
     return SafeArea(
       child: Scaffold(
-        
         appBar: AppBar(
-          
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-             
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -239,11 +239,9 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
           ),
           title: InterMedium(
             text: 'Post Order',
-           
           ),
           centerTitle: true,
         ),
-        
         body: Container(
           height: MediaQuery.of(context).size.height - kToolbarHeight,
           padding: EdgeInsets.symmetric(horizontal: 30.w),
@@ -291,13 +289,13 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
                               margin: EdgeInsets.all(8.w),
                               child: upload['type'] == 'image'
                                   ? Image.file(
-                                upload['file'],
-                                fit: BoxFit.cover,
-                              )
+                                      upload['file'],
+                                      fit: BoxFit.cover,
+                                    )
                                   : SvgPicture.asset(
-                                'assets/images/pdf.svg',
-                                width: 32.w,
-                              ),
+                                      'assets/images/pdf.svg',
+                                      width: 32.w,
+                                    ),
                             ),
                             Positioned(
                               top: -5,
@@ -361,17 +359,21 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
                         height: 66.h,
                         width: 66.w,
                         decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Theme.of(context).shadowColor,
-                              blurRadius: 10.r,
-                              offset: Offset(0, 5),
-                            ),
-                          ],
+                            boxShadow: [
+                              BoxShadow(
+                                color: Theme.of(context).shadowColor,
+                                blurRadius: 10.r,
+                                offset: Offset(0, 5),
+                              ),
+                            ],
                             color: Theme.of(context).cardColor,
                             borderRadius: BorderRadius.circular(8.r)),
                         child: Center(
-                          child: Icon(Icons.add, color: Theme.of(context).textTheme.bodyMedium!.color),
+                          child: Icon(Icons.add,
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .color),
                         ),
                       ),
                     ),
@@ -396,7 +398,8 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
                             String otherFileName = 'Loading...';
                             String otherFileSize = 'Loading...';
 
-                            if (snapshot.connectionState == ConnectionState.done &&
+                            if (snapshot.connectionState ==
+                                    ConnectionState.done &&
                                 snapshot.hasData) {
                               otherFileName = snapshot.data!['name'];
                               otherFileSize = snapshot.data!['size'];
@@ -422,7 +425,8 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
                                   color: DarkColor.color1,
                                 ),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Row(
                                       children: [
@@ -436,19 +440,21 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
                                           ),
                                         ),
                                         Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
                                             PoppinsMedium(
                                               text: otherFileName,
-                                              color:  Theme.of(context)
+                                              color: Theme.of(context)
                                                   .textTheme
                                                   .titleMedium!
                                                   .color,
                                             ),
                                             PoppinsRegular(
                                               text: otherFileSize,
-                                              color:  Theme.of(context)
+                                              color: Theme.of(context)
                                                   .textTheme
                                                   .titleLarge!
                                                   .color,
@@ -464,7 +470,8 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
                           },
                         );
                       } else {
-                        return SizedBox.shrink(); // Skip non-PDF URLs in the ListView
+                        return SizedBox
+                            .shrink(); // Skip non-PDF URLs in the ListView
                       }
                     },
                   ),
@@ -475,9 +482,13 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
                       crossAxisCount: 3, // Number of columns in the grid
                       childAspectRatio: 1.0, // Aspect ratio of the grid items
                     ),
-                    itemCount: allUrls.where((url) => !url.contains('.pdf')).length, // Count of non-PDF URLs
+                    itemCount: allUrls
+                        .where((url) => !url.contains('.pdf'))
+                        .length, // Count of non-PDF URLs
                     itemBuilder: (context, index) {
-                      String imageUrl = allUrls.where((url) => !url.contains('.pdf')).toList()[index];
+                      String imageUrl = allUrls
+                          .where((url) => !url.contains('.pdf'))
+                          .toList()[index];
                       return SizedBox(
                         height: 80.h,
                         width: 80.w,
