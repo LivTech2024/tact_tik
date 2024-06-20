@@ -51,15 +51,17 @@ class _ClientDarOpenScreenState extends State<ClientDarOpenScreen> {
   }
 
   bool _isSameDate(DateTime date1, DateTime date2) {
-    return date1.year == date2.year && date1.month == date2.month && date1.day == date2.day;
+    return date1.year == date2.year &&
+        date1.month == date2.month &&
+        date1.day == date2.day;
   }
 
   Future<String> generateDARPdf(
-      List<dynamic> Data,
-      String GuardName,
-      String DARTime,
-      String DARDate,
-      ) async {
+    List<dynamic> Data,
+    String GuardName,
+    String DARTime,
+    String DARDate,
+  ) async {
     final dateFormat = DateFormat('HH:mm');
 
     String generateTableRows(List<dynamic> data) {
@@ -245,9 +247,14 @@ class _ClientDarOpenScreenState extends State<ClientDarOpenScreen> {
                                   ? "${selectedDate!.toLocal()}".split(' ')[0]
                                   : 'Select Date',
                               fontsize: 14.sp,
-                              color: Theme.of(context).textTheme.bodySmall!.color
-                                  as Color,
-                                  Iconcolor: Theme.of(context).textTheme.bodyMedium!.color as Color,
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall!
+                                  .color as Color,
+                              Iconcolor: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .color as Color,
                             ),
                           ),
                         ),
@@ -302,8 +309,10 @@ class _ClientDarOpenScreenState extends State<ClientDarOpenScreen> {
                                 width: 190.w,
                                 child: InterSemibold(
                                   text: widget.employeeName,
-                                  color:
-                                      Theme.of(context).textTheme.bodyMedium!.color,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .color,
                                   fontsize: 18.sp,
                                 ),
                               )
@@ -361,21 +370,33 @@ class _ClientDarOpenScreenState extends State<ClientDarOpenScreen> {
                             width: 100.w,
                             child: TextButton(
                               clipBehavior: Clip.none,
-                              onPressed: () {generateDARPdf(widget.empDarTile, widget.employeeName, widget.startTime, widget.startDate);},
+                              onPressed: () {
+                                generateDARPdf(
+                                    widget.empDarTile,
+                                    widget.employeeName,
+                                    widget.startTime,
+                                    widget.startDate);
+                              },
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Icon(
                                     Icons.download_for_offline_sharp,
                                     size: 24.sp,
-                                    color: Theme.of(context).textTheme.bodyMedium!.color,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .color,
                                   ),
                                   SizedBox(
                                     width: 10.w,
                                   ),
                                   InterMedium(
                                     text: 'PDF',
-                                    color: Theme.of(context).textTheme.bodyMedium!.color,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .color,
                                     fontsize: 14.sp,
                                   ),
                                   SizedBox(
@@ -400,19 +421,23 @@ class _ClientDarOpenScreenState extends State<ClientDarOpenScreen> {
                       itemCount: widget.empDarTile.where((tile) {
                         final tileDate = tile['TileDate'] as Timestamp;
                         final tileDateTime = tileDate.toDate();
-                        return selectedDate == null || _isSameDate(tileDateTime, selectedDate!);
+                        return selectedDate == null ||
+                            _isSameDate(tileDateTime, selectedDate!);
                       }).length,
                       itemBuilder: (context, index) {
                         final filteredTiles = widget.empDarTile.where((tile) {
                           final tileDate = tile['TileDate'] as Timestamp;
                           final tileDateTime = tileDate.toDate();
-                          return selectedDate == null || _isSameDate(tileDateTime, selectedDate!);
+                          return selectedDate == null ||
+                              _isSameDate(tileDateTime, selectedDate!);
                         }).toList();
 
                         final tile = filteredTiles[index];
-                        final tileContent = tile['TileContent'] ?? 'Not Defined';
+                        final tileContent =
+                            tile['TileContent'] ?? 'Not Defined';
                         final tileTime = tile['TileTime'];
-                        final tileLocation = tile['TileLocation'] ?? 'Not Defined';
+                        final tileLocation =
+                            tile['TileLocation'] ?? 'Not Defined';
                         final tilePatrol = tile['TilePatrol'] ?? [];
                         final tileReport = tile['TileReport'] ?? [];
                         final tileImages = tile['TileImages'] ?? [];
@@ -466,11 +491,15 @@ class _ClientDarOpenScreenState extends State<ClientDarOpenScreen> {
                                 ),
                                 Row(
                                   children: [
-                                    InterSemibold(text: tileTime, fontsize: 16.sp),
+                                    InterSemibold(
+                                        text: tileTime, fontsize: 16.sp),
                                     SizedBox(width: 5.w),
                                     Icon(
                                       Icons.arrow_forward_ios,
-                                      color: Theme.of(context).textTheme.bodyMedium!.color,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .color,
                                       size: 24.sp,
                                     ),
                                   ],
@@ -486,12 +515,13 @@ class _ClientDarOpenScreenState extends State<ClientDarOpenScreen> {
               ),
             ),
             Center(
-                child: SizedBox(
-                  child: Visibility(
-                    visible: loading,
-                    child: CircularProgressIndicator(),
-                  ),
-                ))
+              child: SizedBox(
+                child: Visibility(
+                  visible: loading,
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+            )
           ],
         ),
       ),
