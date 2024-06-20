@@ -94,6 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String _employeeCompanyBranchID = "";
   bool ShiftStarted = false;
   bool ShiftExist = false;
+  late DateTime ShiftStartedTime;
   String _shiftLocationId = "";
   String _shiftId = "";
   String _empEmail = "";
@@ -127,7 +128,7 @@ class _HomeScreenState extends State<HomeScreen> {
   GlobalKey<ScaffoldState> _scaffoldKey1 = GlobalKey();
   bool _showWish = true;
   bool NewMessage = false;
-
+  bool isRoleGuard = false;
   @override
   void refreshHomeScreen() {
     _getUserInfo();
@@ -229,6 +230,14 @@ class _HomeScreenState extends State<HomeScreen> {
         String empImage = userInfo['EmployeeImg'] ?? "";
         String empCompanyId = userInfo['EmployeeCompanyId'] ?? "";
         String empBranchId = userInfo['EmployeeCompanyBranchId'] ?? "";
+        String empRole = userInfo['EmployeeRole'] ?? "";
+        if (empRole.isNotEmpty) {
+          if (empRole == "GUARD") {
+            isRoleGuard = true;
+          } else {
+            isRoleGuard = false;
+          }
+        }
         var shiftInfo =
             await fireStoreService.getShiftByEmployeeIdFromUserInfo(EmployeeId);
         var patrolInfo = await fireStoreService
@@ -303,8 +312,24 @@ class _HomeScreenState extends State<HomeScreen> {
                   .map((status) => status['Status'] as String)
                   .join(', ') ??
               "";
-
+          DateTime statusStartedTime;
+          if (filteredStatus.isNotEmpty &&
+              filteredStatus.first.containsKey('StatusStartedTime')) {
+            statusStartedTime =
+                (filteredStatus.first['StatusStartedTime'] as Timestamp)
+                    .toDate();
+            setState(() {
+              ShiftStartedTime = statusStartedTime;
+            });
+          } else {
+            setState(() {
+              ShiftStartedTime = Timestamp.now().toDate();
+            });
+            // statusStartedTime = DateTime.now(); // or handle this case as needed
+          }
           print("Shift CUrrent Status ${statusString}");
+          // print("statusStartedTimeStringDateTIme ${statusStartedTime}");
+
           if (statusString == "started") {
             SharedPreferences prefs = await SharedPreferences.getInstance();
             prefs.setBool('ShiftStarted', true);
@@ -651,7 +676,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       'History',
                       4,
                       () async {
-                        List<String> emails = [];
+                        // List<String> emails = [];
+
                         // emails.add("sutarvaibhav37@gmail.com");
                         // // emails.add("pankaj.kumar1312@yahoo.com");
                         // // emails.add("alerts.tactik@gmail.com");
@@ -673,6 +699,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         //   "formattedEndTime",
                         // );
                         // customEmail();
+                        // await fireStoreService.copyAndCreateDocument(
+                        //     "PatrolLogs", "vSUJs6G6WBT4xRTIAZVR");
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -861,6 +889,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         onRefresh: refreshHomeScreen,
                                         ShiftName: _ShiftName,
                                         ShiftStatus: _ShiftStatus,
+                                        shiftStartedTime: ShiftStartedTime,
                                       )
                                     : Center(
                                         child: InterMedium(
@@ -960,6 +989,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     empName: _userName,
                                                     clientId: _shiftCLientId,
                                                     ShiftId: _shiftId,
+                                                    isguard: isRoleGuard,
                                                   )));
                                       break;
                                     case 4:

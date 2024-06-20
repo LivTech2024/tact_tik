@@ -6,6 +6,8 @@ import 'package:background_locator_2/location_dto.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:tact_tik/services/Userservice.dart';
+import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import '../../main.dart';
 import '../../screens/feature screens/petroling/eg_patrolling.dart';
 import 'file_manager.dart';
@@ -68,10 +70,14 @@ class LocationServiceRepository {
           'LocationReportedAt': Timestamp.now(),
         };
 
+        late UserService _userService;
+        FireStoreService fireStoreService = FireStoreService();
+        _userService = UserService(firestoreService: FireStoreService());
         // Fetch the employee's current route document
         QuerySnapshot routeSnapshot = await FirebaseFirestore.instance
             .collection('EmployeeRoutes')
             .where('EmpRouteEmpId', isEqualTo: employeeId)
+            .where('EmpRouteShiftId', isEqualTo: _userService.ShiftId)
             .where('EmpRouteShiftStatus', isEqualTo: 'started')
             .get();
 

@@ -378,22 +378,24 @@ class _SHomeScreenState extends State<SHomeScreen> {
                 height: 30.h,
               ),
             ),
-            HomeScreenPart1(
-              isClient: false,
-              empId: _employeeId,
-              branchId: '',
-              empEmail: _empEmail,
-              shiftClientId: '',
-              shiftCompanyId: '',
-              shiftId: '',
-              shiftLocationId: '',
-              shiftLocationName: '',
-              userName: _userName ?? "",
-              // employeeImg: _userImg,
-              employeeImg: _userImg ?? "",
-              drawerOnClicked: () {
-                _scaffoldKeyS.currentState?.openEndDrawer();
-              },
+            SliverToBoxAdapter(
+              child: HomeScreenPart1(
+                isClient: false,
+                empId: _employeeId,
+                branchId: '',
+                empEmail: _empEmail,
+                shiftClientId: '',
+                shiftCompanyId: '',
+                shiftId: '',
+                shiftLocationId: '',
+                shiftLocationName: '',
+                userName: _userName ?? "",
+                // employeeImg: _userImg,
+                employeeImg: _userImg ?? "",
+                drawerOnClicked: () {
+                  _scaffoldKeyS.currentState?.openEndDrawer();
+                },
+              ),
             ),
             SliverToBoxAdapter(
               child: Padding(
@@ -602,7 +604,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => SPostOrder(
-                                          locationId: 'DrD1H6YXEui4G72EHTEZ',
+                                          locationId: "wQXix4XxtRYphbIuN6fb",
                                         ),
                                       ),
                                     );

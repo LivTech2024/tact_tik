@@ -115,8 +115,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     SizedBox(
                       height: 300.h,
                       width: double.maxFinite,
-                      child: Image.asset(
-                        'assets/images/logo.png',
+                      child: Image.asset( themeManager.themeMode == ThemeMode.dark
+                          ? 'assets/images/logo.png'
+                          :
+                        'assets/images/logo_light.png',
                         fit: BoxFit.fitHeight,
                         filterQuality: FilterQuality.high,
                       ),

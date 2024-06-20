@@ -7,6 +7,7 @@ import 'package:background_locator_2/settings/ios_settings.dart';
 import 'package:background_locator_2/settings/locator_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tact_tik/common/widgets/customErrorToast.dart';
 import '../../../services/BackgroundLocationService/location_callback_handler.dart';
@@ -54,12 +55,8 @@ class HomeScreenController extends GetxController {
   Future<void> initPlatformState() async {
     print('Initializing...');
     await BackgroundLocator.initialize();
-
     print('Initialization done');
-    final _isRunning = await BackgroundLocator.isServiceRunning();
-
-    isRunning = _isRunning;
-
+    isRunning = await BackgroundLocator.isServiceRunning();
     print('Running ${isRunning.toString()}');
   }
 
@@ -67,32 +64,111 @@ class HomeScreenController extends GetxController {
   Future<void> startBgLocationService() async {
     try {
       print('start Bg location service');
-      // if (await _checkLocationPermission()) {
-      await _startLocator();
-      final _isRunning = await BackgroundLocator.isServiceRunning();
-      print('Running ${_isRunning.toString()}');
-
-      // isRunning = _isRunning;
-      // lastLocation = null;
-      // } else {
-      //   print("Location permission Error");
-      //   // show error
-      // }
+      if (await _checkLocationPermission()) {
+        await _startLocator();
+        isRunning = await BackgroundLocator.isServiceRunning();
+        print('Running ${isRunning.toString()}');
+        lastLocation = null;
+      } else {
+        print("Location permission Error");
+        // customErrorToast(
+        //     "Location permission is required for background tracking.");
+      }
     } catch (e) {
       print(e);
+      // customErrorToast("An error occurred while starting location service: $e");
     }
   }
 
   Future<bool> _checkLocationPermission() async {
+    // _requestLocationPermission();
+    // await Permission.location.request();\
+
+    // Check the current status of locationWhenInUse permission
+    var statusWhenInUse = await Permission.locationWhenInUse.status;
+
+    // If locationWhenInUse is granted, check locationAlways permission
+    if (statusWhenInUse.isGranted) {
+      var statusAlways = await Permission.locationAlways.status;
+
+      // If locationAlways is granted, return true
+      if (statusAlways.isGranted) {
+        return true;
+      } else if (statusAlways.isDenied) {
+        // Request locationAlways permission
+        var requestStatusAlways = await Permission.locationAlways.request();
+
+        // Return true if locationAlways permission is granted
+        if (requestStatusAlways.isGranted) {
+          return true;
+        } else if (requestStatusAlways.isPermanentlyDenied) {
+          print("Location permission permanently denied. Open app settings 0.");
+          // await openAppSettings();
+          return false;
+        }
+      }
+    } else if (statusWhenInUse.isDenied) {
+      // Request locationWhenInUse permission if not granted
+      var requestStatusWhenInUse = await Permission.location.request();
+
+      // If locationWhenInUse is granted, check locationAlways permission
+      if (requestStatusWhenInUse.isGranted) {
+        var statusAlways = await Permission.locationAlways.request();
+
+        // Return true if locationAlways permission is granted
+        if (statusAlways.isGranted) {
+          return true;
+        } else if (statusAlways.isPermanentlyDenied) {
+          print(
+              "Location permission permanently denied. Open app settings 1 .");
+          // await openAppSettings();
+          return false;
+        }
+      } else if (requestStatusWhenInUse.isPermanentlyDenied) {
+        print("Location permission permanently denied. Open app settings  2.");
+        // await openAppSettings();
+        return false;
+      }
+    } else if (statusWhenInUse.isPermanentlyDenied) {
+      print("Location permission permanently denied. Open app settings 3.");
+      // await openAppSettings();
+
+      return false;
+    }
+    return false;
+  }
+
+  Future<void> checkPermission(
+      Permission permission, BuildContext context) async {
+    final status = await permission.request();
+    if (status.isGranted) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Permission is granted")));
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Permission is denied")));
+    }
+  }
+
+  void _requestLocationPermission() async {
     var status = await Permission.locationWhenInUse.request();
-    await Permission.notification.request();
     if (status.isGranted) {
       var statusAlways = await Permission.locationAlways.request();
       if (statusAlways.isGranted) {
-      } else {}
-    } else if (status.isDenied) {
-    } else if (status.isPermanentlyDenied) {}
-    return true;
+      } else {
+        // LocationAlways permission denied, navigate to the previous screen or open settings
+        Get.snackbar('LocationAlways permission denied',
+            'Please enable permission in settings.');
+        Get.back();
+        // openAppSettings();
+      }
+    } else if (status.isDenied || status.isPermanentlyDenied) {
+      // LocationWhenInUse permission denied, navigate to the previous screen or open settings
+      Get.snackbar('LocationWhenInUse permission denied',
+          'Please enable LocationWhenInUse permission in settings.');
+      Get.back();
+      // openAppSettings();
+    }
   }
 
   Future<void> _startLocator() async {
@@ -103,30 +179,31 @@ class HomeScreenController extends GetxController {
         initDataCallback: data,
         disposeCallback: LocationCallbackHandler.disposeCallback,
         iosSettings: const IOSSettings(
-            accuracy: LocationAccuracy.NAVIGATION,
+            accuracy: LocationAccuracy.HIGH,
             distanceFilter: 0,
-            stopWithTerminate: false),
+            stopWithTerminate: false,
+            showsBackgroundLocationIndicator: true),
         autoStop: false,
         androidSettings: const AndroidSettings(
-            accuracy: LocationAccuracy.NAVIGATION,
-            interval: 5,
-            distanceFilter: 0,
-            client: LocationClient.google,
-            androidNotificationSettings: AndroidNotificationSettings(
-                notificationChannelName: 'Location tracking',
-                notificationTitle: 'Start Location Tracking',
-                notificationMsg: 'Track location in background',
-                notificationBigMsg:
-                    'Background location is on to keep the app up-tp-date with your location. This is required for main features to work properly when the app is not running.',
-                notificationIconColor: Colors.grey,
-                notificationTapCallback:
-                    LocationCallbackHandler.notificationCallback)));
+          accuracy: LocationAccuracy.HIGH,
+          interval: 5,
+          distanceFilter: 0,
+          client: LocationClient.google,
+          androidNotificationSettings: AndroidNotificationSettings(
+              notificationChannelName: 'Location tracking',
+              notificationTitle: 'Start Location Tracking',
+              notificationMsg: 'Track location in background',
+              notificationBigMsg:
+                  'Background location is on to keep the app up-to-date with your location. This is required for main features to work properly when the app is not running.',
+              notificationIconColor: Color.fromARGB(255, 186, 121, 121),
+              notificationTapCallback:
+                  LocationCallbackHandler.notificationCallback),
+        ));
   }
 
   /// stop Bg the location service
   Future<void> stopBgLocationService() async {
     await BackgroundLocator.unRegisterLocationUpdate();
-    final _isRunning = await BackgroundLocator.isServiceRunning();
-    isRunning = _isRunning;
+    isRunning = await BackgroundLocator.isServiceRunning();
   }
 }

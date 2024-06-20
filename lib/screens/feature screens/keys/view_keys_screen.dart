@@ -198,6 +198,8 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                           padding: EdgeInsets.symmetric(horizontal: 30.w),
                           child: GestureDetector(
                             onTap: () {
+                              print(
+                                  "key['KeyAllocationId'] ${key['KeyAllocationId']}");
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(

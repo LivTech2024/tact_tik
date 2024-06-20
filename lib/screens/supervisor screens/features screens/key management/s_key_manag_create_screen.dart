@@ -86,6 +86,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
   bool editKeyMode = true;
   bool showReturnBtn = false;
   bool _isLoading = false;
+  bool hideSubmit = false;
   bool buttonClicked = false;
   bool _isCreatingKey = false;
   @override
@@ -150,6 +151,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
         .collection('KeyAllocations')
         .where('KeyAllocationId', isEqualTo: allocationId)
         .get();
+
     var data = querySnapshot.docs;
 
     // Iterate over each document and print its fields
@@ -180,12 +182,14 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
         print("KeyAllocationIsReturned is true");
         setState(() {
           editKeyMode = false;
-          // showReturnBtn = true;
+          showReturnBtn = true;
+          hideSubmit = true;
         });
       } else {
         setState(() {
           editKeyMode = false;
           showReturnBtn = true;
+          hideSubmit = false;
         });
       }
     }
@@ -357,7 +361,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
         // 'KeyAllocationEndTime': EndDate,
         // 'KeyAllocationStartTime': StartDate,
         'KeyAllocationId': docRef.id,
-        // 'KeyAllocationIsReturned': isChecked,
+        'KeyAllocationIsReturned': isChecked,
         // 'KeyAllocationKeyId': selectedKeyId ?? '',
         // 'KeyAllocationKeyQty': int.tryParse(_AllocateQtController1.text) ?? 0,
         // 'KeyAllocationPurpose': _AllocationPurposeController.text,
@@ -407,7 +411,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
   // return nameLower.contains(patternLower);
   // }).toList(),
   // );
-List<Color> colors = [
+  List<Color> colors = [
     themeManager.themeMode == ThemeMode.dark
         ? DarkColor.color1
         : LightColor.color3,
@@ -417,7 +421,6 @@ List<Color> colors = [
   ];
   @override
   Widget build(BuildContext context) {
-   
     return SafeArea(
       child: Scaffold(
         backgroundColor: Theme.of(context).canvasColor,
@@ -1157,7 +1160,8 @@ List<Color> colors = [
                               SizedBox(height: 20.h),
                               Visibility(
                                 // visible: widget.editKeyMode,
-                                visible: !showReturnBtn,
+                                // visible: !showReturnBtn &&
+                                //     widget.AllocationKeyId.isEmpty,
                                 child: Container(
                                   height: 60.h,
                                   padding:
@@ -1212,11 +1216,11 @@ List<Color> colors = [
                                     ),
                                   ),
                                 ),
-                              showReturnBtn == true || editKeyMode == true
+                              hideSubmit == false || editKeyMode == true
                                   ? Button1(
                                       text: 'Save',
                                       onPressed: () {
-                                        //                                   'KeyAllocationCreatedAt': FieldValue.serverTimestamp(),
+                                        // 'KeyAllocationCreatedAt': FieldValue.serverTimestamp(),
                                         // 'KeyAllocationDate': SelectedDate,
                                         // 'KeyAllocationEndTime': EndDate,
                                         // 'KeyAllocationStartTime': StartDate,
@@ -1228,6 +1232,7 @@ List<Color> colors = [
                                         // 'KeyAllocationRecipientCompany': _CompanyNameController.text,
                                         // 'KeyAllocationRecipientContact': _ContactController.text,
                                         // 'KeyAllocationRecipientName': _recipientController.text,
+
                                         if (_AllocateQtController1
                                                 .text.isEmpty ||
                                             _AllocationPurposeController
@@ -1239,6 +1244,7 @@ List<Color> colors = [
                                               "Fields cannot be empty");
                                           return;
                                         }
+
                                         if (showReturnBtn == true) {
                                           _updateData();
                                         } else {
@@ -1310,9 +1316,10 @@ List<Color> colors = [
                               SizedBox(
                                 height: 40.h,
                               ),
-                              editKeyMode == true
+                              hideSubmit == false
                                   ? Button1(
                                       text: 'Save',
+                                      
                                       onPressed: _isCreatingKey
                                           ? () {
                                               showErrorToast(
@@ -1367,10 +1374,7 @@ List<Color> colors = [
                                             },
                                       // _saveData();
 
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .headlineMedium!
-                                          .color,
+                                      color:Colors.white,
                                       borderRadius: 10.r,
                                       backgroundcolor:
                                           Theme.of(context).primaryColor,

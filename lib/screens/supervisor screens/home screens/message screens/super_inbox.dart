@@ -236,10 +236,7 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                                       offset: Offset(0, 3),
                                     )
                                   ],
-                                  color: Theme.of(context).brightness ==
-                                          Brightness.dark
-                                      ? DarkColor.color19
-                                      : LightColor.WidgetColor,
+                                  color: Theme.of(context).cardColor,
                                   borderRadius: BorderRadius.circular(12.r),
                                 ),
                                 margin: EdgeInsets.only(bottom: 10.h),
