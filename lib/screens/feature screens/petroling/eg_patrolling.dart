@@ -1000,7 +1000,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                       backgroundcolor: widget.p.CurrentStatus == "started"
                           ? Theme.of(context).primaryColorLight
                           : Theme.of(context).primaryColor,
-                      color: DarkColor.color5,
+                      color: Colors.white,
                       borderRadius: 10.r,
                       onPressed: buttonClicked
                           ? () async {
@@ -1391,14 +1391,12 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                   title: Text(
                                                                     'Report Qr',
                                                                     style: TextStyle(
-                                                                        color: Colors
-                                                                            .white),
+                                                                        color: Theme.of(context).textTheme.bodyMedium!.color),
                                                                   ),
                                                                   content: Text(
                                                                     'The scanned QR code does not work.',
                                                                     style: TextStyle(
-                                                                        color: Colors
-                                                                            .white),
+                                                                        color: Theme.of(context).textTheme.bodyMedium!.color),
                                                                   ),
                                                                   actions: [
                                                                     TextButton(

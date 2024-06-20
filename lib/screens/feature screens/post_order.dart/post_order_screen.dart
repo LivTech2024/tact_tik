@@ -344,58 +344,32 @@ class _PostOrderState extends State<PostOrder> {
                                                       width: 200.w,
                                                       height: 46.h,
                                                       decoration: BoxDecoration(
+                                                        boxShadow: [
+                                                          BoxShadow(
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .shadowColor,
+                                                            blurRadius: 5,
+                                                            spreadRadius: 2,
+                                                            offset: Offset(0, 3),
+                                                          )
+                                                        ],
                                                         borderRadius:
                                                             BorderRadius
                                                                 .circular(10.r),
                                                         color: Theme.of(context)
-                                                            .textTheme
-                                                            .bodyMedium!
-                                                            .color,
+                                                            .cardColor,
                                                       ),
-                                                      child: Row(
-                                                        children: [
-                                                          Padding(
-                                                            padding: EdgeInsets
-                                                                .symmetric(
-                                                                    horizontal:
-                                                                        6.w),
-                                                            child: SvgPicture
-                                                                .asset(
-                                                              'assets/images/pdf.svg',
-                                                              width: 32.sp,
-                                                            ),
-                                                          ),
-                                                          Column(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            children: [
-                                                              PoppinsMedium(
-                                                                text:
-                                                                    otherFileName,
-                                                                color: Theme.of(
-                                                                        context)
-                                                                    .textTheme
-                                                                    .titleLarge!
-                                                                    .color,
-                                                                fontsize: 12.sp,
-                                                              ),
-                                                              PoppinsRegular(
-                                                                text:
-                                                                    otherFileSize,
-                                                                color: Theme.of(
-                                                                        context)
-                                                                    .textTheme
-                                                                    .titleLarge!
-                                                                    .color,
-                                                                fontsize: 10.sp,
-                                                              )
-                                                            ],
-                                                          )
-                                                        ],
+                                                      child: Padding(
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                                horizontal:
+                                                                    6.w),
+                                                        child: SvgPicture
+                                                            .asset(
+                                                          'assets/images/pdf.svg',
+                                                          width: 32.sp,
+                                                        ),
                                                       ),
                                                     );
                                                   },

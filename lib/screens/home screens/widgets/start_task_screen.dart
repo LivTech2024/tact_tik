@@ -310,13 +310,13 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: const Text(
+              title:  Text(
                 'Wellness Report',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: Theme.of(context).textTheme.bodyMedium!.color ),
               ),
-              content: const Text(
+              content:  Text(
                 'Please upload your wellness report.',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color:  Theme.of(context).textTheme.bodyMedium!.color),
               ),
               actions: <Widget>[
                 TextButton(

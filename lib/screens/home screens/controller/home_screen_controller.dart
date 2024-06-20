@@ -81,8 +81,8 @@ class HomeScreenController extends GetxController {
   }
 
   Future<bool> _checkLocationPermission() async {
-    _requestLocationPermission();
-    await Permission.location.request();
+    // _requestLocationPermission();
+    // await Permission.location.request();
     // Check the current status of locationWhenInUse permission
     var statusWhenInUse = await Permission.locationWhenInUse.status;
 
@@ -102,7 +102,7 @@ class HomeScreenController extends GetxController {
           return true;
         } else if (requestStatusAlways.isPermanentlyDenied) {
           print("Location permission permanently denied. Open app settings 0.");
-          await openAppSettings();
+          // await openAppSettings();
           return false;
         }
       }
@@ -120,7 +120,7 @@ class HomeScreenController extends GetxController {
         } else if (statusAlways.isPermanentlyDenied) {
           print(
               "Location permission permanently denied. Open app settings 1 .");
-          await openAppSettings();
+          // await openAppSettings();
           return false;
         }
       } else if (requestStatusWhenInUse.isPermanentlyDenied) {
@@ -135,6 +135,18 @@ class HomeScreenController extends GetxController {
       return false;
     }
     return false;
+  }
+
+  Future<void> checkPermission(
+      Permission permission, BuildContext context) async {
+    final status = await permission.request();
+    if (status.isGranted) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Permission is granted")));
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Permission is denied")));
+    }
   }
 
   void _requestLocationPermission() async {
@@ -166,10 +178,10 @@ class HomeScreenController extends GetxController {
         initDataCallback: data,
         disposeCallback: LocationCallbackHandler.disposeCallback,
         iosSettings: const IOSSettings(
-          accuracy: LocationAccuracy.HIGH,
-          distanceFilter: 0,
-          stopWithTerminate: false,
-        ),
+            accuracy: LocationAccuracy.HIGH,
+            distanceFilter: 0,
+            stopWithTerminate: false,
+            showsBackgroundLocationIndicator: true),
         autoStop: false,
         androidSettings: const AndroidSettings(
           accuracy: LocationAccuracy.HIGH,

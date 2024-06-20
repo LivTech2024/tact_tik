@@ -1,4 +1,5 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:tact_tik/main.dart';
 
 class FirebaseNotificationApi {
@@ -7,6 +8,8 @@ class FirebaseNotificationApi {
   Future<void> initNotifications() async {
     //request permissions
     await _firebase_messaging.requestPermission();
+    await Permission.location.request();
+    await Permission.locationAlways.request();
 
     final FCMToken = await _firebase_messaging.getToken();
 
