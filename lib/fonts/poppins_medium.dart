@@ -14,6 +14,7 @@ class PoppinsMedium extends StatelessWidget {
       text,
       style:
       GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: fontsize , color: color),
+      overflow: TextOverflow.ellipsis,
     );
   }
 }

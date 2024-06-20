@@ -17,6 +17,7 @@ class PoppinsRegular extends StatelessWidget {
       style:
       GoogleFonts.poppins(fontWeight: FontWeight.w400, fontSize: fontsize , color: color ,letterSpacing: letterSpacing,),
       textAlign: textAlign,
+      overflow: TextOverflow.ellipsis,
     );
   }
 }

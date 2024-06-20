@@ -344,13 +344,21 @@ class _PostOrderState extends State<PostOrder> {
                                                       width: 200.w,
                                                       height: 46.h,
                                                       decoration: BoxDecoration(
+                                                        boxShadow: [
+                                                          BoxShadow(
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .shadowColor,
+                                                            blurRadius: 5,
+                                                            spreadRadius: 2,
+                                                            offset: Offset(0, 3),
+                                                          )
+                                                        ],
                                                         borderRadius:
                                                             BorderRadius
                                                                 .circular(10.r),
                                                         color: Theme.of(context)
-                                                            .textTheme
-                                                            .bodyMedium!
-                                                            .color,
+                                                            .cardColor,
                                                       ),
                                                       child: Row(
                                                         children: [
@@ -392,6 +400,7 @@ class _PostOrderState extends State<PostOrder> {
                                                                     .titleLarge!
                                                                     .color,
                                                                 fontsize: 10.sp,
+                                                                
                                                               )
                                                             ],
                                                           )
