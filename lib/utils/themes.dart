@@ -114,6 +114,7 @@ var darkTheme = ThemeData(
       letterSpacing: -.3,
     ),
   ),
+
   shadowColor: Colors.transparent,
   focusColor: DarkColor.color4,
   textTheme: const TextTheme(

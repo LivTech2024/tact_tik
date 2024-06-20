@@ -1,6 +1,7 @@
 import 'package:cr_calendar/cr_calendar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tact_tik/common/sizes.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
@@ -57,12 +58,23 @@ class DayEventsBottomSheet extends StatelessWidget {
                         top: height / height16,
                         bottom: height / height16,
                       ),
-                      child: InterMedium(
-                        text: day.format('dd/MM/yy'),
-                        color: Theme.of(context).textTheme.bodyMedium!.color,
-                        fontsize: width / width20,
+                      child: Column(
+                        children: [
+                          InterMedium(
+                            text: day.format('dd/MM/yy'),
+                            color: Theme.of(context).textTheme.bodyMedium!.color,
+                            fontsize: width / width20,
+                          ),
+                          SizedBox(height: 30.h),
+                          InterMedium(
+                            text: 'My shifts',
+                            color: Theme.of(context).textTheme.bodyMedium!.color,
+                            fontsize: width / width20,
+                          )
+                        ],
                       ),
                     ),
+
                     ListView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
@@ -281,7 +293,7 @@ class DayEventsBottomSheet extends StatelessWidget {
                           );
                         }),
                     SizedBox(
-                      height: height / height100,
+                      height: 100.h,
                     )
                   ],
                 ),

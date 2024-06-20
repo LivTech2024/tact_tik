@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cr_calendar/cr_calendar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
@@ -133,7 +134,7 @@ class _CalendarPageState extends State<CalendarPage> {
                 Expanded(
                   child: CrCalendar(
                     firstDayOfWeek: WeekDay.monday,
-                    eventsTopPadding: height / height30,
+                    eventsTopPadding: 30.h,
                     initialDate: _currentDate,
                     maxEventLines: 3,
                     controller: _calendarController,

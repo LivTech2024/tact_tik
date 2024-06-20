@@ -934,9 +934,19 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                         );
                       },
                     ),
-                    buildListTile(Icons.swipe_down_alt, 'Theme', 6, () {
+                    buildListTile(
+                        Theme.of(context).brightness == Brightness.dark
+                            ? Icons.light_mode_outlined
+                            : Icons.light_mode,
+                        Theme.of(context).brightness == Brightness.dark
+                            ? 'Switch To Light Mode'
+                            : 'Switch to dark mode',
+                        5, () {
                       setState(() {
                         themeManager.toggleTheme();
+                        // await prefs.setBool('Theme', isDark);
+                        // SystemChannels.platform.invokeMethod(
+                        //     'SystemNavigator.pop');
                       });
                     }),
                   ],
