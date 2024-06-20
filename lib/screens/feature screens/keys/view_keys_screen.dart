@@ -110,6 +110,7 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
           shape: CircleBorder(),
           child: Icon(
             Icons.add,
+            color: Colors.white,
           ),
         ),
         body: CustomScrollView(
@@ -219,6 +220,13 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                               width: double.maxFinite,
                               margin: EdgeInsets.only(bottom: 10.h),
                               decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.1),
+                                    blurRadius: 10,
+                                    offset: Offset(0, 5),
+                                  ),
+                                ],
                                 borderRadius: BorderRadius.circular(10.r),
                                 color: Theme.of(context).cardColor,
                               ),

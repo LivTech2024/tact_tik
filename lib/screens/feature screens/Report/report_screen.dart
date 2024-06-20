@@ -155,6 +155,7 @@ class _ReportScreenState extends State<ReportScreen> {
           shape: CircleBorder(),
           child: Icon(
             Icons.add,
+            color: Colors.white,
             size: 24.sp,
           ),
         ),
