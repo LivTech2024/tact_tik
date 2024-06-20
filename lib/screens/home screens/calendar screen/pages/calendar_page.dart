@@ -328,6 +328,8 @@ class _CalendarPageState extends State<CalendarPage> {
 
     // Check if any documents exist
     if (querySnapshot.docs.isNotEmpty) {
+      print('receiver id: $employeeId');
+      print('shift id: $shiftId');
       return true; // Exchange request exists
     } else {
       return false; // No exchange request

@@ -127,7 +127,7 @@ class DayEventsBottomSheet extends StatelessWidget {
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         color: Theme.of(context).primaryColor,
-                                        image: DecorationImage(
+                                        image: const DecorationImage(
                                           image: AssetImage(
                                               'assets/images/default.png'),
                                           filterQuality: FilterQuality.high,
@@ -260,6 +260,7 @@ class DayEventsBottomSheet extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => ShiftInformation(
+                                    toAccept: event.others.isExchangeRequested!,
                                     startTime: event.others.startTime!,
                                     endTime: event.others.endTime!,
                                     toRequest: true,
@@ -357,7 +358,7 @@ class DayEventsBottomSheet extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: Theme.of(context).primaryColor,
-                  image: DecorationImage(
+                  image: const DecorationImage(
                     image: AssetImage('assets/images/default.png'),
                     filterQuality: FilterQuality.high,
                     fit: BoxFit.cover,
