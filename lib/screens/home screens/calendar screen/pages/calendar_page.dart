@@ -314,7 +314,7 @@ class _CalendarPageState extends State<CalendarPage> {
       print('isExchangeRequestedList: $isExchangeRequestedList');
 
       List<bool> isShiftRequestedList = [];
-      int index = 0;
+      // int index = 0;
       String? shiftRequestId = '';
 
       shiftRequestId = await getShiftRequestId(
@@ -326,7 +326,7 @@ class _CalendarPageState extends State<CalendarPage> {
       } else {
         isShiftRequestedList.add(false);
       }
-      index++;
+      // index++;
 
       print('isShiftRequestedList: $isShiftRequestedList');
 

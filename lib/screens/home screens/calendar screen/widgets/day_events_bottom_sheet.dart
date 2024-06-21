@@ -143,10 +143,9 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
                                         BorderRadius.circular(width / width10),
                                     border: Border.all(
                                         width: 2,
-                                        color:
-                                            event.others.isShiftRequested[index]
-                                                ? Colors.redAccent
-                                                : Colors.transparent)),
+                                        color: event.others.isShiftRequested[0]
+                                            ? Colors.redAccent
+                                            : Colors.transparent)),
                                 clipBehavior: Clip.antiAlias,
                                 child: Row(
                                   children: [
@@ -292,7 +291,7 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
                         itemCount: widget.events.length,
                         itemBuilder: (context, index) {
                           var event = widget.events[index];
-
+                          print(widget.events.length);
                           print(index);
                           // print(event.others.isExchangeRequested!);
                           print(event.others.isShiftRequested);
