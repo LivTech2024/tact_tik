@@ -42,6 +42,21 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.day);
+
+    bool isDateAfterToday(DateTime date) {
+      // Get the current date
+      DateTime today = DateTime.now();
+
+      // Strip the time part from the current date to get only the date part
+      DateTime justToday = DateTime(today.year, today.month, today.day);
+
+      // Compare the given date with today's date
+      return date.isAfter(justToday);
+    }
+
+    bool canExchangeRequest = isDateAfterToday(widget.day);
+
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
 
@@ -100,27 +115,27 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
                           onTap: () {
                             print(
                                 'event.others.shiftRequestId: ${event.others.shiftRequestId}');
-                            !event.isShiftAcknowledgedByEmployee
+                            event.others.isShiftRequested[0]
                                 ? Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => ShiftInformation(
-                                              empId: widget.empId,
-                                              currentUserId:
-                                                  widget.currentUserId,
-                                              shiftId: event.shiftId,
-                                              startTime: event.startTime,
-                                              endTime: event.endTime,
+                                        builder: (context) => ExchangeRequest(
+                                              isRequest: false,
+                                              exchangeId:
+                                                  event.others.shiftRequestId!,
                                             )))
-                                : event.others.isShiftRequested[index]
+                                : !event.isShiftAcknowledgedByEmployee
                                     ? Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                ExchangeRequest(
-                                                  isRequest: false,
-                                                  exchangeId: event
-                                                      .others.shiftRequestId!,
+                                                ShiftInformation(
+                                                  empId: widget.empId,
+                                                  currentUserId:
+                                                      widget.currentUserId,
+                                                  shiftId: event.shiftId,
+                                                  startTime: event.startTime,
+                                                  endTime: event.endTime,
                                                 )))
                                     : showErrorToast(
                                         duration: const Duration(seconds: 3),
@@ -297,13 +312,10 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
                           print(event.others.isShiftRequested);
                           // Create a common child widget for GestureDetector to avoid code repetition
                           return createWidget(
-                            context,
-                            event,
-                            height,
-                            width,
-                            // true,
-                            // event.others.isExchangeRequested![index],
-                          );
+                              context, event, height, width, canExchangeRequest
+                              // true,
+                              // event.others.isExchangeRequested![index],
+                              );
                         }),
                     SizedBox(
                       height: 100.h,
@@ -315,12 +327,8 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
     );
   }
 
-  Widget createWidget(
-    BuildContext context,
-    CalendarEventModel event,
-    double height,
-    double width,
-  ) {
+  Widget createWidget(BuildContext context, CalendarEventModel event,
+      double height, double width, bool canExchangeRequest) {
     print('inside create widget');
     if (event.others.ids.isEmpty) {
       print('return empty container');
@@ -344,6 +352,7 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => ShiftInformation(
+                      canExchangeRequest: canExchangeRequest,
                       toAccept: event.others.isExchangeRequested![0],
                       startTime: event.others.startTime!,
                       endTime: event.others.endTime!,
@@ -514,6 +523,7 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => ShiftInformation(
+                              canExchangeRequest: canExchangeRequest,
                               toAccept:
                                   event.others.isExchangeRequested![index],
                               startTime: event.others.startTime!,
@@ -662,15 +672,6 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
                             ],
                           ),
                         ),
-
-                        /// TODO : get ID form here
-                        // Text(
-                        //   id,
-                        //   style: TextStyle(
-                        //     fontSize: width / width14,
-                        //     color: color2,
-                        //   ),
-                        // ),
                       ],
                     ),
                   ),
