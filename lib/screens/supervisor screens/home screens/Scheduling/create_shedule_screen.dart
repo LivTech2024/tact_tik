@@ -93,7 +93,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
   // ValueItem<String>(label: 'Patrol 1', value: 'Patrol 1'),
   // ValueItem<String>(label: 'Patrol 2', value: 'Patrol 2'),
   // ValueItem<String>(label: 'Patrol 3', value: 'Patrol 3'),
-  List<String> patrolItems = [];
+  List<Map<String, String>> patrolItems = [];
 
   // print(patrol);
   bool isLoading = false;
@@ -239,14 +239,12 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
 
   void getAllPatrolNames() async {
     try {
-      print("Fetching patrol items...");
-      List<String> patrolNames =
-          await fireStoreService.getAllPatrolName(widget.CompanyId);
-      print("Fetched Patrol Names: $patrolNames");
-      if (patrolNames.isNotEmpty) {
-        setState(() {
-          patrolItems = patrolNames;
+      List<Map<String, String>> patrolData = await fireStoreService.getAllPatrolName(widget.CompanyId);
+      print("Fetched Patrol Data: $patrolData");
 
+      if (patrolData.isNotEmpty) {
+        setState(() {
+          patrolItems = patrolData;
           isLoading = false;
         });
       }
@@ -257,8 +255,6 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
         isLoading = false;
       });
     }
-
-    // patrolItems.forEach((item) => print("Patrol Item: ${item.label}"));
   }
 
   @override
@@ -669,6 +665,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
   final NumberEditingTextController _textController =
       NumberEditingTextController.integer();
   String? _selectedOption;
+  Map<String, String>? _selectedPatrol;
   List<String> options = ['Option 1', 'Option 2', 'Option 3'];
   List<Map<dynamic, dynamic>> AsignedPatrol = [];
 
@@ -707,19 +704,23 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                   hint: Text('Select an option'),
                   value: _selectedOption,
                   onChanged: (newValue) {
-                    _selectedOption = newValue!;
-                    (context as Element).markNeedsBuild();
+                    setState(() {
+                      _selectedOption = newValue!;
+                      List<String> parts = newValue.split('|');
+                      _selectedPatrol = {'id': parts[0], 'name': parts[1]};
+                    });
                   },
-                  items: options.map((String option) {
+                  items: patrolItems.map((Map<String, String> option) {
                     return DropdownMenuItem<String>(
-                      value: option,
-                      child: Text(option),
+                      value: '${option['id']}|${option['name']}',
+                      child: Text(option['name']!),
                     );
                   }).toList(),
                 ),
               ),
               TextField(
                 controller: _textController,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   labelText: 'Enter text',
                 ),
@@ -737,8 +738,9 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
               onPressed: () {
                 // Handle save action
                 AsignedPatrol.add({
-                  "patrol": _selectedOption,
-                  "count": _textController.number
+                  "LinkedPatrolId": _selectedPatrol!['id']!,
+                  "LinkedPatrolName": _selectedPatrol!['name']!,
+                  "LinkedPatrolReqHitCount": _textController.text
                 });
                 setState(() {});
                 // print('Selected option: $_selectedOption');
@@ -2061,7 +2063,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                           _selectedDates,
                                           startTime,
                                           endTime,
-                                          patrolids,
+                                          AsignedPatrol,
                                           clientId,
                                           requiredEmpcontroller.text,
                                           requiredPhotocontroller.text,
@@ -2088,7 +2090,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                           _selectedDates,
                                           startTime,
                                           endTime,
-                                          patrolids,
+                                          AsignedPatrol,
                                           clientId,
                                           requiredEmpcontroller.text,
                                           requiredPhotocontroller.text,
@@ -2137,6 +2139,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
     );
   }
 }
+
 
 class ChipItem {
   final String label;

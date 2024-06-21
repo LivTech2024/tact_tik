@@ -1814,7 +1814,7 @@ class FireStoreService {
     List<DateTime> Date,
     TimeOfDay? startTime,
     TimeOfDay? EndTime,
-    List patrol,
+      List<Map<dynamic, dynamic>> patrol,
     String clientID,
     String requiredEmp,
     String photoInterval,
@@ -1917,30 +1917,30 @@ class FireStoreService {
   }
 
   Future<void> updateShift(
-    String shiftId,
-    List guards,
-    String? role,
-    String Address,
-    String CompanyBranchId,
-    String CompanyId,
-    List<DateTime> Date,
-    TimeOfDay? startTime,
-    TimeOfDay? EndTime,
-    List patrol,
-    String clientID,
-    String requiredEmp,
-    String photoInterval,
-    String restrictedRadius,
-    bool shiftenablerestriction,
-    GeoPoint coordinates,
-    String locationName,
-    String locationId,
-    String locationAddress,
-    String branchId,
-    String shiftDesc,
-    String ShiftName,
-    List<Map<String, dynamic>> tasks,
-  ) async {
+      String shiftId,
+      List guards,
+      String? role,
+      String Address,
+      String CompanyBranchId,
+      String CompanyId,
+      List<DateTime> Date,
+      TimeOfDay? startTime,
+      TimeOfDay? EndTime,
+      List<Map<dynamic, dynamic>> patrol,
+      String clientID,
+      String requiredEmp,
+      String photoInterval,
+      String restrictedRadius,
+      bool shiftenablerestriction,
+      GeoPoint coordinates,
+      String locationName,
+      String locationId,
+      String locationAddress,
+      String branchId,
+      String shiftDesc,
+      String ShiftName,
+      List<Map<String, dynamic>> tasks,
+      ) async {
     try {
       List<String> convertToStringArray(List list) {
         List<String> stringArray = [];
@@ -1952,13 +1952,29 @@ class FireStoreService {
 
       List<String> guardUserIds = convertToStringArray(guards);
       List<String> selectedGuardIds =
-          guards.map((guard) => guard['GuardId'] as String).toList();
+      guards.map((guard) => guard['GuardId'] as String).toList();
 
       final DateFormat dateFormatter = DateFormat('yyyy-MM-dd');
       final DateFormat timeFormatter = DateFormat('HH:mm');
 
       // Get the shift document reference
       final shiftDocRef = shifts.doc(shiftId);
+
+      // Fetch the current shift data
+      DocumentSnapshot shiftSnapshot = await shiftDocRef.get();
+      if (!shiftSnapshot.exists) {
+        print('Shift document does not exist');
+        return;
+      }
+      Map<String, dynamic> shiftData = shiftSnapshot.data() as Map<String, dynamic>;
+
+      // Get the current patrol data
+      List<Map<dynamic, dynamic>> currentPatrol = shiftData['ShiftLinkedPatrolIds'] != null
+          ? List<Map<dynamic, dynamic>>.from(shiftData['ShiftLinkedPatrolIds'])
+          : [];
+
+      // Append new patrol data
+      currentPatrol.addAll(patrol);
 
       // Update the shift document
       await shiftDocRef.update({
@@ -1989,7 +2005,7 @@ class FireStoreService {
         'ShiftCompanyId': CompanyId,
         'ShiftRequiredEmp': int.parse(requiredEmp),
         'ShiftCompanyBranchId': branchId,
-        'ShiftLinkedPatrolIds': patrol,
+        'ShiftLinkedPatrolIds': currentPatrol,
         'ShiftPhotoUploadIntervalInMinutes': int.parse(photoInterval),
         'ShiftRestrictedRadius': int.parse(restrictedRadius),
         'ShiftEnableRestrictedRadius': shiftenablerestriction,
@@ -4241,14 +4257,17 @@ class FireStoreService {
   }
 
   //fetch all the patrols
-  Future<List<String>> getAllPatrolName(String companyId) async {
+  Future<List<Map<String, String>>> getAllPatrolName(String companyId) async {
     try {
       final QuerySnapshot<Map<String, dynamic>> snapshot =
-          await FirebaseFirestore.instance.collection('Patrols').get();
+      await FirebaseFirestore.instance.collection('Patrols').get();
 
-      final List<String> roles = snapshot.docs
+      final List<Map<String, String>> roles = snapshot.docs
           .where((doc) => doc.data()['PatrolCompanyId'] == companyId)
-          .map((doc) => doc.data()['PatrolName'] as String)
+          .map((doc) => {
+        'id': doc.id,
+        'name': doc.data()['PatrolName'] as String
+      })
           .toSet()
           .toList();
       print("Clientname $roles");
