@@ -245,7 +245,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
       print("Fetched Patrol Names: $patrolNames");
       if (patrolNames.isNotEmpty) {
         setState(() {
-          patrolItems = patrolNames;
+          options = patrolNames;
 
           isLoading = false;
         });
@@ -657,10 +657,9 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
   }
 
   List<Color> colors = [
-   themeManager.themeMode == ThemeMode.dark
+    themeManager.themeMode == ThemeMode.dark
         ? DarkColor.color1
         : LightColor.color3,
-    
     themeManager.themeMode == ThemeMode.dark
         ? DarkColor.color25
         : LightColor.color2,
@@ -1433,134 +1432,6 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                             ),
                           ),
                           SizedBox(height: 10.h),
-                          // Select Patrols
-                          /*Container(
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton<String>(
-                                isExpanded: true,
-                                iconSize: 24.w,
-                                icon: Icon(Icons.arrow_drop_down),
-                                iconEnabledColor: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium!
-                                    .color,
-                                // Set icon color for enabled state
-                                dropdownColor: Theme.of(context).cardColor,
-                                style: TextStyle(
-                                    color: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium!
-                                        .color),
-                                value: selectedPosition,
-                                hint: Text("Select Patrols"),
-                                onChanged: (String? newValue) {
-                                  setState(() {
-                                    selectedPosition = newValue;
-                                    // print('$selectedValue selected');
-                                  });
-                                },
-                                items: patrolItems
-                                    .map<DropdownMenuItem<String>>(
-                                        (String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Row(
-                                      children: [
-                                        selectedPosition == value
-                                            ? Icon(Icons.control_camera,
-                                                color: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyMedium!
-                                                    .color)
-                                            : Icon(Icons.control_camera,
-                                                color: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyLarge!
-                                                    .color),
-                                        // Conditional icon color based on selection
-                                        SizedBox(width: 10.w),
-                                        InterRegular(
-                                            text: value,
-                                            color: selectedPosition == value
-                                                ? Theme.of(context)
-                                                    .textTheme
-                                                    .bodyMedium!
-                                                    .color
-                                                : Theme.of(context)
-                                                    .textTheme
-                                                    .bodyLarge!
-                                                    .color),
-                                        // Conditional text color based on selection
-                                      ],
-                                    ),
-                                  );
-                                }).toList(),
-                              ),
-                            ),
-
-                            // constraints: BoxConstraints(minHeight: 60.h),
-                            // padding: EdgeInsets.symmetric(horizontal: 10.w),
-                            // decoration: BoxDecoration(
-                            //   borderRadius: BorderRadius.circular(10.r),
-                            //   border: Border(
-                            //     bottom: BorderSide(
-                            //       color: Theme.of(context).shadowColor,
-                            //     ),
-                            //   ),
-                            // ),
-                            // child: Row(
-                            //   children: [
-                            //     Icon(
-                            //       Icons.checklist,
-                            //       color: DarkColor.color1,
-                            //       size: 24.w,
-                            //     ),
-                            //     Expanded(
-                            //       child: isLoading
-                            //           ? Center(
-                            //               child: CircularProgressIndicator())
-                            //           // : patrolItems.isEmpty
-                            //           //     ? Center(
-                            //           //         child:
-                            //           //             Text('No patrols available'))
-                            //           : MultiSelectDropDown(
-                            //               selectedOptionBackgroundColor:
-                            //                   Theme.of(context).primaryColor,
-                            //               dropdownBackgroundColor:
-                            //                   Theme.of(context).cardColor,
-                            //               fieldBackgroundColor:
-                            //                   Colors.transparent,
-                            //               optionsBackgroundColor:
-                            //                   Theme.of(context).cardColor,
-                            //               borderColor: Colors.transparent,
-                            //               controller: _Patrollcontroller,
-                            //               onOptionSelected: (options) {
-                            //                 setState(() {
-                            //                   _selectedOptions =
-                            //                       options.cast<String>();
-                            //                 });
-                            //                 print(_selectedOptions);
-                            //                 print(
-                            //                     'Length is ${_selectedOptions.length}');
-                            //               },
-                            //               options: patrolItems,
-                            //               selectionType: SelectionType.multi,
-                            //               chipConfig: const ChipConfig(
-                            //                 wrapType: WrapType.wrap,
-                            //               ),
-                            //               dropdownHeight: 300,
-                            //               optionTextStyle:
-                            //                   TextStyle(fontSize: 16),
-                            //               selectedOptionIcon: Icon(
-                            //                 Icons.check_circle,
-                            //                 size: 24,
-                            //               ),
-                            //             ),
-                            //     ),
-                            //   ],
-                            // ),
-                          ),*/
-
                           SizedBox(
                             width: 100.w,
                             child: Button1(
@@ -1789,6 +1660,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                   selectedLocatin != null &&
                                   requiredEmpcontroller.text.isNotEmpty &&
                                   _ShiftName.text.isNotEmpty) {
+                                // _addNewTask();
                                 setState(() {
                                   nextScreen = !nextScreen;
                                 });

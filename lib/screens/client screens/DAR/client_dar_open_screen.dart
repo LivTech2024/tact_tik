@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import '../../../fonts/inter_bold.dart';
 import '../../../fonts/inter_medium.dart';
@@ -187,7 +188,8 @@ class _ClientDarOpenScreenState extends State<ClientDarOpenScreen> {
     if (pdfResponse.statusCode == 200) {
       print('PDF generated successfully');
       final pdfBase64 = base64Encode(pdfResponse.bodyBytes);
-      savePdfLocally(pdfBase64, 'security_report.pdf');
+      final file = await savePdfLocally(pdfBase64, 'security_report.pdf');
+      openPdf(file);
       return pdfBase64;
     } else {
       print('Failed to generate PDF. Status code: ${pdfResponse.statusCode}');
@@ -371,11 +373,17 @@ class _ClientDarOpenScreenState extends State<ClientDarOpenScreen> {
                             child: TextButton(
                               clipBehavior: Clip.none,
                               onPressed: () {
+                                setState(() {
+                                  loading = true;
+                                });
                                 generateDARPdf(
                                     widget.empDarTile,
                                     widget.employeeName,
                                     widget.startTime,
                                     widget.startDate);
+                                setState(() {
+                                  loading = false;
+                                });
                               },
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -526,5 +534,9 @@ class _ClientDarOpenScreenState extends State<ClientDarOpenScreen> {
         ),
       ),
     );
+  }
+
+  void openPdf(File file) {
+    OpenFile.open(file.path);
   }
 }

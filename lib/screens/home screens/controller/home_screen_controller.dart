@@ -64,7 +64,7 @@ class HomeScreenController extends GetxController {
   Future<void> startBgLocationService() async {
     try {
       print('start Bg location service');
-      if (await _checkLocationPermission()) {
+      if (await _checkLocationPermission1()) {
         await _startLocator();
         isRunning = await BackgroundLocator.isServiceRunning();
         print('Running ${isRunning.toString()}');
@@ -103,6 +103,63 @@ class HomeScreenController extends GetxController {
     }
 
     return true;
+  }
+
+  Future<bool> _checkLocationPermission1() async {
+    // _requestLocationPermission();
+    // await Permission.location.request();
+    // Check the current status of locationWhenInUse permission
+    var statusWhenInUse = await Permission.locationWhenInUse.status;
+
+    // If locationWhenInUse is granted, check locationAlways permission
+    if (statusWhenInUse.isGranted) {
+      var statusAlways = await Permission.locationAlways.status;
+
+      // If locationAlways is granted, return true
+      if (statusAlways.isGranted) {
+        return true;
+      } else if (statusAlways.isDenied) {
+        // Request locationAlways permission
+        var requestStatusAlways = await Permission.locationAlways.request();
+
+        // Return true if locationAlways permission is granted
+        if (requestStatusAlways.isGranted) {
+          return true;
+        } else if (requestStatusAlways.isPermanentlyDenied) {
+          print("Location permission permanently denied. Open app settings 0.");
+          // await openAppSettings();
+          return false;
+        }
+      }
+    } else if (statusWhenInUse.isDenied) {
+      // Request locationWhenInUse permission if not granted
+      var requestStatusWhenInUse = await Permission.location.request();
+
+      // If locationWhenInUse is granted, check locationAlways permission
+      if (requestStatusWhenInUse.isGranted) {
+        var statusAlways = await Permission.locationAlways.request();
+
+        // Return true if locationAlways permission is granted
+        if (statusAlways.isGranted) {
+          return true;
+        } else if (statusAlways.isPermanentlyDenied) {
+          print(
+              "Location permission permanently denied. Open app settings 1 .");
+          // await openAppSettings();
+          return false;
+        }
+      } else if (requestStatusWhenInUse.isPermanentlyDenied) {
+        print("Location permission permanently denied. Open app settings  2.");
+        await openAppSettings();
+        return false;
+      }
+    } else if (statusWhenInUse.isPermanentlyDenied) {
+      print("Location permission permanently denied. Open app settings 3.");
+      await openAppSettings();
+
+      return false;
+    }
+    return false;
   }
 
   Future<void> checkPermission(
