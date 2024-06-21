@@ -86,13 +86,13 @@ post_install do |installer|
         'PERMISSION_MEDIA_LIBRARY=0',
 
         ## dart: PermissionGroup.sensors
-        'PERMISSION_SENSORS=1',
+        'PERMISSION_SENSORS=0',
 
         ## dart: PermissionGroup.bluetooth
-        'PERMISSION_BLUETOOTH=1',
+        'PERMISSION_BLUETOOTH=0',
 
         ## dart: PermissionGroup.appTrackingTransparency
-        'PERMISSION_APP_TRACKING_TRANSPARENCY=1',
+        'PERMISSION_APP_TRACKING_TRANSPARENCY=0',
 
         ## dart: PermissionGroup.criticalAlerts
         'PERMISSION_CRITICAL_ALERTS=0',

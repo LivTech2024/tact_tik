@@ -198,7 +198,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 
   void initPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    final homeScreenController = HomeScreenController.instance;
+    // final homeScreenController = HomeScreenController.instance;
     print("Shift Status at StartTask Screen ${widget.ShiftStatus}");
 
     print("Clicked Saved PRef ${clickedIn}");
@@ -215,7 +215,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
       print("Clicked in is true Start Screem");
       updateLateTimeAndStartTimer();
       _startTimer();
-      await homeScreenController.startBgLocationService();
+      // await homeScreenController.startBgLocationService();
     }
     if (pauseState != null) {
       setState(() {
@@ -550,7 +550,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final homeScreenController = HomeScreenController.instance;
+    // final homeScreenController = HomeScreenController.instance;
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
     TextEditingController CommentController = TextEditingController();
@@ -836,8 +836,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                   _startTimer();
                                   //
                                   // // start bg service that get locations and send it to the firebase
-                                  await homeScreenController
-                                      .startBgLocationService();
+                                  // await homeScreenController
+                                  //     .startBgLocationService();
 
                                   setState(() {
                                     _isLoading = true;
@@ -969,7 +969,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 
                       // await _sendEmailWithScreenshot(file.path);
 
-                      await homeScreenController.stopBgLocationService();
+                      // await homeScreenController.stopBgLocationService();
                       // }));
 
                       // setState(() {
@@ -1059,8 +1059,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 
                                           if (CommentController
                                               .text.isNotEmpty) {
-                                            await homeScreenController
-                                                .stopBgLocationService();
+                                            // await homeScreenController
+                                            //     .stopBgLocationService();
                                             widget.onRefresh();
                                             var data = await fireStoreService
                                                 .fetchDataForPdf(

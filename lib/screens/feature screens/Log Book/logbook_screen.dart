@@ -40,17 +40,31 @@ class _LogBookScreenState extends State<LogBookScreen> {
   @override
   void initState() {
     super.initState();
-    _logBookStream = FirebaseFirestore.instance
-        .collection('LogBook')
-        .orderBy('LogBookDate', descending: true)
-        .where('LogBookEmpId', isEqualTo: widget.EmpId)
-        .snapshots();
+
+    // _logBookStream = FirebaseFirestore.instance
+    //     .collection('LogBook')
+    //     .orderBy('LogBookDate', descending: true)
+    //     .where('LogBookEmpId', isEqualTo: widget.EmpId)
+    //     .snapshots();
     // getempID().then((empID) {
     //   _logBookStream = FirebaseFirestore.instance
     //       .collection('LogBook')
     //       .where('LogBookEmpId', isEqualTo: empID)
     //       .snapshots();
     // });
+    fetchlog();
+  }
+
+  void fetchlog() async {
+    try {
+      _logBookStream = FirebaseFirestore.instance
+          .collection('LogBook')
+          .orderBy('LogBookDate', descending: true)
+          .where('LogBookEmpId', isEqualTo: widget.EmpId)
+          .snapshots();
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
