@@ -53,10 +53,10 @@ class _ShiftTaskReturnScreenState extends State<ShiftReturnTaskScreen> {
       for (int i = 0; i < fetchedData.length; i++) {
         final task = fetchedData[i];
         if (task.containsKey('ShiftReturnTaskStatus') &&
-            task['ShiftTaskStatus'] is List &&
-            task['ShiftTaskStatus'].isNotEmpty &&
-            task['ShiftTaskStatus'][0].containsKey('TaskStatus') &&
-            task['ShiftTaskStatus'][0]['TaskStatus'] == 'completed') {
+            task['ShiftReturnTaskStatus'] is List &&
+            task['ShiftReturnTaskStatus'].isNotEmpty &&
+            task['ShiftReturnTaskStatus'][0].containsKey('TaskStatus') &&
+            task['ShiftReturnTaskStatus'][0]['TaskStatus'] == 'completed') {
           completedTaskCount++;
         }
         totalTaskCount++;
@@ -68,10 +68,10 @@ class _ShiftTaskReturnScreenState extends State<ShiftReturnTaskScreen> {
       });
       if (completedTaskCount == totalTaskCount) {
         // Navigator.pop(context); // Pop the screen if all tasks are completed
-        // Navigator.pushReplacement(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => HomeScreen()),
-        // );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
       }
       print(fetchedData);
     } else {

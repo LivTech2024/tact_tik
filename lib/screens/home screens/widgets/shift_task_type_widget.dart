@@ -656,8 +656,7 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                                   )
                                 ],
                                 color: Theme.of(context).cardColor,
-                                borderRadius:
-                                    BorderRadius.circular(8.r)),
+                                borderRadius: BorderRadius.circular(8.r)),
                             child: Center(
                               child: Icon(
                                 Icons.add,
@@ -673,7 +672,11 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                           onPressed: _uploadImages,
                           backgroundColor: Theme.of(context).primaryColor,
                           shape: CircleBorder(),
-                          child: Icon(Icons.cloud_upload, color: Colors.white, size: 24.sp,),
+                          child: Icon(
+                            Icons.cloud_upload,
+                            color: Colors.white,
+                            size: 24.sp,
+                          ),
                         )
                       ],
                     ),

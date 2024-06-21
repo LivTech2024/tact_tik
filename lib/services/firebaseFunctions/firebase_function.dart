@@ -2480,6 +2480,27 @@ class FireStoreService {
     }
   }
 
+  // Future<List<Map<String, dynamic>>?> fetchShiftReturnTask2(
+  //     String shiftID) async {
+  //   try {
+  //     final documentSnapshot = await FirebaseFirestore.instance
+  //         .collection("Shifts")
+  //         .doc(shiftID)
+  //         .get();
+
+  //     if (documentSnapshot.exists) {
+  //       final shiftTasks = documentSnapshot['ShiftTask'] as List<dynamic>;
+  //       if (shiftTasks.isNotEmpty) {
+  //         return List<Map<String, dynamic>>.from(shiftTasks);
+  //       }
+  //     }
+  //     return null; // Return null if no tasks or document doesn't exist
+  //   } catch (e) {
+  //     print("Error fetching shift tasks: $e");
+  //     return null; // Return null in case of error
+  //   }
+  // }
+
   // fetch return shift tasks
   Future<List<Map<String, dynamic>>?> fetchreturnShiftTasks(
       String shiftID) async {
@@ -2507,43 +2528,44 @@ class FireStoreService {
       return null; // Return null in case of error
     }
   }
-  // Future<Map<String, dynamic>> fetchreturnShiftTasks(String shiftID) async {
-  //   try {
-  //     final documentSnapshot = await FirebaseFirestore.instance
-  //         .collection("Shifts")
-  //         .doc(shiftID)
-  //         .get();
 
-  //     if (documentSnapshot.exists) {
-  //       final shiftTasks = documentSnapshot['ShiftTask'] as List<dynamic>;
-  //       if (shiftTasks.isNotEmpty) {
-  //         List<Map<String, dynamic>> tasks = List.from(shiftTasks);
+  Future<Map<String, dynamic>> fetchreturnShiftTasks2(String shiftID) async {
+    try {
+      final documentSnapshot = await FirebaseFirestore.instance
+          .collection("Shifts")
+          .doc(shiftID)
+          .get();
 
-  //         // Extract TaskStatus for each task
-  //         List<Map<String, dynamic>> taskStatusList = [];
-  //         for (var task in tasks) {
-  //           final taskStatus = task['ShiftReturnTaskStatus'] as List<dynamic>;
-  //           taskStatusList.add(taskStatus.isNotEmpty ? taskStatus[0] : {});
-  //         }
+      if (documentSnapshot.exists) {
+        final shiftTasks = documentSnapshot['ShiftTask'] as List<dynamic>;
+        if (shiftTasks.isNotEmpty) {
+          List<Map<String, dynamic>> tasks = List.from(shiftTasks);
 
-  //         return {
-  //           'tasks': tasks,
-  //           'taskStatusList': taskStatusList,
-  //         };
-  //       }
-  //     }
-  //     return {
-  //       'tasks': [],
-  //       'taskStatusList': [],
-  //     }; // Return empty if no tasks or document doesn't exist
-  //   } catch (e) {
-  //     print("Error fetching shift tasks: $e");
-  //     return {
-  //       'tasks': [],
-  //       'taskStatusList': [],
-  //     }; // Return empty in case of error
-  //   }
-  // }
+          // Extract TaskStatus for each task
+          List<Map<String, dynamic>> taskStatusList = [];
+          for (var task in tasks) {
+            final taskStatus = task['ShiftReturnTaskStatus'] as List<dynamic>;
+            taskStatusList.add(taskStatus.isNotEmpty ? taskStatus[0] : {});
+          }
+
+          return {
+            'tasks': tasks,
+            'taskStatusList': taskStatusList,
+          };
+        }
+      }
+      return {
+        'tasks': [],
+        'taskStatusList': [],
+      }; // Return empty if no tasks or document doesn't exist
+    } catch (e) {
+      print("Error fetching shift tasks: $e");
+      return {
+        'tasks': [],
+        'taskStatusList': [],
+      }; // Return empty in case of error
+    }
+  }
 
   Future<Map<String, dynamic>> fetchShiftTasks(String shiftID) async {
     try {
