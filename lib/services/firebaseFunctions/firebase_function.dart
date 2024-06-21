@@ -1814,7 +1814,7 @@ class FireStoreService {
     List<DateTime> Date,
     TimeOfDay? startTime,
     TimeOfDay? EndTime,
-    List patrol,
+    List<Map<dynamic, dynamic>> patrol,
     String clientID,
     String requiredEmp,
     String photoInterval,
@@ -1926,7 +1926,7 @@ class FireStoreService {
     List<DateTime> Date,
     TimeOfDay? startTime,
     TimeOfDay? EndTime,
-    List patrol,
+    List<Map<dynamic, dynamic>> patrol,
     String clientID,
     String requiredEmp,
     String photoInterval,
@@ -1960,6 +1960,25 @@ class FireStoreService {
       // Get the shift document reference
       final shiftDocRef = shifts.doc(shiftId);
 
+      // Fetch the current shift data
+      DocumentSnapshot shiftSnapshot = await shiftDocRef.get();
+      if (!shiftSnapshot.exists) {
+        print('Shift document does not exist');
+        return;
+      }
+      Map<String, dynamic> shiftData =
+          shiftSnapshot.data() as Map<String, dynamic>;
+
+      // Get the current patrol data
+      List<Map<dynamic, dynamic>> currentPatrol =
+          shiftData['ShiftLinkedPatrolIds'] != null
+              ? List<Map<dynamic, dynamic>>.from(
+                  shiftData['ShiftLinkedPatrolIds'])
+              : [];
+
+      // Append new patrol data
+      currentPatrol.addAll(patrol);
+
       // Update the shift document
       await shiftDocRef.update({
         'ShiftName': ShiftName,
@@ -1989,7 +2008,7 @@ class FireStoreService {
         'ShiftCompanyId': CompanyId,
         'ShiftRequiredEmp': int.parse(requiredEmp),
         'ShiftCompanyBranchId': branchId,
-        'ShiftLinkedPatrolIds': patrol,
+        'ShiftLinkedPatrolIds': currentPatrol,
         'ShiftPhotoUploadIntervalInMinutes': int.parse(photoInterval),
         'ShiftRestrictedRadius': int.parse(restrictedRadius),
         'ShiftEnableRestrictedRadius': shiftenablerestriction,
@@ -2376,7 +2395,7 @@ class FireStoreService {
               final taskStatusList =
                   shiftTask['ShiftReturnTaskStatus'] as List<dynamic>;
               if (taskStatusList == null || taskStatusList.isEmpty) {
-                return true;
+                return false;
               }
               if (taskStatusList.isNotEmpty) {
                 print("ShiftTaskStatus is not empty");
@@ -2488,6 +2507,43 @@ class FireStoreService {
       return null; // Return null in case of error
     }
   }
+  // Future<Map<String, dynamic>> fetchreturnShiftTasks(String shiftID) async {
+  //   try {
+  //     final documentSnapshot = await FirebaseFirestore.instance
+  //         .collection("Shifts")
+  //         .doc(shiftID)
+  //         .get();
+
+  //     if (documentSnapshot.exists) {
+  //       final shiftTasks = documentSnapshot['ShiftTask'] as List<dynamic>;
+  //       if (shiftTasks.isNotEmpty) {
+  //         List<Map<String, dynamic>> tasks = List.from(shiftTasks);
+
+  //         // Extract TaskStatus for each task
+  //         List<Map<String, dynamic>> taskStatusList = [];
+  //         for (var task in tasks) {
+  //           final taskStatus = task['ShiftReturnTaskStatus'] as List<dynamic>;
+  //           taskStatusList.add(taskStatus.isNotEmpty ? taskStatus[0] : {});
+  //         }
+
+  //         return {
+  //           'tasks': tasks,
+  //           'taskStatusList': taskStatusList,
+  //         };
+  //       }
+  //     }
+  //     return {
+  //       'tasks': [],
+  //       'taskStatusList': [],
+  //     }; // Return empty if no tasks or document doesn't exist
+  //   } catch (e) {
+  //     print("Error fetching shift tasks: $e");
+  //     return {
+  //       'tasks': [],
+  //       'taskStatusList': [],
+  //     }; // Return empty in case of error
+  //   }
+  // }
 
   Future<Map<String, dynamic>> fetchShiftTasks(String shiftID) async {
     try {
@@ -4337,20 +4393,39 @@ class FireStoreService {
   }
 
   //fetch all the patrols
+  // Future<List<Map<String, String>>> getAllPatrolName(String companyId) async {
+  //   try {
+  //     final QuerySnapshot<Map<String, dynamic>> snapshot =
+  //         await FirebaseFirestore.instance.collection('Patrols').get();
+
+  //     final List<Map<String, String>> roles = snapshot.docs
+  //         .where((doc) => doc.data()['PatrolCompanyId'] == companyId)
+  //         .map((doc) =>
+  //             {'id': doc.id, 'name': doc.data()['PatrolName'] as String})
+  //         .toSet()
+  //         .toList();
+  //     print("Clientname $roles");
+  //     return roles;
+  //   } catch (e) {
+  //     print("Error fetching report titles: $e");
+  //     return []; // Return empty list in case of error
+  //   }
+  // }
+
   Future<List<String>> getAllPatrolName(String companyId) async {
     try {
       final QuerySnapshot<Map<String, dynamic>> snapshot =
           await FirebaseFirestore.instance.collection('Patrols').get();
 
-      final List<String> roles = snapshot.docs
+      final List<String> patrolNames = snapshot.docs
           .where((doc) => doc.data()['PatrolCompanyId'] == companyId)
           .map((doc) => doc.data()['PatrolName'] as String)
           .toSet()
           .toList();
-      print("Clientname $roles");
-      return roles;
+      print("Patrol names: $patrolNames");
+      return patrolNames;
     } catch (e) {
-      print("Error fetching report titles: $e");
+      print("Error fetching patrol names: $e");
       return []; // Return empty list in case of error
     }
   }

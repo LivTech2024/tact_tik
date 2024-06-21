@@ -68,10 +68,10 @@ class _ShiftTaskReturnScreenState extends State<ShiftReturnTaskScreen> {
       });
       if (completedTaskCount == totalTaskCount) {
         // Navigator.pop(context); // Pop the screen if all tasks are completed
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomeScreen()),
-        );
+        // Navigator.pushReplacement(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => HomeScreen()),
+        // );
       }
       print(fetchedData);
     } else {
