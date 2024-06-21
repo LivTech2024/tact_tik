@@ -114,9 +114,10 @@ class _CalendarPageState extends State<CalendarPage> {
                       valueListenable: _monthNameNotifier,
                       builder: (ctx, value, child) => Text(
                         value,
-                        style:  TextStyle(
+                        style: TextStyle(
                             fontSize: 16,
-                            color: Theme.of(context).textTheme.bodyMedium!.color,
+                            color:
+                                Theme.of(context).textTheme.bodyMedium!.color,
                             fontWeight: FontWeight.w600),
                       ),
                     ),
@@ -212,20 +213,25 @@ class _CalendarPageState extends State<CalendarPage> {
           height: 24,
           width: 54,
           decoration: BoxDecoration(
-            color: isPicked ? Theme.of(context).primaryColor : Theme.of(context).cardColor,
+            color: isPicked
+                ? Theme.of(context).primaryColor
+                : Theme.of(context).cardColor,
             borderRadius: const BorderRadius.all(Radius.circular(8)),
           ),
           child: Center(
             child: Text(year.toString(),
                 style: TextStyle(
-                    color: isPicked ? Colors.white : Theme.of(context).textTheme.bodyMedium!.color, fontSize: 16)),
+                    color: isPicked
+                        ? Colors.white
+                        : Theme.of(context).textTheme.bodyMedium!.color,
+                    fontSize: 16)),
           ),
         ),
         controlBarTitleBuilder: (date) => Text(
           DateFormat(kAppBarDateFormat).format(date),
-          style:  TextStyle(
+          style: TextStyle(
             fontSize: 16,
-            color: Theme.of(context).textTheme.bodyMedium!.color ,
+            color: Theme.of(context).textTheme.bodyMedium!.color,
             fontWeight: FontWeight.normal,
           ),
         ),
@@ -241,13 +247,14 @@ class _CalendarPageState extends State<CalendarPage> {
         ),
         cancelButtonBuilder: (onPress) => OutlinedButton(
           style: ElevatedButton.styleFrom(
-            
-            backgroundColor: Theme.of(context).cardColor,
+              backgroundColor: Theme.of(context).cardColor,
               shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          )),
+                borderRadius: BorderRadius.circular(8),
+              )),
           onPressed: () => onPress?.call(),
-          child:  Text('CANCEL', style: TextStyle(color: Theme.of(context).textTheme.bodyMedium!.color )),
+          child: Text('CANCEL',
+              style: TextStyle(
+                  color: Theme.of(context).textTheme.bodyMedium!.color)),
         ),
       ),
     );
