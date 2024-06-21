@@ -604,7 +604,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => SPostOrder(
-                                          locationId: "wQXix4XxtRYphbIuN6fb",
+                                          companyId: _CompanyId,
                                         ),
                                       ),
                                     );

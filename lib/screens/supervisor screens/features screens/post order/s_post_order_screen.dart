@@ -19,8 +19,8 @@ import '../../../../utils/colors.dart';
 import '../../../feature screens/post_order.dart/view_post_order.dart';
 
 class SPostOrder extends StatefulWidget {
-  final String locationId;
-  const SPostOrder({super.key, required this.locationId});
+  final String companyId;
+  const SPostOrder({super.key, required this.companyId});
 
   @override
   State<SPostOrder> createState() => _SPostOrderState();
@@ -38,7 +38,7 @@ class _SPostOrderState extends State<SPostOrder> {
   Future<Map<String, List<Map<String, dynamic>>>> _fetchLocationData() async {
     final locationData = await FirebaseFirestore.instance
         .collection('Locations')
-        .where('LocationId', isEqualTo: widget.locationId)
+        .where('LocationCompanyId', isEqualTo: widget.companyId)
         .get();
 
     Map<String, List<Map<String, dynamic>>> organizedData = {};
@@ -167,7 +167,7 @@ class _SPostOrderState extends State<SPostOrder> {
                                       MaterialPageRoute(
                                         builder: (context) => CreateSPostOrder(
                                           isDisplay: false,
-                                          locationId: widget.locationId,
+                                          locationId: locationId,
                                           title: postOrderTitle,
                                           date: date,
                                         ),
