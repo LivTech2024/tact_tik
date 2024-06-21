@@ -24,6 +24,7 @@ class ShiftInformation extends StatefulWidget {
       required this.startTime,
       required this.endTime,
       required this.currentUserId,
+      this.canExchangeRequest = false,
       this.sendersShiftId = ''});
   final bool toRequest;
   final String empId;
@@ -33,6 +34,7 @@ class ShiftInformation extends StatefulWidget {
   final String currentUserId;
   final String? sendersShiftId;
   final bool? toAccept;
+  final bool? canExchangeRequest;
 
   @override
   State<ShiftInformation> createState() => _ShiftInformationState();
@@ -281,14 +283,19 @@ class _ShiftInformationState extends State<ShiftInformation> {
                           Button1(
                             text: widget.toRequest ? 'Request' : 'Acknowledge ',
                             onPressed: () {
-                              if (widget.toRequest) {
-                                onShiftRequest(
-                                    senderId: widget.currentUserId,
-                                    receiverId: widget.empId,
-                                    shiftId: widget.shiftId);
-                              } else {
-                                onAcceptShift(widget.empId, widget.shiftId);
+                              if (!widget.canExchangeRequest!) {
+                                showErrorToast(context,
+                                    'You cannot make a request previous shift.');
+                                return;
                               }
+                              // if (widget.toRequest) {
+                              //   onShiftRequest(
+                              //       senderId: widget.currentUserId,
+                              //       receiverId: widget.empId,
+                              //       shiftId: widget.shiftId);
+                              // } else {
+                              //   onAcceptShift(widget.empId, widget.shiftId);
+                              // }
                             },
                             backgroundcolor: Theme.of(context).primaryColor,
                             // Todo apply this to the buttons when one of the button is clicked
@@ -307,6 +314,11 @@ class _ShiftInformationState extends State<ShiftInformation> {
                               Button1(
                                   text: 'Exchange',
                                   onPressed: () {
+                                    if (!widget.canExchangeRequest!) {
+                                      showErrorToast(context,
+                                          'You cannot exchange previous shift.');
+                                      return;
+                                    }
                                     onExchangeShift(
                                         widget.currentUserId,
                                         widget.empId,
@@ -348,13 +360,24 @@ class _ShiftInformationState extends State<ShiftInformation> {
     print('receiver id: $receiverId');
     print('shift id: $shiftId');
     try {
+      // check if receiver already acknowledged the shift or not
+      bool result = await isReceiverAlreadyAcknowledgedShift(
+        receiverId: receiverId,
+        shiftId: shiftId,
+      );
+
+      if (result) {
+        showErrorToast(context, "Shift is already acknowledged by user.");
+        return;
+      }
+
       // Define the fields for the new document
       Map<String, dynamic> shiftRequestData = {
         'ShiftReqCreatedAt': Timestamp.now(),
-        'ShiftReqReceiverId': receiverId, // Replace with actual receiver ID
-        'ShiftReqSenderId': senderId, // Replace with actual sender ID
-        'ShiftReqShiftId': shiftId, // Replace with actual shift ID
-        'ShiftReqStatus': 'pending', // Replace with actual status if needed
+        'ShiftReqReceiverId': receiverId,
+        'ShiftReqSenderId': senderId,
+        'ShiftReqShiftId': shiftId,
+        'ShiftReqStatus': 'pending',
       };
 
       // Add a new document to the ShiftRequests collection
@@ -367,6 +390,37 @@ class _ShiftInformationState extends State<ShiftInformation> {
       print('Shift request created with ID: ${docRef.id}');
     } catch (e) {
       print('Error creating shift request: $e');
+    }
+  }
+
+  Future<bool> isReceiverAlreadyAcknowledgedShift({
+    required String receiverId,
+    required String shiftId,
+  }) async {
+    try {
+      // Fetch the document from the Shifts collection with the given shiftId
+      DocumentSnapshot shiftDoc =
+          await firestore.collection('Shifts').doc(shiftId).get();
+
+      if (shiftDoc.exists) {
+        // Extract the ShiftAcknowledgedByEmpId list from the document
+        List<dynamic> acknowledgedByList = shiftDoc['ShiftAcknowledgedByEmpId'];
+
+        // Check if the receiverId is already in the ShiftAcknowledgedByEmpId list
+        bool isReceiverAvailable = acknowledgedByList.contains(receiverId);
+
+        // Print or return the result as needed
+        print('Is receiver available: $isReceiverAvailable');
+
+        // You can also return the result if needed
+        return isReceiverAvailable;
+      } else {
+        print('Shift document does not exist.');
+        return false;
+      }
+    } catch (e) {
+      print('Error fetching shift document: $e');
+      return false;
     }
   }
 

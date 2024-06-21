@@ -355,7 +355,6 @@ class _CalendarPageState extends State<CalendarPage> {
           location: shiftLocationName);
     }).toList());
 
-    await Future.delayed(const Duration(seconds: 1));
     setState(() {
       _isCalenderLoading = false;
       _calendarController = CrCalendarController(
