@@ -104,7 +104,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
   ReceivePort? _receivePort;
   bool clickedIn = false;
   bool issShift = true;
-  late Timer _stopwatchTimer;
+  Timer _stopwatchTimer = Timer(Duration.zero, () {});
   int _stopwatchSeconds = 0;
   String stopwatchtime = "";
   bool isPaused = false;

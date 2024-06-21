@@ -1071,7 +1071,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             childCount: data.length,
                           ),
                         )
-                      : /*ScreenIndex == 2
+                      : const SliverToBoxAdapter(),
+              /*ScreenIndex == 2
                           ? SliverToBoxAdapter(
                               child: Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 30.w),
@@ -1084,143 +1085,134 @@ class _HomeScreenState extends State<HomeScreen> {
                             )
                           :
                             */
-                      ScreenIndex == 3
-                          ? SliverList(
-                              delegate: SliverChildBuilderDelegate(
-                                (context, index) {
-                                  return Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 30.w),
-                                    child: GestureDetector(
-                                      onTap: () {},
-                                      child: Container(
-                                        height: 76.h,
-                                        margin: EdgeInsets.only(
-                                          bottom: 23.h,
-                                        ),
-                                        width: double.maxFinite,
-                                        decoration: BoxDecoration(
-                                          border: Border(
-                                            bottom: BorderSide(
-                                              width: 1,
-                                              color: Theme.of(context)
-                                                  .primaryColor,
+              ScreenIndex == 3
+                  ? SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                          return Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 30.w),
+                            child: GestureDetector(
+                              onTap: () {},
+                              child: Container(
+                                height: 76.h,
+                                margin: EdgeInsets.only(
+                                  bottom: 23.h,
+                                ),
+                                width: double.maxFinite,
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                    bottom: BorderSide(
+                                      width: 1,
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                                  ),
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 7.h,
+                                ),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  // mainAxisAlignment:
+                                  //     MainAxisAlignment
+                                  //         .spaceBetween,
+                                  children: [
+                                    NewMessage
+                                        ? Container(
+                                            height: 11.h,
+                                            width: 11.w,
+                                            decoration: BoxDecoration(
+                                              color: Colors.green,
+                                              shape: BoxShape.circle,
                                             ),
+                                          )
+                                        : SizedBox(),
+                                    Container(
+                                      margin: EdgeInsets.only(left: 9.w),
+                                      height: 45.h,
+                                      width: 45.w,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        image: DecorationImage(
+                                          image: NetworkImage(
+                                            'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg',
                                           ),
-                                        ),
-                                        padding: EdgeInsets.symmetric(
-                                          vertical: 7.h,
-                                        ),
-                                        child: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          // mainAxisAlignment:
-                                          //     MainAxisAlignment
-                                          //         .spaceBetween,
-                                          children: [
-                                            NewMessage
-                                                ? Container(
-                                                    height: 11.h,
-                                                    width: 11.w,
-                                                    decoration: BoxDecoration(
-                                                      color: Colors.green,
-                                                      shape: BoxShape.circle,
-                                                    ),
-                                                  )
-                                                : SizedBox(),
-                                            Container(
-                                              margin:
-                                                  EdgeInsets.only(left: 9.w),
-                                              height: 45.h,
-                                              width: 45.w,
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                image: DecorationImage(
-                                                  image: NetworkImage(
-                                                    'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg',
-                                                  ),
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: 12.w,
-                                            ),
-                                            SizedBox(
-                                              width: 300.w,
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Row(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      InterRegular(
-                                                        text: 'Supervisor',
-                                                        fontsize: 17.sp,
-                                                        color: Theme.of(context)
-                                                            .textTheme
-                                                            .bodyMedium!
-                                                            .color!,
-                                                      ),
-                                                      Row(
-                                                        // mainAxisAlignment: MainAxisAlignment.end,
-                                                        children: [
-                                                          PoppinsRegular(
-                                                            text: '9:36 AM',
-                                                            color: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .bodyLarge!
-                                                                .color!,
-                                                            fontsize: 15.sp,
-                                                          ),
-                                                          Icon(
-                                                            Icons
-                                                                .arrow_forward_ios,
-                                                            color: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .bodyMedium!
-                                                                .color!,
-                                                            size: 15.sp,
-                                                          )
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  SizedBox(
-                                                    height: 4.h,
-                                                  ),
-                                                  Flexible(
-                                                    child: InterRegular(
-                                                      text:
-                                                          'Nice. I don\'t know why people get all worked up about hawaiian pizza. I ...',
-                                                      fontsize: 15.sp,
-                                                      color: Theme.of(context)
-                                                          .textTheme
-                                                          .headlineSmall!
-                                                          .color!,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                          ],
+                                          fit: BoxFit.cover,
                                         ),
                                       ),
                                     ),
-                                  );
-                                },
-                                childCount: 8,
+                                    SizedBox(
+                                      width: 12.w,
+                                    ),
+                                    SizedBox(
+                                      width: 300.w,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              InterRegular(
+                                                text: 'Supervisor',
+                                                fontsize: 17.sp,
+                                                color: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyMedium!
+                                                    .color!,
+                                              ),
+                                              Row(
+                                                // mainAxisAlignment: MainAxisAlignment.end,
+                                                children: [
+                                                  PoppinsRegular(
+                                                    text: '9:36 AM',
+                                                    color: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyLarge!
+                                                        .color!,
+                                                    fontsize: 15.sp,
+                                                  ),
+                                                  Icon(
+                                                    Icons.arrow_forward_ios,
+                                                    color: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyMedium!
+                                                        .color!,
+                                                    size: 15.sp,
+                                                  )
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 4.h,
+                                          ),
+                                          Flexible(
+                                            child: InterRegular(
+                                              text:
+                                                  'Nice. I don\'t know why people get all worked up about hawaiian pizza. I ...',
+                                              fontsize: 15.sp,
+                                              color: Theme.of(context)
+                                                  .textTheme
+                                                  .headlineSmall!
+                                                  .color!,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
-                            )
-                          : const SizedBox(),
+                            ),
+                          );
+                        },
+                        childCount: 8,
+                      ),
+                    )
+                  : SliverToBoxAdapter(),
               /*ScreenIndex == 2
                   ? SliverList(
                       delegate: SliverChildBuilderDelegate(
