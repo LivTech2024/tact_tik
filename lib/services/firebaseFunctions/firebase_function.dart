@@ -1879,29 +1879,32 @@ class FireStoreService {
           'ShiftCompanyId': CompanyId,
           'ShiftRequiredEmp': int.parse(requiredEmp),
           'ShiftCompanyBranchId': branchId,
-          'ShiftCurrentStatus': 'pending',
+          'ShiftCurrentStatus': [],
           'ShiftCreatedAt': Timestamp.now(),
           'ShiftModifiedAt': Timestamp.now(),
           'ShiftLinkedPatrolIds': patrol,
           'ShiftPhotoUploadIntervalInMinutes': int.parse(photoInterval),
           'ShiftRestrictedRadius': int.parse(restrictedRadius),
           'ShiftEnableRestrictedRadius': shiftenablerestriction,
+          'ShiftTask': []
         });
 
         // Prepare the shift tasks array with the document id
-        List<Map<String, dynamic>> shiftTasks = tasks.map((task) {
-          return {
-            'ShiftTask': task['name'],
-            'ShiftTaskId': newDocRef.id, // Assign the document id to each task
-            'ShiftTaskQrCodeReq': task['isQrRequired'] ?? false,
-            'ShiftTaskReturnReq': task['isReturnQrRequired'] ?? false,
-            'ShiftTaskStatus': [],
-          };
-        }).toList();
+        // List<Map<String, dynamic>> shiftTasks = tasks.map((task) {
+        //   return {
+        //     'ShiftTask': task['name'],
+        //     'ShiftTaskId': task['taskid'], // Assign the document id to each task
+        //     'ShiftTaskQrCodeReq': task['isQrRequired'] ?? false,
+        //     'ShiftTaskReturnReq': task['isReturnQrRequired'] ?? false,
+        //     'ShiftTaskStatus': [],
+        //     'ShiftReturnTaskStatus': [],
+        //   };
+        // }).toList();
 
         // Update the document with the tasks
         await newDocRef.update({
-          'ShiftTasks': FieldValue.arrayUnion(shiftTasks),
+          'ShiftId': newDocRef.id,
+          // 'ShiftTask': FieldValue.arrayUnion(shiftTasks),
         });
 
         return newDocRef.id;
@@ -2456,6 +2459,25 @@ class FireStoreService {
     } catch (e) {
       print("Error checking shift task status: $e");
       return null; // Return null in case of error
+    }
+  }
+
+  Future<String?> fetchPatrolId(String patrolName) async {
+    try {
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('Patrols')
+          .where('PatrolName', isEqualTo: patrolName)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        return querySnapshot
+            .docs.first.id; // Assuming PatrolId is the document ID
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching PatrolId: $e');
+      return null;
     }
   }
 

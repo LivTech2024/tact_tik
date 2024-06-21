@@ -693,6 +693,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                             child: HomeScreenUserCard(
                               guardsInfo: _guardsInfo[index],
                               CompanyId: _CompanyId,
+                              empid: _employeeId,
                             ),
                           );
                         } else {
@@ -715,11 +716,13 @@ class _SHomeScreenState extends State<SHomeScreen> {
 class HomeScreenUserCard extends StatefulWidget {
   final DocumentSnapshot<Object?> guardsInfo;
   String CompanyId;
+  final String empid;
 
   HomeScreenUserCard({
     Key? key,
     required this.guardsInfo,
     required this.CompanyId,
+    required this.empid,
   }) : super(key: key);
 
   @override
@@ -875,12 +878,10 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => SLogBookScreen(
-                                          empId:
-                                              widget.guardsInfo['EmployeeId'],
-                                          empName:
-                                              widget.guardsInfo['EmployeeName'],
-                                        )));
+                                  builder: (context) => SelectDARGuardsScreen(
+                                    EmployeeId: widget.empid,
+                                  ),
+                                ));
                           },
                           child: RoundedButton(
                             useSVG: true,

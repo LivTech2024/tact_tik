@@ -22,6 +22,8 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:tact_tik/common/sizes.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
+import 'package:tact_tik/common/widgets/customErrorToast.dart';
+import 'package:tact_tik/common/widgets/customToast.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
@@ -107,6 +109,15 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
     getAllPatrolNames();
     getAllLocationNames();
     initializeData();
+    if (widget.GuardId.isNotEmpty || widget.GuardName.isNotEmpty) {
+      setState(() {
+        selectedGuards.add({
+          'GuardId': widget.GuardId,
+          'GuardName': widget.GuardName ?? '',
+          'GuardImg': widget.GuardImg ?? '',
+        });
+      });
+    }
   }
 
   void initializeData() async {
@@ -467,7 +478,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
     setState(() {
       tasks.add(
           {'name': '', 'isQrRequired': false, 'isReturnQrRequired': false});
-      taskControllers.add(TextEditingController());
+      // taskControllers.add(TextEditingController());
     });
   }
 
@@ -615,6 +626,68 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
   }
 
   final TextEditingController _controller = TextEditingController();
+  void CreateShiftFunction() async {
+    try {
+      String address = "";
+      GeoPoint coordinates = GeoPoint(0, 0);
+      String name = "";
+      String locationId = "";
+
+      List<String> patrolids =
+          await fireStoreService.getPatrolIdsFromNames(selectedPatrols);
+
+      String clientId =
+          await fireStoreService.getClientIdfromName(selectedClint!);
+      print('ClientName: $selectedClint');
+      print('ClientId: $clientId');
+
+      var locationData = await fireStoreService.getLocationByName(
+          selectedLocatin!, widget.CompanyId);
+      if (locationData.exists) {
+        var data = locationData.data() as Map<String, dynamic>?;
+        if (data != null) {
+          address = data['LocationAddress'];
+          coordinates = data['LocationCoordinates'] as GeoPoint;
+          name = data['LocationName'];
+          locationId = data['LocationId'];
+
+          print("Address $address");
+          print("Coordinates $coordinates");
+          print("Latitude: ${coordinates.latitude}");
+          print("Longitude: ${coordinates.longitude}");
+        }
+      }
+      String id = await fireStoreService.ScheduleShift(
+        selectedGuards,
+        selectedPosition,
+        address,
+        "CompanyBranchId",
+        widget.CompanyId,
+        _selectedDates,
+        startTime,
+        endTime,
+        AsignedPatrol,
+        clientId,
+        requiredEmpcontroller.text,
+        requiredPhotocontroller.text,
+        requiredRadius.text,
+        _isRestrictedChecked,
+        coordinates,
+        name,
+        locationId,
+        address,
+        _Branch.text,
+        _Description.text,
+        _ShiftName.text,
+        tasks,
+      );
+      if (id.isNotEmpty) {
+        showSuccessToast(context, "Shift created successfully");
+      }
+    } catch (e) {
+      showErrorToast(context, "Error creating shift");
+    }
+  }
 
   final List<Guards> _screens = [
     Guards('Site Tours', 'Image URL'),
@@ -738,13 +811,32 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
               child: Text('Cancel'),
             ),
             TextButton(
-              onPressed: () {
+              onPressed: () async {
+                if (_selectedOption != null &&
+                    _textController.text.isNotEmpty) {
+                  final patrolId =
+                      await fireStoreService.fetchPatrolId(_selectedOption!);
+                  if (patrolId != null) {
+                    setState(() {
+                      AsignedPatrol.add({
+                        "LinkedPatrolId": patrolId,
+                        "LinkedPatrolName": _selectedOption,
+                        "LinkedPatrolReqHitCount":
+                            int.tryParse(_textController.text) ?? 0,
+                      });
+                    });
+                    // Navigator.of(context).pop();
+                  } else {
+                    // Handle case where PatrolId is not found
+                    print('Patrol ID not found');
+                  }
+                }
                 // Handle save action
-                AsignedPatrol.add({
-                  "patrol": _selectedOption,
-                  "count": _textController.number
-                });
-                setState(() {});
+                // AsignedPatrol.add({
+                //   "patrol": _selectedOption,
+                //   "count": _textController.number
+                // });
+                // setState(() {});
                 // print('Selected option: $_selectedOption');
                 // print('Entered text: ${_textController.text}');
                 Navigator.of(context).pop();
@@ -1474,12 +1566,14 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                   children: [
                                     InterMedium(
                                         text:
-                                            '${AsignedPatrol[index]['patrol']},${AsignedPatrol[index]['count']}'),
+                                            '${AsignedPatrol[index]['LinkedPatrolName']},${AsignedPatrol[index]['LinkedPatrolReqHitCount']}'),
                                     IconButton(
                                         padding: EdgeInsets.zero,
                                         onPressed: () {
-                                          AsignedPatrol.remove(index);
-                                          setState(() {});
+                                          print("delete Patrol clicked");
+                                          setState(() {
+                                            AsignedPatrol.remove(index);
+                                          });
                                         },
                                         icon: Icon(
                                           Icons.close,
@@ -1665,9 +1759,10 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                   selectedLocatin != null &&
                                   requiredEmpcontroller.text.isNotEmpty &&
                                   _ShiftName.text.isNotEmpty) {
-                                setState(() {
-                                  nextScreen = !nextScreen;
-                                });
+                                CreateShiftFunction();
+                                // setState(() {
+                                //   nextScreen = !nextScreen;
+                                // });
                               } else {
                                 String errorMessage =
                                     "Please fill in the following required fields:";
@@ -1826,26 +1921,26 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                         ),
                                       ],
                                     ),
-                                    Button1(
-                                      height: 50.h,
-                                      borderRadius: 10.w,
-                                      backgroundcolor:
-                                          Theme.of(context).brightness ==
-                                                  Brightness.dark
-                                              ? DarkColor.color33
-                                              : LightColor.WidgetColor,
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .headlineMedium!
-                                          .color,
-                                      text: "Generate Qr",
-                                      onPressed: () async {
-                                        final name =
-                                            taskControllers[index].text;
-                                        _saveQrCode(name);
-                                        print('Generate QR Button Pressed');
-                                      },
-                                    ),
+                                    // Button1(
+                                    //   height: 50.h,
+                                    //   borderRadius: 10.w,
+                                    //   backgroundcolor:
+                                    //       Theme.of(context).brightness ==
+                                    //               Brightness.dark
+                                    //           ? DarkColor.color33
+                                    //           : LightColor.WidgetColor,
+                                    //   color: Theme.of(context)
+                                    //       .textTheme
+                                    //       .headlineMedium!
+                                    //       .color,
+                                    //   text: "Generate Qr",
+                                    //   onPressed: () async {
+                                    //     final name =
+                                    //         taskControllers[index].text;
+                                    //     _saveQrCode(name);
+                                    //     print('Generate QR Button Pressed');
+                                    //   },
+                                    // ),
                                   ],
                                 );
                               },
@@ -1927,68 +2022,69 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                           "Number Editing Controller ${requiredEmpcontroller.number}");
                                       print("ShiftName ${_ShiftName.text}");
                                       print("ShiftDesc ${_Description.text}");
+                                      print("Patrol ${AsignedPatrol}");
 
-                                      if (widget.shiftId.isNotEmpty) {
-                                        await fireStoreService.updateShift(
-                                          widget.shiftId,
-                                          selectedGuards,
-                                          selectedPosition,
-                                          address,
-                                          "CompanyBranchId",
-                                          widget.CompanyId,
-                                          _selectedDates,
-                                          startTime,
-                                          endTime,
-                                          patrolids.cast<Map>(),
-                                          clientId,
-                                          requiredEmpcontroller.text,
-                                          requiredPhotocontroller.text,
-                                          requiredRadius.text,
-                                          _isRestrictedChecked,
-                                          coordinates,
-                                          name,
-                                          locationId,
-                                          address,
-                                          _Branch.text,
-                                          _Description.text,
-                                          _ShiftName.text,
-                                          tasks,
-                                        );
-                                      } else {
-                                        String id = await fireStoreService
-                                            .ScheduleShift(
-                                          selectedGuards,
-                                          selectedPosition,
-                                          address,
-                                          "CompanyBranchId",
-                                          widget.CompanyId,
-                                          _selectedDates,
-                                          startTime,
-                                          endTime,
-                                          patrolids.cast<Map>(),
-                                          clientId,
-                                          requiredEmpcontroller.text,
-                                          requiredPhotocontroller.text,
-                                          requiredRadius.text,
-                                          _isRestrictedChecked,
-                                          coordinates,
-                                          name,
-                                          locationId,
-                                          address,
-                                          _Branch.text,
-                                          _Description.text,
-                                          _ShiftName.text,
-                                          tasks,
-                                        );
-                                        setState(() {
-                                          CreatedshiftId = id;
-                                        });
-                                      }
+                                      // if (widget.shiftId.isNotEmpty) {
+                                      //   await fireStoreService.updateShift(
+                                      //     widget.shiftId,
+                                      //     selectedGuards,
+                                      //     selectedPosition,
+                                      //     address,
+                                      //     "CompanyBranchId",
+                                      //     widget.CompanyId,
+                                      //     _selectedDates,
+                                      //     startTime,
+                                      //     endTime,
+                                      //     AsignedPatrol,
+                                      //     clientId,
+                                      //     requiredEmpcontroller.text,
+                                      //     requiredPhotocontroller.text,
+                                      //     requiredRadius.text,
+                                      //     _isRestrictedChecked,
+                                      //     coordinates,
+                                      //     name,
+                                      //     locationId,
+                                      //     address,
+                                      //     _Branch.text,
+                                      //     _Description.text,
+                                      //     _ShiftName.text,
+                                      //     tasks,
+                                      //   );
+                                      // } else {
+                                      //   String id = await fireStoreService
+                                      //       .ScheduleShift(
+                                      //     selectedGuards,
+                                      //     selectedPosition,
+                                      //     address,
+                                      //     "CompanyBranchId",
+                                      //     widget.CompanyId,
+                                      //     _selectedDates,
+                                      //     startTime,
+                                      //     endTime,
+                                      //     AsignedPatrol,
+                                      //     clientId,
+                                      //     requiredEmpcontroller.text,
+                                      //     requiredPhotocontroller.text,
+                                      //     requiredRadius.text,
+                                      //     _isRestrictedChecked,
+                                      //     coordinates,
+                                      //     name,
+                                      //     locationId,
+                                      //     address,
+                                      //     _Branch.text,
+                                      //     _Description.text,
+                                      //     _ShiftName.text,
+                                      //     tasks,
+                                      //   );
+                                      //   setState(() {
+                                      //     CreatedshiftId = id;
+                                      //   });
+                                      // }
 
-                                      setState(() {
-                                        Navigator.pop(context);
-                                        _addNewTask();
-                                      });
+                                      // setState(() {
+                                      //   Navigator.pop(context);
+                                      //   _addNewTask();
+                                      // });
                                       print("Shift Created/Updated");
                                     }
                                   },
