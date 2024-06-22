@@ -58,28 +58,40 @@ Future<bool> sendFormattedEmail(dynamic templateParams) async {
   }
 }
 
-// Future<void> sendapiEmail(String Subject, String fromName, String Data) async {
-//   final url = 'https://backend-sceurity-app.onrender.com/api/send_email';
-//   final response = await http.post(
-//     Uri.parse(url),
-//     headers: {'Content-Type': 'application/json'},
-//     body: json.encode({
-//       'to_email': 'sutarvaibhav37@gmail.com',
-//       'subject': Subject,
-//       'from_name': fromName,
-//       'text': Data,
-//       'html': " <p>This is a test email sent using the API.</p>",
-//     }),
-//   );
+Future<void> sendEmailUsingApi(
+  String Subject,
+  String fromName,
+  String Data,
+) async {
+  final url = 'https://backend-sceurity-app.onrender.com/api/send_email';
+  final response = await http.post(
+    Uri.parse(url),
+    headers: {'Content-Type': 'application/json'},
+    body: json.encode({
+      'to_email': 'sutarvaibhav37@gmail.com',
+      'subject': Subject,
+      'from_name': fromName,
+      // 'text': Data,
+      'html': " <p>This is a test email sent using the API.</p>",
+      'attachments': [
+        {
+          'filename': 'security_report.pdf',
+          'content': Data,
+          'contentType': 'application/pdf',
+        }
+      ],
+    }),
+  );
 
-//   if (response.statusCode == 201) {
-//     print('Email sent successfully');
-//     // Handle success
-//   } else {
-//     print('Failed to send email. Status code: ${response.statusCode}');
-//     // Handle failure
-//   }
-// }
+  if (response.statusCode == 201) {
+    print('Email sent successfully');
+    // Handle success
+  } else {
+    print('Failed to send email. Status code: ${response.statusCode}');
+    // Handle failure
+  }
+}
+
 Future<void> callPdfApi() async {
   final url = Uri.parse('https://yakpdf.p.rapidapi.com/pdf');
 
@@ -652,9 +664,9 @@ Future<File> savePdfLocally(String pdfBase64, String fileName) async {
 
 FireStoreService fireStoreService = FireStoreService();
 Future<String> generateShiftReportPdf(
-    String guardName,
-    Map<String, dynamic> data,
-    ) async {
+  String guardName,
+  Map<String, dynamic> data,
+) async {
   final dateFormat = DateFormat('HH:mm'); // Define the format for time
 
   // Extract patrol information

@@ -58,6 +58,7 @@ class LocationServiceRepository {
 
   Future<void> callback(LocationDto locationDto) async {
     print('$_count location in dart: ${locationDto.toString()}');
+    // await Future.delayed(Duration(seconds: 30));
     if ((_count) % 5 == 0 || _count == 1) {
       var userInfo = await fireStoreService.getUserInfoByCurrentUserEmail();
       if (userInfo != null) {

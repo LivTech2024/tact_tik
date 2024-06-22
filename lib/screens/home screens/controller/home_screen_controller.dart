@@ -71,8 +71,6 @@ class HomeScreenController extends GetxController {
         lastLocation = null;
       } else {
         print("Location permission Error");
-        // customErrorToast(
-        //     "Location permission is required for background tracking.");
       }
     } catch (e) {
       print(e);

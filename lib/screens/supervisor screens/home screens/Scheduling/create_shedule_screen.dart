@@ -109,6 +109,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
     getAllPatrolNames();
     getAllLocationNames();
     initializeData();
+    // _addNewTask();
     if (widget.GuardId.isNotEmpty || widget.GuardName.isNotEmpty) {
       setState(() {
         selectedGuards.add({
@@ -478,7 +479,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
     setState(() {
       tasks.add(
           {'name': '', 'isQrRequired': false, 'isReturnQrRequired': false});
-      // taskControllers.add(TextEditingController());
+      taskControllers.add(TextEditingController());
     });
   }
 
@@ -682,6 +683,11 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
         tasks,
       );
       if (id.isNotEmpty) {
+        setState(() {
+          // Navigator.pop(context);
+          // _addNewTask();
+          CreatedshiftId = id;
+        });
         showSuccessToast(context, "Shift created successfully");
       }
     } catch (e) {
@@ -1270,7 +1276,12 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                         .bodyMedium!
                                         .color),
                                 value: selectedPosition,
-                                hint: Text("Select Roles", style: TextStyle(color: Theme.of(context).textTheme.bodyMedium!.color)),
+                                hint: Text("Select Roles",
+                                    style: TextStyle(
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .color)),
                                 onChanged: (String? newValue) {
                                   setState(() {
                                     selectedPosition = newValue;
@@ -1759,10 +1770,10 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                   selectedLocatin != null &&
                                   requiredEmpcontroller.text.isNotEmpty &&
                                   _ShiftName.text.isNotEmpty) {
-                                CreateShiftFunction();
-                                // setState(() {
-                                //   nextScreen = !nextScreen;
-                                // });
+                                // CreateShiftFunction();
+                                setState(() {
+                                  nextScreen = !nextScreen;
+                                });
                               } else {
                                 String errorMessage =
                                     "Please fill in the following required fields:";
@@ -2024,67 +2035,68 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                       print("ShiftDesc ${_Description.text}");
                                       print("Patrol ${AsignedPatrol}");
 
-                                      // if (widget.shiftId.isNotEmpty) {
-                                      //   await fireStoreService.updateShift(
-                                      //     widget.shiftId,
-                                      //     selectedGuards,
-                                      //     selectedPosition,
-                                      //     address,
-                                      //     "CompanyBranchId",
-                                      //     widget.CompanyId,
-                                      //     _selectedDates,
-                                      //     startTime,
-                                      //     endTime,
-                                      //     AsignedPatrol,
-                                      //     clientId,
-                                      //     requiredEmpcontroller.text,
-                                      //     requiredPhotocontroller.text,
-                                      //     requiredRadius.text,
-                                      //     _isRestrictedChecked,
-                                      //     coordinates,
-                                      //     name,
-                                      //     locationId,
-                                      //     address,
-                                      //     _Branch.text,
-                                      //     _Description.text,
-                                      //     _ShiftName.text,
-                                      //     tasks,
-                                      //   );
-                                      // } else {
-                                      //   String id = await fireStoreService
-                                      //       .ScheduleShift(
-                                      //     selectedGuards,
-                                      //     selectedPosition,
-                                      //     address,
-                                      //     "CompanyBranchId",
-                                      //     widget.CompanyId,
-                                      //     _selectedDates,
-                                      //     startTime,
-                                      //     endTime,
-                                      //     AsignedPatrol,
-                                      //     clientId,
-                                      //     requiredEmpcontroller.text,
-                                      //     requiredPhotocontroller.text,
-                                      //     requiredRadius.text,
-                                      //     _isRestrictedChecked,
-                                      //     coordinates,
-                                      //     name,
-                                      //     locationId,
-                                      //     address,
-                                      //     _Branch.text,
-                                      //     _Description.text,
-                                      //     _ShiftName.text,
-                                      //     tasks,
-                                      //   );
-                                      //   setState(() {
-                                      //     CreatedshiftId = id;
-                                      //   });
-                                      // }
+                                      if (widget.shiftId.isNotEmpty) {
+                                        await fireStoreService.updateShift(
+                                          widget.shiftId,
+                                          selectedGuards,
+                                          selectedPosition,
+                                          address,
+                                          "CompanyBranchId",
+                                          widget.CompanyId,
+                                          _selectedDates,
+                                          startTime,
+                                          endTime,
+                                          AsignedPatrol,
+                                          clientId,
+                                          requiredEmpcontroller.text,
+                                          requiredPhotocontroller.text,
+                                          requiredRadius.text,
+                                          _isRestrictedChecked,
+                                          coordinates,
+                                          name,
+                                          locationId,
+                                          address,
+                                          _Branch.text,
+                                          _Description.text,
+                                          _ShiftName.text,
+                                          tasks,
+                                        );
+                                      } else {
+                                        String id = await fireStoreService
+                                            .ScheduleShift(
+                                          selectedGuards,
+                                          selectedPosition,
+                                          address,
+                                          "CompanyBranchId",
+                                          widget.CompanyId,
+                                          _selectedDates,
+                                          startTime,
+                                          endTime,
+                                          AsignedPatrol,
+                                          clientId,
+                                          requiredEmpcontroller.text,
+                                          requiredPhotocontroller.text,
+                                          requiredRadius.text,
+                                          _isRestrictedChecked,
+                                          coordinates,
+                                          name,
+                                          locationId,
+                                          address,
+                                          _Branch.text,
+                                          _Description.text,
+                                          _ShiftName.text,
+                                          tasks,
+                                        );
+                                        setState(() {
+                                          CreatedshiftId = id;
+                                        });
+                                      }
 
                                       // setState(() {
-                                      //   Navigator.pop(context);
                                       //   _addNewTask();
                                       // });
+                                      // Navigator.pop
+                                      Navigator.pop(context);
                                       print("Shift Created/Updated");
                                     }
                                   },
