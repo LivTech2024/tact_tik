@@ -23,6 +23,7 @@ class ReportScreen extends StatefulWidget {
   final String clientId;
   final String ShiftId;
   final bool isguard;
+
   const ReportScreen(
       {super.key,
       required this.locationId,
@@ -44,6 +45,7 @@ class _ReportScreenState extends State<ReportScreen> {
   List<String> tittles = [];
   List<Map<String, dynamic>> groupedReportData = [];
   List<Map<String, dynamic>> reportData = [];
+
   @override
   void initState() {
     super.initState();
@@ -169,65 +171,69 @@ class _ReportScreenState extends State<ReportScreen> {
             size: 24.sp,
           ),
         ),
-        body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 30.w),
+        body: SingleChildScrollView(
           child: Column(
             children: [
               SizedBox(height: 30.h),
-              SizedBox(
-                height: 55.h,
-                child: ListView.builder(
-                  itemCount: tittles.length,
-                  // shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          currentIndex = index;
-                          getAllReports();
-                        });
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: AnimatedContainer(
-                          margin: EdgeInsets.only(right: 10.w),
-                          padding: EdgeInsets.symmetric(horizontal: 20.w),
-                          constraints: BoxConstraints(
-                            minWidth: 70.w,
-                          ),
-                          decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Theme.of(context).shadowColor,
-                                  blurRadius: 5,
-                                  spreadRadius: 2,
-                                  offset: Offset(0, 3),
-                                )
-                              ],
-                              borderRadius: BorderRadius.circular(20.r),
-                              color: currentIndex == index
-                                  ? Theme.of(context).primaryColor
-                                  : Theme.of(context).cardColor),
-                          duration: const Duration(microseconds: 500),
-                          child: Center(
-                            child: InterRegular(
-                              text: tittles[index],
-                              fontsize: 16.sp,
-                              color: currentIndex == index
-                                  ? Colors.white
-                                  : Theme.of(context).primaryColor,
+              Padding(
+                padding: EdgeInsets.only(left: 30.sp),
+                child: SizedBox(
+                  height: 55.h,
+                  child: ListView.builder(
+                    itemCount: tittles.length,
+                    // shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            currentIndex = index;
+                            getAllReports();
+                          });
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: AnimatedContainer(
+                            margin: EdgeInsets.only(right: 10.w),
+                            padding: EdgeInsets.symmetric(horizontal: 20.w),
+                            constraints: BoxConstraints(
+                              minWidth: 70.w,
+                            ),
+                            decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Theme.of(context).shadowColor,
+                                    blurRadius: 5,
+                                    spreadRadius: 2,
+                                    offset: Offset(0, 3),
+                                  )
+                                ],
+                                borderRadius: BorderRadius.circular(20.r),
+                                color: currentIndex == index
+                                    ? Theme.of(context).primaryColor
+                                    : Theme.of(context).cardColor),
+                            duration: const Duration(microseconds: 500),
+                            child: Center(
+                              child: InterRegular(
+                                text: tittles[index],
+                                fontsize: 16.sp,
+                                color: currentIndex == index
+                                    ? Colors.white
+                                    : Theme.of(context).primaryColor,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
               ),
               SizedBox(height: 20.h),
-              Expanded(
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 30.w),
                 child: ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   itemCount: groupedReportData.length,
                   itemBuilder: (context, groupIndex) {
@@ -274,7 +280,8 @@ class _ReportScreenState extends State<ReportScreen> {
                                         ClientId: widget.clientId,
                                         reportId: report['ReportId'],
                                         buttonEnable: false,
-                                        ShiftId: widget.ShiftId, SearchId: '',
+                                        ShiftId: widget.ShiftId,
+                                        SearchId: '',
                                         isRoleGuard: widget.isguard,
                                       ),
                                     ),
@@ -327,16 +334,13 @@ class _ReportScreenState extends State<ReportScreen> {
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [
-                                                Text(
-                                                  report['ReportName'],
-                                                  style: TextStyle(
-                                                    fontSize: 20.sp,
-                                                    color: Theme.of(context)
-                                                        .textTheme
-                                                        .bodyMedium!
-                                                        .color,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
+                                                InterMedium(
+                                                  text: report['ReportName'],
+                                                  fontsize: 20.sp,
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyMedium!
+                                                      .color,
                                                 ),
                                                 SizedBox(height: 10.h),
                                                 Row(
@@ -355,15 +359,18 @@ class _ReportScreenState extends State<ReportScreen> {
                                                                   .displaySmall!
                                                                   .color,
                                                         ),
-                                                        InterRegular(
-                                                          text: report[
-                                                              'ReportCategoryName'],
-                                                          fontsize: 14.sp,
-                                                          color: Theme.of(
-                                                                  context)
-                                                              .textTheme
-                                                              .displayMedium!
-                                                              .color,
+                                                        SizedBox(
+                                                          width: 130.w,
+                                                          child: InterRegular(
+                                                            text: report[
+                                                                'ReportCategoryName'],
+                                                            fontsize: 14.sp,
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .displayMedium!
+                                                                .color,
+                                                          ),
                                                         ),
                                                       ],
                                                     ),

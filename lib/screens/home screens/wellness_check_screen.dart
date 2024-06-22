@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 // import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -20,6 +21,7 @@ import '../../utils/colors.dart';
 class WellnessCheckScreen extends StatefulWidget {
   final String EmpId;
   final String EmpName;
+
   const WellnessCheckScreen(
       {super.key, required this.EmpId, required this.EmpName});
 
@@ -98,12 +100,10 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-         
           elevation: 0,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-            
             ),
             padding: EdgeInsets.only(left: width / width20),
             onPressed: () {
@@ -112,7 +112,6 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
           ),
           title: InterMedium(
             text: 'Wellness Check',
-            
           ),
           centerTitle: true,
         ),
@@ -173,7 +172,10 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
                         style: GoogleFonts.poppins(
                           fontWeight: FontWeight.w300,
                           fontSize: width / width18,
-                          color: Theme.of(context).textTheme.bodyMedium!.color, // Change text color to white
+                          color: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .color, // Change text color to white
                         ),
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
@@ -186,7 +188,10 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
                           hintStyle: GoogleFonts.poppins(
                             fontWeight: FontWeight.w300,
                             fontSize: width / width18,
-                            color: Theme.of(context).textTheme.bodyLarge!.color, // Change text color to white
+                            color: Theme.of(context)
+                                .textTheme
+                                .bodyLarge!
+                                .color, // Change text color to white
                           ),
                           hintText: 'Upload Img / Comment',
                           contentPadding: EdgeInsets.zero, // Remove padding
@@ -273,8 +278,9 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
                           color: Theme.of(context).cardColor,
                           borderRadius: BorderRadius.circular(width / width8)),
                       child: Center(
-                        child: Icon(Icons.add,
-                            color: Theme.of(context).textTheme.bodySmall!.color,
+                        child: Icon(
+                          Icons.add,
+                          color: Theme.of(context).textTheme.bodySmall!.color,
                         ),
                       ),
                     ),
@@ -288,7 +294,11 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
           onPressed: _uploadImages,
           backgroundColor: Theme.of(context).primaryColor,
           shape: CircleBorder(),
-          child: Icon(Icons.check, color: Colors.white,size: 24.sp,),
+          child: Icon(
+            Icons.check,
+            color: Colors.white,
+            size: 24.sp,
+          ),
         ),
       ),
     );

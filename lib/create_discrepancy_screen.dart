@@ -336,10 +336,7 @@ class _CreateDiscrepancyScreenState extends State<CreateDiscrepancyScreen> {
                               ),
                               child: Center(
                                 child: Icon(
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium!
-                                      .color,
+                                  color: Theme.of(context).textTheme.bodySmall!.color,
                                   Icons.add,
                                   size: width / width20,
                                 ),
