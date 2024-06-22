@@ -695,6 +695,7 @@ class FireStoreService {
           checkPointStatuses[existingIndex]['Status'] = 'unchecked';
           checkPointStatuses[existingIndex]['StatusReportedTime'] =
               Timestamp.now();
+          checkPointStatuses[existingIndex]['StatusImage'] = [];
         }
 
         // Update the CheckPointStatus in the checkpoint
