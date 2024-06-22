@@ -122,7 +122,7 @@ class _CreateVisitorsState extends State<SCreateVisitors> {
         return Theme(
           data: ThemeData.dark().copyWith(
             colorScheme: ColorScheme.dark(
-              primary: DarkColor. Primarycolor,
+              primary: DarkColor.Primarycolor,
               secondary: DarkColor.Primarycolor,
             ),
           ),
@@ -272,24 +272,19 @@ class _CreateVisitorsState extends State<SCreateVisitors> {
 
   @override
   Widget build(BuildContext context) {
-
-
     bool isEditMode = widget.visitorData != null;
 
     var isFieldEnabled = widget.visitorData != null;
     return SafeArea(
       child: Scaffold(
-        
         body: Stack(
           children: [
             CustomScrollView(
               slivers: [
                 SliverAppBar(
-                
                   leading: IconButton(
                     icon: Icon(
                       Icons.arrow_back_ios,
-                      
                     ),
                     padding: EdgeInsets.only(left: 20.w),
                     onPressed: () {
@@ -300,7 +295,6 @@ class _CreateVisitorsState extends State<SCreateVisitors> {
                   ),
                   title: InterMedium(
                     text: 'Create Visitors',
-                   
                   ),
                   centerTitle: true,
                   floating: true, // Makes the app bar float above the content
@@ -429,8 +423,8 @@ class _CreateVisitorsState extends State<SCreateVisitors> {
                               // Handle the case when saving or updating visitor data fails
                             }
                           },
-                          backgroundcolor:  Theme.of(context).primaryColor,
-                          color:Colors.white,
+                          backgroundcolor: Theme.of(context).primaryColor,
+                          color: Colors.white,
                           borderRadius: 10.w,
                           fontsize: 18.sp,
                         ),

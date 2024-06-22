@@ -446,12 +446,15 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: [
-                                            PoppinsMedium(
-                                              text: otherFileName,
-                                              color: Theme.of(context)
-                                                  .textTheme
-                                                  .titleMedium!
-                                                  .color,
+                                            SizedBox(
+                                              width:300.w,
+                                              child: PoppinsMedium(
+                                                text: otherFileName,
+                                                color: Theme.of(context)
+                                                    .textTheme
+                                                    .titleMedium!
+                                                    .color,
+                                              ),
                                             ),
                                             PoppinsRegular(
                                               text: otherFileSize,
