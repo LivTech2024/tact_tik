@@ -1758,21 +1758,33 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                             return Column(
                               children: [
                                 ListTile(
+                                  
                                   title: Container(
+                                    height: 50.h,
+
                                     padding: EdgeInsets.only(left: 10.w),
                                     decoration: BoxDecoration(
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Theme.of(context).shadowColor,
+                                          blurRadius: 5,
+                                          spreadRadius: 2,
+                                          offset: Offset(0, 3),
+                                        )
+                                      ],
                                       color: Theme.of(context).cardColor,
                                       borderRadius:
                                       BorderRadius.circular(10.r),
                                     ),
                                     child: taskControllers.isNotEmpty
                                         ? TextField(
+                                          
                                       controller:
                                       taskControllers[index],
                                       style: GoogleFonts.poppins(
                                         fontWeight: FontWeight.w300,
                                         fontSize: 18.sp,
-                                        color: Colors.white,
+                                        color: Theme.of(context).textTheme.bodyMedium!.color, 
                                       ),
                                       decoration: InputDecoration(
                                         border: OutlineInputBorder(
