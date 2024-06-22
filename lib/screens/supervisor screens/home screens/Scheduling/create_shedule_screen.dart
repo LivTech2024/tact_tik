@@ -1800,7 +1800,10 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                         GoogleFonts.poppins(
                                           fontWeight: FontWeight.w300,
                                           fontSize: 18.sp,
-                                          color: Colors.grey,
+                                          color: Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge!
+                                              .color,
                                         ),
                                         hintText: 'Task ${index + 1}',
                                         contentPadding:
@@ -2049,10 +2052,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                               },
                               backgroundcolor:
                               Theme.of(context).primaryColor,
-                              color: Theme.of(context)
-                                  .textTheme
-                                  .headlineMedium!
-                                  .color,
+                              color: Colors.white,
                               borderRadius: 10.r,
                               fontsize: 14.sp,
                             ),
