@@ -57,8 +57,6 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
 
     bool canExchangeRequest = isDateAfterToday(widget.day);
 
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
 
     return DraggableScrollableSheet(
       expand: false,
@@ -68,7 +66,7 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
                 child: InterMedium(
                 text: 'No shifts on this day',
                 color: Theme.of(context).textTheme.bodyMedium!.color,
-                fontsize: width / width18,
+                fontsize: 18.sp,
               ))
             : SingleChildScrollView(
                 child: Column(
@@ -77,9 +75,9 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
                   children: [
                     Padding(
                       padding: EdgeInsets.only(
-                        left: width / width18,
-                        top: height / height16,
-                        bottom: height / height16,
+                        left: 18.w,
+                        top: 16.h,
+                        bottom: 16.h,
                       ),
                       child: Column(
                         children: [
@@ -87,14 +85,14 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
                             text: widget.day.format('dd/MM/yy'),
                             color:
                                 Theme.of(context).textTheme.bodyMedium!.color,
-                            fontsize: width / width20,
+                            fontsize: 20.sp,
                           ),
                           SizedBox(height: 30.h),
                           InterMedium(
                             text: 'My shifts',
                             color:
                                 Theme.of(context).textTheme.bodyMedium!.color,
-                            fontsize: width / width20,
+                            fontsize: 20.sp,
                           )
                         ],
                       ),
@@ -143,11 +141,11 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
                                         'Shift already accepted');
                           },
                           child: SizedBox(
-                            height: height / height100,
+                            height: 100.h,
                             child: Padding(
                               padding: EdgeInsets.symmetric(
-                                horizontal: width / width16,
-                                vertical: height / height4,
+                                horizontal: 16.w,
+                                vertical: 4.h,
                               ),
                               child: Container(
                                 decoration: BoxDecoration(
@@ -163,29 +161,29 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
                                         ? Colors.green.shade700
                                         : (Theme.of(context).cardColor),
                                     borderRadius:
-                                        BorderRadius.circular(width / width10),
+                                        BorderRadius.circular(10.r),
                                     border: Border.all(
                                         width: 2,
                                         color: event.others.isShiftRequested[0]
                                             ? Colors.redAccent
-                                            : Colors.transparent)),
+                                            : Colors.transparent,),),
                                 clipBehavior: Clip.antiAlias,
                                 child: Row(
                                   children: [
                                     Container(
-                                      height: height / height60,
-                                      width: width / width4,
-                                      decoration: const BoxDecoration(
+                                      height: 60.h,
+                                      width: 4.w,
+                                      decoration: BoxDecoration(
                                         color: Colors.green,
                                         borderRadius: BorderRadius.only(
-                                            topRight: Radius.circular(10),
-                                            bottomRight: Radius.circular(10)),
+                                            topRight: Radius.circular(10.r),
+                                            bottomRight: Radius.circular(10.r)),
                                       ),
                                     ),
-                                    SizedBox(width: width / width10),
+                                    SizedBox(width: 10.w),
                                     Container(
-                                      height: height / height50,
-                                      width: width / width50,
+                                      height: 50.h,
+                                      width: 50.w,
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         color: Theme.of(context).primaryColor,
@@ -200,7 +198,7 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
                                     Expanded(
                                       child: Padding(
                                         padding: EdgeInsets.only(
-                                            left: width / width14),
+                                            left: 14.w,),
                                         child: Align(
                                           alignment: Alignment.centerLeft,
                                           child: Column(
@@ -211,14 +209,14 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
                                             children: [
                                               InterSemibold(
                                                 text: event.name,
-                                                fontsize: width / width16,
+                                                fontsize: 16.sp,
                                                 color: Theme.of(context)
                                                     .textTheme
                                                     .bodyMedium!
                                                     .color,
                                               ),
                                               SizedBox(
-                                                  height: height / height8),
+                                                  height: 8.h),
                                               IntrinsicHeight(
                                                 child: Row(
                                                   children: [
@@ -226,7 +224,7 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
                                                       children: [
                                                         Icon(
                                                           Icons.location_on,
-                                                          size: width / width10,
+                                                          size: 10.sp,
                                                           color:
                                                               Theme.of(context)
                                                                   .textTheme
@@ -235,11 +233,10 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
                                                         ),
                                                         SizedBox(
                                                             width:
-                                                                width / width4),
+                                                                4.w),
                                                         InterMedium(
                                                           text: event.location,
-                                                          fontsize:
-                                                              width / width14,
+                                                          fontsize: 14.sp,
                                                           color:
                                                               Theme.of(context)
                                                                   .textTheme
@@ -259,8 +256,7 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
                                                       child: InterMedium(
                                                         text:
                                                             '${event.startTime}-${event.endTime}',
-                                                        fontsize:
-                                                            width / width14,
+                                                        fontsize: 14.sp,
                                                         color: Theme.of(context)
                                                             .textTheme
                                                             .bodyLarge!
@@ -277,10 +273,10 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
                                     ),
                                     Padding(
                                       padding: EdgeInsets.only(
-                                          right: width / width10),
+                                          right: 10.w),
                                       child: Icon(
                                         Icons.arrow_forward_ios,
-                                        size: width / width20,
+                                        size: 20.sp,
                                         color: Theme.of(context)
                                             .textTheme
                                             .bodyMedium!
@@ -297,14 +293,14 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
                     ),
                     Padding(
                       padding: EdgeInsets.only(
-                        left: width / width18,
-                        top: height / height16,
-                        bottom: height / height16,
+                        left: 18.w,
+                        top: 16.h,
+                        bottom: 16.h,
                       ),
                       child: InterMedium(
                         text: 'Others',
                         color: Theme.of(context).textTheme.bodyMedium!.color,
-                        fontsize: width / width20,
+                        fontsize: 20.sp,
                       ),
                     ),
                     ListView.builder(
@@ -320,7 +316,7 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
                           print(event.others.isShiftRequested);
                           // Create a common child widget for GestureDetector to avoid code repetition
                           return createWidget(
-                              context, event, height, width, canExchangeRequest
+                              context, event,  canExchangeRequest
                               // true,
                               // event.others.isExchangeRequested![index],
                               );
@@ -336,13 +332,12 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
   }
 
   Widget createWidget(BuildContext context, CalendarEventModel event,
-      double height, double width, bool canExchangeRequest) {
+      bool canExchangeRequest) {
     print('inside create widget');
     if (event.others.ids.isEmpty) {
       print('return empty container');
       return Container();
     }
-    ;
 
     if (event.others.ids.length == 1) {
       print('length is one');
@@ -374,11 +369,11 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
                 );
         },
         child: SizedBox(
-          height: height / height100,
+          height: 100.h,
           child: Padding(
             padding: EdgeInsets.symmetric(
-              horizontal: width / width16,
-              vertical: height / height4,
+              horizontal: 16.w,
+              vertical: 4.h,
             ),
             child: Container(
               decoration: BoxDecoration(
@@ -391,29 +386,31 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
                   )
                 ],
                 color: Theme.of(context).cardColor,
-                borderRadius: BorderRadius.circular(width / width10),
+                borderRadius: BorderRadius.circular(10.r),
                 border: Border.all(
-                    color: event.others.isExchangeRequested![0]
-                        ? Colors.redAccent
-                        : Colors.transparent),
+                  color: event.others.isExchangeRequested![0]
+                      ? Colors.redAccent
+                      : Colors.transparent,
+                ),
               ),
               clipBehavior: Clip.antiAlias,
               child: Row(
                 children: [
                   Container(
-                    height: height / height60,
-                    width: width / width4,
-                    decoration: const BoxDecoration(
+                    height: 60.h,
+                    width: 4.w,
+                    decoration: BoxDecoration(
                       color: Colors.red,
                       borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(10),
-                          bottomRight: Radius.circular(10)),
+                        topRight: Radius.circular(10.r),
+                        bottomRight: Radius.circular(10.r),
+                      ),
                     ),
                   ),
-                  SizedBox(width: width / width10),
+                  SizedBox(width: 10.w),
                   Container(
-                    height: height / height50,
-                    width: width / width50,
+                    height: 50.h,
+                    width: 50.w,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: Theme.of(context).primaryColor,
@@ -426,7 +423,7 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
                   ),
                   Expanded(
                     child: Padding(
-                      padding: EdgeInsets.only(left: width / width12),
+                      padding: EdgeInsets.only(left: 12.w),
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Column(
@@ -435,11 +432,11 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
                           children: [
                             InterSemibold(
                               text: event.others.othersShiftName,
-                              fontsize: width / width16,
+                              fontsize: 16.sp,
                               color:
                                   Theme.of(context).textTheme.bodyMedium!.color,
                             ),
-                            SizedBox(height: height / height8),
+                            SizedBox(height: 8.h),
                             IntrinsicHeight(
                               child: Row(
                                 children: [
@@ -447,16 +444,16 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
                                     children: [
                                       Icon(
                                         Icons.location_on,
-                                        size: width / width10,
+                                        size: 10.sp,
                                         color: Theme.of(context)
                                             .textTheme
                                             .bodyMedium!
                                             .color,
                                       ),
-                                      SizedBox(width: width / width4),
+                                      SizedBox(width: 4.w),
                                       InterMedium(
                                         text: event.others.othersShiftLocation,
-                                        fontsize: width / width14,
+                                        fontsize: 14.sp,
                                         color: Theme.of(context)
                                             .textTheme
                                             .bodyLarge!
@@ -475,7 +472,7 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
                                     child: InterMedium(
                                       text:
                                           '${event.others.startTime!} - ${event.others.endTime!}',
-                                      fontsize: width / width14,
+                                      fontsize: 14.sp,
                                       color: Theme.of(context)
                                           .textTheme
                                           .bodyLarge!
@@ -491,10 +488,10 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(right: width / width10),
+                    padding: EdgeInsets.only(right: 10.w),
                     child: Icon(
                       Icons.arrow_forward_ios,
-                      size: width / width20,
+                      size: 20.sp,
                       color: Theme.of(context).textTheme.bodyMedium!.color,
                     ),
                   ),
@@ -562,8 +559,6 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
                   event.others.othersShiftLocation,
                   event.others.startTime!,
                   event.others.endTime!,
-                  height,
-                  width,
                 ),
               );
             },
@@ -581,15 +576,13 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
       String shiftName,
       String shiftLocation,
       String startTime,
-      String endTime,
-      double height,
-      double width) {
+      String endTime,) {
     return SizedBox(
-      height: height / height100,
+      height: 100.h,
       child: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: width / width16,
-          vertical: height / height4,
+          horizontal: 16.w,
+          vertical: 4.h,
         ),
         child: Container(
           decoration: BoxDecoration(
@@ -602,7 +595,7 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
               )
             ],
             color: Theme.of(context).cardColor,
-            borderRadius: BorderRadius.circular(width / width10),
+            borderRadius: BorderRadius.circular(10.r),
 
             /// TODO : Change the border color to red if the shift exchange is not assigned
             border: Border.all(
@@ -614,19 +607,19 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
           child: Row(
             children: [
               Container(
-                height: height / height60,
-                width: width / width4,
-                decoration: const BoxDecoration(
+                height: 60.h,
+                width: 4.w,
+                decoration:  BoxDecoration(
                   color: Colors.red,
                   borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(10),
-                      bottomRight: Radius.circular(10)),
+                      topRight: Radius.circular(10.r),
+                      bottomRight: Radius.circular(10.r),),
                 ),
               ),
-              SizedBox(width: width / width10),
+              SizedBox(width: 10.w),
               Container(
-                height: height / height50,
-                width: width / width50,
+                height: 50.h,
+                width: 50.w,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: Theme.of(context).primaryColor,
@@ -639,7 +632,7 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
               ),
               Expanded(
                 child: Padding(
-                  padding: EdgeInsets.only(left: width / width12),
+                  padding: EdgeInsets.only(left: 12.w),
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Column(
@@ -648,10 +641,10 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
                       children: [
                         InterSemibold(
                           text: shiftName,
-                          fontsize: width / width16,
+                          fontsize: 16.sp,
                           color: Theme.of(context).textTheme.bodyMedium!.color,
                         ),
-                        SizedBox(height: height / height8),
+                        SizedBox(height: 8.h),
                         IntrinsicHeight(
                           child: Row(
                             children: [
@@ -659,16 +652,16 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
                                 children: [
                                   Icon(
                                     Icons.location_on,
-                                    size: width / width10,
+                                    size: 10.sp,
                                     color: Theme.of(context)
                                         .textTheme
                                         .bodyMedium!
                                         .color,
                                   ),
-                                  SizedBox(width: width / width4),
+                                  SizedBox(width: 4.w),
                                   InterMedium(
                                     text: shiftLocation,
-                                    fontsize: width / width14,
+                                    fontsize: 14.sp,
                                     color: Theme.of(context)
                                         .textTheme
                                         .bodyLarge!
@@ -686,7 +679,7 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
                               Expanded(
                                 child: InterMedium(
                                   text: '${startTime} - ${endTime}',
-                                  fontsize: width / width14,
+                                  fontsize: 14.sp,
                                   color: Theme.of(context)
                                       .textTheme
                                       .bodyLarge!
@@ -702,10 +695,10 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(right: width / width10),
+                padding: EdgeInsets.only(right: 10.w),
                 child: Icon(
                   Icons.arrow_forward_ios,
-                  size: width / width20,
+                  size: 20.sp,
                   color: Theme.of(context).textTheme.bodyMedium!.color,
                 ),
               ),

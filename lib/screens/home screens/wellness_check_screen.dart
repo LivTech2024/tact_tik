@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 // import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -130,7 +131,6 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
               Container(
                 height: height / height70,
                 padding: EdgeInsets.symmetric(
-
                   horizontal: width / width20,
                   vertical: height / height11,
                 ),
@@ -274,7 +274,7 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
                           borderRadius: BorderRadius.circular(width / width8)),
                       child: Center(
                         child: Icon(Icons.add,
-                            color: Colors.white
+                            color: Theme.of(context).textTheme.bodySmall!.color,
                         ),
                       ),
                     ),
@@ -288,7 +288,7 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
           onPressed: _uploadImages,
           backgroundColor: Theme.of(context).primaryColor,
           shape: CircleBorder(),
-          child: Icon(Icons.check, color: Colors.white),
+          child: Icon(Icons.check, color: Colors.white,size: 24.sp,),
         ),
       ),
     );

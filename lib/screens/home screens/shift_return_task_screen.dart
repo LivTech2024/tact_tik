@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tact_tik/common/enums/shift_task_enums.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/screens/home%20screens/home_screen.dart';
@@ -121,7 +122,7 @@ class _ShiftTaskReturnScreenState extends State<ShiftReturnTaskScreen> {
             slivers: [
               SliverToBoxAdapter(
                 child: SizedBox(
-                  height: height / height60,
+                  height: 60.h,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

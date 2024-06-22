@@ -21,6 +21,7 @@ import 'package:tact_tik/utils/colors.dart';
 
 class NewGuardScreen extends StatefulWidget {
   final String companyId;
+
   NewGuardScreen({super.key, required this.companyId});
 
   @override
