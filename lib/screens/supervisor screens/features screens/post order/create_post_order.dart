@@ -183,6 +183,7 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
         .doc(widget.locationId);
     await docRef.update({
       'LocationPostOrder.PostOrderOtherData': FieldValue.arrayUnion(urls),
+      'LocationPostOrder.PostOrderComment': _explainController.text,
     });
 
     Navigator.of(context).pop();

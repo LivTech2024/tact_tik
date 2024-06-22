@@ -49,6 +49,7 @@ class _SPostOrderState extends State<SPostOrder> {
       String formattedDate = DateFormat('yyyy-MM-dd').format(createdAt);
 
       var postOrder = doc['LocationPostOrder'];
+      postOrder['LocationId'] = doc.id; // Add document ID to postOrder
 
       if (!organizedData.containsKey(formattedDate)) {
         organizedData[formattedDate] = [];
@@ -80,6 +81,8 @@ class _SPostOrderState extends State<SPostOrder> {
 
   @override
   Widget build(BuildContext context) {
+    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
     return SafeArea(
       child: Scaffold(
         body: FutureBuilder<Map<String, List<Map<String, dynamic>>>>(
@@ -162,6 +165,7 @@ class _SPostOrderState extends State<SPostOrder> {
 
                                 return GestureDetector(
                                   onTap: () {
+                                    print("LOCATION ID: ${locationId}");
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -271,49 +275,40 @@ class _SPostOrderState extends State<SPostOrder> {
                                           SizedBox(
                                             height: 20.h,
                                           ),
-                                          GridView.builder(
+                                          ListView.builder(
                                             shrinkWrap: true,
-                                            physics:
-                                                NeverScrollableScrollPhysics(),
-                                            gridDelegate:
-                                                SliverGridDelegateWithFixedCrossAxisCount(
-                                              crossAxisCount: 3,
-                                              crossAxisSpacing: 10.0,
-                                              mainAxisSpacing: 10.0,
-                                            ),
-                                            itemCount:
-                                                postOrderOtherData.length < 3
-                                                    ? postOrderOtherData.length
-                                                    : 3,
+                                            physics: NeverScrollableScrollPhysics(),
+                                            itemCount: postOrderOtherData.where((url) => url.contains('.pdf')).length,
                                             itemBuilder: (context, index) {
-                                              String url =
-                                                  postOrderOtherData[index];
-                                              /*if (url.contains('.pdf')) {
-                                                return FutureBuilder<Map<String, dynamic>>(
-                                                  future: _fetchFileMetadata(url),
-                                                  builder: (context, snapshot) {
-                                                    String otherFileName = 'Loading...';
-                                                    String otherFileSize = 'Loading...';
+                                              String url = postOrderOtherData.where((url) => url.contains('.pdf')).toList()[index];
+                                              return FutureBuilder<Map<String, dynamic>>(
+                                                future: _fetchFileMetadata(url),
+                                                builder: (context, snapshot) {
+                                                  String otherFileName = 'Loading...';
+                                                  String otherFileSize = 'Loading...';
 
-                                                    if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
-                                                      otherFileName = snapshot.data!['name'];
-                                                      otherFileSize = snapshot.data!['size'];
-                                                    }
+                                                  if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
+                                                    otherFileName = snapshot.data!['name'];
+                                                    otherFileSize = snapshot.data!['size'];
+                                                  }
 
-                                                    return Container(
+                                                  return Padding(
+                                                    padding: const EdgeInsets.all(8.0),
+                                                    child: Container(
                                                       width: width / width200,
                                                       height: height / height46,
                                                       decoration: BoxDecoration(
                                                         borderRadius: BorderRadius.circular(width / width10),
-                                                        color: DarkColor. color1,
+                                                        color: DarkColor.color1,
                                                       ),
                                                       child: Row(
                                                         children: [
                                                           Padding(
                                                             padding: EdgeInsets.symmetric(horizontal: width / width6),
                                                             child: SvgPicture.asset(
-                                                                'assets/images/pdf.svg',
-                                                                width: width / width32),
+                                                              'assets/images/pdf.svg',
+                                                              width: width / width32,
+                                                            ),
                                                           ),
                                                           Column(
                                                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -321,28 +316,38 @@ class _SPostOrderState extends State<SPostOrder> {
                                                             children: [
                                                               PoppinsMedium(
                                                                 text: otherFileName,
-                                                                color: DarkColor
-                                                                    . color15,
+                                                                color: DarkColor.color15,
                                                               ),
                                                               PoppinsRegular(
                                                                 text: otherFileSize,
-                                                                color: DarkColor
-                                                                    .color16,
+                                                                color: DarkColor.color16,
                                                               )
                                                             ],
                                                           )
                                                         ],
                                                       ),
-                                                    );
-                                                  },
-                                                );
-                                              } else {*/
+                                                    ),
+                                                  );
+                                                },
+                                              );
+                                            },
+                                          ),
+                                          GridView.builder(
+                                            shrinkWrap: true,
+                                            physics: NeverScrollableScrollPhysics(),
+                                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                              crossAxisCount: 3,
+                                              crossAxisSpacing: 10.0,
+                                              mainAxisSpacing: 10.0,
+                                            ),
+                                            itemCount: postOrderOtherData.where((url) => !url.contains('.pdf')).length,
+                                            itemBuilder: (context, index) {
+                                              String url = postOrderOtherData.where((url) => !url.contains('.pdf')).toList()[index];
                                               return SizedBox(
                                                 height: 20.h,
                                                 width: 20.w,
                                                 child: Image.network(url),
                                               );
-                                              // }
                                             },
                                           ),
                                         ],
