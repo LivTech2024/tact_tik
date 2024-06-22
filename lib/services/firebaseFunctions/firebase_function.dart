@@ -4,7 +4,8 @@ import 'dart:ffi';
 import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
-
+import 'package:http/http.dart' as http;
+import 'dart:ui' as ui;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto/crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,9 +16,11 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
 import 'package:tact_tik/screens/supervisor%20screens/patrol_logs.dart';
+import 'package:tact_tik/services/EmailService/EmailJs_fucntion.dart';
 import 'package:tact_tik/services/auth/auth.dart';
 
 class FireStoreService {
@@ -692,6 +695,7 @@ class FireStoreService {
           checkPointStatuses[existingIndex]['Status'] = 'unchecked';
           checkPointStatuses[existingIndex]['StatusReportedTime'] =
               Timestamp.now();
+          checkPointStatuses[existingIndex]['StatusImage'] = [];
         }
 
         // Update the CheckPointStatus in the checkpoint
@@ -1804,6 +1808,14 @@ class FireStoreService {
     }
   }
 
+  String getRandomString(int length) {
+    const characters =
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    Random random = Random();
+    return String.fromCharCodes(Iterable.generate(length,
+        (_) => characters.codeUnitAt(random.nextInt(characters.length))));
+  }
+
   //Patrol is Completed
   Future<String> ScheduleShift(
     List guards,
@@ -1890,23 +1902,28 @@ class FireStoreService {
         });
 
         // Prepare the shift tasks array with the document id
-        // List<Map<String, dynamic>> shiftTasks = tasks.map((task) {
-        //   return {
-        //     'ShiftTask': task['name'],
-        //     'ShiftTaskId': task['taskid'], // Assign the document id to each task
-        //     'ShiftTaskQrCodeReq': task['isQrRequired'] ?? false,
-        //     'ShiftTaskReturnReq': task['isReturnQrRequired'] ?? false,
-        //     'ShiftTaskStatus': [],
-        //     'ShiftReturnTaskStatus': [],
-        //   };
-        // }).toList();
+        List<Map<String, dynamic>> shiftTasks =
+            tasks.asMap().entries.map((entry) {
+          int index = entry.key;
+          var task = entry.value;
+          String randomString =
+              getRandomString(2); // Generate 2 random characters
+          return {
+            'ShiftTask': task['name'],
+            'ShiftTaskId':
+                "${newDocRef.id}${randomString}${index}", // Assign the modified document id to each task
+            'ShiftTaskQrCodeReq': task['isQrRequired'] ?? false,
+            'ShiftTaskReturnReq': task['isReturnQrRequired'] ?? false,
+            'ShiftReturnTaskStatus': [],
+          };
+        }).toList();
 
         // Update the document with the tasks
         await newDocRef.update({
           'ShiftId': newDocRef.id,
-          // 'ShiftTask': FieldValue.arrayUnion(shiftTasks),
+          'ShiftTask': FieldValue.arrayUnion(shiftTasks),
         });
-
+        // await generateAndSendQrPdf(shiftTasks, "sutarvaibhav37@gmail.com");
         return newDocRef.id;
       }
       return '';
@@ -1917,6 +1934,194 @@ class FireStoreService {
       return '';
       // Handle the error as needed
     }
+  }
+
+  // Future<void> generateAndSendQrPdf(
+  //     String taskId, String supervisorEmail) async {
+  //   Uint8List qrCodeBytes = await generateQrCode(taskId);
+  //   String base64QrCode = base64Encode(qrCodeBytes);
+  //   await callPdfApi(base64QrCode, supervisorEmail);
+  // }
+
+  // Future<void> callPdfApi(String base64Image, String supervisorEmail) async {
+  //   final url =
+  //       Uri.parse('https://backend-sceurity-app.onrender.com/api/html_to_pdf');
+
+  //   final headers = {
+  //     'Content-Type': 'application/json',
+  //   };
+
+  //   final htmlContent = '''
+  //   <!DOCTYPE html>
+  //   <html lang="en">
+  //   <head>
+  //     <meta charset="UTF-8">
+  //     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  //   </head>
+  //   <body>
+  //     <h1>TASK QR CODE!</h1>
+  //     <img src="data:image/png;base64,$base64Image"/>
+  //   </body>
+  //   </html>
+  // ''';
+
+  //   final body = jsonEncode({
+  //     'html': htmlContent,
+  //     'file_name': 'TaskQR.pdf',
+  //   });
+
+  //   final response = await http.post(
+  //     url,
+  //     headers: headers,
+  //     body: body,
+  //   );
+
+  //   if (response.statusCode == 200) {
+  //     final pdfBase64 = base64Encode(response.bodyBytes);
+  //     await sendEmail({
+  //       'to_email': supervisorEmail,
+  //       'subject': 'Task QR Code',
+  //       'from_name': 'Company',
+  //       'html': '',
+  //       'pdfFile': pdfBase64,
+  //     });
+  //   } else {
+  //     print(
+  //         'Failed to call API: ${response.statusCode}, ${response.reasonPhrase}');
+  //   }
+  // }
+
+  // Future<String> prepareHtmlContent(
+  //     List<Map<String, dynamic>> shiftTasks) async {
+  //   String htmlContent = """
+  // <!DOCTYPE html>
+  // <html>
+  // <head>
+  //   <title>Shift Tasks</title>
+  // </head>
+  // <body>
+  //   <h1>Shift Tasks</h1>
+  //   <table border="1">
+  //     <tr>
+  //       <th>Task Name</th>
+  //       <th>QR Code</th>
+  //     </tr>
+  // """;
+
+  //   for (var task in shiftTasks) {
+  //     Uint8List qrCodeBytes = await generateQrCode(task['ShiftTaskId']);
+  //     String base64QrCode = base64Encode(qrCodeBytes);
+
+  //     htmlContent += """
+  //     <tr>
+  //       <td>${task['ShiftTask']}</td>
+  //       <td><img src="data:image/png;base64,$base64QrCode" alt="QR Code"></td>
+  //     </tr>
+  //   """;
+  //   }
+
+  //   htmlContent += """
+  //   </table>
+  // </body>
+  // </html>
+  // """;
+
+  //   return htmlContent;
+  // }
+  Future<void> generateAndSendQrPdf(
+    List<Map<String, dynamic>> shiftTasks,
+    String supervisorEmail,
+  ) async {
+    // Generate HTML content with all QR codes
+    String htmlContent = await prepareHtmlContent(shiftTasks);
+
+    // Call PDF API
+    await callPdfApi(htmlContent, supervisorEmail);
+  }
+
+  Future<void> callPdfApi(String htmlContent, String supervisorEmail) async {
+    final url =
+        Uri.parse('https://backend-security-app.onrender.com/api/html_to_pdf');
+
+    final headers = {
+      'Content-Type': 'application/json',
+    };
+
+    final body = jsonEncode({
+      'html': htmlContent,
+      'file_name': 'TaskQR.pdf',
+    });
+
+    final response = await http.post(
+      url,
+      headers: headers,
+      body: body,
+    );
+
+    if (response.statusCode == 200) {
+      final pdfBase64 = base64Encode(response.bodyBytes);
+      await sendEmailUsingApi("Qr Testing", "Vaibhav", pdfBase64);
+    } else {
+      print(
+          'Failed to call API: ${response.statusCode}, ${response.reasonPhrase}');
+    }
+  }
+
+  Future<String> prepareHtmlContent(
+    List<Map<String, dynamic>> shiftTasks,
+  ) async {
+    String htmlContent = """
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Shift Tasks</title>
+</head>
+<body>
+  <h1>Shift Tasks</h1>
+  <table border="1">
+    <tr>
+      <th>Task Name</th>
+      <th>QR Code</th>
+    </tr>
+""";
+
+    for (var task in shiftTasks) {
+      Uint8List qrCodeBytes = await generateQrCode(task['ShiftTaskId']);
+      String base64QrCode = base64Encode(qrCodeBytes);
+
+      htmlContent += """
+    <tr>
+      <td>${task['ShiftTask']}</td>
+      <td><img src="data:image/png;base64,$base64QrCode" alt="QR Code"></td>
+    </tr>
+  """;
+    }
+
+    htmlContent += """
+  </table>
+</body>
+</html>
+""";
+
+    return htmlContent;
+  }
+
+  Future<Uint8List> generateQrCode(String data) async {
+    final qrValidationResult = QrValidator.validate(
+      data: data,
+      version: QrVersions.auto,
+      errorCorrectionLevel: QrErrorCorrectLevel.L,
+    );
+    final qrCode = qrValidationResult.qrCode;
+    final painter = QrPainter.withQr(
+      qr: qrCode!,
+      color: Color(0xFF000000),
+      emptyColor: Color(0xFFFFFFFF),
+      gapless: true,
+    );
+    final image = await painter.toImage(200);
+    final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+    return byteData!.buffer.asUint8List();
   }
 
   Future<void> updateShift(

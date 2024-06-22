@@ -62,6 +62,7 @@ class HomeScreenController extends GetxController {
 
   /// start Bg the location service
   Future<void> startBgLocationService() async {
+    // await Future.delayed(Duration(seconds: 30));
     try {
       print('start Bg location service');
       if (await _checkLocationPermission1()) {
@@ -71,8 +72,6 @@ class HomeScreenController extends GetxController {
         lastLocation = null;
       } else {
         print("Location permission Error");
-        // customErrorToast(
-        //     "Location permission is required for background tracking.");
       }
     } catch (e) {
       print(e);
@@ -196,6 +195,8 @@ class HomeScreenController extends GetxController {
   }
 
   Future<void> _startLocator() async {
+    // await Future.delayed(Duration(seconds: 30));
+
     Map<String, dynamic> data = {'countInit': 1};
     return await BackgroundLocator.registerLocationUpdate(
         LocationCallbackHandler.callback,

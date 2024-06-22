@@ -107,6 +107,16 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
     getAllPatrolNames();
     getAllLocationNames();
     initializeData();
+    // _addNewTask();
+    if (widget.GuardId.isNotEmpty || widget.GuardName.isNotEmpty) {
+      setState(() {
+        selectedGuards.add({
+          'GuardId': widget.GuardId,
+          'GuardName': widget.GuardName ?? '',
+          'GuardImg': widget.GuardImg ?? '',
+        });
+      });
+    }
   }
 
   void initializeData() async {
@@ -615,6 +625,73 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
   }
 
   final TextEditingController _controller = TextEditingController();
+  void CreateShiftFunction() async {
+    try {
+      String address = "";
+      GeoPoint coordinates = GeoPoint(0, 0);
+      String name = "";
+      String locationId = "";
+
+      List<String> patrolids =
+          await fireStoreService.getPatrolIdsFromNames(selectedPatrols);
+
+      String clientId =
+          await fireStoreService.getClientIdfromName(selectedClint!);
+      print('ClientName: $selectedClint');
+      print('ClientId: $clientId');
+
+      var locationData = await fireStoreService.getLocationByName(
+          selectedLocatin!, widget.CompanyId);
+      if (locationData.exists) {
+        var data = locationData.data() as Map<String, dynamic>?;
+        if (data != null) {
+          address = data['LocationAddress'];
+          coordinates = data['LocationCoordinates'] as GeoPoint;
+          name = data['LocationName'];
+          locationId = data['LocationId'];
+
+          print("Address $address");
+          print("Coordinates $coordinates");
+          print("Latitude: ${coordinates.latitude}");
+          print("Longitude: ${coordinates.longitude}");
+        }
+      }
+      String id = await fireStoreService.ScheduleShift(
+        selectedGuards,
+        selectedPosition,
+        address,
+        "CompanyBranchId",
+        widget.CompanyId,
+        _selectedDates,
+        startTime,
+        endTime,
+        AsignedPatrol,
+        clientId,
+        requiredEmpcontroller.text,
+        requiredPhotocontroller.text,
+        requiredRadius.text,
+        _isRestrictedChecked,
+        coordinates,
+        name,
+        locationId,
+        address,
+        _Branch.text,
+        _Description.text,
+        _ShiftName.text,
+        tasks,
+      );
+      if (id.isNotEmpty) {
+        setState(() {
+          // Navigator.pop(context);
+          // _addNewTask();
+          CreatedshiftId = id;
+        });
+        showSuccessToast(context, "Shift created successfully");
+      }
+    } catch (e) {
+      showErrorToast(context, "Error creating shift");
+    }
+  }
 
   final List<Guards> _screens = [
     Guards('Site Tours', 'Image URL'),
@@ -671,7 +748,6 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
   final NumberEditingTextController _textController =
       NumberEditingTextController.integer();
   String? _selectedOption;
-
   // List<String> options = [];
 
   //
@@ -696,6 +772,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
               Container(
                 height: 60.h,
                 width: double.maxFinite,
+                padding: EdgeInsets.symmetric(horizontal: 10.w),
                 decoration: BoxDecoration(
                   // color: Colors.redAccent,
                   borderRadius: BorderRadius.circular(10.r),
@@ -778,6 +855,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
 
   @override
   Widget build(BuildContext context) {
+    int requiredEmp = 0;
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -833,381 +911,382 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                       guard['GuardId'] ==
                                           value['id']);
 
-                                      if (guardExists) {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                            content: Text(
-                                                'Guard already added'),
-                                          ),
-                                        );
-                                      } else {
-                                        // Add the guard if it does not exist
-                                        selectedGuards.add({
-                                          'GuardId': value['id'],
-                                          'GuardName': value['name'],
-                                          'GuardImg': value['url']
-                                        });
-                                      }
-                                    }),
-                                  }
-                              });
-                            },
-                            child: InterBold(
-                              text: 'view all',
-                              fontsize: 14.sp,
-                              color: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium!
-                                  .color,
-                            ),
-                          )
-                        ],
-                      ),
-                      SizedBox(height: 24.h),
-                      Container(
-                        height: 64.h,
-                        padding: EdgeInsets.symmetric(horizontal: 10.w),
-                        decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Theme.of(context).shadowColor,
-                              blurRadius: 5,
-                              spreadRadius: 2,
-                              offset: Offset(0, 3),
-                            )
-                          ],
-                          color: Theme.of(context).cardColor,
-                          borderRadius: BorderRadius.circular(13.r),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: TextField(
-                                controller: _searchController,
-                                onChanged: (query) {
-                                  searchGuards(query);
+                                              if (guardExists) {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                        'Guard already added'),
+                                                  ),
+                                                );
+                                              } else {
+                                                // Add the guard if it does not exist
+                                                selectedGuards.add({
+                                                  'GuardId': value['id'],
+                                                  'GuardName': value['name'],
+                                                  'GuardImg': value['url']
+                                                });
+                                              }
+                                            }),
+                                          }
+                                      });
                                 },
-                                style: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.w300,
-                                  fontSize: 18.sp,
+                                child: InterBold(
+                                  text: 'view all',
+                                  fontsize: 14.sp,
                                   color: Theme.of(context)
                                       .textTheme
                                       .bodyMedium!
                                       .color,
                                 ),
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderSide: BorderSide.none,
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10.r),
-                                    ),
-                                  ),
-                                  focusedBorder: InputBorder.none,
-                                  hintStyle: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 18.sp,
-                                    color: Theme.of(context)
-                                        .textTheme
-                                        .bodyLarge!
-                                        .color,
-                                  ),
-                                  hintText: 'Search Guard',
-                                  contentPadding: EdgeInsets.zero,
-                                ),
-                                cursorColor: Theme.of(context).primaryColor,
-                              ),
+                              )
+                            ],
+                          ),
+                          SizedBox(height: 24.h),
+                          Container(
+                            height: 64.h,
+                            padding: EdgeInsets.symmetric(horizontal: 10.w),
+                            decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Theme.of(context).shadowColor,
+                                  blurRadius: 5,
+                                  spreadRadius: 2,
+                                  offset: Offset(0, 3),
+                                )
+                              ],
+                              color: Theme.of(context).cardColor,
+                              borderRadius: BorderRadius.circular(13.r),
                             ),
-                            Container(
-                              height: 44.h,
-                              width: 44.w,
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).primaryColor,
-                                borderRadius: BorderRadius.circular(10.r),
-                              ),
-                              child: Center(
-                                child: Icon(
-                                  Icons.search,
-                                  size: 20.w,
-                                  color: Theme.of(context).brightness ==
-                                      Brightness.dark
-                                      ? DarkColor.Secondarycolor
-                                      : LightColor.color1,
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: guards.length,
-                        itemBuilder: (context, index) {
-                          final guard = guards[index];
-                          return ListTile(
-                            title: Text(guard['EmployeeName']),
-                            onTap: () {
-                              setState(() {
-                                _searchController.text =
-                                guard['EmployeeName'];
-                                selectedGuardId = guard['EmployeeId'];
-                                selectedGuardName = guard['EmployeeName'];
-                                selectedGuardImage = guard['EmployeeImg'];
-                                selectedGuards.add({
-                                  'GuardId': selectedGuardId,
-                                  'GuardName': selectedGuardName,
-                                  'GuardImg': selectedGuardImage,
-                                });
-                                guards.clear();
-                              });
-                            },
-                          );
-                        },
-                      ),
-                      SizedBox(height: 20.h),
-                      selectedGuards.isNotEmpty
-                          ? Container(
-                        margin: EdgeInsets.only(top: 20.h),
-                        height: 80.h,
-                        width: double.maxFinite,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: selectedGuards.length,
-                          itemBuilder: (context, index) {
-                            String guardId =
-                            selectedGuards[index]['GuardId'];
-                            String guardName =
-                            selectedGuards[index]['GuardName'];
-                            String guardImg =
-                            selectedGuards[index]['GuardImg'];
-                            return Padding(
-                              padding: EdgeInsets.only(right: 20.h),
-                              child: Column(
-                                mainAxisAlignment:
-                                MainAxisAlignment.end,
-                                children: [
-                                  Stack(
-                                    clipBehavior: Clip.none,
-                                    children: [
-                                      Container(
-                                        height: 50.h,
-                                        width: 50.w,
-                                        decoration: guardImg != ""
-                                            ? BoxDecoration(
-                                          shape:
-                                          BoxShape.circle,
-                                          image:
-                                          DecorationImage(
-                                            image: NetworkImage(
-                                                guardImg ?? ""),
-                                            filterQuality:
-                                            FilterQuality
-                                                .high,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        )
-                                            : BoxDecoration(
-                                          shape:
-                                          BoxShape.circle,
-                                          color:
-                                          Theme.of(context)
-                                              .primaryColor,
-                                          image:
-                                          DecorationImage(
-                                            image: AssetImage(
-                                                'assets/images/default.png'),
-                                            filterQuality:
-                                            FilterQuality
-                                                .high,
-                                            fit: BoxFit.cover,
-                                          ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: TextField(
+                                    controller: _searchController,
+                                    onChanged: (query) {
+                                      searchGuards(query);
+                                    },
+                                    style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w300,
+                                      fontSize: 18.sp,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .color,
+                                    ),
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderSide: BorderSide.none,
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(10.r),
                                         ),
                                       ),
-                                      Positioned(
-                                        top: -4,
-                                        right: -5,
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              selectedGuards
-                                                  .removeAt(index);
-                                            });
-                                          },
-                                          child: Container(
-                                            height: 20.h,
-                                            width: 20.w,
-                                            decoration: BoxDecoration(
-                                                shape:
-                                                BoxShape.circle,
-                                                color:
-                                                DarkColor.color1),
-                                            child: Center(
-                                              child: Icon(
-                                                Icons.close,
-                                                size: 8.sp,
-                                                color: DarkColor
-                                                    .Secondarycolor,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    ],
+                                      focusedBorder: InputBorder.none,
+                                      hintStyle: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.w300,
+                                        fontSize: 18.sp,
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge!
+                                            .color,
+                                      ),
+                                      hintText: 'Search Guard',
+                                      contentPadding: EdgeInsets.zero,
+                                    ),
+                                    cursorColor: Theme.of(context).primaryColor,
                                   ),
-                                  SizedBox(height: 8.h),
-                                  InterBold(
-                                    text: guardName,
-                                    fontsize: 14.sp,
-                                    color: Theme.of(context)
-                                        .textTheme
-                                        .displayMedium!
-                                        .color,
-                                  )
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                      )
-                          : SizedBox(),
-                      SizedBox(
-                        height: 30.h,
-                      ),
-                      InterBold(
-                        text: 'Set Details',
-                        fontsize: 16.sp,
-                        color:
-                        Theme.of(context).textTheme.bodyMedium!.color,
-                      ),
-                      SizedBox(height: 10.h),
-                      // Select Guard
-                      // SetDetailsWidget(
-                      //   useTextField: true,
-                      //   hintText: 'Shift Position',
-                      //   icon: Icons.control_camera,
-                      //   controller: _ShiftPosition,
-                      //   onTap: () {},
-                      // ),
-                      Container(
-                        height: 60.h,
-                        padding: EdgeInsets.symmetric(horizontal: 10.w),
-                        decoration: BoxDecoration(
-                          // color: Colors.redAccent,
-                          borderRadius: BorderRadius.circular(10.r),
-                          border: Border(
-                            bottom: BorderSide(
-                              color: Theme.of(context).brightness ==
-                                  Brightness.dark
-                                  ? DarkColor.color19
-                                  : LightColor.color3,
+                                ),
+                                Container(
+                                  height: 44.h,
+                                  width: 44.w,
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context).primaryColor,
+                                    borderRadius: BorderRadius.circular(10.r),
+                                  ),
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.search,
+                                      size: 20.w,
+                                      color: Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? DarkColor.Secondarycolor
+                                          : LightColor.color1,
+                                    ),
+                                  ),
+                                )
+                              ],
                             ),
                           ),
-                        ),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<String>(
-                            isExpanded: true,
-                            iconSize: 24.w,
-                            icon: Icon(Icons.arrow_drop_down, size: 24.sp),
-                            iconEnabledColor: Theme.of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .color,
-                            // Set icon color for enabled state
-                            dropdownColor: Theme.of(context).cardColor,
-                            style: TextStyle(
-                                color: Theme.of(context)
+                          ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: guards.length,
+                            itemBuilder: (context, index) {
+                              final guard = guards[index];
+                              return ListTile(
+                                title: Text(guard['EmployeeName']),
+                                onTap: () {
+                                  setState(() {
+                                    _searchController.text =
+                                        guard['EmployeeName'];
+                                    selectedGuardId = guard['EmployeeId'];
+                                    selectedGuardName = guard['EmployeeName'];
+                                    selectedGuardImage = guard['EmployeeImg'];
+                                    selectedGuards.add({
+                                      'GuardId': selectedGuardId,
+                                      'GuardName': selectedGuardName,
+                                      'GuardImg': selectedGuardImage,
+                                    });
+                                    guards.clear();
+                                  });
+                                },
+                              );
+                            },
+                          ),
+                          SizedBox(height: 20.h),
+                          selectedGuards.isNotEmpty
+                              ? Container(
+                                  margin: EdgeInsets.only(top: 20.h),
+                                  height: 80.h,
+                                  width: double.maxFinite,
+                                  child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: selectedGuards.length,
+                                    itemBuilder: (context, index) {
+                                      String guardId =
+                                          selectedGuards[index]['GuardId'];
+                                      String guardName =
+                                          selectedGuards[index]['GuardName'];
+                                      String guardImg =
+                                          selectedGuards[index]['GuardImg'];
+                                      return Padding(
+                                        padding: EdgeInsets.only(right: 20.h),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            Stack(
+                                              clipBehavior: Clip.none,
+                                              children: [
+                                                Container(
+                                                  height: 50.h,
+                                                  width: 50.w,
+                                                  decoration: guardImg != ""
+                                                      ? BoxDecoration(
+                                                          shape:
+                                                              BoxShape.circle,
+                                                          image:
+                                                              DecorationImage(
+                                                            image: NetworkImage(
+                                                                guardImg ?? ""),
+                                                            filterQuality:
+                                                                FilterQuality
+                                                                    .high,
+                                                            fit: BoxFit.cover,
+                                                          ),
+                                                        )
+                                                      : BoxDecoration(
+                                                          shape:
+                                                              BoxShape.circle,
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .primaryColor,
+                                                          image:
+                                                              DecorationImage(
+                                                            image: AssetImage(
+                                                                'assets/images/default.png'),
+                                                            filterQuality:
+                                                                FilterQuality
+                                                                    .high,
+                                                            fit: BoxFit.cover,
+                                                          ),
+                                                        ),
+                                                ),
+                                                Positioned(
+                                                  top: -4,
+                                                  right: -5,
+                                                  child: GestureDetector(
+                                                    onTap: () {
+                                                      setState(() {
+                                                        selectedGuards
+                                                            .removeAt(index);
+                                                      });
+                                                    },
+                                                    child: Container(
+                                                      height: 20.h,
+                                                      width: 20.w,
+                                                      decoration: BoxDecoration(
+                                                          shape:
+                                                              BoxShape.circle,
+                                                          color:
+                                                              DarkColor.color1),
+                                                      child: Center(
+                                                        child: Icon(
+                                                          Icons.close,
+                                                          size: 8,
+                                                          color: DarkColor
+                                                              .Secondarycolor,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                            SizedBox(height: 8.h),
+                                            InterBold(
+                                              text: guardName,
+                                              fontsize: 14.sp,
+                                              color: Theme.of(context)
+                                                  .textTheme
+                                                  .displayMedium!
+                                                  .color,
+                                            )
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                )
+                              : SizedBox(),
+                          SizedBox(
+                            height: 30.h,
+                          ),
+                          InterBold(
+                            text: 'Set Details',
+                            fontsize: 16.sp,
+                            color:
+                                Theme.of(context).textTheme.bodyMedium!.color,
+                          ),
+                          SizedBox(height: 10.h),
+                          // Select Guard
+                          // SetDetailsWidget(
+                          //   useTextField: true,
+                          //   hintText: 'Shift Position',
+                          //   icon: Icons.control_camera,
+                          //   controller: _ShiftPosition,
+                          //   onTap: () {},
+                          // ),
+                          Container(
+                            height: 60.h,
+                            padding: EdgeInsets.symmetric(horizontal: 10.w),
+                            decoration: BoxDecoration(
+                              // color: Colors.redAccent,
+                              borderRadius: BorderRadius.circular(10.r),
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? DarkColor.color19
+                                      : LightColor.color3,
+                                ),
+                              ),
+                            ),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<String>(
+                                isExpanded: true,
+                                iconSize: 24.w,
+                                icon: Icon(Icons.arrow_drop_down),
+                                iconEnabledColor: Theme.of(context)
                                     .textTheme
                                     .bodyMedium!
-                                    .color),
-                            value: selectedPosition,
-                            hint: InterMedium(
-                              text: 'Select',
-                              fontsize: 20.sp,
-                              color: Theme.of(context).highlightColor,
-                            ),
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                selectedPosition = newValue;
-                                // print('$selectedValue selected');
-                              });
-                            },
-                            items: PositionValues.map<
-                                DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Row(
-                                  children: [
-                                    selectedPosition == value
-                                        ? Icon(Icons.control_camera,
+                                    .color,
+                                // Set icon color for enabled state
+                                dropdownColor: Theme.of(context).cardColor,
+                                style: TextStyle(
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .color),
+                                value: selectedPosition,
+                                hint: Text("Select Roles",
+                                    style: TextStyle(
                                         color: Theme.of(context)
                                             .textTheme
                                             .bodyMedium!
-                                            .color)
-                                        : Icon(Icons.control_camera,
-                                        color: Theme.of(context)
-                                            .textTheme
-                                            .bodyLarge!
-                                            .color),
-                                    // Conditional icon color based on selection
-                                    SizedBox(width: 10.w),
-                                    InterRegular(
-                                        text: value,
-                                        color: selectedPosition == value
-                                            ? Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium!
-                                            .color
-                                            : Theme.of(context)
-                                            .textTheme
-                                            .bodyLarge!
-                                            .color),
-                                    // Conditional text color based on selection
-                                  ],
-                                ),
-                              );
-                            }).toList(),
-                          ),
-                        ),
-                      ),
-                      SetDetailsWidget(
-                        useTextField: true,
-                        hintText: 'Shift Name',
-                        icon: Icons.map_outlined,
-                        controller: _ShiftName,
-                        onTap: () {},
-                      ),
-                      // Multiple Date To Do
-                      SetDetailsWidget(
-                        hintText: 'Date',
-                        icon: Icons.date_range,
-                        onTap: () => _showDatePicker(context),
-                      ),
-                      SizedBox(height: 5.h),
-                      Row(
-                        children: [
-                          InterMedium(
-                            text: 'Selected dates: ',
-                            color: Theme.of(context)
-                                .textTheme
-                                .bodySmall!
-                                .color,
-                            fontsize: 14.sp,
-                          ),
-                          if (_selectedDates != null)
-                            for (var date in _selectedDates)
-                              Flexible(
-                                child: InterMedium(
-                                  text: '${DateFormat('d').format(date)},',
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .bodyLarge!
-                                      .color,
-                                  fontsize: 14.sp,
-                                ),
+                                            .color)),
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    selectedPosition = newValue;
+                                    // print('$selectedValue selected');
+                                  });
+                                },
+                                items: PositionValues.map<
+                                    DropdownMenuItem<String>>((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Row(
+                                      children: [
+                                        selectedPosition == value
+                                            ? Icon(Icons.control_camera,
+                                                color: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyMedium!
+                                                    .color)
+                                            : Icon(Icons.control_camera,
+                                                color: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyLarge!
+                                                    .color),
+                                        // Conditional icon color based on selection
+                                        SizedBox(width: 10.w),
+                                        InterRegular(
+                                            text: value,
+                                            color: selectedPosition == value
+                                                ? Theme.of(context)
+                                                    .textTheme
+                                                    .bodyMedium!
+                                                    .color
+                                                : Theme.of(context)
+                                                    .textTheme
+                                                    .bodyLarge!
+                                                    .color),
+                                        // Conditional text color based on selection
+                                      ],
+                                    ),
+                                  );
+                                }).toList(),
                               ),
-                        ],
-                      ),
+                            ),
+                          ),
+                          SetDetailsWidget(
+                            useTextField: true,
+                            hintText: 'Shift Name',
+                            icon: Icons.map_outlined,
+                            controller: _ShiftName,
+                            onTap: () {},
+                          ),
+                          // Multiple Date To Do
+                          SetDetailsWidget(
+                            hintText: 'Date',
+                            icon: Icons.date_range,
+                            onTap: () => _showDatePicker(context),
+                          ),
+                          SizedBox(height: 5.h),
+                          Row(
+                            children: [
+                              InterMedium(
+                                text: 'Selected dates: ',
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall!
+                                    .color,
+                                fontsize: 14.sp,
+                              ),
+                              if (_selectedDates != null)
+                                for (var date in _selectedDates)
+                                  Flexible(
+                                    child: InterMedium(
+                                      text: '${DateFormat('d').format(date)},',
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge!
+                                          .color,
+                                      fontsize: 14.sp,
+                                    ),
+                                  ),
+                            ],
+                          ),
 
                       // Seperate Time
                       SetDetailsWidget(
@@ -1351,30 +1430,30 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                       children: [
                                         selectedClint == value
                                             ? Icon(
-                                            Icons.account_circle_outlined,
-                                            color: Theme.of(context)
-                                                .textTheme
-                                                .bodyMedium!
-                                                .color)
+                                                Icons.account_circle_outlined,
+                                                color: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyMedium!
+                                                    .color)
                                             : Icon(
-                                            Icons.account_circle_outlined,
-                                            color: Theme.of(context)
-                                                .textTheme
-                                                .bodyLarge!
-                                                .color),
+                                                Icons.account_circle_outlined,
+                                                color: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyLarge!
+                                                    .color),
                                         // Conditional icon color based on selection
                                         SizedBox(width: 10.w),
                                         InterRegular(
                                             text: value,
                                             color: selectedClint == value
                                                 ? Theme.of(context)
-                                                .textTheme
-                                                .bodyMedium!
-                                                .color
+                                                    .textTheme
+                                                    .bodyMedium!
+                                                    .color
                                                 : Theme.of(context)
-                                                .textTheme
-                                                .bodyLarge!
-                                                .color),
+                                                    .textTheme
+                                                    .bodyLarge!
+                                                    .color),
                                         // Conditional text color based on selection
                                       ],
                                     ),
@@ -1508,7 +1587,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                         },
                       ),
 
-                      /**/
+                          /**/
 
                       SetDetailsWidget(
                         keyboardType: TextInputType.number,
@@ -1570,404 +1649,400 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                         ],
                       ),
 
-                      SetDetailsWidget(
-                        useTextField: true,
-                        hintText: 'Branch(Optional)',
-                        icon: Icons.apartment,
-                        controller: _Branch,
-                        onTap: () {},
-                      ),
-                      SetDetailsWidget(
-                        useTextField: true,
-                        keyboardType: TextInputType.number,
-                        hintText: 'Photo Upload interval in minutes ',
-                        icon: Icons.backup_outlined,
-                        controller: requiredPhotocontroller,
-                        onTap: () {},
-                      ),
-                      // IntInputWidget(
-                      //     hintText: "Photo Upload interval in minutes",
-                      //     controller: requiredPhotocontroller,
-                      //     onChanged: (text) {
-                      //       print("Photo Interval minutes ${text}");
-                      //       // setState(() {
-                      //       //   requiredEmp = text!;
-                      //       // });
-                      //     }),
-                      SetDetailsWidget(
-                        useTextField: true,
-                        hintText: 'Description(Optional)',
-                        icon: Icons.draw_outlined,
-                        controller: _Description,
-                        onTap: () {},
-                      ),
-                      // placesAutoCompleteTextField(),
+                          SetDetailsWidget(
+                            useTextField: true,
+                            hintText: 'Branch(Optional)',
+                            icon: Icons.apartment,
+                            controller: _Branch,
+                            onTap: () {},
+                          ),
+                          SetDetailsWidget(
+                            useTextField: true,
+                            keyboardType: TextInputType.number,
+                            hintText: 'Photo Upload interval in minutes ',
+                            icon: Icons.backup_outlined,
+                            controller: requiredPhotocontroller,
+                            onTap: () {},
+                          ),
+                          // IntInputWidget(
+                          //     hintText: "Photo Upload interval in minutes",
+                          //     controller: requiredPhotocontroller,
+                          //     onChanged: (text) {
+                          //       print("Photo Interval minutes ${text}");
+                          //       // setState(() {
+                          //       //   requiredEmp = text!;
+                          //       // });
+                          //     }),
+                          SetDetailsWidget(
+                            useTextField: true,
+                            hintText: 'Description(Optional)',
+                            icon: Icons.draw_outlined,
+                            controller: _Description,
+                            onTap: () {},
+                          ),
+                          // placesAutoCompleteTextField(),
 
-                      SizedBox(height: 40.h),
-                      Button1(
-                        text: 'Next',
-                        height: 50.h,
-                        onPressed: () async {
-                          if (selectedClint != null &&
-                              selectedLocatin != null &&
-                              requiredEmpcontroller.text.isNotEmpty &&
-                              _ShiftName.text.isNotEmpty) {
-                            setState(() {
-                              nextScreen = !nextScreen;
-                            });
-                          } else {
-                            String errorMessage =
-                                "Please fill in the following required fields:";
-                            if (selectedClint == null) {
-                              errorMessage += "\n- Client";
-                            }
-                            if (selectedLocatin == null) {
-                              errorMessage += "\n- Location";
-                            }
-                            if (requiredEmpcontroller.text.isEmpty) {
-                              errorMessage +=
-                              "\n- Required Number of Employees";
-                            }
-                            if (_ShiftName.text.isEmpty) {
-                              errorMessage += "\n- Shift Name";
-                            }
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text(errorMessage)));
-                            print(errorMessage);
-                          }
-                        },
-                        backgroundcolor: Theme.of(context).primaryColor,
-                        color: Colors.white,
-                        borderRadius: 10.r,
-                        fontsize: 14.sp,
+                          SizedBox(height: 40.h),
+                          Button1(
+                            text: 'Next',
+                            height: 50.h,
+                            onPressed: () async {
+                              if (selectedClint != null &&
+                                  selectedLocatin != null &&
+                                  requiredEmpcontroller.text.isNotEmpty &&
+                                  _ShiftName.text.isNotEmpty) {
+                                CreateShiftFunction();
+                                // setState(() {
+                                //   nextScreen = !nextScreen;
+                                // });
+                              } else {
+                                String errorMessage =
+                                    "Please fill in the following required fields:";
+                                if (selectedClint == null) {
+                                  errorMessage += "\n- Client";
+                                }
+                                if (selectedLocatin == null) {
+                                  errorMessage += "\n- Location";
+                                }
+                                if (requiredEmpcontroller.text.isEmpty) {
+                                  errorMessage +=
+                                      "\n- Required Number of Employees";
+                                }
+                                if (_ShiftName.text.isEmpty) {
+                                  errorMessage += "\n- Shift Name";
+                                }
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text(errorMessage)));
+                                print(errorMessage);
+                              }
+                            },
+                            backgroundcolor: Theme.of(context).primaryColor,
+                            color: Colors.white,
+                            borderRadius: 10.r,
+                            fontsize: 14.sp,
+                          ),
+                          SizedBox(height: 40.h),
+                        ],
                       ),
-                      SizedBox(height: 40.h),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Scaffold(
-              body: SingleChildScrollView(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 30.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (tasks.isNotEmpty)
-                        ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: tasks.length,
-                          itemBuilder: (context, index) {
-                            String taskName = tasks[index]['name'];
-                            bool isChecked =
-                                tasks[index]['isQrRequired'] ?? false;
-                            bool isReturnChecked =
-                                tasks[index]['isReturnQrRequired'] ?? false;
+                    )
+                  : Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 30.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (tasks.isNotEmpty)
+                            ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: tasks.length,
+                              itemBuilder: (context, index) {
+                                String taskName = tasks[index]['name'];
+                                bool isChecked =
+                                    tasks[index]['isQrRequired'] ?? false;
+                                bool isReturnChecked =
+                                    tasks[index]['isReturnQrRequired'] ?? false;
 
-                            return Column(
-                              children: [
-                                ListTile(
-                                  title: Container(
-                                    padding: EdgeInsets.only(left: 10.w),
-                                    decoration: BoxDecoration(
-                                      color: Theme.of(context).cardColor,
-                                      borderRadius:
-                                      BorderRadius.circular(10.r),
-                                    ),
-                                    child: taskControllers.isNotEmpty
-                                        ? TextField(
-                                      controller:
-                                      taskControllers[index],
-                                      style: GoogleFonts.poppins(
-                                        fontWeight: FontWeight.w300,
-                                        fontSize: 18.sp,
-                                        color: Colors.white,
-                                      ),
-                                      decoration: InputDecoration(
-                                        border: OutlineInputBorder(
-                                          borderSide: BorderSide.none,
+                                return Column(
+                                  children: [
+                                    ListTile(
+                                      title: Container(
+                                        padding: EdgeInsets.only(left: 10.w),
+                                        decoration: BoxDecoration(
+                                          color: Theme.of(context).cardColor,
                                           borderRadius:
-                                          BorderRadius.all(
-                                            Radius.circular(10.r),
+                                              BorderRadius.circular(10.r),
+                                        ),
+                                        child: taskControllers.isNotEmpty
+                                            ? TextField(
+                                                controller:
+                                                    taskControllers[index],
+                                                style: GoogleFonts.poppins(
+                                                  fontWeight: FontWeight.w300,
+                                                  fontSize: 18.sp,
+                                                  color: Colors.white,
+                                                ),
+                                                decoration: InputDecoration(
+                                                  border: OutlineInputBorder(
+                                                    borderSide: BorderSide.none,
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                      Radius.circular(10.r),
+                                                    ),
+                                                  ),
+                                                  focusedBorder:
+                                                      InputBorder.none,
+                                                  hintStyle:
+                                                      GoogleFonts.poppins(
+                                                    fontWeight: FontWeight.w300,
+                                                    fontSize: 18.sp,
+                                                    color: Colors.grey,
+                                                  ),
+                                                  hintText: 'Task ${index + 1}',
+                                                  contentPadding:
+                                                      EdgeInsets.zero,
+                                                ),
+                                                cursorColor: Colors.red,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    tasks[index]['name'] =
+                                                        value;
+                                                  });
+                                                  print(
+                                                      "textfield value $value");
+                                                },
+                                              )
+                                            : SizedBox(),
+                                      ),
+                                      trailing: IconButton(
+                                        icon: Icon(
+                                          Icons.delete,
+                                          color: Colors.redAccent,
+                                          size: 24.w,
+                                        ),
+                                        onPressed: () {
+                                          setState(() {
+                                            tasks.removeAt(index);
+                                            taskControllers.removeAt(index);
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    SizedBox(height: 10.h),
+                                    Row(
+                                      children: [
+                                        Checkbox(
+                                          activeColor: Colors.red,
+                                          checkColor: Colors.black,
+                                          value: isChecked,
+                                          onChanged: (bool? value) {
+                                            setState(() {
+                                              tasks[index]['isQrRequired'] =
+                                                  value ?? false;
+                                            });
+                                          },
+                                        ),
+                                        Text(
+                                          'QR Code Required',
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 16.sp,
+                                            color: Colors.grey,
                                           ),
                                         ),
-                                        focusedBorder:
-                                        InputBorder.none,
-                                        hintStyle:
-                                        GoogleFonts.poppins(
-                                          fontWeight: FontWeight.w300,
-                                          fontSize: 18.sp,
-                                          color: Colors.grey,
+                                      ],
+                                    ),
+                                    SizedBox(height: 10.h),
+                                    Row(
+                                      children: [
+                                        Checkbox(
+                                          activeColor: Colors.red,
+                                          checkColor: Colors.black,
+                                          value: isReturnChecked,
+                                          onChanged: (bool? value) {
+                                            setState(() {
+                                              tasks[index]
+                                                      ['isReturnQrRequired'] =
+                                                  value ?? false;
+                                            });
+                                          },
                                         ),
-                                        hintText: 'Task ${index + 1}',
-                                        contentPadding:
-                                        EdgeInsets.zero,
-                                      ),
-                                      cursorColor: Colors.red,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          tasks[index]['name'] =
-                                              value;
-                                        });
-                                        print(
-                                            "textfield value $value");
-                                      },
-                                    )
-                                        : SizedBox(),
-                                  ),
-                                  trailing: IconButton(
-                                    icon: Icon(
-                                      Icons.delete,
-                                      color: Colors.redAccent,
-                                      size: 24.w,
+                                        Text(
+                                          'Return QR Code Required',
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 16.sp,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    onPressed: () {
-                                      setState(() {
-                                        tasks.removeAt(index);
-                                        taskControllers.removeAt(index);
-                                      });
-                                    },
-                                  ),
-                                ),
-                                SizedBox(height: 10.h),
-                                Row(
-                                  children: [
-                                    Checkbox(
-                                      activeColor: Colors.red,
-                                      checkColor: Colors.black,
-                                      value: isChecked,
-                                      onChanged: (bool? value) {
-                                        setState(() {
-                                          tasks[index]['isQrRequired'] =
-                                              value ?? false;
-                                        });
-                                      },
-                                    ),
-                                    Text(
-                                      'QR Code Required',
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 16.sp,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
+                                    // Button1(
+                                    //   height: 50.h,
+                                    //   borderRadius: 10.w,
+                                    //   backgroundcolor:
+                                    //       Theme.of(context).brightness ==
+                                    //               Brightness.dark
+                                    //           ? DarkColor.color33
+                                    //           : LightColor.WidgetColor,
+                                    //   color: Theme.of(context)
+                                    //       .textTheme
+                                    //       .headlineMedium!
+                                    //       .color,
+                                    //   text: "Generate Qr",
+                                    //   onPressed: () async {
+                                    //     final name =
+                                    //         taskControllers[index].text;
+                                    //     _saveQrCode(name);
+                                    //     print('Generate QR Button Pressed');
+                                    //   },
+                                    // ),
                                   ],
-                                ),
-                                SizedBox(height: 10.h),
-                                Row(
-                                  children: [
-                                    Checkbox(
-                                      activeColor: Colors.red,
-                                      checkColor: Colors.black,
-                                      value: isReturnChecked,
-                                      onChanged: (bool? value) {
-                                        setState(() {
-                                          tasks[index]
-                                          ['isReturnQrRequired'] =
-                                              value ?? false;
-                                        });
-                                      },
-                                    ),
-                                    Text(
-                                      'Return QR Code Required',
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 16.sp,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Button1(
-                                  height: 50.h,
-                                  borderRadius: 10.w,
-                                  backgroundcolor:
-                                  Theme.of(context).brightness ==
-                                      Brightness.dark
-                                      ? DarkColor.color33
-                                      : LightColor.WidgetColor,
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .headlineMedium!
-                                      .color,
-                                  text: "Generate Qr",
-                                  onPressed: () async {
-                                    final name =
-                                        taskControllers[index].text;
-                                    _saveQrCode(name);
-                                    print('Generate QR Button Pressed');
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        )
-                      else
-                        Text('No tasks available.'),
-                      SizedBox(height: 20.h),
-                      SizedBox(
-                        width: 120.w,
-                        child: Button1(
-                          borderRadius: 10.r,
-                          onPressed: () {
-                            print("Tasks ${tasks}");
-                            _addNewTask();
-                          },
-                          height: 50.h,
-                          backgroundcolor: Theme.of(context).cardColor,
-                          text: nextScreen == false
-                              ? 'Create Shift Task'
-                              : 'Create Task',
-                          color: Theme.of(context)
-                              .textTheme
-                              .headlineMedium!
-                              .color,
-                        ),
-                      ),
-                      SizedBox(height: 90.h),
-                      Row(
-                        children: [
-                          Expanded(
-                            flex: 2,
-                            child: Button1(
-                              height: 50.h,
-                              text: 'Done',
-                              onPressed: () async {
-                                if (nextScreen!) {
-                                  String address = "";
-                                  GeoPoint coordinates = GeoPoint(0, 0);
-                                  String name = "";
-                                  String locationId = "";
-
-                                  List<String> patrolids =
-                                  await fireStoreService
-                                      .getPatrolIdsFromNames(
-                                      selectedPatrols);
-
-                                  String clientId = await fireStoreService
-                                      .getClientIdfromName(selectedClint!);
-                                  print('ClientName: $selectedClint');
-                                  print('ClientId: $clientId');
-
-                                  var locationData = await fireStoreService
-                                      .getLocationByName(selectedLocatin!,
-                                      widget.CompanyId);
-                                  if (locationData.exists) {
-                                    var data = locationData.data()
-                                    as Map<String, dynamic>?;
-                                    if (data != null) {
-                                      address = data['LocationAddress'];
-                                      coordinates =
-                                      data['LocationCoordinates']
-                                      as GeoPoint;
-                                      name = data['LocationName'];
-                                      locationId = data['LocationId'];
-
-                                      print("Address $address");
-                                      print("Coordinates $coordinates");
-                                      print(
-                                          "Latitude: ${coordinates.latitude}");
-                                      print(
-                                          "Longitude: ${coordinates.longitude}");
-                                    }
-                                  }
-
-                                  print("LocationData ids $locationData");
-                                  var requiredEmp =
-                                      requiredEmpcontroller.text;
-                                  print(
-                                      "Number Editing Controller ${requiredEmpcontroller.number}");
-                                  print("ShiftName ${_ShiftName.text}");
-                                  print("ShiftDesc ${_Description.text}");
-
-                                  if (widget.shiftId.isNotEmpty) {
-                                    await fireStoreService.updateShift(
-                                      widget.shiftId,
-                                      selectedGuards,
-                                      selectedPosition,
-                                      address,
-                                      "CompanyBranchId",
-                                      widget.CompanyId,
-                                      _selectedDates,
-                                      startTime,
-                                      endTime,
-                                      patrolids.cast<Map>(),
-                                      clientId,
-                                      requiredEmpcontroller.text,
-                                      requiredPhotocontroller.text,
-                                      requiredRadius.text,
-                                      _isRestrictedChecked,
-                                      coordinates,
-                                      name,
-                                      locationId,
-                                      address,
-                                      _Branch.text,
-                                      _Description.text,
-                                      _ShiftName.text,
-                                      tasks,
-                                    );
-                                  } else {
-                                    String id = await fireStoreService
-                                        .ScheduleShift(
-                                      selectedGuards,
-                                      selectedPosition,
-                                      address,
-                                      "CompanyBranchId",
-                                      widget.CompanyId,
-                                      _selectedDates,
-                                      startTime,
-                                      endTime,
-                                      patrolids.cast<Map>(),
-                                      clientId,
-                                      requiredEmpcontroller.text,
-                                      requiredPhotocontroller.text,
-                                      requiredRadius.text,
-                                      _isRestrictedChecked,
-                                      coordinates,
-                                      name,
-                                      locationId,
-                                      address,
-                                      _Branch.text,
-                                      _Description.text,
-                                      _ShiftName.text,
-                                      tasks,
-                                    );
-                                    setState(() {
-                                      CreatedshiftId = id;
-                                    });
-                                  }
-
-                                  setState(() {
-                                    Navigator.pop(context);
-                                    _addNewTask();
-                                  });
-                                  print("Shift Created/Updated");
-                                }
+                                );
                               },
-                              backgroundcolor:
-                              Theme.of(context).primaryColor,
+                            )
+                          else
+                            Text('No tasks available.'),
+                          SizedBox(height: 20.h),
+                          SizedBox(
+                            width: 120.w,
+                            child: Button1(
+                              borderRadius: 10.r,
+                              onPressed: () {
+                                print("Tasks ${tasks}");
+                                _addNewTask();
+                              },
+                              height: 50.h,
+                              backgroundcolor: Theme.of(context).cardColor,
+                              text: nextScreen == false
+                                  ? 'Create Shift Task'
+                                  : 'Create Task',
                               color: Theme.of(context)
                                   .textTheme
                                   .headlineMedium!
                                   .color,
-                              borderRadius: 10.r,
-                              fontsize: 14.sp,
                             ),
+                          ),
+                          SizedBox(height: 90.h),
+                          Row(
+                            children: [
+                              Expanded(
+                                flex: 2,
+                                child: Button1(
+                                  height: 50.h,
+                                  text: 'Done',
+                                  onPressed: () async {
+                                    if (nextScreen!) {
+                                      String address = "";
+                                      GeoPoint coordinates = GeoPoint(0, 0);
+                                      String name = "";
+                                      String locationId = "";
+
+                                      List<String> patrolids =
+                                          await fireStoreService
+                                              .getPatrolIdsFromNames(
+                                                  selectedPatrols);
+
+                                      String clientId = await fireStoreService
+                                          .getClientIdfromName(selectedClint!);
+                                      print('ClientName: $selectedClint');
+                                      print('ClientId: $clientId');
+
+                                      var locationData = await fireStoreService
+                                          .getLocationByName(selectedLocatin!,
+                                              widget.CompanyId);
+                                      if (locationData.exists) {
+                                        var data = locationData.data()
+                                            as Map<String, dynamic>?;
+                                        if (data != null) {
+                                          address = data['LocationAddress'];
+                                          coordinates =
+                                              data['LocationCoordinates']
+                                                  as GeoPoint;
+                                          name = data['LocationName'];
+                                          locationId = data['LocationId'];
+
+                                          print("Address $address");
+                                          print("Coordinates $coordinates");
+                                          print(
+                                              "Latitude: ${coordinates.latitude}");
+                                          print(
+                                              "Longitude: ${coordinates.longitude}");
+                                        }
+                                      }
+
+                                      print("LocationData ids $locationData");
+                                      var requiredEmp =
+                                          requiredEmpcontroller.text;
+                                      print(
+                                          "Number Editing Controller ${requiredEmpcontroller.number}");
+                                      print("ShiftName ${_ShiftName.text}");
+                                      print("ShiftDesc ${_Description.text}");
+                                      print("Patrol ${AsignedPatrol}");
+
+                                      if (widget.shiftId.isNotEmpty) {
+                                        await fireStoreService.updateShift(
+                                          widget.shiftId,
+                                          selectedGuards,
+                                          selectedPosition,
+                                          address,
+                                          "CompanyBranchId",
+                                          widget.CompanyId,
+                                          _selectedDates,
+                                          startTime,
+                                          endTime,
+                                          AsignedPatrol,
+                                          clientId,
+                                          requiredEmpcontroller.text,
+                                          requiredPhotocontroller.text,
+                                          requiredRadius.text,
+                                          _isRestrictedChecked,
+                                          coordinates,
+                                          name,
+                                          locationId,
+                                          address,
+                                          _Branch.text,
+                                          _Description.text,
+                                          _ShiftName.text,
+                                          tasks,
+                                        );
+                                      } else {
+                                        String id = await fireStoreService
+                                            .ScheduleShift(
+                                          selectedGuards,
+                                          selectedPosition,
+                                          address,
+                                          "CompanyBranchId",
+                                          widget.CompanyId,
+                                          _selectedDates,
+                                          startTime,
+                                          endTime,
+                                          AsignedPatrol,
+                                          clientId,
+                                          requiredEmpcontroller.text,
+                                          requiredPhotocontroller.text,
+                                          requiredRadius.text,
+                                          _isRestrictedChecked,
+                                          coordinates,
+                                          name,
+                                          locationId,
+                                          address,
+                                          _Branch.text,
+                                          _Description.text,
+                                          _ShiftName.text,
+                                          tasks,
+                                        );
+                                        setState(() {
+                                          CreatedshiftId = id;
+                                        });
+                                      }
+
+                                      // setState(() {
+                                      //   _addNewTask();
+                                      // });
+                                      // Navigator.pop
+                                      Navigator.pop(context);
+                                      print("Shift Created/Updated");
+                                    }
+                                  },
+                                  backgroundcolor:
+                                      Theme.of(context).primaryColor,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .headlineMedium!
+                                      .color,
+                                  borderRadius: 10.r,
+                                  fontsize: 14.sp,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                ),
-              ),
-            )
-          ],
+                    )
+            ],
+          ),
         ),
       ),
     );
   }
 }
-
-
 
 class ChipItem {
   final String label;
