@@ -10,6 +10,7 @@ import '../../../fonts/inter_bold.dart';
 import '../../../fonts/inter_medium.dart';
 import '../../../fonts/inter_semibold.dart';
 import '../../home screens/widgets/icon_text_widget.dart';
+import '../DAR/select_location_dar.dart';
 import '../select_client_guards_screen.dart';
 import 'client_oprn_report.dart';
 
@@ -63,7 +64,22 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
       Map<String, List<DocumentSnapshot>> dataByDate = {};
       for (var doc in querySnapshot.docs) {
         var data = doc.data() as Map<String, dynamic>;
-        var date = (data['ReportCreatedAt'] as Timestamp).toDate();
+        var createdAt = data['ReportCreatedAt'];
+        if (createdAt == null) {
+          print("Warning: ReportCreatedAt is null for document ${doc.id}");
+          continue;
+        }
+
+        var date = (createdAt as Timestamp).toDate();
+
+        if (selectedDate != null) {
+          if (date.year != selectedDate!.year ||
+              date.month != selectedDate!.month ||
+              date.day != selectedDate!.day) {
+            continue;
+          }
+        }
+
         var formattedDate = DateFormat('dd/MM/yyyy').format(date);
 
         if (selectedLocationId != null && selectedLocationId.isNotEmpty) {
@@ -167,7 +183,7 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
     setState(() {
       if (picked != null) {
         selectedDate = picked;
-        // fetchDARData();  // Fetch data for the selected date
+        fetchReports();
       }
     });
   }
@@ -207,7 +223,7 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       GestureDetector(
-                        // onTap: () => _selectDate(context),
+                        onTap: () => _selectDate(context),
                         child: SizedBox(
                           width: 140.w,
                           child: IconTextWidget(
@@ -229,11 +245,11 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              // SelectLocationDar.showLocationDialog(
-                              //   context,
-                              //   widget.companyId,
-                              //   onLocationSelected,
-                              // );
+                              SelectLocationDar.showLocationDialog(
+                                context,
+                                widget.companyId,
+                                onLocationSelected,
+                              );
                             },
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -269,15 +285,15 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //     builder: (context) => SelectClientGuardsScreen(
-                              //       companyId: widget.companyId,
-                              //       onGuardSelected: onGuardSelected,
-                              //     ),
-                              //   ),
-                              // );
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SelectClientGuardsScreen(
+                                    companyId: widget.companyId,
+                                    onGuardSelected: onGuardSelected,
+                                  ),
+                                ),
+                              );
                             },
                             child: Column(
                               children: [
