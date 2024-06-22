@@ -194,14 +194,14 @@ class _LicensesDetailsState extends State<LicensesDetails> {
               decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
-                      color:Theme.of(context).cardColor,
+                      color: Theme.of(context).shadowColor,
                       blurRadius: 5,
                       spreadRadius: 2,
                       offset: const Offset(0, 3),
                     )
                   ],
                   color:
-                      Theme.of(context).canvasColor,
+                      Theme.of(context).cardColor,
                   borderRadius: BorderRadius.circular(width / width8)),
               child: Center(
                 child: InterBold(
