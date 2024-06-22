@@ -197,6 +197,14 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
                                   width: double.maxFinite,
                                   margin: EdgeInsets.only(bottom: 16.h),
                                   decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Theme.of(context).shadowColor,
+                                        blurRadius: 5,
+                                        spreadRadius: 2,
+                                        offset: Offset(0, 3),
+                                      )
+                                    ],
                                     borderRadius: BorderRadius.circular(10.r),
                                     color: Theme.of(context).cardColor,
                                   ),

@@ -153,9 +153,17 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
                                 child: Container(
                                   // height: 60,
                                   decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Theme.of(context).shadowColor,
+                                        blurRadius: 5,
+                                        spreadRadius: 2,
+                                        offset: Offset(0, 3),
+                                      )
+                                    ],
                                     color: Theme.of(context).brightness ==
                                             Brightness.dark
-                                        ? DarkColor.color19
+                                        ? DarkColor.WidgetColor
                                         : LightColor.WidgetColor,
                                     borderRadius: BorderRadius.circular(12.h),
                                   ),

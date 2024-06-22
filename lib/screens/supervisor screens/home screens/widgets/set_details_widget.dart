@@ -96,7 +96,7 @@ class SetDetailsWidget extends StatelessWidget {
                         fontSize: 18.sp,
                         color: Theme.of(context)
                             .textTheme
-                            .bodyLarge!
+                            .bodyMedium!
                             .color, // Change text color to white
                       ),
                       hintText: hintText,
@@ -111,7 +111,7 @@ class SetDetailsWidget extends StatelessWidget {
                   child: InterMedium(
                     text: hintText,
                     fontsize: 18.sp,
-                    color:   Theme.of(context).highlightColor,
+                    color:   Theme.of(context).textTheme.bodyMedium!.color,
                   ),
                 ),
         ],

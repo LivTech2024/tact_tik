@@ -197,11 +197,11 @@ class _LicensesDetailsState extends State<LicensesDetails> {
                       color:Theme.of(context).cardColor,
                       blurRadius: 5,
                       spreadRadius: 2,
-                      offset: Offset(0, 3),
+                      offset: const Offset(0, 3),
                     )
                   ],
                   color:
-                      Theme.of(context).cardColor,
+                      Theme.of(context).canvasColor,
                   borderRadius: BorderRadius.circular(width / width8)),
               child: Center(
                 child: InterBold(

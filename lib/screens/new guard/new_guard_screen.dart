@@ -289,7 +289,7 @@ class _NewGuardScreenState extends State<NewGuardScreen> {
               text: 'Submit',
               onPressed: createEmployee,
               backgroundcolor: Theme.of(context).primaryColor,
-              color: Theme.of(context).textTheme.headlineMedium!.color,
+              color: Colors.white,
               borderRadius: 10.r,
               fontsize: 18.sp,
             )

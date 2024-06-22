@@ -215,7 +215,10 @@ class _SelectGuardsScreenState extends State<SelectDARGuardsScreen> {
                                             height: 14.h,
                                             width: 24.w,
                                             child: SvgPicture.asset(
-                                              'assets/images/arrow.svg',
+                                              themeManager.themeMode == ThemeMode.light
+                                                  ? 'assets/images/arrow.svg'
+                                                  :
+                                             'assets/images/arrow_light.svg',
                                               fit: BoxFit.fitWidth,
                                             ),
                                           )

@@ -538,9 +538,13 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
                           iconSize: 24.w,
                           hint: Text(
                             "Select Client",
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(color: Theme.of(context).textTheme.bodyMedium!.color),
                           ),
-                          icon: Icon(Icons.arrow_drop_down),
+                          icon: Icon(Icons.arrow_drop_down,
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .color),
                           iconEnabledColor:
                               Theme.of(context).textTheme.bodyMedium!.color,
                           // Set icon color for enabled state
@@ -621,10 +625,18 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
                           isExpanded: true,
                           hint: Text(
                             "Select Location",
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color),
                           ),
                           iconSize: 24.w,
-                          icon: Icon(Icons.arrow_drop_down),
+                          icon: Icon(Icons.arrow_drop_down,
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .color),
                           iconEnabledColor:
                               Theme.of(context).textTheme.bodyMedium!.color,
                           dropdownColor: Theme.of(context).cardColor,
@@ -723,7 +735,7 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
                             ],
                           ),
                           Checkbox(
-                            activeColor: DarkColor.Primarycolor,
+                            activeColor: Theme.of(context).primaryColor,
                             checkColor: DarkColor.color1,
                             value: isChecked,
                             onChanged: (bool? value) {
@@ -833,10 +845,7 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
                               ),
                               child: Center(
                                 child: Icon(
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium!
-                                      .color,
+                                  color: Colors.white,
                                   Icons.add,
                                   size: 20.sp,
                                 ),
@@ -875,7 +884,7 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
                         height: 50.h,
                         text: 'Submit',
                         color:
-                            Theme.of(context).textTheme.headlineMedium!.color,
+                            Colors.white,
                         onPressed: () async {
                           setState(() {
                             _isLoading = true;

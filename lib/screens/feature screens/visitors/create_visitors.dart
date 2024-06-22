@@ -641,16 +641,16 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                                           cursorColor:
                                               Theme.of(context).primaryColor,
                                           onChanged: (value) {
-                                            // final tagData =
-                                            DynamicTagData(value, "");
-                                            // inputFieldValues
-                                            // .onTagChanged(tagData);
+                                            final tagData =
+                                            DynamicTagData(value);
+                                            inputFieldValues
+                                            .onTagChanged(tagData);
                                           },
                                           onSubmitted: (value) {
-                                            // final tagData =
-                                            DynamicTagData(value, "");
-                                            // inputFieldValues
-                                            // .onTagSubmitted(tagData);
+                                            final tagData =
+                                            DynamicTagData(value);
+                                            inputFieldValues
+                                            .onTagSubmitted(tagData);
                                           },
                                         ),
                                       ),

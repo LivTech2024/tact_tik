@@ -188,6 +188,14 @@ class _SPostOrderState extends State<SPostOrder> {
                                       width: double.maxFinite,
                                       margin: EdgeInsets.only(bottom: 10.h),
                                       decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color:
+                                                Theme.of(context).shadowColor,
+                                            blurRadius: 10.r,
+                                            offset: Offset(0, 5),
+                                          ),
+                                        ],
                                         borderRadius:
                                             BorderRadius.circular(10.r),
                                         color: Theme.of(context).cardColor,

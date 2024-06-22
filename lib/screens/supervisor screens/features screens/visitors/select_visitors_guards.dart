@@ -186,7 +186,8 @@ class _SelectGuardsScreenState extends State<SelectVisitorsGuardsScreen> {
                                             height: 14.h,
                                             width: 24.w,
                                             child: SvgPicture.asset(
-                                              'assets/images/arrow.svg',
+                                              themeManager.themeMode== ThemeMode.dark?
+                                              'assets/images/arrow.svg': 'assets/images/arrow_light.svg',
                                               fit: BoxFit.fitWidth,
                                             ),
                                           )

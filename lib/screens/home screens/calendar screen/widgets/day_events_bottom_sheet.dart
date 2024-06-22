@@ -151,6 +151,14 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
                               ),
                               child: Container(
                                 decoration: BoxDecoration(
+                                  boxShadow: [
+                                      BoxShadow(
+                                        color: Theme.of(context).shadowColor,
+                                        blurRadius: 5,
+                                        spreadRadius: 2,
+                                        offset: Offset(0, 3),
+                                      )
+                                    ],
                                     color: event.isShiftAcknowledgedByEmployee
                                         ? Colors.green.shade700
                                         : (Theme.of(context).cardColor),
@@ -374,6 +382,14 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
             ),
             child: Container(
               decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: Theme.of(context).shadowColor,
+                    blurRadius: 5,
+                    spreadRadius: 2,
+                    offset: Offset(0, 3),
+                  )
+                ],
                 color: Theme.of(context).cardColor,
                 borderRadius: BorderRadius.circular(width / width10),
                 border: Border.all(
@@ -577,6 +593,14 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
         ),
         child: Container(
           decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Theme.of(context).shadowColor,
+                blurRadius: 5,
+                spreadRadius: 2,
+                offset: Offset(0, 3),
+              )
+            ],
             color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(width / width10),
 

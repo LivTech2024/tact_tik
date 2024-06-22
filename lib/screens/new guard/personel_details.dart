@@ -126,6 +126,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
             height: 60.h,
             padding: EdgeInsets.symmetric(horizontal: 10.w),
             decoration: BoxDecoration(
+            
               // color: Colors.redAccent,
               borderRadius: BorderRadius.circular(10.r),
               border: Border(
@@ -147,7 +148,9 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                 style: TextStyle(
                     color: Theme.of(context).textTheme.bodyMedium!.color),
                 value: selectedPosition,
-                hint: Text("Select Roles"),
+                hint: Text("Select Roles",
+                    style: TextStyle(
+                        color: Theme.of(context).textTheme.bodyMedium!.color)),
                 onChanged: (String? newValue) {
                   setState(() {
                     selectedPosition = newValue;

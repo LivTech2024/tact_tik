@@ -1270,7 +1270,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                         .bodyMedium!
                                         .color),
                                 value: selectedPosition,
-                                hint: Text("Select Roles"),
+                                hint: Text("Select Roles", style: TextStyle(color: Theme.of(context).textTheme.bodyMedium!.color)),
                                 onChanged: (String? newValue) {
                                   setState(() {
                                     selectedPosition = newValue;
