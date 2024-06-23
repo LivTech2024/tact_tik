@@ -139,7 +139,6 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
                     ),
                   ),
                 ),
-
                 SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {

@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tact_tik/common/widgets/customErrorToast.dart';
+import 'package:tact_tik/common/widgets/customToast.dart';
 import '../../../services/BackgroundLocationService/location_callback_handler.dart';
 import '../../../services/BackgroundLocationService/location_service_repo.dart';
 
@@ -36,6 +37,7 @@ class HomeScreenController extends GetxController {
       (dynamic data) async {
         await updateUI(data);
         print('listening');
+        Get.snackbar('Listening', "Listening");
       },
     );
     initPlatformState();
@@ -105,12 +107,9 @@ class HomeScreenController extends GetxController {
   }
 
   Future<bool> _checkLocationPermission1() async {
-    // _requestLocationPermission();
-    // await Permission.location.request();
-    // Check the current status of locationWhenInUse permission
     var statusWhenInUse = await Permission.locationWhenInUse.status;
 
-    // If locationWhenInUse is granted, check locationAlways permission
+    // If locationWhenInUse is granted, check locatsonAlways permission
     if (statusWhenInUse.isGranted) {
       var statusAlways = await Permission.locationAlways.status;
 
@@ -132,7 +131,7 @@ class HomeScreenController extends GetxController {
       }
     } else if (statusWhenInUse.isDenied) {
       // Request locationWhenInUse permission if not granted
-      var requestStatusWhenInUse = await Permission.location.request();
+      var requestStatusWhenInUse = await Permission.locationWhenInUse.request();
 
       // If locationWhenInUse is granted, check locationAlways permission
       if (requestStatusWhenInUse.isGranted) {

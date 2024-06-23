@@ -102,7 +102,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
         String EmployeeId = userInfo['EmployeeId'];
         String CompanyId = userInfo['EmployeeCompanyId'];
         String BranchId = userInfo['EmployeeCompanyBranchId'];
-
+        String EmpRole = userInfo['EmployeeRole'];
         String Imgurl = userInfo['EmployeeImg'];
         String EmpEmail = userInfo['EmployeeEmail'];
         // bool isemployeeAvailable = userInfo['EmployeeIsAvailable'];

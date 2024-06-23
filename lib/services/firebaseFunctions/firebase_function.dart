@@ -67,32 +67,34 @@ class FireStoreService {
       return null;
     }
   }
-Future<DocumentSnapshot?> getUserInfoByCurrentUserEmail2() async {
-  User? currentUser = FirebaseAuth.instance.currentUser;
 
-  if (currentUser == null) {
-    print("No current user logged in");
-    return null;
+  Future<DocumentSnapshot?> getUserInfoByCurrentUserEmail2() async {
+    User? currentUser = FirebaseAuth.instance.currentUser;
+
+    if (currentUser == null) {
+      print("No current user logged in");
+      return null;
+    }
+
+    final currentUserEmail = currentUser.email;
+    if (currentUserEmail == null || currentUserEmail.isEmpty) {
+      print("CurrentUserEmail is empty");
+      return null;
+    }
+
+    final querySnapshot = await userInfo
+        .where("EmployeeEmail", isEqualTo: currentUserEmail)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      // Return the first document found
+      print(querySnapshot.docs.first);
+      return querySnapshot.docs.first;
+    } else {
+      return null;
+    }
   }
 
-  final currentUserEmail = currentUser.email;
-  if (currentUserEmail == null || currentUserEmail.isEmpty) {
-    print("CurrentUserEmail is empty");
-    return null;
-  }
-
-  final querySnapshot = await userInfo
-      .where("EmployeeEmail", isEqualTo: currentUserEmail)
-      .get();
-
-  if (querySnapshot.docs.isNotEmpty) {
-    // Return the first document found
-    print(querySnapshot.docs.first);
-    return querySnapshot.docs.first;
-  } else {
-    return null;
-  }
-}
   Future<DocumentSnapshot?> getClientInfoByCurrentUserEmail() async {
     String? currentUser = storage.getItem("CurrentUser");
     print("Curretn User ${currentUser}");

@@ -10,6 +10,7 @@ class FirebaseNotificationApi {
     await _firebase_messaging.requestPermission();
     await Permission.location.request();
     await Permission.locationAlways.request();
+    await Permission.locationWhenInUse.request();
 
     final FCMToken = await _firebase_messaging.getToken();
 
