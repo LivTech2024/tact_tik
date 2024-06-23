@@ -57,7 +57,7 @@ class SetDetailsWidget extends StatelessWidget {
          border: Border(
           bottom: BorderSide(
             color: Theme.of(context).brightness == Brightness.dark
-                ? DarkColor.color19
+                ? DarkColor.color12
                 : LightColor.color3,
           ),
         ),
