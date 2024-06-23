@@ -111,6 +111,7 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
     getAllPatrolNames();
     getAllLocationNames();
     initializeData();
+    getAllBranchNames();
     // _addNewTask();
     if (widget.GuardId.isNotEmpty || widget.GuardName.isNotEmpty) {
       setState(() {
@@ -248,6 +249,16 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
     if (LocatioName.isNotEmpty) {
       setState(() {
         LocationValues.addAll(LocatioName);
+      });
+    }
+  }
+
+  void getAllBranchNames() async {
+    List<String> LocatioName =
+        await fireStoreService.getAllBranch(widget.CompanyId);
+    if (LocatioName.isNotEmpty) {
+      setState(() {
+        BranchValues.addAll(LocatioName);
       });
     }
   }
@@ -1625,13 +1636,13 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
                         ],
                       ),
 
-                      SetDetailsWidget(
-                        useTextField: true,
-                        hintText: 'Branch(Optional)',
-                        icon: Icons.apartment,
-                        controller: _Branch,
-                        onTap: () {},
-                      ),
+                      // SetDetailsWidget(
+                      //   useTextField: true,
+                      //   hintText: 'Branch(Optional)',
+                      //   icon: Icons.apartment,
+                      //   controller: _Branch,
+                      //   onTap: () {},
+                      // ),
                       Container(
                         height: 60.h,
                         padding: EdgeInsets.symmetric(horizontal: 10.w),
@@ -1743,7 +1754,10 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
                               requiredEmpcontroller.text.isNotEmpty &&
                               _ShiftName.text.isNotEmpty) {
                             // CreateShiftFunction();
+                            print("Next Screen Button Clicked");
                             setState(() {
+                              print("Button Clicked on Set State");
+
                               nextScreen = !nextScreen;
                             });
                           } else {

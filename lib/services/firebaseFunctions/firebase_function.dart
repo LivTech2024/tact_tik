@@ -4646,6 +4646,24 @@ class FireStoreService {
     }
   }
 
+  Future<List<String>> getAllBranch(String companyid) async {
+    try {
+      final QuerySnapshot<Map<String, dynamic>> snapshot =
+          await FirebaseFirestore.instance.collection('CompanyBranch').get();
+
+      final List<String> roles = snapshot.docs
+          .where((doc) => doc.data()['CompanyId'] == companyid)
+          .map((doc) => doc.data()['CompanyBranchName'] as String)
+          .toSet()
+          .toList();
+      print("Clientname ${roles}");
+      return roles;
+    } catch (e) {
+      print("Error fetching report titles: $e");
+      return []; // Return empty list in case of error
+    }
+  }
+
   Future<Map<String, String>> getAllLocationsWithId(String companyId) async {
     try {
       final QuerySnapshot<Map<String, dynamic>> snapshot =
