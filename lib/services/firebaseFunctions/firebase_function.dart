@@ -4,7 +4,8 @@ import 'dart:ffi';
 import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
-
+import 'package:http/http.dart' as http;
+import 'dart:ui' as ui;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto/crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,9 +16,11 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
 import 'package:tact_tik/screens/supervisor%20screens/patrol_logs.dart';
+import 'package:tact_tik/services/EmailService/EmailJs_fucntion.dart';
 import 'package:tact_tik/services/auth/auth.dart';
 
 class FireStoreService {
@@ -692,6 +695,7 @@ class FireStoreService {
           checkPointStatuses[existingIndex]['Status'] = 'unchecked';
           checkPointStatuses[existingIndex]['StatusReportedTime'] =
               Timestamp.now();
+          checkPointStatuses[existingIndex]['StatusImage'] = [];
         }
 
         // Update the CheckPointStatus in the checkpoint
@@ -1804,6 +1808,14 @@ class FireStoreService {
     }
   }
 
+  String getRandomString(int length) {
+    const characters =
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    Random random = Random();
+    return String.fromCharCodes(Iterable.generate(length,
+        (_) => characters.codeUnitAt(random.nextInt(characters.length))));
+  }
+
   //Patrol is Completed
   Future<String> ScheduleShift(
     List guards,
@@ -1814,7 +1826,7 @@ class FireStoreService {
     List<DateTime> Date,
     TimeOfDay? startTime,
     TimeOfDay? EndTime,
-      List<Map<dynamic, dynamic>> patrol,
+    List<Map<dynamic, dynamic>> patrol,
     String clientID,
     String requiredEmp,
     String photoInterval,
@@ -1879,31 +1891,39 @@ class FireStoreService {
           'ShiftCompanyId': CompanyId,
           'ShiftRequiredEmp': int.parse(requiredEmp),
           'ShiftCompanyBranchId': branchId,
-          'ShiftCurrentStatus': 'pending',
+          'ShiftCurrentStatus': [],
           'ShiftCreatedAt': Timestamp.now(),
           'ShiftModifiedAt': Timestamp.now(),
           'ShiftLinkedPatrolIds': patrol,
           'ShiftPhotoUploadIntervalInMinutes': int.parse(photoInterval),
           'ShiftRestrictedRadius': int.parse(restrictedRadius),
           'ShiftEnableRestrictedRadius': shiftenablerestriction,
+          'ShiftTask': []
         });
 
         // Prepare the shift tasks array with the document id
-        List<Map<String, dynamic>> shiftTasks = tasks.map((task) {
+        List<Map<String, dynamic>> shiftTasks =
+            tasks.asMap().entries.map((entry) {
+          int index = entry.key;
+          var task = entry.value;
+          String randomString =
+              getRandomString(2); // Generate 2 random characters
           return {
             'ShiftTask': task['name'],
-            'ShiftTaskId': newDocRef.id, // Assign the document id to each task
+            'ShiftTaskId':
+                "${newDocRef.id}${randomString}${index}", // Assign the modified document id to each task
             'ShiftTaskQrCodeReq': task['isQrRequired'] ?? false,
             'ShiftTaskReturnReq': task['isReturnQrRequired'] ?? false,
-            'ShiftTaskStatus': [],
+            'ShiftReturnTaskStatus': [],
           };
         }).toList();
 
         // Update the document with the tasks
         await newDocRef.update({
-          'ShiftTasks': FieldValue.arrayUnion(shiftTasks),
+          'ShiftId': newDocRef.id,
+          'ShiftTask': FieldValue.arrayUnion(shiftTasks),
         });
-
+        // await generateAndSendQrPdf(shiftTasks, "sutarvaibhav37@gmail.com");
         return newDocRef.id;
       }
       return '';
@@ -1916,31 +1936,219 @@ class FireStoreService {
     }
   }
 
+  // Future<void> generateAndSendQrPdf(
+  //     String taskId, String supervisorEmail) async {
+  //   Uint8List qrCodeBytes = await generateQrCode(taskId);
+  //   String base64QrCode = base64Encode(qrCodeBytes);
+  //   await callPdfApi(base64QrCode, supervisorEmail);
+  // }
+
+  // Future<void> callPdfApi(String base64Image, String supervisorEmail) async {
+  //   final url =
+  //       Uri.parse('https://backend-sceurity-app.onrender.com/api/html_to_pdf');
+
+  //   final headers = {
+  //     'Content-Type': 'application/json',
+  //   };
+
+  //   final htmlContent = '''
+  //   <!DOCTYPE html>
+  //   <html lang="en">
+  //   <head>
+  //     <meta charset="UTF-8">
+  //     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  //   </head>
+  //   <body>
+  //     <h1>TASK QR CODE!</h1>
+  //     <img src="data:image/png;base64,$base64Image"/>
+  //   </body>
+  //   </html>
+  // ''';
+
+  //   final body = jsonEncode({
+  //     'html': htmlContent,
+  //     'file_name': 'TaskQR.pdf',
+  //   });
+
+  //   final response = await http.post(
+  //     url,
+  //     headers: headers,
+  //     body: body,
+  //   );
+
+  //   if (response.statusCode == 200) {
+  //     final pdfBase64 = base64Encode(response.bodyBytes);
+  //     await sendEmail({
+  //       'to_email': supervisorEmail,
+  //       'subject': 'Task QR Code',
+  //       'from_name': 'Company',
+  //       'html': '',
+  //       'pdfFile': pdfBase64,
+  //     });
+  //   } else {
+  //     print(
+  //         'Failed to call API: ${response.statusCode}, ${response.reasonPhrase}');
+  //   }
+  // }
+
+  // Future<String> prepareHtmlContent(
+  //     List<Map<String, dynamic>> shiftTasks) async {
+  //   String htmlContent = """
+  // <!DOCTYPE html>
+  // <html>
+  // <head>
+  //   <title>Shift Tasks</title>
+  // </head>
+  // <body>
+  //   <h1>Shift Tasks</h1>
+  //   <table border="1">
+  //     <tr>
+  //       <th>Task Name</th>
+  //       <th>QR Code</th>
+  //     </tr>
+  // """;
+
+  //   for (var task in shiftTasks) {
+  //     Uint8List qrCodeBytes = await generateQrCode(task['ShiftTaskId']);
+  //     String base64QrCode = base64Encode(qrCodeBytes);
+
+  //     htmlContent += """
+  //     <tr>
+  //       <td>${task['ShiftTask']}</td>
+  //       <td><img src="data:image/png;base64,$base64QrCode" alt="QR Code"></td>
+  //     </tr>
+  //   """;
+  //   }
+
+  //   htmlContent += """
+  //   </table>
+  // </body>
+  // </html>
+  // """;
+
+  //   return htmlContent;
+  // }
+  Future<void> generateAndSendQrPdf(
+    List<Map<String, dynamic>> shiftTasks,
+    String supervisorEmail,
+  ) async {
+    // Generate HTML content with all QR codes
+    String htmlContent = await prepareHtmlContent(shiftTasks);
+
+    // Call PDF API
+    await callPdfApi(htmlContent, supervisorEmail);
+  }
+
+  Future<void> callPdfApi(String htmlContent, String supervisorEmail) async {
+    final url =
+        Uri.parse('https://backend-security-app.onrender.com/api/html_to_pdf');
+
+    final headers = {
+      'Content-Type': 'application/json',
+    };
+
+    final body = jsonEncode({
+      'html': htmlContent,
+      'file_name': 'TaskQR.pdf',
+    });
+
+    final response = await http.post(
+      url,
+      headers: headers,
+      body: body,
+    );
+
+    if (response.statusCode == 200) {
+      final pdfBase64 = base64Encode(response.bodyBytes);
+      await sendEmailUsingApi("Qr Testing", "Vaibhav", pdfBase64);
+    } else {
+      print(
+          'Failed to call API: ${response.statusCode}, ${response.reasonPhrase}');
+    }
+  }
+
+  Future<String> prepareHtmlContent(
+    List<Map<String, dynamic>> shiftTasks,
+  ) async {
+    String htmlContent = """
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Shift Tasks</title>
+</head>
+<body>
+  <h1>Shift Tasks</h1>
+  <table border="1">
+    <tr>
+      <th>Task Name</th>
+      <th>QR Code</th>
+    </tr>
+""";
+
+    for (var task in shiftTasks) {
+      Uint8List qrCodeBytes = await generateQrCode(task['ShiftTaskId']);
+      String base64QrCode = base64Encode(qrCodeBytes);
+
+      htmlContent += """
+    <tr>
+      <td>${task['ShiftTask']}</td>
+      <td><img src="data:image/png;base64,$base64QrCode" alt="QR Code"></td>
+    </tr>
+  """;
+    }
+
+    htmlContent += """
+  </table>
+</body>
+</html>
+""";
+
+    return htmlContent;
+  }
+
+  Future<Uint8List> generateQrCode(String data) async {
+    final qrValidationResult = QrValidator.validate(
+      data: data,
+      version: QrVersions.auto,
+      errorCorrectionLevel: QrErrorCorrectLevel.L,
+    );
+    final qrCode = qrValidationResult.qrCode;
+    final painter = QrPainter.withQr(
+      qr: qrCode!,
+      color: Color(0xFF000000),
+      emptyColor: Color(0xFFFFFFFF),
+      gapless: true,
+    );
+    final image = await painter.toImage(200);
+    final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+    return byteData!.buffer.asUint8List();
+  }
+
   Future<void> updateShift(
-      String shiftId,
-      List guards,
-      String? role,
-      String Address,
-      String CompanyBranchId,
-      String CompanyId,
-      List<DateTime> Date,
-      TimeOfDay? startTime,
-      TimeOfDay? EndTime,
-      List<Map<dynamic, dynamic>> patrol,
-      String clientID,
-      String requiredEmp,
-      String photoInterval,
-      String restrictedRadius,
-      bool shiftenablerestriction,
-      GeoPoint coordinates,
-      String locationName,
-      String locationId,
-      String locationAddress,
-      String branchId,
-      String shiftDesc,
-      String ShiftName,
-      List<Map<String, dynamic>> tasks,
-      ) async {
+    String shiftId,
+    List guards,
+    String? role,
+    String Address,
+    String CompanyBranchId,
+    String CompanyId,
+    List<DateTime> Date,
+    TimeOfDay? startTime,
+    TimeOfDay? EndTime,
+    List<Map<dynamic, dynamic>> patrol,
+    String clientID,
+    String requiredEmp,
+    String photoInterval,
+    String restrictedRadius,
+    bool shiftenablerestriction,
+    GeoPoint coordinates,
+    String locationName,
+    String locationId,
+    String locationAddress,
+    String branchId,
+    String shiftDesc,
+    String ShiftName,
+    List<Map<String, dynamic>> tasks,
+  ) async {
     try {
       List<String> convertToStringArray(List list) {
         List<String> stringArray = [];
@@ -1952,7 +2160,7 @@ class FireStoreService {
 
       List<String> guardUserIds = convertToStringArray(guards);
       List<String> selectedGuardIds =
-      guards.map((guard) => guard['GuardId'] as String).toList();
+          guards.map((guard) => guard['GuardId'] as String).toList();
 
       final DateFormat dateFormatter = DateFormat('yyyy-MM-dd');
       final DateFormat timeFormatter = DateFormat('HH:mm');
@@ -1966,12 +2174,15 @@ class FireStoreService {
         print('Shift document does not exist');
         return;
       }
-      Map<String, dynamic> shiftData = shiftSnapshot.data() as Map<String, dynamic>;
+      Map<String, dynamic> shiftData =
+          shiftSnapshot.data() as Map<String, dynamic>;
 
       // Get the current patrol data
-      List<Map<dynamic, dynamic>> currentPatrol = shiftData['ShiftLinkedPatrolIds'] != null
-          ? List<Map<dynamic, dynamic>>.from(shiftData['ShiftLinkedPatrolIds'])
-          : [];
+      List<Map<dynamic, dynamic>> currentPatrol =
+          shiftData['ShiftLinkedPatrolIds'] != null
+              ? List<Map<dynamic, dynamic>>.from(
+                  shiftData['ShiftLinkedPatrolIds'])
+              : [];
 
       // Append new patrol data
       currentPatrol.addAll(patrol);
@@ -2392,7 +2603,7 @@ class FireStoreService {
               final taskStatusList =
                   shiftTask['ShiftReturnTaskStatus'] as List<dynamic>;
               if (taskStatusList == null || taskStatusList.isEmpty) {
-                return true;
+                return false;
               }
               if (taskStatusList.isNotEmpty) {
                 print("ShiftTaskStatus is not empty");
@@ -2456,6 +2667,25 @@ class FireStoreService {
     }
   }
 
+  Future<String?> fetchPatrolId(String patrolName) async {
+    try {
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('Patrols')
+          .where('PatrolName', isEqualTo: patrolName)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        return querySnapshot
+            .docs.first.id; // Assuming PatrolId is the document ID
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching PatrolId: $e');
+      return null;
+    }
+  }
+
   //Fetch shift task
   Future<List<Map<String, dynamic>>?> fetchShiftTask(String shiftID) async {
     try {
@@ -2476,6 +2706,27 @@ class FireStoreService {
       return null; // Return null in case of error
     }
   }
+
+  // Future<List<Map<String, dynamic>>?> fetchShiftReturnTask2(
+  //     String shiftID) async {
+  //   try {
+  //     final documentSnapshot = await FirebaseFirestore.instance
+  //         .collection("Shifts")
+  //         .doc(shiftID)
+  //         .get();
+
+  //     if (documentSnapshot.exists) {
+  //       final shiftTasks = documentSnapshot['ShiftTask'] as List<dynamic>;
+  //       if (shiftTasks.isNotEmpty) {
+  //         return List<Map<String, dynamic>>.from(shiftTasks);
+  //       }
+  //     }
+  //     return null; // Return null if no tasks or document doesn't exist
+  //   } catch (e) {
+  //     print("Error fetching shift tasks: $e");
+  //     return null; // Return null in case of error
+  //   }
+  // }
 
   // fetch return shift tasks
   Future<List<Map<String, dynamic>>?> fetchreturnShiftTasks(
@@ -2502,6 +2753,44 @@ class FireStoreService {
     } catch (e) {
       print("Error fetching shift tasks: $e");
       return null; // Return null in case of error
+    }
+  }
+
+  Future<Map<String, dynamic>> fetchreturnShiftTasks2(String shiftID) async {
+    try {
+      final documentSnapshot = await FirebaseFirestore.instance
+          .collection("Shifts")
+          .doc(shiftID)
+          .get();
+
+      if (documentSnapshot.exists) {
+        final shiftTasks = documentSnapshot['ShiftTask'] as List<dynamic>;
+        if (shiftTasks.isNotEmpty) {
+          List<Map<String, dynamic>> tasks = List.from(shiftTasks);
+
+          // Extract TaskStatus for each task
+          List<Map<String, dynamic>> taskStatusList = [];
+          for (var task in tasks) {
+            final taskStatus = task['ShiftReturnTaskStatus'] as List<dynamic>;
+            taskStatusList.add(taskStatus.isNotEmpty ? taskStatus[0] : {});
+          }
+
+          return {
+            'tasks': tasks,
+            'taskStatusList': taskStatusList,
+          };
+        }
+      }
+      return {
+        'tasks': [],
+        'taskStatusList': [],
+      }; // Return empty if no tasks or document doesn't exist
+    } catch (e) {
+      print("Error fetching shift tasks: $e");
+      return {
+        'tasks': [],
+        'taskStatusList': [],
+      }; // Return empty in case of error
     }
   }
 
@@ -2846,13 +3135,104 @@ class FireStoreService {
   }
 
   // Add images and comment
+  // Future<void> addImagesToPatrol(
+  //     List<Map<String, dynamic>> uploads,
+  //     String comment,
+  //     String patrolID,
+  //     String empId,
+  //     String patrolCheckPointId,
+  //     String ShiftId) async {
+  //   try {
+  //     final querySnapshot = await patrols.doc(patrolID).get();
+
+  //     if (querySnapshot.exists) {
+  //       final doc = querySnapshot.data() as Map<String, dynamic>;
+
+  //       List<Map<String, dynamic>> wellnessReports =
+  //           List.from(doc["PatrolReport"] ?? []);
+
+  //       // Check if PatrolCheckPoints is null or not properly initialized
+  //       List<dynamic> patrolCheckPoints = doc["PatrolCheckPoints"] ?? [];
+
+  //       // Find the specific CheckPoint within PatrolCheckPoints
+  //       var checkPoint = patrolCheckPoints.firstWhere(
+  //         (cp) => cp["CheckPointId"] == patrolCheckPointId,
+  //         orElse: () => null,
+  //       );
+
+  //       if (checkPoint != null) {
+  //         // Ensure that CheckPointStatus is correctly initialized and cast to List<dynamic>
+  //         List<dynamic> checkPointStatus = checkPoint["CheckPointStatus"] ?? [];
+
+  //         // Find the specific status within CheckPointStatus where StatusReportedById matches empId
+  //         var status = checkPointStatus.firstWhere(
+  //           (s) =>
+  //               s["StatusReportedById"] == empId &&
+  //               // isSameDay(s["StatusReportedTime"], Timestamp.now()
+  //               s["StatusShiftId"] == ShiftId
+
+  //           // )
+  //           ,
+  //           orElse: () => null,
+  //         );
+
+  //         if (status == null) {
+  //           // Create a new status entry for the empId
+  //           status = {
+  //             "StatusReportedById": empId,
+  //             "StatusImage": [],
+  //             "StatusComment": "",
+  //             "StatusReportedTime": Timestamp.now(),
+  //             "StatusShiftId": ShiftId
+  //           };
+  //           checkPointStatus.add(status);
+  //         }
+
+  //         List<Map<String, dynamic>> imgUrls = [];
+  //         for (var upload in uploads) {
+  //           if (upload['type'] == 'image') {
+  //             File file = upload['file'];
+
+  //             // Upload the image file and get the download URL
+  //             List<Map<String, dynamic>> downloadURL =
+  //                 await addImageToStoragePatrol(file);
+
+  //             // Add the download URLs to the imgUrls list
+  //             for (var url in downloadURL) {
+  //               imgUrls.add(url);
+  //             }
+  //           }
+  //         }
+
+  //         // Add the new image and comment map to the status
+  //         status["StatusImage"] =
+  //             imgUrls.map((url) => url['downloadURL']).toList();
+  //         status["StatusComment"] = comment;
+  //         status["StatusReportedTime"] = Timestamp.now();
+
+  //         // Update the Firestore document with the new wellness reports
+  //         await patrols.doc(patrolID).update({
+  //           "PatrolReport": wellnessReports,
+  //           "PatrolCheckPoints": patrolCheckPoints,
+  //         });
+  //       } else {
+  //         print("No CheckPoint found with CheckPointId: $patrolCheckPointId");
+  //       }
+  //     } else {
+  //       print("No document found with PatrolID: $patrolID");
+  //     }
+  //   } catch (e) {
+  //     print('Error adding images to PatrolReport: $e');
+  //     throw e;
+  //   }
+  // }
   Future<void> addImagesToPatrol(
       List<Map<String, dynamic>> uploads,
       String comment,
       String patrolID,
       String empId,
       String patrolCheckPointId,
-      String ShiftId) async {
+      String shiftId) async {
     try {
       final querySnapshot = await patrols.doc(patrolID).get();
 
@@ -2879,11 +3259,7 @@ class FireStoreService {
           var status = checkPointStatus.firstWhere(
             (s) =>
                 s["StatusReportedById"] == empId &&
-                // isSameDay(s["StatusReportedTime"], Timestamp.now()
-                s["StatusShiftId"] == ShiftId
-
-            // )
-            ,
+                s["StatusShiftId"] == shiftId,
             orElse: () => null,
           );
 
@@ -2894,11 +3270,15 @@ class FireStoreService {
               "StatusImage": [],
               "StatusComment": "",
               "StatusReportedTime": Timestamp.now(),
-              "StatusShiftId": ShiftId
+              "StatusShiftId": shiftId
             };
             checkPointStatus.add(status);
           }
 
+          // Get the existing images
+          List<dynamic> existingImages = status["StatusImage"] ?? [];
+
+          // Add the new images
           List<Map<String, dynamic>> imgUrls = [];
           for (var upload in uploads) {
             if (upload['type'] == 'image') {
@@ -2915,9 +3295,14 @@ class FireStoreService {
             }
           }
 
-          // Add the new image and comment map to the status
-          status["StatusImage"] =
-              imgUrls.map((url) => url['downloadURL']).toList();
+          // Combine existing images with new images
+          List<String> allImages = [
+            ...existingImages,
+            ...imgUrls.map((url) => url['downloadURL'])
+          ];
+
+          // Update the status with the combined images and new comment
+          status["StatusImage"] = allImages;
           status["StatusComment"] = comment;
           status["StatusReportedTime"] = Timestamp.now();
 
@@ -4257,23 +4642,39 @@ class FireStoreService {
   }
 
   //fetch all the patrols
-  Future<List<Map<String, String>>> getAllPatrolName(String companyId) async {
+  // Future<List<Map<String, String>>> getAllPatrolName(String companyId) async {
+  //   try {
+  //     final QuerySnapshot<Map<String, dynamic>> snapshot =
+  //         await FirebaseFirestore.instance.collection('Patrols').get();
+
+  //     final List<Map<String, String>> roles = snapshot.docs
+  //         .where((doc) => doc.data()['PatrolCompanyId'] == companyId)
+  //         .map((doc) =>
+  //             {'id': doc.id, 'name': doc.data()['PatrolName'] as String})
+  //         .toSet()
+  //         .toList();
+  //     print("Clientname $roles");
+  //     return roles;
+  //   } catch (e) {
+  //     print("Error fetching report titles: $e");
+  //     return []; // Return empty list in case of error
+  //   }
+  // }
+
+  Future<List<String>> getAllPatrolName(String companyId) async {
     try {
       final QuerySnapshot<Map<String, dynamic>> snapshot =
-      await FirebaseFirestore.instance.collection('Patrols').get();
+          await FirebaseFirestore.instance.collection('Patrols').get();
 
-      final List<Map<String, String>> roles = snapshot.docs
+      final List<String> patrolNames = snapshot.docs
           .where((doc) => doc.data()['PatrolCompanyId'] == companyId)
-          .map((doc) => {
-        'id': doc.id,
-        'name': doc.data()['PatrolName'] as String
-      })
+          .map((doc) => doc.data()['PatrolName'] as String)
           .toSet()
           .toList();
-      print("Clientname $roles");
-      return roles;
+      print("Patrol names: $patrolNames");
+      return patrolNames;
     } catch (e) {
-      print("Error fetching report titles: $e");
+      print("Error fetching patrol names: $e");
       return []; // Return empty list in case of error
     }
   }

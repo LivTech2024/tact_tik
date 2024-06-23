@@ -62,17 +62,16 @@ class HomeScreenController extends GetxController {
 
   /// start Bg the location service
   Future<void> startBgLocationService() async {
+    // await Future.delayed(Duration(seconds: 30));
     try {
       print('start Bg location service');
-      if (await _checkLocationPermission()) {
+      if (await _checkLocationPermission1()) {
         await _startLocator();
         isRunning = await BackgroundLocator.isServiceRunning();
         print('Running ${isRunning.toString()}');
         lastLocation = null;
       } else {
         print("Location permission Error");
-        // customErrorToast(
-        //     "Location permission is required for background tracking.");
       }
     } catch (e) {
       print(e);
@@ -81,9 +80,33 @@ class HomeScreenController extends GetxController {
   }
 
   Future<bool> _checkLocationPermission() async {
-    // _requestLocationPermission();
-    // await Permission.location.request();\
+    var status = await Permission.locationWhenInUse.request();
+    await Permission.notification.request();
+    print("Status ${status}");
+    if (status.isGranted) {
+      var statusAlways = await Permission.locationAlways.request();
+      if (statusAlways.isGranted) {
+        print("Location Permission is granted 1");
 
+        return true;
+      } else {
+        print("Location Permission is denied 1");
+        return false;
+      }
+    } else if (status.isDenied) {
+      print("Location Permission is denied 2");
+      return false;
+    } else if (status.isPermanentlyDenied) {
+      print("Location Permission is denied 3");
+      return false;
+    }
+
+    return true;
+  }
+
+  Future<bool> _checkLocationPermission1() async {
+    // _requestLocationPermission();
+    // await Permission.location.request();
     // Check the current status of locationWhenInUse permission
     var statusWhenInUse = await Permission.locationWhenInUse.status;
 
@@ -126,12 +149,12 @@ class HomeScreenController extends GetxController {
         }
       } else if (requestStatusWhenInUse.isPermanentlyDenied) {
         print("Location permission permanently denied. Open app settings  2.");
-        // await openAppSettings();
+        await openAppSettings();
         return false;
       }
     } else if (statusWhenInUse.isPermanentlyDenied) {
       print("Location permission permanently denied. Open app settings 3.");
-      // await openAppSettings();
+      await openAppSettings();
 
       return false;
     }
@@ -172,6 +195,8 @@ class HomeScreenController extends GetxController {
   }
 
   Future<void> _startLocator() async {
+    // await Future.delayed(Duration(seconds: 30));
+
     Map<String, dynamic> data = {'countInit': 1};
     return await BackgroundLocator.registerLocationUpdate(
         LocationCallbackHandler.callback,
@@ -186,7 +211,7 @@ class HomeScreenController extends GetxController {
         autoStop: false,
         androidSettings: const AndroidSettings(
           accuracy: LocationAccuracy.HIGH,
-          interval: 5,
+          interval: 30,
           distanceFilter: 0,
           client: LocationClient.google,
           androidNotificationSettings: AndroidNotificationSettings(

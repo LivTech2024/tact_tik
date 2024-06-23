@@ -58,28 +58,40 @@ Future<bool> sendFormattedEmail(dynamic templateParams) async {
   }
 }
 
-// Future<void> sendapiEmail(String Subject, String fromName, String Data) async {
-//   final url = 'https://backend-sceurity-app.onrender.com/api/send_email';
-//   final response = await http.post(
-//     Uri.parse(url),
-//     headers: {'Content-Type': 'application/json'},
-//     body: json.encode({
-//       'to_email': 'sutarvaibhav37@gmail.com',
-//       'subject': Subject,
-//       'from_name': fromName,
-//       'text': Data,
-//       'html': " <p>This is a test email sent using the API.</p>",
-//     }),
-//   );
+Future<void> sendEmailUsingApi(
+  String Subject,
+  String fromName,
+  String Data,
+) async {
+  final url = 'https://backend-sceurity-app.onrender.com/api/send_email';
+  final response = await http.post(
+    Uri.parse(url),
+    headers: {'Content-Type': 'application/json'},
+    body: json.encode({
+      'to_email': 'sutarvaibhav37@gmail.com',
+      'subject': Subject,
+      'from_name': fromName,
+      // 'text': Data,
+      'html': " <p>This is a test email sent using the API.</p>",
+      'attachments': [
+        {
+          'filename': 'security_report.pdf',
+          'content': Data,
+          'contentType': 'application/pdf',
+        }
+      ],
+    }),
+  );
 
-//   if (response.statusCode == 201) {
-//     print('Email sent successfully');
-//     // Handle success
-//   } else {
-//     print('Failed to send email. Status code: ${response.statusCode}');
-//     // Handle failure
-//   }
-// }
+  if (response.statusCode == 201) {
+    print('Email sent successfully');
+    // Handle success
+  } else {
+    print('Failed to send email. Status code: ${response.statusCode}');
+    // Handle failure
+  }
+}
+
 Future<void> callPdfApi() async {
   final url = Uri.parse('https://yakpdf.p.rapidapi.com/pdf');
 
@@ -652,172 +664,173 @@ Future<File> savePdfLocally(String pdfBase64, String fileName) async {
 
 FireStoreService fireStoreService = FireStoreService();
 Future<String> generateShiftReportPdf(
-  String GuardName,
-  Map<String, dynamic> Data,
+  String guardName,
+  Map<String, dynamic> data,
 ) async {
   final dateFormat = DateFormat('HH:mm'); // Define the format for time
 
-  // Generate the HTML content for the report
-  String patrolInfoHTML = '';
-  for (var item in Data['patrols']) {
-    String checkpointImagesHTML = '';
-    for (var checkpoint in item['PatrolLogCheckPoints']) {
-      String checkpointImages = '';
-      if (checkpoint['CheckPointImage'] != null) {
-        for (var image in checkpoint['CheckPointImage']) {
-          checkpointImages +=
-              '<img src="$image" alt="Checkpoint Image">'; // Set max-width to ensure responsiveness
-        }
-      }
-      checkpointImagesHTML += '''
-        <div>
-          <p>Checkpoint Name: ${checkpoint['CheckPointName'] ?? 'N/A'}</p>
-          $checkpointImages
-          <p>Comment: ${checkpoint['CheckPointComment'] ?? 'N/A'}</p>
-          <p>Reported At: ${checkpoint['CheckPointReportedAt'] != null ? dateFormat.format(checkpoint['CheckPointReportedAt'].toDate()) : 'N/A'}</p>
-          <p>Status: ${checkpoint['CheckPointStatus'] ?? 'N/A'}</p>
-        </div>
-      ''';
-    }
+  // Extract patrol information
+  String patrolId = data['PatrolId'];
+  DateTime patrolDate = data['PatrolDate'].toDate();
+  List<dynamic> checkpoints = data['PatrolLogCheckPoints'];
+  DateTime startedAt = data['PatrolLogStartedAt'].toDate();
+  DateTime endedAt = data['PatrolLogEndedAt'].toDate();
+  String patrolStatus = data['PatrolLogStatus'];
+  int patrolCount = data['PatrolLogPatrolCount'];
 
-    patrolInfoHTML += '''
-      <tr>
-        <td>${item['PatrolLogPatrolCount']}</td>
-        <td>${dateFormat.format(item['PatrolLogStartedAt'].toDate())}</td>
-        <td>${dateFormat.format(item['PatrolLogEndedAt'].toDate())}</td>
-        <td>${checkpointImagesHTML}</td>
-      </tr>
+  // Generate HTML for checkpoints
+  String checkpointInfoHTML = '';
+  for (var checkpoint in checkpoints) {
+    String checkpointImages = '';
+    if (checkpoint['CheckPointImage'] != null) {
+      for (var image in checkpoint['CheckPointImage']) {
+        checkpointImages += '<img src="$image" alt="Checkpoint Image">';
+      }
+    }
+    DateTime reportedAt = checkpoint['CheckPointReportedAt'].toDate();
+    checkpointInfoHTML += '''
+      <div>
+        <p>Checkpoint Name: ${checkpoint['CheckPointName'] ?? 'N/A'}</p>
+        $checkpointImages
+        <p>Comment: ${checkpoint['CheckPointComment'] ?? 'N/A'}</p>
+        <p>Reported At: ${dateFormat.format(reportedAt)}</p>
+        <p>Status: ${checkpoint['CheckPointStatus'] ?? 'N/A'}</p>
+      </div>
     ''';
   }
 
+  // Generate patrol info HTML
+  String patrolInfoHTML = '''
+    <tr>
+      <td>$patrolCount</td>
+      <td>${dateFormat.format(startedAt)}</td>
+      <td>${dateFormat.format(endedAt)}</td>
+      <td>$checkpointInfoHTML</td>
+    </tr>
+  ''';
+
   final htmlContent = """
     <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Security Report</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Security Report</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh;
+            }
 
-        header {
-            background-color: #333;
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
+            header {
+                background-color: #333;
+                color: white;
+                padding: 20px;
+                text-align: center;
+            }
 
-        .logo-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
+            h1 {
+                margin: 0;
+                font-size: 24px;
+            }
 
-        .logo-container img {
-            max-height: 50px; /* Set the max-height for the logos */
-        }
+            section {
+                padding: 20px;
+                background-color: #fff;
+                margin-bottom: 20px;
+                border-radius: 5px;
+            }
 
-        h1 {
-            margin: 0;
-            font-size: 24px;
-            flex-grow: 1; /* Allow the <h1> to grow and fill the space */
-        }
+            table {
+                border-collapse: collapse;
+                width: 100%;
+            }
 
-        section {
-            padding: 20px;
-            background-color: #fff;
-            margin-bottom: 20px;
-            border-radius: 5px;
-        }
+            th, td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: left;
+            }
 
-        /* Other styles for tables, images, and footer */
-        table {
-            border-collapse: collapse;
-            width: 100%;
-        }
+            th {
+                background-color: #f2f2f2;
+            }
 
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
+            img {
+                max-width: 100%;
+                height: auto;
+                display: block;
+                margin-bottom: 10px;
+                max-height: 200px;
+            }
 
-        th {
-            background-color: #f2f2f2;
-        }
+            footer {
+                background-color: #333;
+                color: white;
+                text-align: center;
+                padding: 10px 0;
+                margin-top: auto;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <h1>Security Report</h1>
+        </header>
 
-        img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-            margin-bottom: 10px;
-            max-height: 200px; /* Define a max-height for the images */
-        }
+        <section>
+            <h3>Shift Information</h3>
+            <table>
+                <tr>
+                    <th>Guard Name</th>
+                    <th>Patrol Date</th>
+                    <th>Patrol ID</th>
+                </tr>
+                <tr>
+                    <td>$guardName</td>
+                    <td>${DateFormat('yyyy-MM-dd').format(patrolDate)}</td>
+                    <td>$patrolId</td>
+                </tr>
+            </table>
+        </section>
 
-        footer {
-            background-color: #333;
-            color: white;
-            text-align: center;
-            padding: 10px 0;
-            margin-top: auto; /* Push the footer to the bottom of the page */
-        }
-    </style>
-</head>
-<body>
-    <header>
-        <h1>Security Report</h1>
-    </header>
+        <section>
+            <h3>Patrol Information</h3>
+            <table>
+                <tr>
+                    <th>Patrol Count</th>
+                    <th>Patrol Time In</th>
+                    <th>Patrol Time Out</th>
+                    <th>Checkpoint Details</th>
+                </tr>
+                $patrolInfoHTML
+            </table>
+        </section>
 
-    <section>
-        <h3>Shift Information</h3>
-        <table>
-            <tr>
-                <th>Guard Name</th>
-            </tr>
-            <tr>
-                <td>${GuardName}</td>
-            </tr>
-        </table>
-    </section>
+        <section>
+            <h3>Additional Information</h3>
+            <table>
+                <tr>
+                    <th>Status</th>
+                    <th>Feedback Comment</th>
+                </tr>
+                <tr>
+                    <td>$patrolStatus</td>
+                    <td>${data['PatrolLogFeedbackComment'] ?? 'N/A'}</td>
+                </tr>
+            </table>
+        </section>
 
-    <section>
-        <h3>Patrol Information</h3>
-        <table>
-            <tr>
-                <th>Patrol Count</th>
-                <th>Patrol Time In</th>
-                <th>Patrol Time Out</th>
-                <th>Checkpoint Details</th>
-            </tr>
-            ${patrolInfoHTML}
-        </table>
-    </section>
-
-    <section>
-        <h3>Comments</h3>
-        <table>
-            <tr>
-                <th>Incident</th>
-                <th>Important Note</th>
-                <th>Feedback Note</th>
-            </tr>
-        </table>
-    </section>
-
-    <footer>
-        <p>&copy; 2024 TEAM TACTTIK. All rights reserved.</p>
-    </footer>
-</body>
-</html>
+        <footer>
+            <p>&copy; 2024 TEAM TACTTIK. All rights reserved.</p>
+        </footer>
+    </body>
+    </html>
   """;
 
   // Generate the PDF

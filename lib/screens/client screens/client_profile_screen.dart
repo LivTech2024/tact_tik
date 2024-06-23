@@ -78,11 +78,11 @@ class _ProfileScreenState extends State<ClientProfileScreen> {
 
     try {
       await FirebaseFirestore.instance
-          .collection('Employees')
+          .collection('Clients')
           .doc(widget.empId)
           .update({
-        'EmployeeName': _nameController.text,
-        'EmployeePhone': _phoneNoController.text,
+        'ClientName': _nameController.text,
+        'ClientPhone': _phoneNoController.text,
       });
 
       if (_selectedImageFile != null) {
@@ -201,9 +201,8 @@ class _ProfileScreenState extends State<ClientProfileScreen> {
                       Container(
                         padding: EdgeInsets.all(4.w),
                         decoration: BoxDecoration(
-                          color: _employeeImageUrl != null
-                              ? Color(0xFFAC7310)
-                              : Theme.of(context).primaryColor,
+                          color: 
+                              Theme.of(context).primaryColor,
                           shape: BoxShape.circle,
                         ),
                         child: isEdit

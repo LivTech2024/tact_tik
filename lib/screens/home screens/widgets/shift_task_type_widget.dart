@@ -467,13 +467,19 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                               SizedBox(
                                 width: 20.w,
                               ),
-                              InterRegular(
-                                text: widget.taskName,
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .displayMedium!
-                                    .color,
-                                fontsize: 18.sp,
+                              SizedBox(
+                                width: 220.w,
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: InterRegular(
+                                    text: widget.taskName,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .displayMedium!
+                                        .color,
+                                    fontsize: 18.sp,
+                                  ),
+                                ),
                               ),
                             ],
                           ),
@@ -656,8 +662,7 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                                   )
                                 ],
                                 color: Theme.of(context).cardColor,
-                                borderRadius:
-                                    BorderRadius.circular(8.r)),
+                                borderRadius: BorderRadius.circular(8.r)),
                             child: Center(
                               child: Icon(
                                 Icons.add,
@@ -673,7 +678,11 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                           onPressed: _uploadImages,
                           backgroundColor: Theme.of(context).primaryColor,
                           shape: CircleBorder(),
-                          child: Icon(Icons.cloud_upload, color: Colors.white, size: 24.sp,),
+                          child: Icon(
+                            Icons.cloud_upload,
+                            color: Colors.white,
+                            size: 24.sp,
+                          ),
                         )
                       ],
                     ),

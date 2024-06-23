@@ -61,7 +61,7 @@ class _VisiTorsScreenState extends State<SVisiTorsScreen> {
           },
           backgroundColor: Theme.of(context).primaryColor,
           shape: CircleBorder(),
-          child: Icon(Icons.add),
+          child: Icon(Icons.add,color: Colors.white,),
         ),
         body: FutureBuilder<QuerySnapshot>(
           future: FirebaseFirestore.instance

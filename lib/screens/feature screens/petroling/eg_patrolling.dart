@@ -1391,12 +1391,18 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                   title: Text(
                                                                     'Report Qr',
                                                                     style: TextStyle(
-                                                                        color: Theme.of(context).textTheme.bodyMedium!.color),
+                                                                        color: Theme.of(context)
+                                                                            .textTheme
+                                                                            .bodyMedium!
+                                                                            .color),
                                                                   ),
                                                                   content: Text(
                                                                     'The scanned QR code does not work.',
                                                                     style: TextStyle(
-                                                                        color: Theme.of(context).textTheme.bodyMedium!.color),
+                                                                        color: Theme.of(context)
+                                                                            .textTheme
+                                                                            .bodyMedium!
+                                                                            .color),
                                                                   ),
                                                                   actions: [
                                                                     TextButton(

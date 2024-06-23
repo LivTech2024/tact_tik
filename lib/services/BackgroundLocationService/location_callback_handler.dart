@@ -31,6 +31,7 @@ class LocationCallbackHandler {
     }
     LocationServiceRepository myLocationCallbackRepository =
         LocationServiceRepository();
+    // await Future.delayed(Duration(seconds: 30));
     await myLocationCallbackRepository.callback(locationDto);
   }
 

@@ -226,11 +226,9 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-             
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -239,7 +237,6 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
           ),
           title: InterBold(
             text: 'Post Order',
-           
           ),
           centerTitle: true,
         ),
@@ -267,7 +264,7 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
                 isExpanded: true,
                 controller: _explainController,
               ),
-             /* SizedBox(height: 30.h),
+              /* SizedBox(height: 30.h),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
@@ -409,7 +406,8 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
                           builder: (context, snapshot) {
                             String otherFileName = 'Loading...';
                             String otherFileSize = 'Loading...';
-                            if (snapshot.connectionState == ConnectionState.done &&
+                            if (snapshot.connectionState ==
+                                    ConnectionState.done &&
                                 snapshot.hasData) {
                               otherFileName = snapshot.data!['name'];
                               otherFileSize = snapshot.data!['size'];
@@ -431,10 +429,11 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
                                     ),
                                   ],
                                   borderRadius: BorderRadius.circular(10.r),
-                                  color:  Theme.of(context).cardColor,
+                                  color: Theme.of(context).cardColor,
                                 ),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Row(
                                       children: [
@@ -448,17 +447,28 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
                                           ),
                                         ),
                                         Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
-                                            PoppinsMedium(
-                                              text: otherFileName,
-                                              color:  Theme.of(context).textTheme.bodyMedium!.color,
-                                              fontsize: 12.sp,
+                                            SizedBox(
+                                              width:300.w,
+                                              child: PoppinsMedium(
+                                                text: otherFileName,
+                                                color: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyMedium!
+                                                    .color,
+                                                fontsize: 12.sp,
+                                              ),
                                             ),
                                             PoppinsRegular(
                                               text: otherFileSize,
-                                              color:    Theme.of(context).textTheme.bodyMedium!.color,
+                                              color: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium!
+                                                  .color,
                                               fontsize: 12.sp,
                                             )
                                           ],
@@ -472,7 +482,8 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
                           },
                         );
                       } else {
-                        return SizedBox.shrink(); // Skip non-PDF URLs in the ListView
+                        return SizedBox
+                            .shrink(); // Skip non-PDF URLs in the ListView
                       }
                     },
                   ),
@@ -483,9 +494,13 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
                       crossAxisCount: 3, // Number of columns in the grid
                       childAspectRatio: 1.0, // Aspect ratio of the grid items
                     ),
-                    itemCount: allUrls.where((url) => !url.contains('.pdf')).length, // Count of non-PDF URLs
+                    itemCount:
+                        allUrls.where((url) => !url.contains('.pdf')).length,
+                    // Count of non-PDF URLs
                     itemBuilder: (context, index) {
-                      String imageUrl = allUrls.where((url) => !url.contains('.pdf')).toList()[index];
+                      String imageUrl = allUrls
+                          .where((url) => !url.contains('.pdf'))
+                          .toList()[index];
                       return SizedBox(
                         height: 100.h,
                         width: 100.w,
@@ -518,7 +533,7 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
                       onPressed: () {
                         _uploadFiles();
                       },
-                color: Theme.of(context).textTheme.headlineMedium!.color,
+                      color: Theme.of(context).textTheme.headlineMedium!.color,
                       backgroundcolor: Theme.of(context).primaryColor,
                       borderRadius: 10.r,
                     )

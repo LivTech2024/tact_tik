@@ -105,7 +105,7 @@ class _CalendarPageState extends State<CalendarPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     IconButton(
-                      icon: const Icon(Icons.arrow_back_ios),
+                      icon: Icon(Icons.arrow_back_ios,size: 25.sp,color: Theme.of(context).textTheme.bodyMedium!.color,),
                       onPressed: () {
                         _changeCalendarPage(showNext: false);
                       },
@@ -122,7 +122,7 @@ class _CalendarPageState extends State<CalendarPage> {
                       ),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.arrow_forward_ios),
+                      icon: Icon(Icons.arrow_forward_ios, size: 25.sp,color: Theme.of(context).textTheme.bodyMedium!.color,),
                       onPressed: () {
                         _changeCalendarPage(showNext: true);
                       },
@@ -437,16 +437,17 @@ class _CalendarPageState extends State<CalendarPage> {
   void _showDayEventsInModalSheet(
       List<CalendarEventModel> events, DateTime day) {
     showModalBottomSheet(
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(8))),
-        isScrollControlled: true,
-        context: context,
-        builder: (context) => DayEventsBottomSheet(
-              currentUserId: currentUserId,
-              empId: widget.employeeId,
-              events: events,
-              day: day,
-              screenHeight: MediaQuery.of(context).size.height,
-            ));
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(8))),
+      isScrollControlled: true,
+      context: context,
+      builder: (context) => DayEventsBottomSheet(
+        currentUserId: currentUserId,
+        empId: widget.employeeId,
+        events: events,
+        day: day,
+        screenHeight: MediaQuery.of(context).size.height,
+      ),
+    );
   }
 }

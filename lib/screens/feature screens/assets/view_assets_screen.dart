@@ -110,6 +110,14 @@ class ViewAssetsScreen extends StatelessWidget {
                     child: Container(
                       height: 60.h,
                       decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Theme.of(context).shadowColor,
+                            blurRadius: 5,
+                            spreadRadius: 2,
+                            offset: Offset(0, 3),
+                          )
+                        ],
                         borderRadius: BorderRadius.circular(10.r),
                         color: Theme.of(context).cardColor,
                       ),
@@ -134,6 +142,14 @@ class ViewAssetsScreen extends StatelessWidget {
                     child: Container(
                       height: 60.h,
                       decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Theme.of(context).shadowColor,
+                            blurRadius: 5,
+                            spreadRadius: 2,
+                            offset: Offset(0, 3),
+                          )
+                        ],
                         borderRadius: BorderRadius.circular(10.r),
                         color: Theme.of(context).cardColor,
                       ),
@@ -180,6 +196,14 @@ class ViewAssetsScreen extends StatelessWidget {
                       width: double.maxFinite,
                       padding: EdgeInsets.symmetric(horizontal: 20.w),
                       decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Theme.of(context).shadowColor,
+                            blurRadius: 5,
+                            spreadRadius: 2,
+                            offset: Offset(0, 3),
+                          )
+                        ],
                         borderRadius: BorderRadius.circular(10.r),
                         color: Theme.of(context).cardColor,
                       ),

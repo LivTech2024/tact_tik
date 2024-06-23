@@ -95,11 +95,9 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              
             ),
             padding: EdgeInsets.only(left: width / width20),
             onPressed: () {
@@ -109,7 +107,6 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
           ),
           title: InterMedium(
             text: "${widget.Name}",
-            
           ),
           centerTitle: true,
         ),
@@ -131,17 +128,18 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
                         InterBold(
                           text: '',
                           fontsize: 18.sp,
-                          color:  Theme.of(context).textTheme.bodySmall!.color,
+                          color: Theme.of(context).textTheme.bodySmall!.color,
                         ),
                         InterBold(
                           text: '$completedTaskCount/$totalTaskCount',
                           fontsize: 18.sp,
-                          color:  Theme.of(context).textTheme.bodySmall!.color,
+                          color: Theme.of(context).textTheme.bodySmall!.color,
                         ),
                       ],
                     ),
                   ),
                 ),
+
                 SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {
@@ -194,6 +192,7 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
                           }
                         }
                       }
+
                       return ShiftTaskTypeWidget(
                           type: taskType ?? ShiftTaskEnum.upload,
                           taskName: fetchedTasks?[index]['ShiftTask'] ?? "",

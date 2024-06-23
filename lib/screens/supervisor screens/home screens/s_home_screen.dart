@@ -16,7 +16,7 @@ import 'package:tact_tik/screens/home%20screens/widgets/icon_text_widget.dart';
 import 'package:tact_tik/screens/supervisor%20screens/TrackingScreen/s_tracking_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/history/s_history_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/loogbook/s_loogbook_screen.dart';
-import 'package:tact_tik/screens/supervisor%20screens/home%20screens/Scheduling/create_shedule_screen.dart';
+import 'package:tact_tik/screens/supervisor%20screens/home%20screens/Scheduling/create_schedule_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/home%20screens/widgets/rounded_button.dart';
 import 'package:tact_tik/screens/supervisor%20screens/patrol_logs.dart';
 
@@ -604,7 +604,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => SPostOrder(
-                                          locationId: "wQXix4XxtRYphbIuN6fb",
+                                          companyId: _CompanyId,
                                         ),
                                       ),
                                     );
@@ -693,6 +693,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                             child: HomeScreenUserCard(
                               guardsInfo: _guardsInfo[index],
                               CompanyId: _CompanyId,
+                              empid: _employeeId,
                             ),
                           );
                         } else {
@@ -715,11 +716,13 @@ class _SHomeScreenState extends State<SHomeScreen> {
 class HomeScreenUserCard extends StatefulWidget {
   final DocumentSnapshot<Object?> guardsInfo;
   String CompanyId;
+  final String empid;
 
   HomeScreenUserCard({
     Key? key,
     required this.guardsInfo,
     required this.CompanyId,
+    required this.empid,
   }) : super(key: key);
 
   @override
@@ -835,7 +838,7 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => CreateSheduleScreen(
+                                  builder: (context) => CreateScheduleScreen(
                                         shiftId: '',
                                         supervisorEmail: '',
                                         BranchId: widget.guardsInfo[
@@ -875,12 +878,10 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => SLogBookScreen(
-                                          empId:
-                                              widget.guardsInfo['EmployeeId'],
-                                          empName:
-                                              widget.guardsInfo['EmployeeName'],
-                                        )));
+                                  builder: (context) => SelectDARGuardsScreen(
+                                    EmployeeId: widget.empid,
+                                  ),
+                                ));
                           },
                           child: RoundedButton(
                             useSVG: true,

@@ -54,9 +54,11 @@ class SetDetailsWidget extends StatelessWidget {
       decoration: BoxDecoration(
         // color: Colors.redAccent,
         borderRadius: BorderRadius.circular(10.r),
-        border: Border(
+         border: Border(
           bottom: BorderSide(
-            color: DarkColor.color19,
+            color: Theme.of(context).brightness == Brightness.dark
+                ? DarkColor.color12
+                : LightColor.color3,
           ),
         ),
       ),
@@ -96,7 +98,7 @@ class SetDetailsWidget extends StatelessWidget {
                         fontSize: 18.sp,
                         color: Theme.of(context)
                             .textTheme
-                            .bodyLarge!
+                            .bodyMedium!
                             .color, // Change text color to white
                       ),
                       hintText: hintText,
@@ -111,7 +113,7 @@ class SetDetailsWidget extends StatelessWidget {
                   child: InterMedium(
                     text: hintText,
                     fontsize: 18.sp,
-                    color:   Theme.of(context).highlightColor,
+                    color:   Theme.of(context).textTheme.bodyMedium!.color,
                   ),
                 ),
         ],

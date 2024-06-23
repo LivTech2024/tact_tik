@@ -748,10 +748,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                         ? Button1(
                             height: 60.h,
                             text: _isSubmitting ? 'Submitting...' : 'Submit',
-                            color: Theme.of(context)
-                                .textTheme
-                                .headlineMedium!
-                                .color,
+                            color: Colors.white,
                             onPressed: submitDarTileData,
                             backgroundcolor: Theme.of(context).primaryColor,
                             borderRadius: 10.r,

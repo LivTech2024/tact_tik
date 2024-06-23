@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:tact_tik/main.dart';
 import '../../../fonts/inter_bold.dart';
@@ -45,7 +47,10 @@ class ClientOpenReport extends StatefulWidget {
 class _ClientOpenReportState extends State<ClientOpenReport> {
   bool isLoading = true;
   List<Map<String, dynamic>> followUp = [];
-bool loading = false;
+  bool loading = false;
+  List<String> selectedLocationAddress = [];
+  String selectedGuardId = '';
+  DateTime? selectedDate;
   @override
   void initState() {
     super.initState();
@@ -56,6 +61,22 @@ bool loading = false;
         isLoading = false;
       });
     }
+  }
+
+  void onLocationSelected(List<dynamic> locationAddresses) {
+    setState(() {
+      selectedLocationAddress = List<String>.from(locationAddresses);
+    });
+    print('Selected Location Address: $selectedLocationAddress');
+    // fetchDARData();
+  }
+
+  void onGuardSelected(String guardId) {
+    setState(() {
+      selectedGuardId = guardId;
+    });
+    print('Selected Guard ID: $selectedGuardId');
+    // fetchDARData();
   }
 
   Future<void> fetchFollowUp() async {
@@ -254,7 +275,18 @@ bool loading = false;
     if (pdfResponse.statusCode == 200) {
       print('PDF generated successfully');
       final pdfBase64 = base64Encode(pdfResponse.bodyBytes);
-      savePdfLocally(pdfBase64, 'security_report.pdf');
+      final file = await savePdfLocally(pdfBase64, 'security_report.pdf');
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Scaffold(
+            appBar: AppBar(title: Text('PDF Viewer')),
+            body: PDFView(
+              filePath: file.path,
+            ),
+          ),
+        ),
+      );
       return pdfBase64;
     } else {
       print('Failed to generate PDF. Status code: ${pdfResponse.statusCode}');
@@ -291,6 +323,9 @@ bool loading = false;
           actions: [
             TextButton(
               onPressed: () {
+                setState(() {
+                  loading = true;
+                });
                 generateReportPdf(
                     widget.reportName,
                     widget.reportCategory,
@@ -301,6 +336,9 @@ bool loading = false;
                     widget.reportDate,
                     widget.reportLocation,
                     widget.reportImages);
+                setState(() {
+                  loading = false;
+                });
               },
               child: Row(
                 children: [
@@ -580,5 +618,9 @@ bool loading = false;
         ),
       ),
     );
+  }
+
+  void openPdf(File file) {
+    OpenFile.open(file.path);
   }
 }

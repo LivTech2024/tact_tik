@@ -44,7 +44,7 @@ class _SelectGuardsScreenState extends State<SelectClientGuardsScreen> {
 
     var employeeSnapshot = await FirebaseFirestore.instance
         .collection('Employees')
-        .where('EmployeeRole', isEqualTo: "GUARD")
+        // .where('EmployeeRole', isEqualTo: "GUARD")
         .where('EmployeeCompanyId', isEqualTo: widget.companyId)
         .get();
 
@@ -57,8 +57,10 @@ class _SelectGuardsScreenState extends State<SelectClientGuardsScreen> {
           String EmployeeId = userInfo['EmployeeId'] ?? "";
           String CompanyId = userInfo['EmployeeCompanyId'] ?? "";
 
-          var guardsInfo = await fireStoreService.getGuardForSupervisor(widget.companyId);
-          var patrolInfo = await fireStoreService.getPatrolsByEmployeeIdFromUserInfo(EmployeeId);
+          var guardsInfo =
+              await fireStoreService.getGuardForSupervisor(widget.companyId);
+          var patrolInfo = await fireStoreService
+              .getPatrolsByEmployeeIdFromUserInfo(EmployeeId);
 
           for (var doc in guardsInfo) {
             print("All Guards : ${doc.data()}");

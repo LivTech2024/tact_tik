@@ -20,7 +20,7 @@ import '../feature screens/petroling/eg_patrolling.dart';
 import '../feature screens/petroling/patrolling.dart';
 import '../home screens/shift_task_screen.dart';
 import '../supervisor screens/home screens/Scheduling/all_schedules_screen.dart';
-import '../supervisor screens/home screens/Scheduling/create_shedule_screen.dart';
+import '../supervisor screens/home screens/Scheduling/create_schedule_screen.dart';
 import '../supervisor screens/home screens/Scheduling/select_guards_screen.dart';
 import '../supervisor screens/home screens/s_home_screen.dart';
 

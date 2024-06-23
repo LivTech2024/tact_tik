@@ -243,10 +243,11 @@ class _ExchangeRequestState extends State<ExchangeRequest> {
     return _isLoading
         ? const SafeArea(
             child: Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
+              body: Center(
+                child: CircularProgressIndicator(),
+              ),
             ),
-          ))
+          )
         : SafeArea(
             child: Scaffold(
               body: Padding(

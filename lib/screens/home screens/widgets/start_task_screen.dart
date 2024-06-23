@@ -1003,6 +1003,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         bool? status =
                             await fireStoreService.checkShiftReturnTaskStatus2(
                                 widget.EmployeId, widget.ShiftId);
+                        print("Status for shiftReturn Task ${status}");
+
                         if (status == false) {
                           Navigator.push(
                             context,
@@ -1146,6 +1148,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         bool? status =
                             await fireStoreService.checkShiftReturnTaskStatus2(
                                 widget.EmployeId, widget.ShiftId);
+                        print("Status for shiftReturn Task ${status}");
                         if (status == false) {
                           Navigator.push(
                             context,

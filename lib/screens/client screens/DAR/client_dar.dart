@@ -73,7 +73,8 @@ class _ClientDarScreenState extends State<ClientDarScreen> {
       var formattedDate = DateFormat('dd/MM/yyyy').format(date);
 
       if (selectedDate != null) {
-        var selectedFormattedDate = DateFormat('dd/MM/yyyy').format(selectedDate!);
+        var selectedFormattedDate =
+            DateFormat('dd/MM/yyyy').format(selectedDate!);
         if (formattedDate != selectedFormattedDate) {
           continue;
         }
@@ -110,7 +111,6 @@ class _ClientDarScreenState extends State<ClientDarScreen> {
     });
   }
 
-
   void NavigateScreen(Widget screen, BuildContext context) {
     Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
   }
@@ -120,21 +120,19 @@ class _ClientDarScreenState extends State<ClientDarScreen> {
         context: context,
         initialDate: DateTime.now(),
         firstDate: DateTime(2015, 8),
-        lastDate: DateTime(2101)
-    );
+        lastDate: DateTime(2101));
     setState(() {
       if (picked != null) {
         selectedDate = picked;
-        fetchDARData();  // Fetch data for the selected date
+        fetchDARData(); // Fetch data for the selected date
       }
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     final bool isDark =
-    Theme.of(context).brightness == Brightness.dark ? true : false;
+        Theme.of(context).brightness == Brightness.dark ? true : false;
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -176,88 +174,101 @@ class _ClientDarScreenState extends State<ClientDarScreen> {
                           fontsize: 14.sp,
                           color: Theme.of(context).textTheme.bodyMedium!.color
                               as Color,
-                              Iconcolor: Theme.of(context).textTheme.bodyMedium!.color as Color,
+                          Iconcolor: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .color as Color,
                         ),
                       ),
                     ),
-        Row(
-          children: [
-            GestureDetector(
-              onTap: () {
-                SelectLocationDar.showLocationDialog(
-                  context,
-                  widget.companyId,
-                  onLocationSelected,
-                );
-              },
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: 80.w,
-                    child: IconTextWidget(
-                      space: 6.w,
-                      icon: Icons.add,
-                      iconSize: 20.sp,
-                      text: 'Select',
-                      useBold: true,
-                      fontsize: 14.sp,
-                      color: Theme.of(context).textTheme.bodySmall!.color as Color,
-                      Iconcolor:
-                      Theme.of(context).textTheme.bodyMedium!.color as Color,
+                    Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            SelectLocationDar.showLocationDialog(
+                              context,
+                              widget.companyId,
+                              onLocationSelected,
+                            );
+                          },
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                width: 80.w,
+                                child: IconTextWidget(
+                                  space: 6.w,
+                                  icon: Icons.add,
+                                  iconSize: 20.sp,
+                                  text: 'Select',
+                                  useBold: true,
+                                  fontsize: 14.sp,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall!
+                                      .color as Color,
+                                  Iconcolor: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .color as Color,
+                                ),
+                              ),
+                              InterBold(
+                                text: 'Location',
+                                fontsize: 16.sp,
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          width: Platform.isIOS ? 30.w : 10.w,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SelectClientGuardsScreen(
+                                  companyId: widget.companyId,
+                                  onGuardSelected: onGuardSelected,
+                                ),
+                              ),
+                            );
+                          },
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                width: 80.w,
+                                child: IconTextWidget(
+                                  space: 6.w,
+                                  icon: Icons.add,
+                                  iconSize: 20.sp,
+                                  text: 'Select',
+                                  useBold: true,
+                                  fontsize: 14.sp,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall!
+                                      .color as Color,
+                                  Iconcolor: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .color as Color,
+                                ),
+                              ),
+                              InterBold(
+                                text: 'Employee',
+                                fontsize: 16.sp,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  InterBold(
-                    text: 'Location',
-                    fontsize: 16.sp,
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              width: Platform.isIOS ? 30.w : 10.w,
-            ),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SelectClientGuardsScreen(
-                      companyId: widget.companyId,
-                      onGuardSelected: onGuardSelected,
-                    ),
-                  ),
-                );
-              },
-              child: Column(
-                children: [
-                  SizedBox(
-                    width: 80.w,
-                    child: IconTextWidget(
-                      space: 6.w,
-                      icon: Icons.add,
-                      iconSize: 20.sp,
-                      text: 'Select',
-                      useBold: true,
-                      fontsize: 14.sp,
-                      color: Theme.of(context).textTheme.bodySmall!.color as Color,
-                      Iconcolor:
-                      Theme.of(context).textTheme.bodyMedium!.color as Color,
-                    ),
-                  ),
-                  InterBold(
-                    text: 'Employee',
-                    fontsize: 16.sp,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
                   ],
                 ),
                 ListView.builder(
-                  physics: NeverScrollableScrollPhysics(),
+                    physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: groupedData.length,
                     itemBuilder: (context, index) {
@@ -280,9 +291,10 @@ class _ClientDarScreenState extends State<ClientDarScreen> {
                                   String startTime = DateFormat('HH:mm').format(
                                       (docData['EmpDarDate'] as Timestamp)
                                           .toDate());
-                                  String startDate = DateFormat('yyyy-MM-dd').format(
-                                      (docData['EmpDarDate'] as Timestamp).toDate()
-                                  );
+                                  String startDate = DateFormat('yyyy-MM-dd')
+                                      .format(
+                                          (docData['EmpDarDate'] as Timestamp)
+                                              .toDate());
                                   List<dynamic> empDarTile =
                                       docData['EmpDarTile'] ?? [];
                                   Navigator.push(
@@ -338,7 +350,8 @@ class _ClientDarScreenState extends State<ClientDarScreen> {
                                                     bottomRight:
                                                         Radius.circular(10.r),
                                                   ),
-                                                  color: Theme.of(context).primaryColor,
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
                                                 ),
                                               ),
                                             ],
