@@ -283,19 +283,20 @@ class _ShiftInformationState extends State<ShiftInformation> {
                           Button1(
                             text: widget.toRequest ? 'Request' : 'Acknowledge ',
                             onPressed: () {
-                              if (!widget.canExchangeRequest!) {
-                                showErrorToast(context,
-                                    'You cannot make a request previous shift.');
-                                return;
+
+                              if (widget.toRequest) {
+                                if (!widget.canExchangeRequest!) {
+                                  showErrorToast(context,
+                                      'You cannot make a request previous shift.');
+                                  return;
+                                }
+                                onShiftRequest(
+                                    senderId: widget.currentUserId,
+                                    receiverId: widget.empId,
+                                    shiftId: widget.shiftId);
+                              } else {
+                                onAcceptShift(widget.empId, widget.shiftId);
                               }
-                              // if (widget.toRequest) {
-                              //   onShiftRequest(
-                              //       senderId: widget.currentUserId,
-                              //       receiverId: widget.empId,
-                              //       shiftId: widget.shiftId);
-                              // } else {
-                              //   onAcceptShift(widget.empId, widget.shiftId);
-                              // }
                             },
                             backgroundcolor: Theme.of(context).primaryColor,
                             // Todo apply this to the buttons when one of the button is clicked
