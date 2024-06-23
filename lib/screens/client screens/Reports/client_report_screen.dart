@@ -245,7 +245,7 @@ class _ClientReportScreenState extends State<ClientReportScreen> {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              SelectLocationDar.showLocationDialog(
+                              SelectLocationReport.showLocationDialog(
                                 context,
                                 widget.companyId,
                                 onLocationSelected,
