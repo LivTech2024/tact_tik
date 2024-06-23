@@ -211,7 +211,7 @@ class HomeScreenController extends GetxController {
         autoStop: false,
         androidSettings: const AndroidSettings(
           accuracy: LocationAccuracy.HIGH,
-          interval: 30,
+          interval: 5,
           distanceFilter: 0,
           client: LocationClient.google,
           androidNotificationSettings: AndroidNotificationSettings(

@@ -59,46 +59,49 @@ class LocationServiceRepository {
   Future<void> callback(LocationDto locationDto) async {
     print('$_count location in dart: ${locationDto.toString()}');
     // await Future.delayed(Duration(seconds: 30));
-    if ((_count) % 5 == 0 || _count == 1) {
-      var userInfo = await fireStoreService.getUserInfoByCurrentUserEmail();
-      if (userInfo != null) {
-        String employeeId = userInfo['EmployeeId'];
+    // if ((_count) % 5 == 0 || _count == 1) {
+    var userInfo = await fireStoreService.getUserInfoByCurrentUserEmail2();
+    if (userInfo != null) {
+      String employeeId = userInfo['EmployeeId'];
 
-        // Define the new location to be added
-        Map<String, dynamic> newLocation = {
-          'LocationCoordinates':
-              GeoPoint(locationDto.latitude, locationDto.longitude),
-          'LocationReportedAt': Timestamp.now(),
-        };
+      // Define the new location to be added
+      Map<String, dynamic> newLocation = {
+        'LocationCoordinates':
+            GeoPoint(locationDto.latitude, locationDto.longitude),
+        'LocationReportedAt': Timestamp.now(),
+      };
 
-        late UserService _userService;
-        FireStoreService fireStoreService = FireStoreService();
-        _userService = UserService(firestoreService: FireStoreService());
-        // Fetch the employee's current route document
-        QuerySnapshot routeSnapshot = await FirebaseFirestore.instance
-            .collection('EmployeeRoutes')
-            .where('EmpRouteEmpId', isEqualTo: employeeId)
-            .where('EmpRouteShiftId', isEqualTo: _userService.ShiftId)
-            .where('EmpRouteShiftStatus', isEqualTo: 'started')
-            .get();
+      late UserService _userService;
+      FireStoreService fireStoreService = FireStoreService();
+      _userService = UserService(firestoreService: FireStoreService());
+      print(_userService.ShiftId);
+      print(_userService.employeeId);
 
-        if (routeSnapshot.docs.isNotEmpty) {
-          // Assuming you only get one active route document per employee
-          DocumentReference routeDocRef = routeSnapshot.docs.first.reference;
+      // Fetch the employee's current route document
+      QuerySnapshot routeSnapshot = await FirebaseFirestore.instance
+          .collection('EmployeeRoutes')
+          .where('EmpRouteEmpId', isEqualTo: employeeId)
+          // .where('EmpRouteShiftId', isEqualTo: _userService.ShiftId)ss
+          .where('EmpRouteShiftStatus', isEqualTo: 'started')
+          .get();
 
-          // Update the EmpRouteLocations array in the document
-          await routeDocRef.update({
-            'EmpRouteLocations': FieldValue.arrayUnion([newLocation])
-          });
+      if (routeSnapshot.docs.isNotEmpty) {
+        // Assuming you only get one actisve route document per empzzzloyee
+        DocumentReference routeDocRef = routeSnapshot.docs.first.reference;
 
-          print('Location added to employee route: $newLocation');
-        } else {
-          print('No active route found for employee: $employeeId');
-        }
+        // Update the EmpRouteLocations array in the document
+        await routeDocRef.update({
+          'EmpRouteLocations': FieldValue.arrayUnion([newLocation])
+        });
+
+        print('Location added to employee route: $newLocation');
       } else {
-        print('User info is null');
+        print('No active route found for employee: $employeeId');
       }
+    } else {
+      print('User info is null');
     }
+    // }
     await setLogPosition(_count, locationDto);
     final SendPort? send = IsolateNameServer.lookupPortByName(isolateName);
     send?.send(locationDto.toJson());
