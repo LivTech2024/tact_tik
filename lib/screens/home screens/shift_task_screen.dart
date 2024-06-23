@@ -139,6 +139,7 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
                     ),
                   ),
                 ),
+
                 SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {
@@ -191,6 +192,7 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
                           }
                         }
                       }
+
                       return ShiftTaskTypeWidget(
                           type: taskType ?? ShiftTaskEnum.upload,
                           taskName: fetchedTasks?[index]['ShiftTask'] ?? "",

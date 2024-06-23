@@ -467,13 +467,18 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                               SizedBox(
                                 width: 20.w,
                               ),
-                              InterRegular(
-                                text: widget.taskName,
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .displayMedium!
-                                    .color,
-                                fontsize: 18.sp,
+                              Expanded(
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: InterRegular(
+                                    text: widget.taskName,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .displayMedium!
+                                        .color,
+                                    fontsize: 18.sp,
+                                  ),
+                                ),
                               ),
                             ],
                           ),
