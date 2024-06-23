@@ -28,6 +28,7 @@ class CreateVisitors extends StatefulWidget {
   final Map<String, dynamic>? visitorData;
   final bool isCompleted;
   final bool showButton;
+
   CreateVisitors(
       {super.key,
       this.visitorData,
@@ -642,13 +643,13 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                                               Theme.of(context).primaryColor,
                                           onChanged: (value) {
                                             final tagData =
-                                                DynamicTagData(value, "");
+                                                DynamicTagData(value);
                                             inputFieldValues
                                                 .onTagChanged(tagData);
                                           },
                                           onSubmitted: (value) {
                                             final tagData =
-                                                DynamicTagData(value, "");
+                                                DynamicTagData(value);
                                             inputFieldValues
                                                 .onTagSubmitted(tagData);
                                           },

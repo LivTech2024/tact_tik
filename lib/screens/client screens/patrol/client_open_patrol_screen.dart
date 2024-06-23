@@ -1,7 +1,10 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
@@ -79,6 +82,208 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
         selectedDate = picked;
       }
     });
+  }
+
+  Future<String> generateShiftReportPdf(
+      String guardName,
+      Map<String, dynamic> data,
+      ) async {
+    final dateFormat = DateFormat('HH:mm'); // Define the format for time
+
+    // Extract patrol information
+    String patrolId = data['PatrolId'];
+    DateTime patrolDate = data['PatrolDate'].toDate();
+    List<dynamic> checkpoints = data['PatrolLogCheckPoints'];
+    DateTime startedAt = data['PatrolLogStartedAt'].toDate();
+    DateTime endedAt = data['PatrolLogEndedAt'].toDate();
+    String patrolStatus = data['PatrolLogStatus'];
+    int patrolCount = data['PatrolLogPatrolCount'];
+
+    // Generate HTML for checkpoints
+    String checkpointInfoHTML = '';
+    for (var checkpoint in checkpoints) {
+      String checkpointImages = '';
+      if (checkpoint['CheckPointImage'] != null) {
+        for (var image in checkpoint['CheckPointImage']) {
+          checkpointImages += '<img src="$image" alt="Checkpoint Image">';
+        }
+      }
+      DateTime reportedAt = checkpoint['CheckPointReportedAt'].toDate();
+      checkpointInfoHTML += '''
+      <div>
+        <p>Checkpoint Name: ${checkpoint['CheckPointName'] ?? 'N/A'}</p>
+        $checkpointImages
+        <p>Comment: ${checkpoint['CheckPointComment'] ?? 'N/A'}</p>
+        <p>Reported At: ${dateFormat.format(reportedAt)}</p>
+        <p>Status: ${checkpoint['CheckPointStatus'] ?? 'N/A'}</p>
+      </div>
+    ''';
+    }
+
+    // Generate patrol info HTML
+    String patrolInfoHTML = '''
+    <tr>
+      <td>$patrolCount</td>
+      <td>${dateFormat.format(startedAt)}</td>
+      <td>${dateFormat.format(endedAt)}</td>
+      <td>$checkpointInfoHTML</td>
+    </tr>
+  ''';
+
+    final htmlContent = """
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Security Report</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh;
+            }
+
+            header {
+                background-color: #333;
+                color: white;
+                padding: 20px;
+                text-align: center;
+            }
+
+            h1 {
+                margin: 0;
+                font-size: 24px;
+            }
+
+            section {
+                padding: 20px;
+                background-color: #fff;
+                margin-bottom: 20px;
+                border-radius: 5px;
+            }
+
+            table {
+                border-collapse: collapse;
+                width: 100%;
+            }
+
+            th, td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: left;
+            }
+
+            th {
+                background-color: #f2f2f2;
+            }
+
+            img {
+                max-width: 100%;
+                height: auto;
+                display: block;
+                margin-bottom: 10px;
+                max-height: 200px;
+            }
+
+            footer {
+                background-color: #333;
+                color: white;
+                text-align: center;
+                padding: 10px 0;
+                margin-top: auto;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <h1>Security Report</h1>
+        </header>
+
+        <section>
+            <h3>Shift Information</h3>
+            <table>
+                <tr>
+                    <th>Guard Name</th>
+                    <th>Patrol Date</th>
+                    <th>Patrol ID</th>
+                </tr>
+                <tr>
+                    <td>$guardName</td>
+                    <td>${DateFormat('yyyy-MM-dd').format(patrolDate)}</td>
+                    <td>$patrolId</td>
+                </tr>
+            </table>
+        </section>
+
+        <section>
+            <h3>Patrol Information</h3>
+            <table>
+                <tr>
+                    <th>Patrol Count</th>
+                    <th>Patrol Time In</th>
+                    <th>Patrol Time Out</th>
+                    <th>Checkpoint Details</th>
+                </tr>
+                $patrolInfoHTML
+            </table>
+        </section>
+
+        <section>
+            <h3>Additional Information</h3>
+            <table>
+                <tr>
+                    <th>Status</th>
+                    <th>Feedback Comment</th>
+                </tr>
+                <tr>
+                    <td>$patrolStatus</td>
+                    <td>${data['PatrolLogFeedbackComment'] ?? 'N/A'}</td>
+                </tr>
+            </table>
+        </section>
+
+        <footer>
+            <p>&copy; 2024 TEAM TACTTIK. All rights reserved.</p>
+        </footer>
+    </body>
+    </html>
+  """;
+
+    // Generate the PDF
+    final pdfResponse = await http.post(
+      Uri.parse('https://backend-security-app.onrender.com/api/html_to_pdf'),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'html': htmlContent,
+        'file_name': 'security_report.pdf',
+      }),
+    );
+
+    if (pdfResponse.statusCode == 200) {
+      print('PDF generated successfully');
+      final pdfBase64 = base64Encode(pdfResponse.bodyBytes);
+      final file = await savePdfLocally(pdfBase64, 'security_report_${Timestamp.now().toString()}.pdf');
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Scaffold(
+            appBar: AppBar(title: Text('PDF Viewer')),
+            body: PDFView(
+              filePath: file.path,
+            ),
+          ),
+        ),
+      );
+      return pdfBase64;
+    } else {
+      print('Failed to generate PDF. Status code: ${pdfResponse.statusCode}');
+      throw Exception('Failed to generate PDF');
+    }
   }
 
   @override

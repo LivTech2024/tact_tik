@@ -1285,7 +1285,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       GestureDetector(
-                                        // onTap: () => _selectDate(context),
+                                        onTap: () => _selectDate(context),
                                         child: SizedBox(
                                           width: 140.w,
                                           child: IconTextWidget(
@@ -1310,11 +1310,11 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                         children: [
                                           GestureDetector(
                                             onTap: () {
-                                              // SelectLocationDar.showLocationDialog(
-                                              //   context,
-                                              //   widget.companyId,
-                                              //   onLocationSelected,
-                                              // );
+                                              SelectLocationShift.showLocationDialog(
+                                                context,
+                                                _cmpId,
+                                                onLocationSelected,
+                                              );
                                             },
                                             child: Column(
                                               crossAxisAlignment:
@@ -1351,15 +1351,15 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                           ),
                                           GestureDetector(
                                             onTap: () {
-                                              // Navigator.push(
-                                              //   context,
-                                              //   MaterialPageRoute(
-                                              //     builder: (context) => SelectClientGuardsScreen(
-                                              //       companyId: widget.companyId,
-                                              //       onGuardSelected: onGuardSelected,
-                                              //     ),
-                                              //   ),
-                                              // );
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) => SelectClientGuardsScreen(
+                                                    companyId: _cmpId,
+                                                    onGuardSelected: onGuardSelected,
+                                                  ),
+                                                ),
+                                              );
                                             },
                                             child: Column(
                                               children: [

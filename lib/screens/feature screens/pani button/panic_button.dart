@@ -78,6 +78,7 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
                     ? DarkColor.color1
                     : LightColor.color4,
                 fontsize: 18.sp,
+                maxline: 2,
               ),
               SizedBox(height: 16.h),
               Row(

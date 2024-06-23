@@ -78,11 +78,11 @@ class _ProfileScreenState extends State<ClientProfileScreen> {
 
     try {
       await FirebaseFirestore.instance
-          .collection('Employees')
+          .collection('Clients')
           .doc(widget.empId)
           .update({
-        'EmployeeName': _nameController.text,
-        'EmployeePhone': _phoneNoController.text,
+        'ClientName': _nameController.text,
+        'ClientPhone': _phoneNoController.text,
       });
 
       if (_selectedImageFile != null) {

@@ -190,7 +190,7 @@ class _SPostOrderState extends State<SPostOrder> {
                                         vertical: 10.h,
                                       ),
                                       width: double.maxFinite,
-                                      margin: EdgeInsets.only(bottom: 10.h),
+                                      margin: EdgeInsets.only(bottom: 5.h),
                                       decoration: BoxDecoration(
                                         boxShadow: [
                                           BoxShadow(
@@ -251,13 +251,16 @@ class _SPostOrderState extends State<SPostOrder> {
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.center,
                                                   children: [
-                                                    PoppinsMedium(
-                                                      text: fileName,
-                                                      color: Theme.of(context)
-                                                          .textTheme
-                                                          .titleMedium!
-                                                          .color,
-                                                      fontsize: 14.sp,
+                                                    SizedBox(
+                                                      width: 280.w,
+                                                      child: PoppinsMedium(
+                                                        text: fileName,
+                                                        color: Theme.of(context)
+                                                            .textTheme
+                                                            .titleMedium!
+                                                            .color,
+                                                        fontsize: 14.sp,
+                                                      ),
                                                     ),
                                                     PoppinsRegular(
                                                       text: fileSize,
@@ -292,40 +295,41 @@ class _SPostOrderState extends State<SPostOrder> {
                                                     otherFileSize = snapshot.data!['size'];
                                                   }
 
-                                                  return Padding(
-                                                    padding: const EdgeInsets.all(8.0),
-                                                    child: Container(
-                                                      width: width / width200,
-                                                      height: height / height46,
-                                                      decoration: BoxDecoration(
-                                                        borderRadius: BorderRadius.circular(width / width10),
-                                                        color: DarkColor.color1,
-                                                      ),
-                                                      child: Row(
-                                                        children: [
-                                                          Padding(
-                                                            padding: EdgeInsets.symmetric(horizontal: width / width6),
-                                                            child: SvgPicture.asset(
-                                                              'assets/images/pdf.svg',
-                                                              width: width / width32,
-                                                            ),
+                                                  return Container(
+                                                    width: width / width200,
+                                                    height: height / height46,
+                                                    margin: EdgeInsets.only(bottom: 5.h),
+                                                    decoration: BoxDecoration(
+                                                      borderRadius: BorderRadius.circular(width / width10),
+                                                      color: DarkColor.color1,
+                                                    ),
+                                                    child: Row(
+                                                      children: [
+                                                        Padding(
+                                                          padding: EdgeInsets.symmetric(horizontal: width / width6),
+                                                          child: SvgPicture.asset(
+                                                            'assets/images/pdf.svg',
+                                                            width: width / width32,
                                                           ),
-                                                          Column(
-                                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                                            mainAxisAlignment: MainAxisAlignment.center,
-                                                            children: [
-                                                              PoppinsMedium(
+                                                        ),
+                                                        Column(
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          mainAxisAlignment: MainAxisAlignment.center,
+                                                          children: [
+                                                            SizedBox(
+                                                              width: 280.w,
+                                                              child: PoppinsMedium(
                                                                 text: otherFileName,
                                                                 color: DarkColor.color15,
                                                               ),
-                                                              PoppinsRegular(
-                                                                text: otherFileSize,
-                                                                color: DarkColor.color16,
-                                                              )
-                                                            ],
-                                                          )
-                                                        ],
-                                                      ),
+                                                            ),
+                                                            PoppinsRegular(
+                                                              text: otherFileSize,
+                                                              color: DarkColor.color16,
+                                                            )
+                                                          ],
+                                                        )
+                                                      ],
                                                     ),
                                                   );
                                                 },

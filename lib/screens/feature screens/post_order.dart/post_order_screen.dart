@@ -278,13 +278,16 @@ class _PostOrderState extends State<PostOrder> {
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.center,
                                                   children: [
-                                                    PoppinsMedium(
-                                                      text: fileName,
-                                                      color: Theme.of(context)
-                                                          .textTheme
-                                                          .titleLarge!
-                                                          .color,
-                                                      fontsize: 12.sp,
+                                                    SizedBox(
+                                                      width: 280.w,
+                                                      child: PoppinsMedium(
+                                                        text: fileName,
+                                                        color: Theme.of(context)
+                                                            .textTheme
+                                                            .titleLarge!
+                                                            .color,
+                                                        fontsize: 12.sp,
+                                                      ),
                                                     ),
                                                     PoppinsRegular(
                                                       text: fileSize,

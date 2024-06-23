@@ -54,9 +54,11 @@ class SetDetailsWidget extends StatelessWidget {
       decoration: BoxDecoration(
         // color: Colors.redAccent,
         borderRadius: BorderRadius.circular(10.r),
-        border: Border(
+         border: Border(
           bottom: BorderSide(
-            color: DarkColor.color19,
+            color: Theme.of(context).brightness == Brightness.dark
+                ? DarkColor.color12
+                : LightColor.color3,
           ),
         ),
       ),
