@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -188,8 +189,18 @@ class _ClientDarOpenScreenState extends State<ClientDarOpenScreen> {
     if (pdfResponse.statusCode == 200) {
       print('PDF generated successfully');
       final pdfBase64 = base64Encode(pdfResponse.bodyBytes);
-      final file = await savePdfLocally(pdfBase64, 'security_report.pdf');
-      openPdf(file);
+      final file = await savePdfLocally(pdfBase64, 'security_report_${Timestamp.now().toString()}.pdf');
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Scaffold(
+            appBar: AppBar(title: Text('PDF Viewer')),
+            body: PDFView(
+              filePath: file.path,
+            ),
+          ),
+        ),
+      );
       return pdfBase64;
     } else {
       print('Failed to generate PDF. Status code: ${pdfResponse.statusCode}');
