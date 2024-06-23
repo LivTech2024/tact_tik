@@ -169,7 +169,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
             },
             child: Icon(
               Icons.add,
-              color: Theme.of(context).brightness == Brightness.dark ? DarkColor.color15 : LightColor.color1,
+              color: LightColor.color1,
             ),
           ),
         ),
