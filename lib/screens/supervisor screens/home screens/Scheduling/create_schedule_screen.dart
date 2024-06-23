@@ -41,7 +41,7 @@ class Guards {
   Guards(this.name, this.image);
 }
 
-class CreateSheduleScreen extends StatefulWidget {
+class CreateScheduleScreen extends StatefulWidget {
   final String GuardId;
   final String GuardName;
   final String GuardImg;
@@ -50,7 +50,7 @@ class CreateSheduleScreen extends StatefulWidget {
   final String supervisorEmail;
   final String shiftId;
 
-  CreateSheduleScreen({
+  CreateScheduleScreen({
     super.key,
     required this.GuardId,
     required this.GuardName,
@@ -62,10 +62,10 @@ class CreateSheduleScreen extends StatefulWidget {
   });
 
   @override
-  State<CreateSheduleScreen> createState() => _CreateSheduleScreenState();
+  State<CreateScheduleScreen> createState() => _CreateScheduleScreenState();
 }
 
-class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
+class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
   FireStoreService fireStoreService = FireStoreService();
 
   List selectedGuards = [];
@@ -76,6 +76,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
   String dropdownValue = 'Other';
   List<String> tittles = [];
   String? selectedClint = 'Client';
+  String? selectedBranch = 'Select branch';
   String? selectedLocatin = 'Select Location';
   String? selectedGuard = 'Guard 1';
   List<DateTime> _selectedDates = [];
@@ -85,6 +86,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
   String? selectedGuardName;
 
   List<String> ClintValues = ['Client'];
+  List<String> BranchValues = ['Select branch'];
   List<String> LocationValues = ['Select Location'];
   List<String> PatrolValues = [];
   List<String> selectedPatrols = [];
@@ -1629,6 +1631,81 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                         icon: Icons.apartment,
                         controller: _Branch,
                         onTap: () {},
+                      ),
+                      Container(
+                        height: 60.h,
+                        padding: EdgeInsets.symmetric(horizontal: 10.w),
+                        decoration: BoxDecoration(
+                          // color: Colors.redAccent,
+                          borderRadius: BorderRadius.circular(10.w),
+                          border: Border(
+                            bottom: BorderSide(
+                              color: Theme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? DarkColor.color12
+                                  : LightColor.color3,
+                            ),
+                          ),
+                        ),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            isExpanded: true,
+                            iconSize: 24.w,
+                            icon: Icon(Icons.arrow_drop_down),
+                            iconEnabledColor:
+                                Theme.of(context).textTheme.bodyMedium!.color,
+                            // Set icon color for enabled state
+                            dropdownColor: Theme.of(context).cardColor,
+                            style: TextStyle(
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color),
+                            value: selectedBranch,
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                selectedBranch = newValue!;
+                                print('$selectedClint selected');
+                              });
+                            },
+                            items: BranchValues.map<DropdownMenuItem<String>>(
+                                (String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Row(
+                                  children: [
+                                    selectedBranch == value
+                                        ? Icon(Icons.apartment,
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium!
+                                                .color)
+                                        : Icon(Icons.apartment,
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .bodyLarge!
+                                                .color),
+                                    // Conditional icon color based on selection
+                                    SizedBox(width: 10.w),
+                                    InterRegular(
+                                      text: value,
+                                      color: selectedBranch == value
+                                          ? Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .color
+                                          : Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge!
+                                              .color,
+                                    ),
+                                    // Conditional text color based on selection
+                                  ],
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ),
                       ),
                       SetDetailsWidget(
                         useTextField: true,
