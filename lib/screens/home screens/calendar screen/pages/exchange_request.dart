@@ -89,7 +89,7 @@ class _ExchangeRequestState extends State<ExchangeRequest> {
 
       if (receiverDoc.exists) {
         var receiverData = receiverDoc.data() as Map<String, dynamic>;
-        receiverName = receiverData['EmployeeName'];
+        receiverName = receiverData['EmployeeName'] ?? '';
         receiverSupervisorId = receiverData['EmployeeSupervisorId'][0] ?? '';
       }
 
@@ -99,7 +99,7 @@ class _ExchangeRequestState extends State<ExchangeRequest> {
             .doc(receiverSupervisorId)
             .get();
         if (supervisorSnapshot.exists) {
-          receiverSupervisorName = supervisorSnapshot['EmployeeName'];
+          receiverSupervisorName = supervisorSnapshot['EmployeeName'] ?? '';
         }
       }
 
@@ -109,7 +109,7 @@ class _ExchangeRequestState extends State<ExchangeRequest> {
 
       if (senderDoc.exists) {
         var senderData = senderDoc.data() as Map<String, dynamic>;
-        senderName = senderData['EmployeeName'];
+        senderName = senderData['EmployeeName'] ?? '';
         senderSupervisorId = senderData['EmployeeSupervisorId'][0] ?? '';
       }
 
@@ -119,7 +119,7 @@ class _ExchangeRequestState extends State<ExchangeRequest> {
             .doc(senderSupervisorId)
             .get();
         if (supervisorSnapshot.exists) {
-          senderSupervisorIdName = supervisorSnapshot['EmployeeName'];
+          senderSupervisorIdName = supervisorSnapshot['EmployeeName'] ?? '';
         }
       }
 
@@ -129,13 +129,13 @@ class _ExchangeRequestState extends State<ExchangeRequest> {
 
       if (receiverShiftDoc.exists) {
         var receiverShiftData = receiverShiftDoc.data() as Map<String, dynamic>;
-        receiverShiftName = receiverShiftData['ShiftName'];
+        receiverShiftName = receiverShiftData['ShiftName'] ?? '';
         receiverShiftDescription =
             receiverShiftData['ShiftDescription'] ?? 'No details found.';
         receiverShiftLocationAddress =
             receiverShiftData['ShiftLocationAddress'] ?? '';
-        receiverShiftStartTime = receiverShiftData['ShiftStartTime'];
-        receiverShiftEndTime = receiverShiftData['ShiftEndTime'];
+        receiverShiftStartTime = receiverShiftData['ShiftStartTime'] ?? '';
+        receiverShiftEndTime = receiverShiftData['ShiftEndTime'] ?? '';
       }
 
       // Step 4: Query Shifts collection for SenderShift information
@@ -144,12 +144,13 @@ class _ExchangeRequestState extends State<ExchangeRequest> {
 
       if (senderShiftDoc.exists) {
         var senderShiftData = senderShiftDoc.data() as Map<String, dynamic>;
-        senderShiftName = senderShiftData['ShiftName'];
+        senderShiftName = senderShiftData['ShiftName'] ?? '';
         senderShiftDescription =
             senderShiftData['ShiftDescription'] ?? 'No details found.';
-        senderShiftLocationAddress = senderShiftData['ShiftLocationAddress'];
-        senderShiftStartTime = senderShiftData['ShiftStartTime'];
-        senderShiftEndTime = senderShiftData['ShiftEndTime'];
+        senderShiftLocationAddress =
+            senderShiftData['ShiftLocationAddress'] ?? '';
+        senderShiftStartTime = senderShiftData['ShiftStartTime'] ?? '';
+        senderShiftEndTime = senderShiftData['ShiftEndTime'] ?? '';
       }
 
       if (senderSupervisorId.isNotEmpty) {
@@ -158,7 +159,7 @@ class _ExchangeRequestState extends State<ExchangeRequest> {
             .doc(senderSupervisorId)
             .get();
         if (supervisorSnapshot.exists) {
-          senderSupervisorIdName = supervisorSnapshot['EmployeeName'];
+          senderSupervisorIdName = supervisorSnapshot['EmployeeName'] ?? '';
         }
       }
 
@@ -211,7 +212,7 @@ class _ExchangeRequestState extends State<ExchangeRequest> {
             .doc(senderSupervisorId)
             .get();
         if (supervisorSnapshot.exists) {
-          senderSupervisorIdName = supervisorSnapshot['EmployeeName'];
+          senderSupervisorIdName = supervisorSnapshot['EmployeeName'] ?? '';
         }
       }
       // Step 4: Query Shifts collection for SenderShift information
@@ -220,12 +221,13 @@ class _ExchangeRequestState extends State<ExchangeRequest> {
 
       if (senderShiftDoc.exists) {
         var senderShiftData = senderShiftDoc.data() as Map<String, dynamic>;
-        senderShiftName = senderShiftData['ShiftName'];
+        senderShiftName = senderShiftData['ShiftName'] ?? '';
         senderShiftDescription =
             senderShiftData['ShiftDescription'] ?? 'No details found.';
-        senderShiftLocationAddress = senderShiftData['ShiftLocationAddress'];
-        senderShiftStartTime = senderShiftData['ShiftStartTime'];
-        senderShiftEndTime = senderShiftData['ShiftEndTime'];
+        senderShiftLocationAddress =
+            senderShiftData['ShiftLocationAddress'] ?? '';
+        senderShiftStartTime = senderShiftData['ShiftStartTime'] ?? '';
+        senderShiftEndTime = senderShiftData['ShiftEndTime'] ?? '';
       }
       setState(() {
         _isLoading = false;
@@ -368,7 +370,7 @@ class _ExchangeRequestState extends State<ExchangeRequest> {
                             SizedBox(height: 50.h),
                             InterBold(
                               text: widget.isRequest
-                                  ? "Request From: $receiverName"
+                                  ? "Request to: $receiverName"
                                   : "Exchange Request From: guardName",
                               fontsize: 18.sp,
                               color:
@@ -601,9 +603,6 @@ class _ExchangeRequestState extends State<ExchangeRequest> {
             List<String>.from(shiftAssignedUserId);
 
         // Add senderId to both lists if it's not already present
-        if (!updatedShiftAcknowledgedByEmpId.contains(senderId)) {
-          updatedShiftAcknowledgedByEmpId.add(senderId);
-        }
         if (!updatedShiftAssignedUserId.contains(senderId)) {
           updatedShiftAssignedUserId.add(senderId);
         }
@@ -731,9 +730,7 @@ class _ExchangeRequestState extends State<ExchangeRequest> {
               List.from(shiftData['ShiftAssignedUserId'] ?? []);
 
           // Add the new user ID
-          if (!acknowledgedByEmpIds.contains(addId)) {
-            acknowledgedByEmpIds.add(addId);
-          }
+
           if (!assignedUserIds.contains(addId)) {
             assignedUserIds.add(addId);
           }

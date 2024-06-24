@@ -25,6 +25,7 @@ class ShiftInformation extends StatefulWidget {
       required this.endTime,
       required this.currentUserId,
       this.canExchangeRequest = false,
+      this.isToday = false,
       this.sendersShiftId = ''});
   final bool toRequest;
   final String empId;
@@ -35,6 +36,7 @@ class ShiftInformation extends StatefulWidget {
   final String? sendersShiftId;
   final bool? toAccept;
   final bool? canExchangeRequest;
+  final bool? isToday;
 
   @override
   State<ShiftInformation> createState() => _ShiftInformationState();
@@ -48,14 +50,28 @@ class _ShiftInformationState extends State<ShiftInformation> {
   String location = '';
   bool isLoading = true;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+  bool isAlreadyAcknowledged = false;
+  bool _clicked = false;
   @override
   void initState() {
     super.initState();
     _getUsersAndShiftInfo(widget.empId, widget.shiftId);
   }
 
+  findTheShiftIsAlreadyAckoleded(String receiverId, String shiftId) async {
+    isAlreadyAcknowledged = await isReceiverAlreadyAcknowledgedShift(
+      receiverId: receiverId,
+      shiftId: shiftId,
+    );
+    print('isAlreadyAcknowledged: $isAlreadyAcknowledged');
+  }
+
   Future<void> _getUsersAndShiftInfo(String empId, String shiftId) async {
     try {
+      if (widget.toRequest) {
+        await findTheShiftIsAlreadyAckoleded(empId, shiftId);
+      }
+
       // Fetch user info from Employees collection
       DocumentSnapshot userSnapshot =
           await firestore.collection('Employees').doc(empId).get();
@@ -274,76 +290,82 @@ class _ShiftInformationState extends State<ShiftInformation> {
                         ],
                       ),
                     ),
-                    IgnorePointer(
-                      ignoring:
-                          /**condition clicked true* */ false /*Todo pass the bool of true and false*/,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Button1(
-                            text: widget.toRequest ? 'Request' : 'Acknowledge ',
-                            onPressed: () {
-                              if (!widget.canExchangeRequest!) {
-                                showErrorToast(context,
-                                    'You cannot make a request previous shift.');
-                                return;
-                              }
-                              // if (widget.toRequest) {
-                              //   onShiftRequest(
-                              //       senderId: widget.currentUserId,
-                              //       receiverId: widget.empId,
-                              //       shiftId: widget.shiftId);
-                              // } else {
-                              //   onAcceptShift(widget.empId, widget.shiftId);
-                              // }
-                            },
-                            backgroundcolor: Theme.of(context).primaryColor,
-                            // Todo apply this to the buttons when one of the button is clicked
-                            // backgroundcolor: *condition clicked true* ? Theme.of(context).primaryColorLight :Theme.of(context).primaryColor,
-                            borderRadius: 10.r,
-                            fontsize: 18.sp,
-                            color:
-                                Theme.of(context).textTheme.bodyMedium!.color,
-                          ),
-                          SizedBox(height: 20.h),
-                          widget.toRequest
-                              ?
-                              // ? Column(
-                              //     children: [
-                              // SizedBox(height: 20.h),
-                              Button1(
-                                  text: 'Exchange',
+                    !widget.isToday!
+                        ? IgnorePointer(
+                            ignoring: isAlreadyAcknowledged || _clicked,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Button1(
+                                  text: widget.toRequest
+                                      ? 'Request'
+                                      : 'Acknowledge ',
                                   onPressed: () {
-                                    if (!widget.canExchangeRequest!) {
-                                      showErrorToast(context,
-                                          'You cannot exchange previous shift.');
-                                      return;
+                                    if (widget.toRequest) {
+                                      if (!widget.canExchangeRequest!) {
+                                        showErrorToast(context,
+                                            'You cannot make a request previous shift.');
+                                        return;
+                                      }
+                                      onShiftRequest(
+                                          senderId: widget.currentUserId,
+                                          receiverId: widget.empId,
+                                          shiftId: widget.shiftId);
+                                    } else {
+                                      onAcceptShift(
+                                          widget.empId, widget.shiftId);
                                     }
-                                    onExchangeShift(
-                                        widget.currentUserId,
-                                        widget.empId,
-                                        widget.shiftId,
-                                        widget.sendersShiftId!);
                                   },
                                   backgroundcolor:
-                                      Theme.of(context).primaryColor,
-                                  // Todo apply this to the buttons when one of the button is clicked
-                                  // backgroundcolor: *condition clicked true* ? Theme.of(context).primaryColorLight :Theme.of(context).primaryColor,
+                                      isAlreadyAcknowledged || _clicked
+                                          ? Theme.of(context).primaryColorLight
+                                          : Theme.of(context).primaryColor,
                                   borderRadius: 10.r,
                                   fontsize: 18.sp,
                                   color: Theme.of(context)
                                       .textTheme
                                       .bodyMedium!
                                       .color,
-                                  useBorder: true,
-                                )
-                              // ],
-                              // )
-                              : SizedBox(),
-                          SizedBox(height: 100.h),
-                        ],
-                      ),
-                    )
+                                ),
+                                SizedBox(height: 20.h),
+                                widget.toRequest
+                                    ? !widget.isToday!
+                                        ? Button1(
+                                            text: 'Exchange',
+                                            onPressed: () {
+                                              if (!widget.canExchangeRequest!) {
+                                                showErrorToast(context,
+                                                    'You cannot exchange previous shift.');
+                                                return;
+                                              }
+                                              onExchangeShift(
+                                                  widget.currentUserId,
+                                                  widget.empId,
+                                                  widget.shiftId,
+                                                  widget.sendersShiftId!);
+                                            },
+                                            backgroundcolor:
+                                                isAlreadyAcknowledged ||
+                                                        _clicked
+                                                    ? Theme.of(context)
+                                                        .primaryColorLight
+                                                    : Theme.of(context)
+                                                        .primaryColor,
+                                            borderRadius: 10.r,
+                                            fontsize: 18.sp,
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium!
+                                                .color,
+                                            useBorder: true,
+                                          )
+                                        : SizedBox()
+                                    : SizedBox(),
+                                SizedBox(height: 100.h),
+                              ],
+                            ),
+                          )
+                        : const SizedBox(),
                   ],
                 ),
               ),
@@ -387,6 +409,9 @@ class _ShiftInformationState extends State<ShiftInformation> {
       // Update the document with the generated ID
       await docRef.update({'ShiftRequestId': docRef.id});
       showSuccessToast(context, "Shift request created successfully");
+      setState(() {
+        _clicked = true;
+      });
       print('Shift request created with ID: ${docRef.id}');
     } catch (e) {
       print('Error creating shift request: $e');
@@ -494,6 +519,16 @@ class _ShiftInformationState extends State<ShiftInformation> {
         return;
       }
 
+      bool result = await isReceiverAlreadyAcknowledgedShift(
+        receiverId: empId,
+        shiftId: shiftId,
+      );
+
+      if (result) {
+        showErrorToast(context, "Shift is already acknowledged by user.");
+        return;
+      }
+
       final shiftsCollection = firestore.collection('Shifts');
       final exchangeCollection = firestore.collection('ShiftExchange');
 
@@ -529,7 +564,9 @@ class _ShiftInformationState extends State<ShiftInformation> {
       print('senders shift id : $sendersShiftId');
 
       showSuccessToast(context, "Shift exchange request sent successfully");
-
+      setState(() {
+        _clicked = true;
+      });
       print("Shift exchange request successfully by $empId");
     } catch (e) {
       print("Failed to shift exchange request: $e");

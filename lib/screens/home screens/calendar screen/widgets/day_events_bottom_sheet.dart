@@ -42,21 +42,22 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.day);
-
     bool isDateAfterToday(DateTime date) {
-      // Get the current date
       DateTime today = DateTime.now();
-
-      // Strip the time part from the current date to get only the date part
       DateTime justToday = DateTime(today.year, today.month, today.day);
-
-      // Compare the given date with today's date
       return date.isAfter(justToday);
     }
 
-    bool canExchangeRequest = isDateAfterToday(widget.day);
+    bool isDateISToday(DateTime date) {
+      DateTime today = DateTime.now();
+      DateTime justToday = DateTime(today.year, today.month, today.day);
+      DateTime justDate = DateTime(date.year, date.month, date.day);
+      return justDate.isAtSameMomentAs(justToday);
+    }
 
+    bool isToday = isDateISToday(widget.day);
+    print('isToday: $isToday');
+    bool canExchangeRequest = isDateAfterToday(widget.day);
 
     return DraggableScrollableSheet(
       expand: false,
@@ -150,23 +151,24 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
                               child: Container(
                                 decoration: BoxDecoration(
                                   boxShadow: [
-                                      BoxShadow(
-                                        color: Theme.of(context).shadowColor,
-                                        blurRadius: 5,
-                                        spreadRadius: 2,
-                                        offset: Offset(0, 3),
-                                      )
-                                    ],
-                                    color: event.isShiftAcknowledgedByEmployee
-                                        ? Colors.green.shade700
-                                        : (Theme.of(context).cardColor),
-                                    borderRadius:
-                                        BorderRadius.circular(10.r),
-                                    border: Border.all(
-                                        width: 2,
-                                        color: event.others.isShiftRequested[0]
-                                            ? Colors.redAccent
-                                            : Colors.transparent,),),
+                                    BoxShadow(
+                                      color: Theme.of(context).shadowColor,
+                                      blurRadius: 5,
+                                      spreadRadius: 2,
+                                      offset: Offset(0, 3),
+                                    )
+                                  ],
+                                  color: event.isShiftAcknowledgedByEmployee
+                                      ? Colors.green.shade700
+                                      : (Theme.of(context).cardColor),
+                                  borderRadius: BorderRadius.circular(10.r),
+                                  border: Border.all(
+                                    width: 2,
+                                    color: event.others.isShiftRequested[0]
+                                        ? Colors.redAccent
+                                        : Colors.transparent,
+                                  ),
+                                ),
                                 clipBehavior: Clip.antiAlias,
                                 child: Row(
                                   children: [
@@ -198,7 +200,8 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
                                     Expanded(
                                       child: Padding(
                                         padding: EdgeInsets.only(
-                                            left: 14.w,),
+                                          left: 14.w,
+                                        ),
                                         child: Align(
                                           alignment: Alignment.centerLeft,
                                           child: Column(
@@ -215,8 +218,7 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
                                                     .bodyMedium!
                                                     .color,
                                               ),
-                                              SizedBox(
-                                                  height: 8.h),
+                                              SizedBox(height: 8.h),
                                               IntrinsicHeight(
                                                 child: Row(
                                                   children: [
@@ -231,9 +233,7 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
                                                                   .bodyMedium!
                                                                   .color,
                                                         ),
-                                                        SizedBox(
-                                                            width:
-                                                                4.w),
+                                                        SizedBox(width: 4.w),
                                                         InterMedium(
                                                           text: event.location,
                                                           fontsize: 14.sp,
@@ -272,8 +272,7 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
                                       ),
                                     ),
                                     Padding(
-                                      padding: EdgeInsets.only(
-                                          right: 10.w),
+                                      padding: EdgeInsets.only(right: 10.w),
                                       child: Icon(
                                         Icons.arrow_forward_ios,
                                         size: 20.sp,
@@ -316,7 +315,7 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
                           print(event.others.isShiftRequested);
                           // Create a common child widget for GestureDetector to avoid code repetition
                           return createWidget(
-                              context, event,  canExchangeRequest
+                              context, event, canExchangeRequest, isToday
                               // true,
                               // event.others.isExchangeRequested![index],
                               );
@@ -332,7 +331,7 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
   }
 
   Widget createWidget(BuildContext context, CalendarEventModel event,
-      bool canExchangeRequest) {
+      bool canExchangeRequest, bool isToday) {
     print('inside create widget');
     if (event.others.ids.isEmpty) {
       print('return empty container');
@@ -355,6 +354,7 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => ShiftInformation(
+                      isToday: isToday,
                       canExchangeRequest: canExchangeRequest,
                       toAccept: event.others.isExchangeRequested![0],
                       startTime: event.others.startTime!,
@@ -536,6 +536,7 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => ShiftInformation(
+                              isToday: isToday,
                               canExchangeRequest: canExchangeRequest,
                               toAccept:
                                   event.others.isExchangeRequested![index],
@@ -569,14 +570,15 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
   }
 
   Widget createAnotherWidget(
-      bool isExchangeRequested,
-      BuildContext context,
-      String id,
-      Color eventColor,
-      String shiftName,
-      String shiftLocation,
-      String startTime,
-      String endTime,) {
+    bool isExchangeRequested,
+    BuildContext context,
+    String id,
+    Color eventColor,
+    String shiftName,
+    String shiftLocation,
+    String startTime,
+    String endTime,
+  ) {
     return SizedBox(
       height: 100.h,
       child: Padding(
@@ -609,11 +611,12 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
               Container(
                 height: 60.h,
                 width: 4.w,
-                decoration:  BoxDecoration(
+                decoration: BoxDecoration(
                   color: Colors.red,
                   borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(10.r),
-                      bottomRight: Radius.circular(10.r),),
+                    topRight: Radius.circular(10.r),
+                    bottomRight: Radius.circular(10.r),
+                  ),
                 ),
               ),
               SizedBox(width: 10.w),
