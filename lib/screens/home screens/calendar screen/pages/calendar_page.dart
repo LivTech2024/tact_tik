@@ -105,7 +105,11 @@ class _CalendarPageState extends State<CalendarPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     IconButton(
-                      icon: Icon(Icons.arrow_back_ios,size: 25.sp,color: Theme.of(context).textTheme.bodyMedium!.color,),
+                      icon: Icon(
+                        Icons.arrow_back_ios,
+                        size: 25.sp,
+                        color: Theme.of(context).textTheme.bodyMedium!.color,
+                      ),
                       onPressed: () {
                         _changeCalendarPage(showNext: false);
                       },
@@ -122,7 +126,11 @@ class _CalendarPageState extends State<CalendarPage> {
                       ),
                     ),
                     IconButton(
-                      icon: Icon(Icons.arrow_forward_ios, size: 25.sp,color: Theme.of(context).textTheme.bodyMedium!.color,),
+                      icon: Icon(
+                        Icons.arrow_forward_ios,
+                        size: 25.sp,
+                        color: Theme.of(context).textTheme.bodyMedium!.color,
+                      ),
                       onPressed: () {
                         _changeCalendarPage(showNext: true);
                       },
