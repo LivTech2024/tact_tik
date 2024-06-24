@@ -93,6 +93,7 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
   final TextEditingController _searchController = TextEditingController();
   List<Map<String, dynamic>> guards = [];
   String? selectedPatrol;
+  PageController _pageController = PageController(initialPage: 0,);
 
   // ValueItem<String>(label: 'Patrol 1', value: 'Patrol 1'),
   // ValueItem<String>(label: 'Patrol 2', value: 'Patrol 2'),
@@ -862,6 +863,21 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
     );
   }
 
+
+  int currentPage = 0;
+  void NextPage() {
+    setState(() {
+      _pageController.animateToPage(1,
+          duration: Duration(milliseconds: 500), curve: Curves.ease);
+    });
+  }
+  void PreviousPage() {
+    setState(() {
+      _pageController.animateToPage(0,
+          duration: Duration(milliseconds: 500), curve: Curves.ease);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     int requiredEmp = 0;
@@ -874,7 +890,11 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
-              Navigator.of(context).pop();
+              if(currentPage != 1) {
+                Navigator.of(context).pop();
+              }else {
+                PreviousPage();
+              }
             },
           ),
           title: InterMedium(
@@ -883,6 +903,7 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
           centerTitle: true,
         ),
         body: PageView(
+          controller: _pageController,
           children: [
             Scaffold(
               body: SingleChildScrollView(
@@ -1744,6 +1765,7 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
                               _ShiftName.text.isNotEmpty) {
                             // CreateShiftFunction();
                             setState(() {
+                              NextPage();
                               nextScreen = !nextScreen;
                             });
                           } else {
@@ -2092,6 +2114,10 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
               ),
             )
           ],
+          onPageChanged: (int page){
+            currentPage = page;
+            print("Current Page: " + page.toString());
+          },
         ),
       ),
     );

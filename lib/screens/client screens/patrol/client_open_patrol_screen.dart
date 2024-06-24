@@ -88,8 +88,7 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
       String guardName,
       Map<String, dynamic> data,
       ) async {
-    final dateFormat = DateFormat('HH:mm'); // Define the format for time
-
+    final dateFormat = DateFormat('HH:mm');
     // Extract patrol information
     String patrolId = data['PatrolId'];
     DateTime patrolDate = data['PatrolDate'].toDate();
@@ -98,6 +97,14 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
     DateTime endedAt = data['PatrolLogEndedAt'].toDate();
     String patrolStatus = data['PatrolLogStatus'];
     int patrolCount = data['PatrolLogPatrolCount'];
+
+    print('NIG1: $patrolId');
+    print('NIG2: $patrolDate');
+    print('NIG3: $checkpoints');
+    print('NIG4: $startedAt');
+    print('NIG5: $endedAt');
+    print('NIG6: $patrolStatus');
+    print('NIG7: $patrolCount');
 
     // Generate HTML for checkpoints
     String checkpointInfoHTML = '';
@@ -256,7 +263,7 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
 
     // Generate the PDF
     final pdfResponse = await http.post(
-      Uri.parse('https://backend-security-app.onrender.com/api/html_to_pdf'),
+      Uri.parse('https://backend-sceurity-app.onrender.com/api/html_to_pdf'),
       headers: {'Content-Type': 'application/json'},
       body: json.encode({
         'html': htmlContent,
