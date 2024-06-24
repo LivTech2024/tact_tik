@@ -4808,6 +4808,25 @@ class FireStoreService {
     }
   }
 
+Future<String?> getPatrolNameFromId(String PatrolId) async {
+  try {
+    final QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('Patrols')
+        .where('PatrolId', isEqualTo: PatrolId)
+        .limit(1) // Limit to 1 result as we expect only one patrol name for a given PatrolId
+        .get();
+
+    if (snapshot.docs.isNotEmpty) {
+      return snapshot.docs.first['PatrolName'];
+    } else {
+      return null; // Return null if no document is found
+    }
+  } catch (e) {
+    print(e);
+    return null; // Return null or handle the error as needed
+  }
+}
+
   Future<DocumentSnapshot> getLocationByName(
       String locationName, String companyid) async {
     try {

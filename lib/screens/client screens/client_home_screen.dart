@@ -990,7 +990,6 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                     shiftId: _shiftId,
                     shiftLocationId: _shiftLocationId,
                     shiftLocationName: '',
-                  
                     showWish: _showWish,
                     drawerOnClicked: () {
                       _scaffoldKeyClient.currentState?.openEndDrawer();
@@ -1310,7 +1309,8 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                         children: [
                                           GestureDetector(
                                             onTap: () {
-                                              SelectLocationShift.showLocationDialog(
+                                              SelectLocationShift
+                                                  .showLocationDialog(
                                                 context,
                                                 _cmpId,
                                                 onLocationSelected,
@@ -1354,9 +1354,11 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
-                                                  builder: (context) => SelectClientGuardsScreen(
+                                                  builder: (context) =>
+                                                      SelectClientGuardsScreen(
                                                     companyId: _cmpId,
-                                                    onGuardSelected: onGuardSelected,
+                                                    onGuardSelected:
+                                                        onGuardSelected,
                                                   ),
                                                 ),
                                               );

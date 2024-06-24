@@ -85,9 +85,9 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
   }
 
   Future<String> generateShiftReportPdf(
-      String guardName,
-      Map<String, dynamic> data,
-      ) async {
+    String guardName,
+    Map<String, dynamic> data,
+  ) async {
     final dateFormat = DateFormat('HH:mm');
     // Extract patrol information
     String patrolId = data['PatrolId'];
@@ -97,7 +97,8 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
     DateTime endedAt = data['PatrolLogEndedAt'].toDate();
     String patrolStatus = data['PatrolLogStatus'];
     int patrolCount = data['PatrolLogPatrolCount'];
-
+    String GuardName = data['PatrolLogGuardName'];
+    var patrolName = await fireStoreService.getPatrolNameFromId(patrolId);
     print('NIG1: $patrolId');
     print('NIG2: $patrolDate');
     print('NIG3: $checkpoints');
@@ -217,12 +218,12 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                 <tr>
                     <th>Guard Name</th>
                     <th>Patrol Date</th>
-                    <th>Patrol ID</th>
+                    <th>Patrol Name</th>
                 </tr>
                 <tr>
-                    <td>$guardName</td>
+                    <td>$GuardName</td>
                     <td>${DateFormat('yyyy-MM-dd').format(patrolDate)}</td>
-                    <td>$patrolId</td>
+                    <td>$patrolName</td>
                 </tr>
             </table>
         </section>
@@ -274,7 +275,8 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
     if (pdfResponse.statusCode == 200) {
       print('PDF generated successfully');
       final pdfBase64 = base64Encode(pdfResponse.bodyBytes);
-      final file = await savePdfLocally(pdfBase64, 'security_report_${Timestamp.now().toString()}.pdf');
+      final file = await savePdfLocally(
+          pdfBase64, 'security_report_${Timestamp.now().toString()}.pdf');
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -393,7 +395,7 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                     ),*/
                     Container(
                       height: 200.h,
-                      margin: EdgeInsets.only(top: 10.h,left: 4.w,right: 4.w),
+                      margin: EdgeInsets.only(top: 10.h, left: 4.w, right: 4.w),
                       width: double.maxFinite,
                       decoration: BoxDecoration(
                         boxShadow: [
@@ -464,7 +466,8 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                                 SizedBox(
                                   width: 70.w,
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       InterRegular(
                                         text: 'Started at',
@@ -489,7 +492,8 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                                 SizedBox(
                                   width: 70.w,
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       InterRegular(
                                         text: 'Ended at',
@@ -514,7 +518,8 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                                 SizedBox(
                                   width: 40.w,
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       InterRegular(
                                         text: 'Count',
@@ -539,7 +544,8 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                                 SizedBox(
                                   width: 80.w,
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       InterRegular(
                                         text: 'Status',
@@ -596,13 +602,20 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                                   child: TextButton(
                                     clipBehavior: Clip.none,
                                     onPressed: () async {
+                                      setState(() {
+                                        loading = true;
+                                      });
                                       await generateShiftReportPdf(
                                         "Vaibhav",
                                         widget.data,
                                       );
+                                      setState(() {
+                                        loading = false;
+                                      });
                                     },
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         Icon(
                                           Icons.download_for_offline_sharp,
@@ -640,8 +653,8 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                     InterBold(
                       text: 'Checkpoints',
                       fontsize: 18.sp,
-                      color:
-                          Theme.of(context).textTheme.displaySmall!.color as Color,
+                      color: Theme.of(context).textTheme.displaySmall!.color
+                          as Color,
                     ),
                     SizedBox(height: 20.h),
                     ListView.builder(
@@ -681,7 +694,8 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                           child: Container(
                             height: 50.h,
                             width: double.maxFinite,
-                            margin: EdgeInsets.only(bottom: 10.h,left: 4.w,right: 4.w),
+                            margin: EdgeInsets.only(
+                                bottom: 10.h, left: 4.w, right: 4.w),
                             decoration: BoxDecoration(
                               boxShadow: [
                                 BoxShadow(
@@ -745,12 +759,13 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
               ),
             ),
             Center(
-                child: SizedBox(
-                  child: Visibility(
-                    visible: loading,
-                    child: CircularProgressIndicator(),
-                  ),
-                ),)
+              child: SizedBox(
+                child: Visibility(
+                  visible: loading,
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+            )
           ],
         ),
       ),

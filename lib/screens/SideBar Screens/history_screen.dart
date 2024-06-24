@@ -69,16 +69,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
     return SafeArea(
       child: Scaffold(
-        
         body: CustomScrollView(
           // physics: const PageScrollPhysics(),
           slivers: [
             SliverAppBar(
-              
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back_ios,
-                 
                 ),
                 padding: EdgeInsets.only(left: 20.w),
                 onPressed: () {
@@ -88,7 +85,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
               ),
               title: InterMedium(
                 text: 'My History',
-                
               ),
               centerTitle: true,
               floating: true, // Makes the app bar float above the content
@@ -113,17 +109,15 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       '${shiftDate.day}/${shiftDate.month}/${shiftDate.year}';
                   String dayOfWeek = _getDayOfWeek(shiftDate.weekday);
                   return Padding(
-                    padding: EdgeInsets.only(
-                        left: 30.w,
-                        right: 30.w,
-                        bottom: 40.h),
+                    padding:
+                        EdgeInsets.only(left: 30.w, right: 30.w, bottom: 40.h),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         InterBold(
                           text: "${date}  ${dayOfWeek}",
                           fontsize: width / width18,
-                          color:  Theme.of(context).textTheme.bodyMedium!.color,
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
                         ),
                         SizedBox(height: 20.h),
                         Container(
@@ -141,23 +135,21 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                 offset: Offset(0, 3),
                               )
                             ],
-                            borderRadius:
-                                BorderRadius.circular(10.w),
+                            borderRadius: BorderRadius.circular(10.w),
                             color: Theme.of(context).cardColor,
                           ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 20.w),
+                                padding: EdgeInsets.symmetric(horizontal: 20.w),
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     InterSemibold(
                                       text: 'Shift Name',
                                       fontsize: 16.w,
-                                      color:  Theme.of(context)
+                                      color: Theme.of(context)
                                           .textTheme
                                           .bodyMedium!
                                           .color,
@@ -167,7 +159,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                       child: InterSemibold(
                                         text: shift['ShiftName'],
                                         fontsize: 16.w,
-                                        color:  Theme.of(context)
+                                        color: Theme.of(context)
                                             .textTheme
                                             .bodyMedium!
                                             .color,
@@ -185,15 +177,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                         Brightness.dark
                                     ? DarkColor.colorRed
                                     : LightColor.colorRed,
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 20.w),
+                                padding: EdgeInsets.symmetric(horizontal: 20.w),
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     InterSemibold(
                                       text: 'Location',
                                       fontsize: 16.w,
-                                      color:   Theme.of(context)
+                                      color: Theme.of(context)
                                           .textTheme
                                           .bodyMedium!
                                           .color,
@@ -203,7 +194,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                       child: InterSemibold(
                                         text: shift['ShiftLocationAddress'],
                                         fontsize: 16.w,
-                                        color:  Theme.of(context)
+                                        color: Theme.of(context)
                                             .textTheme
                                             .bodyMedium!
                                             .color,
@@ -214,8 +205,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                               ),
                               SizedBox(height: 30.h),
                               Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 20.h),
+                                padding: EdgeInsets.symmetric(horizontal: 20.h),
                                 width: double.maxFinite,
                                 child: Row(
                                   mainAxisAlignment:
@@ -228,7 +218,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                         InterSemibold(
                                           text: 'Shift Timimg',
                                           fontsize: 16.w,
-                                          color:  Theme.of(context)
+                                          color: Theme.of(context)
                                               .textTheme
                                               .bodyMedium!
                                               .color,
@@ -256,7 +246,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                           InterSemibold(
                                             text: 'Total',
                                             fontsize: 16.w,
-                                            color:  Theme.of(context)
+                                            color: Theme.of(context)
                                                 .textTheme
                                                 .bodyMedium!
                                                 .color,
@@ -267,7 +257,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                           InterSemibold(
                                             text: '',
                                             fontsize: 16.sp,
-                                            color:  Theme.of(context)
+                                            color: Theme.of(context)
                                                 .textTheme
                                                 .bodyMedium!
                                                 .color,
@@ -297,13 +287,17 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                     ),
                                     InterSemibold(
                                       text: 'Download',
-                                      color: Theme.of(context).textTheme.headlineMedium!.color,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .headlineMedium!
+                                          .color,
                                       fontsize: 16.sp,
                                     )
                                   ],
                                 ),
                                 onPressed: () {},
-                                backgroundcolor:Theme.of(context).primaryColorLight,
+                                backgroundcolor:
+                                    Theme.of(context).primaryColorLight,
                                 useBorderRadius: true,
                                 MyBorderRadius: BorderRadius.only(
                                   bottomLeft: Radius.circular(12.w),

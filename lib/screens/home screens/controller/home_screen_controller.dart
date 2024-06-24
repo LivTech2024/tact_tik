@@ -37,7 +37,7 @@ class HomeScreenController extends GetxController {
       (dynamic data) async {
         await updateUI(data);
         print('listening');
-        Get.snackbar('Listening', "Listening");
+        // Get.snackbar('Listening', "Listening");
       },
     );
     initPlatformState();

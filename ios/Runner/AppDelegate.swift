@@ -2,6 +2,7 @@ import UIKit
 import Flutter
 import background_locator_2
 import GoogleMaps
+import flutter_background_service_ios 
 func registerPlugins(registry: FlutterPluginRegistry) -> () {
     if (!registry.hasPlugin("BackgroundLocatorPlugin")) {
         GeneratedPluginRegistrant.register(with: registry)

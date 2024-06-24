@@ -67,9 +67,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    final bool isDark = Theme
-        .of(context)
-        .brightness == Brightness.dark;
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
     return ScreenUtilInit(
       designSize: const ui.Size(430, 932),
       builder: (context, child) {
@@ -93,9 +91,11 @@ class _MyAppState extends State<MyApp> {
         );
       },
       child: OfflineBuilder(
-        connectivityBuilder: (BuildContext context,
-            ConnectivityResult connectivity,
-            Widget child,) {
+        connectivityBuilder: (
+          BuildContext context,
+          ConnectivityResult connectivity,
+          Widget child,
+        ) {
           final bool isConnected = connectivity != ConnectivityResult.none;
           if (isConnected) {
             return child;
@@ -104,13 +104,9 @@ class _MyAppState extends State<MyApp> {
               body: Center(
                 child: InterSemibold(
                   text:
-                  'No internet connection.\nConnect to Internet or Restart the app',
+                      'No internet connection.\nConnect to Internet or Restart the app',
                   fontsize: 20.sp,
-                  color: Theme
-                      .of(context)
-                      .textTheme
-                      .bodyMedium!
-                      .color,
+                  color: Theme.of(context).textTheme.bodyMedium!.color,
                 ),
               ),
             );
