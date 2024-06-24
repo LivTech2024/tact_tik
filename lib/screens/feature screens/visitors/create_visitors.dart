@@ -59,6 +59,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
   Set<String> tags = {};
   Set<String> options = {};
   List<String> Emptyoptions = [""];
+  List<String> TagString = [];
 
   TimeOfDay? InTime;
   TimeOfDay? OutTime;
@@ -138,11 +139,11 @@ class _CreateVisitorsState extends State<CreateVisitors> {
         Set<String> opt = convertCommaSeparatedStringToList(
                 widget.visitorData!['VisitorAssetHandover'])
             .toSet(); // Convert list to set for unique values
+        List<String> opt2 = convertCommaSeparatedStringToList(
+            widget.visitorData!['VisitorAssetHandover']);
         setState(() {
           tags = opt;
-          options = opt;
-          print("opt ${opt}");
-          // options = opt;
+          TagString = opt2;
         });
         print("Tag ${tags}");
         print("opt ${opt}");
@@ -658,40 +659,71 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                                     );
                                   },
                                 )
-                              : Content(
-                                  title: 'Asset HandOver',
-                                  child: ChipsChoice<String>.multiple(
-                                    value: tags.toList(),
-                                    placeholder: "asset",
-                                    onChanged: (val) {
-                                      print("Selected assets: $val");
-                                      setState(() {
-                                        // val.forEach((item) {
-                                        //   if (!options.contains(item)) {
-                                        //     options.add(item);
-                                        //   }
-                                        // });
-                                        options.addAll(val.where(
-                                            (item) => !options.contains(item)));
-                                        // tags = val
-                                        //     .toSet(); // Update tags with selected values
-                                      });
-                                      print("Updated options: $options");
-                                    },
-                                    choiceItems:
-                                        C2Choice.listFrom<String, String>(
-                                      source: tags.isEmpty
-                                          ? Emptyoptions
-                                          : tags.toList(),
-                                      value: (i, v) => v,
-                                      label: (i, v) => v,
-                                      tooltip: (i, v) => v,
-                                    ),
-                                    choiceStyle: C2ChipStyle.outlined(
-                                      color: Theme.of(context).primaryColor,
-                                    ),
+                              : SizedBox(
+                                  height: 200.h,
+                                  child: ListView(
+                                    children: TagString.isNotEmpty
+                                        ? Emptyoptions.map((item) =>
+                                                ListTile(title: Text(item)))
+                                            .toList()
+                                        : TagString.map((item) {
+                                            print("Tags ${TagString}");
+                                            return CheckboxListTile(
+                                              title: Text(item),
+                                              value: options.contains(item),
+                                              onChanged: (bool? checked) {
+                                                setState(() {
+                                                  if (checked == true) {
+                                                    if (!options
+                                                        .contains(item)) {
+                                                      options.add(item);
+                                                    }
+                                                  } else {
+                                                    options.remove(item);
+                                                  }
+                                                  print(
+                                                      "Updated options: $options");
+                                                });
+                                              },
+                                            );
+                                          }).toList(),
                                   ),
                                 ),
+
+                          // Content(
+                          //     title: 'Asset HandOver',
+                          //     child: ChipsChoice<String>.multiple(
+                          //       value: tags.toList(),
+                          //       placeholder: "asset",
+                          //       onChanged: (val) {
+                          //         print("Selected assets: $val");
+                          //         setState(() {
+                          //           // val.forEach((item) {
+                          //           //   if (!options.contains(item)) {
+                          //           //     options.add(item);
+                          //           //   }
+                          //           // });
+                          //           options.addAll(val.where(
+                          //               (item) => !options.contains(item)));
+                          //           // tags = val
+                          //           //     .toSet(); // Update tags with selected values
+                          //         });
+                          //         print("Updated options: $options");
+                          //       },
+                          //       choiceItems:
+                          //           C2Choice.listFrom<String, String>(
+                          //         source: tags.isEmpty
+                          //             ? Emptyoptions
+                          //             : tags.toList(),
+                          //         value: (i, v) => v,
+                          //         label: (i, v) => v,
+                          //         tooltip: (i, v) => v,
+                          //       ),
+                          //       choiceStyle: C2ChipStyle.outlined(
+                          //         color: Theme.of(context).primaryColor,
+                          //       ),
+                          //     ),
+                          //   ),
                           SizedBox(height: 20.h),
                           InterBold(
                             text: 'Asset Return',

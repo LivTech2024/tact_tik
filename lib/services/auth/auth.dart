@@ -7,6 +7,7 @@ import 'package:tact_tik/common/widgets/customErrorToast.dart';
 import 'package:tact_tik/screens/client%20screens/client_home_screen.dart';
 import 'package:tact_tik/screens/home%20screens/home_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/home%20screens/s_home_screen.dart';
+// import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
 class CustomUser {
   final String email;
@@ -17,6 +18,8 @@ class CustomUser {
 // final LocalStorage storage = LocalStorage('currentUserEmail');
 
 class Auth {
+  // FireStoreService fireStoreService = FireStoreService();
+
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -162,6 +165,21 @@ class Auth {
   //     print('Error signing in firestore: $e');
   //   }
   // }
+  // Future<void> addToLoggedInUsers(
+  //     String empId, bool isloggedin, String usertype, String FcmToken) async {
+  //   try {
+  //     fireStoreService.addLoggedInUser(
+  //         loggedInUserId: empId,
+  //         isLoggedIn: isloggedin,
+  //         loggedInUserType: usertype,
+  //         loggedInCreatedAt: Timestamp.now(),
+  //         loggedInNotifyFcmToken: "",
+  //         loggedInPlatform: "android");
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
+
   Future<void> signInWithEmailAndPassword(
       String email, String password, BuildContext context) async {
     try {
@@ -192,6 +210,7 @@ class Auth {
       if (loginType == 'client') {
         await storage.setItem("CurrentUser", email);
         await storage.setItem("Role", 'CLIENT');
+        // await addToLoggedInUsers();
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) => ClientHomeScreen()));
       } else {

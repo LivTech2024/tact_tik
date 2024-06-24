@@ -142,22 +142,66 @@ class FireStoreService {
     try {
       CollectionReference loggedInCollection =
           FirebaseFirestore.instance.collection('LoggedInUsers');
-      DocumentReference docRef = await loggedInCollection.add({
-        'LoggedInUserId': loggedInUserId,
-        'IsLoggedIn': isLoggedIn,
-        'LoggedInUserType': loggedInUserType,
-        'LoggedInCreatedAt': loggedInCreatedAt,
-        'LoggedInNotifyFcmToken': loggedInNotifyFcmToken,
-        'LoggedInPlatform': loggedInPlatform,
-      });
 
-      // Use the document ID as LoggedInId
-      String loggedInId = docRef.id;
-      await docRef.update({'LoggedInId': loggedInId});
+      // Check if document with loggedInUserId exists
+      QuerySnapshot querySnapshot = await loggedInCollection
+          .where('LoggedInUserId', isEqualTo: loggedInUserId)
+          .get();
 
-      print('Data added successfully with LoggedInId: $loggedInId');
+      if (querySnapshot.docs.isNotEmpty) {
+        // Document exists, update the IsLoggedIn field
+        DocumentReference docRef = querySnapshot.docs.first.reference;
+        await docRef.update({
+          'IsLoggedIn': isLoggedIn,
+        });
+        print('User status updated successfully');
+      } else {
+        // Document does not exist, create a new one
+        DocumentReference docRef = await loggedInCollection.add({
+          'LoggedInUserId': loggedInUserId,
+          'IsLoggedIn': isLoggedIn,
+          'LoggedInUserType': loggedInUserType,
+          'LoggedInCreatedAt': FieldValue.serverTimestamp(),
+          'LoggedInNotifyFcmToken': loggedInNotifyFcmToken,
+          'LoggedInPlatform': loggedInPlatform,
+        });
+
+        // Use the document ID as LoggedInId
+        String loggedInId = docRef.id;
+        await docRef.update({'LoggedInId': loggedInId});
+
+        print('Data added successfully with LoggedInId: $loggedInId');
+      }
     } catch (e) {
       print('Error adding data: $e');
+    }
+  }
+
+  Future<void> updateLoggedInNotifyFcmToken({
+    required String loggedInUserId,
+    required String newNotifyFcmToken,
+  }) async {
+    try {
+      CollectionReference loggedInCollection =
+          FirebaseFirestore.instance.collection('LoggedInUsers');
+
+      // Check if document with loggedInUserId exists
+      QuerySnapshot querySnapshot = await loggedInCollection
+          .where('LoggedInUserId', isEqualTo: loggedInUserId)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        // Document exists, update the LoggedInNotifyFcmToken field
+        DocumentReference docRef = querySnapshot.docs.first.reference;
+        await docRef.update({
+          'LoggedInNotifyFcmToken': newNotifyFcmToken,
+        });
+        print('FCM token updated successfully');
+      } else {
+        print('No user found with LoggedInUserId: $loggedInUserId');
+      }
+    } catch (e) {
+      print('Error updating FCM token: $e');
     }
   }
 

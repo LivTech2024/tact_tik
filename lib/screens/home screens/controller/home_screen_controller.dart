@@ -194,8 +194,6 @@ class HomeScreenController extends GetxController {
   }
 
   Future<void> _startLocator() async {
-    // await Future.delayed(Duration(seconds: 30));
-
     Map<String, dynamic> data = {'countInit': 1};
     return await BackgroundLocator.registerLocationUpdate(
         LocationCallbackHandler.callback,
@@ -203,10 +201,10 @@ class HomeScreenController extends GetxController {
         initDataCallback: data,
         disposeCallback: LocationCallbackHandler.disposeCallback,
         iosSettings: const IOSSettings(
-            accuracy: LocationAccuracy.HIGH,
-            distanceFilter: 0,
-            stopWithTerminate: false,
-            showsBackgroundLocationIndicator: true),
+          accuracy: LocationAccuracy.HIGH,
+          distanceFilter: 0,
+          stopWithTerminate: false,
+        ),
         autoStop: false,
         androidSettings: const AndroidSettings(
           accuracy: LocationAccuracy.HIGH,

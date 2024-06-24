@@ -1757,7 +1757,6 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
                             print("Next Screen Button Clicked");
                             setState(() {
                               print("Button Clicked on Set State");
-
                               nextScreen = !nextScreen;
                             });
                           } else {

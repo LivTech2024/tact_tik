@@ -24,7 +24,7 @@ class LocationServiceRepository {
   static const String isolateName = 'LocatorIsolate';
 
   int _count = -1;
-
+  Timer? _timer;
   Future<void> init(Map<dynamic, dynamic> params) async {
     //TODO change logs
     print("***********Init callback handler");

@@ -9,6 +9,7 @@ import 'package:tact_tik/common/widgets/customErrorToast.dart';
 import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/client%20screens/client_home_screen.dart';
 import 'package:tact_tik/screens/home%20screens/home_screen.dart';
+import 'package:tact_tik/screens/new%20guard/personel_details.dart';
 import 'package:tact_tik/screens/supervisor%20screens/home%20screens/s_home_screen.dart';
 import 'package:tact_tik/services/auth/auth.dart';
 import 'package:tact_tik/utils/colors.dart';
