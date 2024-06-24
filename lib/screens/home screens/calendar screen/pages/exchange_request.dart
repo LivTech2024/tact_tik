@@ -48,14 +48,58 @@ class _ExchangeRequestState extends State<ExchangeRequest> {
   String receiverId = '';
   String senderId = '';
   String senderShiftId = '';
+  bool isAlreadyAcknowledged = false;
 
   @override
   void initState() {
+    print('exchange request screen');
     super.initState();
     if (widget.isRequest) {
+      print('exchange id ${widget.exchangeId}');
       getShiftExchangeInfo(widget.exchangeId);
     } else {
+      print('exchange id ${widget.exchangeId}');
       getShiftRequestInfo(widget.exchangeId);
+    }
+  }
+
+  findTheShiftIsAlreadyAckoleded(String receiverId, String shiftId) async {
+    isAlreadyAcknowledged = await isReceiverAlreadyAcknowledgedShift(
+      receiverId: receiverId,
+      shiftId: shiftId,
+    );
+    print('isAlreadyAcknowledged: $isAlreadyAcknowledged');
+  }
+
+  Future<bool> isReceiverAlreadyAcknowledgedShift({
+    required String receiverId,
+    required String shiftId,
+  }) async {
+    try {
+      final FirebaseFirestore firestore = FirebaseFirestore.instance;
+      // Fetch the document from the Shifts collection with the given shiftId
+      DocumentSnapshot shiftDoc =
+          await firestore.collection('Shifts').doc(shiftId).get();
+
+      if (shiftDoc.exists) {
+        // Extract the ShiftAcknowledgedByEmpId list from the document
+        List<dynamic> acknowledgedByList = shiftDoc['ShiftAcknowledgedByEmpId'];
+
+        // Check if the receiverId is already in the ShiftAcknowledgedByEmpId list
+        bool isReceiverAvailable = acknowledgedByList.contains(receiverId);
+
+        // Print or return the result as needed
+        print('Is receiver available: $isReceiverAvailable');
+
+        // You can also return the result if needed
+        return isReceiverAvailable;
+      } else {
+        print('Shift document does not exist.');
+        return false;
+      }
+    } catch (e) {
+      print('Error fetching shift document: $e');
+      return false;
     }
   }
 
@@ -82,6 +126,8 @@ class _ExchangeRequestState extends State<ExchangeRequest> {
       receiverId = shiftExchangeData['ShiftExchReqReceiverId'];
       senderId = shiftExchangeData['ShiftExchReqSenderId'];
       senderShiftId = shiftExchangeData['ShiftExchSenderShiftId'];
+
+      await findTheShiftIsAlreadyAckoleded(senderId, senderShiftId);
 
       // Step 3: Query Employees collection for Receiver information
       DocumentSnapshot receiverDoc =
@@ -196,6 +242,8 @@ class _ExchangeRequestState extends State<ExchangeRequest> {
       receiverId = shiftExchangeData['ShiftReqReceiverId'];
       senderId = shiftExchangeData['ShiftReqSenderId'];
       senderShiftId = shiftExchangeData['ShiftReqShiftId'];
+
+      await findTheShiftIsAlreadyAckoleded(senderId, senderShiftId);
 
       // Step 3: Query Employees collection for Sender information
       DocumentSnapshot senderDoc =
@@ -477,7 +525,8 @@ class _ExchangeRequestState extends State<ExchangeRequest> {
                         height: 30.h,
                       ),
                       IgnorePointer(
-                        ignoring: _isTransactionLoading,
+                        ignoring:
+                            _isTransactionLoading || isAlreadyAcknowledged,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
@@ -501,9 +550,10 @@ class _ExchangeRequestState extends State<ExchangeRequest> {
                                   );
                                 }
                               },
-                              backgroundcolor: _isTransactionLoading
-                                  ? Theme.of(context).primaryColorLight
-                                  : Theme.of(context).primaryColor,
+                              backgroundcolor:
+                                  _isTransactionLoading || isAlreadyAcknowledged
+                                      ? Theme.of(context).primaryColorLight
+                                      : Theme.of(context).primaryColor,
                               borderRadius: 10.r,
                               fontsize: 18.sp,
                               color:
@@ -521,9 +571,10 @@ class _ExchangeRequestState extends State<ExchangeRequest> {
                                   onCancel(exchangeId: widget.exchangeId);
                                 }
                               },
-                              backgroundcolor: _isTransactionLoading
-                                  ? Theme.of(context).primaryColorLight
-                                  : Theme.of(context).primaryColor,
+                              backgroundcolor:
+                                  _isTransactionLoading || isAlreadyAcknowledged
+                                      ? Theme.of(context).primaryColorLight
+                                      : Theme.of(context).primaryColor,
                               borderRadius: 10.r,
                               fontsize: 18.sp,
                               color:
