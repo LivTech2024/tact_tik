@@ -307,6 +307,7 @@ class _ShiftInformationState extends State<ShiftInformation> {
                                             'You cannot make a request previous shift.');
                                         return;
                                       }
+
                                       onShiftRequest(
                                           senderId: widget.currentUserId,
                                           receiverId: widget.empId,
@@ -330,35 +331,38 @@ class _ShiftInformationState extends State<ShiftInformation> {
                                 SizedBox(height: 20.h),
                                 widget.toRequest
                                     ? !widget.isToday!
-                                        ? Button1(
-                                            text: 'Exchange',
-                                            onPressed: () {
-                                              if (!widget.canExchangeRequest!) {
-                                                showErrorToast(context,
-                                                    'You cannot exchange previous shift.');
-                                                return;
-                                              }
-                                              onExchangeShift(
-                                                  widget.currentUserId,
-                                                  widget.empId,
-                                                  widget.shiftId,
-                                                  widget.sendersShiftId!);
-                                            },
-                                            backgroundcolor:
-                                                isAlreadyAcknowledged ||
-                                                        _clicked
-                                                    ? Theme.of(context)
-                                                        .primaryColorLight
-                                                    : Theme.of(context)
-                                                        .primaryColor,
-                                            borderRadius: 10.r,
-                                            fontsize: 18.sp,
-                                            color: Theme.of(context)
-                                                .textTheme
-                                                .bodyMedium!
-                                                .color,
-                                            useBorder: true,
-                                          )
+                                        ? widget.sendersShiftId!.isNotEmpty
+                                            ? Button1(
+                                                text: 'Exchange',
+                                                onPressed: () {
+                                                  if (!widget
+                                                      .canExchangeRequest!) {
+                                                    showErrorToast(context,
+                                                        'You cannot exchange previous shift.');
+                                                    return;
+                                                  }
+                                                  onExchangeShift(
+                                                      widget.currentUserId,
+                                                      widget.empId,
+                                                      widget.shiftId,
+                                                      widget.sendersShiftId!);
+                                                },
+                                                backgroundcolor:
+                                                    isAlreadyAcknowledged ||
+                                                            _clicked
+                                                        ? Theme.of(context)
+                                                            .primaryColorLight
+                                                        : Theme.of(context)
+                                                            .primaryColor,
+                                                borderRadius: 10.r,
+                                                fontsize: 18.sp,
+                                                color: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyMedium!
+                                                    .color,
+                                                useBorder: true,
+                                              )
+                                            : SizedBox()
                                         : SizedBox()
                                     : SizedBox(),
                                 SizedBox(height: 100.h),

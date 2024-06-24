@@ -514,10 +514,22 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
               return GestureDetector(
                 onTap: () {
                   if (sendersShiftId == '') {
-                    showErrorToast(
-                      duration: const Duration(seconds: 3),
+                    Navigator.push(
                       context,
-                      'You don\'t have any shift to exchange on today.',
+                      MaterialPageRoute(
+                        builder: (context) => ShiftInformation(
+                          isToday: isToday,
+                          canExchangeRequest: canExchangeRequest,
+                          toAccept: event.others.isExchangeRequested![index],
+                          startTime: event.others.startTime!,
+                          endTime: event.others.endTime!,
+                          toRequest: true,
+                          empId: event.others.ids[index],
+                          shiftId: event.others.othersShiftId!,
+                          currentUserId: widget.currentUserId,
+                          sendersShiftId: sendersShiftId,
+                        ),
+                      ),
                     );
                     return;
                   }
