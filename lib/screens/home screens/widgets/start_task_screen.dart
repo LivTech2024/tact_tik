@@ -1307,7 +1307,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
             ? Button1(
                 height: 65.h,
                 // text: controller.isPaused.value ? 'Resume' : 'Break',
-                text: onBreak ? 'Resume' : 'Break',
+                text: onBreak ? 'Break' : 'Resume',
                 fontsize: 18.sp,
                 color: Theme.of(context).textTheme.titleSmall!.color,
                 backgroundcolor: Theme.of(context).cardColor,

@@ -854,6 +854,9 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                                             widget.guardsInfo["EmployeeImg"] ??
                                                 "",
                                         CompanyId: widget.CompanyId ?? "",
+                                        GuardRole:
+                                            widget.guardsInfo["EmployeeRole"] ??
+                                                "",
                                       )),
                             );
                           },

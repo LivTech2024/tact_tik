@@ -312,6 +312,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   .map((status) => status['Status'] as String)
                   .join(', ') ??
               "";
+          String statusOnBreakString = filteredStatus
+              .map((status) => (status['StatusIsOnBreak'] as bool).toString())
+              .join(', ');
+
+          // Print the result
+          print("statusOnBreakString ${statusOnBreakString}");
           DateTime statusStartedTime;
           if (filteredStatus.isNotEmpty &&
               filteredStatus.first.containsKey('StatusStartedTime')) {
@@ -333,6 +339,8 @@ class _HomeScreenState extends State<HomeScreen> {
           if (statusString == "started") {
             SharedPreferences prefs = await SharedPreferences.getInstance();
             prefs.setBool('ShiftStarted', true);
+            prefs.setBool('onBreak', true);
+
             setState(() {
               ShiftStarted = true;
             });
@@ -341,6 +349,8 @@ class _HomeScreenState extends State<HomeScreen> {
             SharedPreferences prefs = await SharedPreferences.getInstance();
             prefs.setBool('ShiftStarted', false);
             prefs.setBool('clickedIn', false);
+            prefs.setBool('onBreak', false);
+
             setState(() {
               ShiftStarted = false;
             });

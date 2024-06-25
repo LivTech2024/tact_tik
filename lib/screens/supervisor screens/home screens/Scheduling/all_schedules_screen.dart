@@ -164,6 +164,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                             CompanyId: widget.CompanyId,
                             supervisorEmail: '',
                             shiftId: '',
+                            GuardRole: '',
                           )));
             },
             child: Icon(
@@ -490,6 +491,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                                           BranchId: '',
                                                           supervisorEmail: '',
                                                           shiftId: shiftId,
+                                                          GuardRole: '',
                                                         ),
                                                       ),
                                                     );

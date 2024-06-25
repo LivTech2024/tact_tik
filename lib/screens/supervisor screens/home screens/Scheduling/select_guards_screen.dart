@@ -45,6 +45,7 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
         String userName = userInfo['EmployeeName'] ?? "";
         String EmployeeId = userInfo['EmployeeId'] ?? "";
         String CompanyId = userInfo['EmployeeCompanyId'] ?? "";
+
         var guardsInfo =
             await fireStoreService.getGuardForSupervisor(EmployeeId);
         var patrolInfo = await fireStoreService
@@ -138,6 +139,7 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
                             String name = guardInfo['EmployeeName'] ?? "";
                             String id = guardInfo['EmployeeId'] ?? "";
                             String url = guardInfo['EmployeeImg'] ?? "";
+                            String role = guardInfo['EmployeeRole'] ?? "";
                             print(guardInfo);
                             return GestureDetector(
                                 onTap: () {
@@ -147,6 +149,7 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
                                       'name': name,
                                       'id': id,
                                       'url': url,
+                                      'role': role
                                     },
                                   );
                                 },

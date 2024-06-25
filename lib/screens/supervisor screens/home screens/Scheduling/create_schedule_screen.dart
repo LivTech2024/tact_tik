@@ -47,6 +47,7 @@ class CreateScheduleScreen extends StatefulWidget {
   final String GuardImg;
   final String CompanyId;
   final String BranchId;
+  final String GuardRole;
   final String supervisorEmail;
   final String shiftId;
 
@@ -59,6 +60,7 @@ class CreateScheduleScreen extends StatefulWidget {
     required this.BranchId,
     required this.supervisorEmail,
     required this.shiftId,
+    required this.GuardRole,
   });
 
   @override
@@ -122,6 +124,7 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
           'GuardId': widget.GuardId,
           'GuardName': widget.GuardName ?? '',
           'GuardImg': widget.GuardImg ?? '',
+          'GuardRole': widget.GuardRole ?? "",
         });
       });
     }
@@ -129,6 +132,11 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
 
   void initializeData() async {
     await fetchShiftDataAndUpdateGuards();
+  }
+
+  void filterGuardsByRole(List selectedGuards, String guardRole) {
+    selectedGuards.removeWhere((guard) => guard['GuardRole'] != guardRole);
+    showErrorToast(context, "Selected Guard has been removed");
   }
 
   Future<void> fetchShiftDataAndUpdateGuards() async {
@@ -152,6 +160,7 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
                 'GuardId': guardId,
                 'GuardName': employeeData['EmployeeName'] ?? '',
                 'GuardImg': employeeData['EmployeeImg'] ?? '',
+                'GuardRole': employeeData['EmployeeRole'] ?? '',
               });
             });
           }
@@ -992,7 +1001,8 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
                                             selectedGuards.add({
                                               'GuardId': value['id'],
                                               'GuardName': value['name'],
-                                              'GuardImg': value['url']
+                                              'GuardImg': value['url'],
+                                              'GuardRole': value['role']
                                             });
                                           }
                                         }),
@@ -1097,11 +1107,17 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
                                 selectedGuardId = guard['EmployeeId'];
                                 selectedGuardName = guard['EmployeeName'];
                                 selectedGuardImage = guard['EmployeeImg'];
-                                selectedGuards.add({
-                                  'GuardId': selectedGuardId,
-                                  'GuardName': selectedGuardName,
-                                  'GuardImg': selectedGuardImage,
-                                });
+                                if (selectedGuard!.length == requiredEmp) {
+                                  selectedGuards.add({
+                                    'GuardId': selectedGuardId,
+                                    'GuardName': selectedGuardName,
+                                    'GuardImg': selectedGuardImage,
+                                    'GuardRole': guard['EmployeeRole']
+                                  });
+                                } else {
+                                  showErrorToast(
+                                      context, 'Required Employee is 0');
+                                }
                                 guards.clear();
                               });
                             },
@@ -1262,6 +1278,7 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
                                 selectedPosition = newValue;
                                 // print('$selectedValue selected');
                               });
+                              filterGuardsByRole(selectedGuards, newValue!);
                             },
                             items: PositionValues.map<DropdownMenuItem<String>>(
                                 (String value) {
