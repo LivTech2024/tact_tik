@@ -93,7 +93,9 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
   final TextEditingController _searchController = TextEditingController();
   List<Map<String, dynamic>> guards = [];
   String? selectedPatrol;
-  PageController _pageController = PageController(initialPage: 0,);
+  PageController _pageController = PageController(
+    initialPage: 0,
+  );
 
   // ValueItem<String>(label: 'Patrol 1', value: 'Patrol 1'),
   // ValueItem<String>(label: 'Patrol 2', value: 'Patrol 2'),
@@ -874,7 +876,6 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
     );
   }
 
-
   int currentPage = 0;
   void NextPage() {
     setState(() {
@@ -882,6 +883,7 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
           duration: Duration(milliseconds: 500), curve: Curves.ease);
     });
   }
+
   void PreviousPage() {
     setState(() {
       _pageController.animateToPage(0,
@@ -901,9 +903,9 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
-              if(currentPage != 1) {
+              if (currentPage != 1) {
                 Navigator.of(context).pop();
-              }else {
+              } else {
                 PreviousPage();
               }
             },
@@ -2125,7 +2127,7 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
               ),
             )
           ],
-          onPageChanged: (int page){
+          onPageChanged: (int page) {
             currentPage = page;
             print("Current Page: " + page.toString());
           },
