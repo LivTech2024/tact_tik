@@ -225,9 +225,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     }
     if (breakState != null) {
       // Add this block
-      setState(() {
-        onBreak = breakState;
-      });
+      // setState(() {
+      //   // onBreak = breakState;
+      // });
       if (!onBreak) {
         // startStopwatch();
         _startTimer();
@@ -526,6 +526,33 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
   }
 
   void _startTimer() {
+    print('start timer');
+    print('timer ${_timer}');
+    print('remainingTime ${remainingTime}');
+
+    if (_timer != null) {
+      _timer!.cancel();
+    }
+
+    DateTime now = DateTime.now();
+
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (mounted) {
+        setState(() {
+          if (remainingTime.inSeconds > 0) {
+            remainingTime = remainingTime - Duration(seconds: 1);
+            remainingTimeFormatted =
+                "${remainingTime.inHours}h : ${remainingTime.inMinutes % 60}m : ${remainingTime.inSeconds % 60}s";
+            print("Timer $remainingTimeFormatted");
+          } else {
+            _timer!.cancel();
+          }
+        });
+      }
+    });
+  }
+
+  void _startBreakTimer() {
     print('start timer');
     print('timer ${_timer}');
     print('remainingTime ${remainingTime}');
