@@ -487,10 +487,18 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                         setState(() {
                           _isLoading = false;
                         });
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => HomeScreen()));
+                        // Navigator.pushReplacement(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) => HomeScreen()));
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => HomeScreen(),
+                          ),
+                          (Route<dynamic> route) => route
+                              .isFirst, // Remove all routes until the first one
+                        );
                         // }
                       },
                       color: Theme.of(context).textTheme.headlineMedium!.color,

@@ -198,7 +198,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 
   void initPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    // final homeScreenController = HomeScreenController.instance;
+    final homeScreenController = HomeScreenController.instance;
     print("Shift Status at StartTask Screen ${widget.ShiftStatus}");
 
     print("Clicked Saved PRef ${clickedIn}");
@@ -215,8 +215,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
       print("Clicked in is true Start Screem");
       updateLateTimeAndStartTimer();
       _startTimer();
-      // await homeScreenController.startBgLocationService();
-    }
+      await homeScreenController.startBgLocationService();
+    } else {}
+
     if (pauseState != null) {
       setState(() {
         isPaused = pauseState;
@@ -302,6 +303,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
   @override
   void dispose() {
     _stopwatchTimer.cancel();
+
     super.dispose();
   }
 
@@ -535,22 +537,24 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     DateTime now = DateTime.now();
 
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      setState(() {
-        if (remainingTime.inSeconds > 0) {
-          remainingTime = remainingTime - Duration(seconds: 1);
-          remainingTimeFormatted =
-              "${remainingTime.inHours}h : ${remainingTime.inMinutes % 60}m : ${remainingTime.inSeconds % 60}s";
-          print("Timer $remainingTimeFormatted");
-        } else {
-          _timer!.cancel();
-        }
-      });
+      if (mounted) {
+        setState(() {
+          if (remainingTime.inSeconds > 0) {
+            remainingTime = remainingTime - Duration(seconds: 1);
+            remainingTimeFormatted =
+                "${remainingTime.inHours}h : ${remainingTime.inMinutes % 60}m : ${remainingTime.inSeconds % 60}s";
+            print("Timer $remainingTimeFormatted");
+          } else {
+            _timer!.cancel();
+          }
+        });
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // final homeScreenController = HomeScreenController.instance;
+    final homeScreenController = HomeScreenController.instance;
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
     TextEditingController CommentController = TextEditingController();
@@ -836,8 +840,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                   _startTimer();
                                   //
                                   // // start bg service that get locations and send it to the firebase
-                                  // await homeScreenController
-                                  //     .startBgLocationService();
+                                  await homeScreenController
+                                      .startBgLocationService();
 
                                   setState(() {
                                     _isLoading = true;
@@ -1061,45 +1065,44 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 
                                           if (CommentController
                                               .text.isNotEmpty) {
-                                            // await homeScreenController
-                                            //     .stopBgLocationService();
-                                            var data = await fireStoreService
-                                                .fetchDataForPdf(
-                                                    widget.EmployeId,
-                                                    widget.ShiftId);
-                                            // QuerySnapshot routeSnapshot =
-                                            //     await FirebaseFirestore.instance
-                                            //         .collection(
-                                            //             'EmployeeRoutes')
-                                            //         .where('EmpRouteEmpId',
-                                            //             isEqualTo:
-                                            //                 widget.EmployeId)
-                                            //         .where(
-                                            //             'EmpRouteShiftStatus',
-                                            //             isEqualTo: 'started')
-                                            //         .get();
+                                            widget.onRefresh();
+                                            print("Ending the shift here");
+                                            await homeScreenController
+                                                .stopBgLocationService();
 
-                                            // if (routeSnapshot.docs.isNotEmpty) {
-                                            //   // Assuming you only get one active route document per employee
-                                            //   DocumentReference routeDocRef =
-                                            //       routeSnapshot
-                                            //           .docs.first.reference;
+                                            QuerySnapshot routeSnapshot =
+                                                await FirebaseFirestore.instance
+                                                    .collection(
+                                                        'EmployeeRoutes')
+                                                    .where('EmpRouteEmpId',
+                                                        isEqualTo:
+                                                            widget.EmployeId)
+                                                    .where(
+                                                        'EmpRouteShiftStatus',
+                                                        isEqualTo: 'started')
+                                                    .get();
 
-                                            //   // Update the EmpRouteShiftStatus to "completed"
-                                            //   await routeDocRef.update({
-                                            //     'EmpRouteShiftStatus':
-                                            //         'completed',
-                                            //     'EmpRouteCompletedAt':
-                                            //         Timestamp.now(),
-                                            //   });
-                                            //   print(
-                                            //       'Shift ended for employee: ${widget.EmployeId}');
-                                            // } else {
-                                            //   print(
-                                            //       'No active route found for employee:  ${widget.EmployeId}');
-                                            // }
-                                            // widget.onRefresh();
-                                            // send_mail_onOut(data); //Need to uncomment this
+                                            if (routeSnapshot.docs.isNotEmpty) {
+                                              // Assuming you only get one active route document per employee
+                                              DocumentReference routeDocRef =
+                                                  routeSnapshot
+                                                      .docs.first.reference;
+
+                                              // Update the EmpRouteShiftStatus to "completed"
+                                              await routeDocRef.update({
+                                                'EmpRouteShiftStatus':
+                                                    'completed',
+                                                'EmpRouteCompletedAt':
+                                                    Timestamp.now(),
+                                              });
+                                              print(
+                                                  'Shift ended for employee: ${widget.EmployeId}');
+                                            } else {
+                                              print(
+                                                  'No active route found for employee:  ${widget.EmployeId}');
+                                            }
+
+                                            // send_mail_onOut(data); //Do not uncomment this
 
                                             var clientName =
                                                 await fireStoreService
@@ -1127,19 +1130,20 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                                     widget.EmployeeName,
                                                     widget.ShiftClientID,
                                                     CommentController.text);
-                                            setState(() {
-                                              // isPaused = !isPaused;
-                                              // prefs.setBool("pauseState", isPaused);
-                                              clickedIn = false;
-                                              // resetStopwatch();
-                                              // resetClickedState();
-                                              widget.resetShiftStarted();
-                                              prefs.setBool(
-                                                  'ShiftStarted', false);
-                                            });
+                                            // setState(() {
+                                            //   // isPaused = !isPaused;
+                                            //   // prefs.setBool("pauseState", isPaused);
+                                            //   clickedIn = false;
+                                            //   // resetStopwatch();
+                                            //   // resetClickedState();
+                                            //   widget.resetShiftStarted();
+                                            //   prefs.setBool(
+                                            //       'ShiftStarted', false);
+                                            // });
                                             print("Reached Here");
                                             Navigator.pop(context);
                                             // if (mounted) {
+                                            widget.onRefresh();
                                             Navigator.pushReplacement(
                                               context,
                                               MaterialPageRoute(
@@ -1190,10 +1194,10 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         //   print(
                         //       'No active route found for employee:  ${widget.EmployeId}');
                         // }
-                        print(
-                            'Current time is after or equal to shift end time');
+                        // print(
+                        //     'Current time is after or equal to shift end time');
                         // await homeScreenController.stopBgLocationService();
-                        //Check for the Current time if it is early then the shiftEndTime or more thant the shift endtime return alterbox or else not
+                        // //Check for the Current time if it is early then the shiftEndTime or more thant the shift endtime return alterbox or else not
                         SharedPreferences prefs =
                             await SharedPreferences.getInstance();
 
@@ -1214,8 +1218,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                           );
                         } else {
                           widget.onRefresh();
-                          var data = await fireStoreService.fetchDataForPdf(
-                              widget.EmployeId, widget.ShiftId);
+                          // var data = await fireStoreService.fetchDataForPdf(
+                          //     widget.EmployeId, widget.ShiftId);
 
                           // send_mail_onOut(data); //Need to uncomment this too
 
@@ -1229,7 +1233,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                               widget.EmployeeName,
                               widget.ShiftCompanyId,
                               widget.ShiftBranchId,
-                              widget.ShiftClientID,
+                              widget.ShiftClientID ?? "",
                               widget.ShiftLocationId,
                               widget.ShiftName);
                           await fireStoreService.EndShiftLog2(
@@ -1253,23 +1257,24 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                               .getAdminEmail(widget.ShiftCompanyId);
                           print("Client Name ${AdminEmal}");
                           widget.onRefresh();
-                          setState(() {
-                            // isPaused = !isPaused;
-                            // prefs.setBool("pauseState", isPaused);
-                            clickedIn = false;
-                            // resetStopwatch();
-                            // resetClickedState();
-                            widget.resetShiftStarted();
-                            prefs.setBool('ShiftStarted', false);
-                          });
+                          // setState(() {
+                          //   // isPaused = !isPaused;
+                          //   // prefs.setBool("pauseState", isPaused);
+                          //   clickedIn = false;
+                          //   // resetStopwatch();
+                          //   // resetClickedState();
+                          //   widget.resetShiftStarted();
+                          //   prefs.setBool('ShiftStarted', false);
+                          // });
                           // if (mounted) {
+                          widget.onRefresh();
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
                               builder: (context) => HomeScreen(),
                             ),
                           );
-                          // }
+                          // }s
                         }
                       }
 
@@ -1309,9 +1314,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                 onPressed: () async {
                   await fireStoreService.fetchPatrolData(
                       widget.ShiftId, widget.EmployeId);
-                  var data = await fireStoreService.fetchDataForPdf(
-                      widget.EmployeId, widget.ShiftId);
-                  print("Fetched Data for generating pdf: ${data}");
+                  // var data = await fireStoreService.fetchDataForPdf(
+                  //     widget.EmployeId, widget.ShiftId);
+                  // print("Fetched Data for generating pdf: ${data}");
                   SharedPreferences prefs =
                       await SharedPreferences.getInstance();
                   setState(() {
@@ -1321,22 +1326,22 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                   });
                   // isPaused ? stopStopwatch() : startStopwatch();
                   if (isPaused) {
-                    var data = await fireStoreService.fetchDataForPdf(
-                        widget.EmployeId, widget.ShiftId);
+                    // var data = await fireStoreService.fetchDataForPdf(
+                    //     widget.EmployeId, widget.ShiftId);
                     var clientName = await fireStoreService
                         .getClientName(widget.ShiftClientID);
-                    print("Fetched Data for generating pdf: ${data}");
+                    // print("Fetched Data for generating pdf: ${data}");
                     await fireStoreService.addToLog(
                         'shift_break',
-                        widget.ShiftAddressName,
+                        widget.ShiftAddressName ?? "",
                         clientName ?? "",
-                        widget.EmployeId,
-                        widget.EmployeeName,
-                        widget.ShiftCompanyId,
-                        widget.ShiftBranchId,
-                        widget.ShiftClientID,
-                        widget.ShiftLocationId,
-                        widget.ShiftName);
+                        widget.EmployeId ?? "",
+                        widget.EmployeeName ?? "",
+                        widget.ShiftCompanyId ?? "",
+                        widget.ShiftBranchId ?? "",
+                        widget.ShiftClientID ?? "",
+                        widget.ShiftLocationId ?? "",
+                        widget.ShiftName ?? "");
                     // stopStopwatch();
                     setState(() {
                       onBreak = true;

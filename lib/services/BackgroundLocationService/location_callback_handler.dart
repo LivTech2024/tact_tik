@@ -5,6 +5,8 @@ import 'location_service_repo.dart';
 
 @pragma('vm:entry-point')
 class LocationCallbackHandler {
+  static DateTime? _lastUpdateTime;
+
   @pragma('vm:entry-point')
   static Future<void> initCallback(Map<dynamic, dynamic> params) async {
     LocationServiceRepository myLocationCallbackRepository =
@@ -32,7 +34,17 @@ class LocationCallbackHandler {
     LocationServiceRepository myLocationCallbackRepository =
         LocationServiceRepository();
     // await Future.delayed(Duration(seconds: 30));
-    await myLocationCallbackRepository.callback(locationDto);
+    final now = DateTime.now();
+
+    // Check if the interval has passed since the last update
+    if (_lastUpdateTime == null ||
+        now.difference(_lastUpdateTime!).inSeconds >= 30) {
+      // Update the last update time
+      _lastUpdateTime = now;
+
+      // Handle the location update
+      await myLocationCallbackRepository.callback(locationDto);
+    }
   }
 
   @pragma('vm:entry-point')
