@@ -148,7 +148,7 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                     ),
                     Row(
                       children: [
-                        GestureDetector(
+                        /*GestureDetector(
                           onTap: () {
                             // SelectLocationDar.showLocationDialog(
                             //   context,
@@ -179,7 +179,7 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                               ),
                             ],
                           ),
-                        ),
+                        ),*/
                         SizedBox(
                           width: Platform.isIOS ? 30.w : 10.w,
                         ),
