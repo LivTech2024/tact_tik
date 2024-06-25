@@ -150,7 +150,14 @@ class _CalendarPageState extends State<CalendarPage> {
                     dayItemBuilder: (builderArgument) =>
                         DayItemWidget(properties: builderArgument),
                     weekDaysBuilder: (day) => WeekDaysWidget(day: day),
-                    eventBuilder: (drawer) => EventWidget(drawer: drawer),
+                    eventBuilder: (drawer) {
+                      print("Event Color: ${drawer.backgroundColor}");
+                      if (drawer.backgroundColor == Colors.red) {
+                        print("Filtered out a red event");
+                        return const SizedBox.shrink();
+                      }
+                      return EventWidget(drawer: drawer);
+                    },
                     onDayClicked: _showDayEventsInModalSheet,
                     minDate:
                         DateTime.now().subtract(const Duration(days: 1000)),
@@ -350,7 +357,7 @@ class _CalendarPageState extends State<CalendarPage> {
               ids: otherUserIds,
               startTime: shiftStartTime,
               endTime: shiftEndTime),
-          name: isAssignedToCurrentUser ? name : "",
+          name: isAssignedToCurrentUser ? name : name,
           begin: begin,
           end: end,
           startTime: shiftStartTime,
@@ -358,10 +365,19 @@ class _CalendarPageState extends State<CalendarPage> {
           shiftId: shiftId,
           isAssignedToCurrentUser: isAssignedToCurrentUser,
           isShiftAcknowledgedByEmployee: isShiftAcknowledgedByEmployee,
-          eventColor:
-              isAssignedToCurrentUser ? Colors.green : Colors.transparent,
+          eventColor: isAssignedToCurrentUser ? Colors.green : Colors.red,
           location: shiftLocationName);
     }).toList());
+
+    events.sort((a, b) {
+      if (a.isAssignedToCurrentUser && !b.isAssignedToCurrentUser) {
+        return -1;
+      } else if (!a.isAssignedToCurrentUser && b.isAssignedToCurrentUser) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
 
     setState(() {
       _isCalenderLoading = false;
