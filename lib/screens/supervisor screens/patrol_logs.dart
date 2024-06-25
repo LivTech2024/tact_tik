@@ -239,7 +239,7 @@ class _PatrollLogsScreenState extends State<PatrollLogsScreen> {
                     ),
                     Button1(
                       backgroundcolor: Theme.of(context).primaryColor,
-                      color: Theme.of(context).textTheme.headlineMedium!.color,
+                      color: Colors.white,
                       text: "Submit",
                       onPressed: _getUserInfo,
                     ),
