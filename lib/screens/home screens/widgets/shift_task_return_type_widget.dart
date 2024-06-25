@@ -373,7 +373,15 @@ class _ShiftTaskReturnTypeWidgetState extends State<ShiftTaskReturnTypeWidget> {
                       ),
                       margin: EdgeInsets.only(top: height / height10),
                       decoration: BoxDecoration(
-                        color: DarkColor.color15,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Theme.of(context).shadowColor,
+                            blurRadius: 5,
+                            spreadRadius: 2,
+                            offset: Offset(0, 3),
+                          )
+                        ],
+                        color: Theme.of(context).cardColor,
                         borderRadius: BorderRadius.circular(width / width10),
                       ),
                       child: Row(
@@ -385,7 +393,15 @@ class _ShiftTaskReturnTypeWidgetState extends State<ShiftTaskReturnTypeWidget> {
                                 height: height / height48,
                                 width: width / width48,
                                 decoration: BoxDecoration(
-                                  color: DarkColor.color16,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Theme.of(context).shadowColor,
+                                      blurRadius: 5,
+                                      spreadRadius: 2,
+                                      offset: Offset(0, 3),
+                                    )
+                                  ],
+                                  color: Theme.of(context).cardColor,
                                   borderRadius:
                                       BorderRadius.circular(width / width10),
                                 ),
@@ -400,7 +416,7 @@ class _ShiftTaskReturnTypeWidgetState extends State<ShiftTaskReturnTypeWidget> {
                                         ? Icons.done
                                         : Icons.add_a_photo,
                                     size: width / width24,
-                                    color: DarkColor.Primarycolor,
+                                    color: Theme.of(context).primaryColor,
                                   ),
                                 ),
                               ),
@@ -409,7 +425,7 @@ class _ShiftTaskReturnTypeWidgetState extends State<ShiftTaskReturnTypeWidget> {
                               ),
                               InterRegular(
                                 text: widget.taskName,
-                                color: DarkColor.color17,
+                                color: Theme.of(context).textTheme.displayMedium!.color,
                                 fontsize: width / width18,
                               ),
                             ],
@@ -419,7 +435,10 @@ class _ShiftTaskReturnTypeWidgetState extends State<ShiftTaskReturnTypeWidget> {
                             width: width / width34,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: DarkColor.color16,
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .titleLarge!
+                                  .color,
                             ),
                             child: Center(
                               child: IconButton(
@@ -556,15 +575,15 @@ class _ShiftTaskReturnTypeWidgetState extends State<ShiftTaskReturnTypeWidget> {
                                 borderRadius:
                                     BorderRadius.circular(width / width8)),
                             child: Center(
-                              child: Icon(Icons.add),
+                              child: Icon(Icons.add,color: Theme.of(context).textTheme.bodyMedium!.color,),
                             ),
                           ),
                         ),
                         FloatingActionButton(
                           onPressed: _uploadImages,
-                          backgroundColor: DarkColor.Primarycolor,
+                          backgroundColor: Theme.of(context).primaryColor,
                           shape: CircleBorder(),
-                          child: Icon(Icons.cloud_upload),
+                          child: Icon(Icons.cloud_upload,color: Colors.white,),
                         )
                       ],
                     ),
@@ -578,7 +597,7 @@ class _ShiftTaskReturnTypeWidgetState extends State<ShiftTaskReturnTypeWidget> {
                             height: height / height66,
                             width: width / width66,
                             decoration: BoxDecoration(
-                              color: DarkColor.Primarycolor,
+                              color: Theme.of(context).primaryColor,
                               borderRadius:
                                   BorderRadius.circular(width / width10),
                             ),

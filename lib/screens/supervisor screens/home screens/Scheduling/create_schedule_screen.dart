@@ -322,7 +322,7 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
   List<DateTime> selectedDates = [];
 
   List<Map<String, dynamic>> tasks = [
-    {'name': '', 'isQrRequired': false, 'isReturnQrRequired': false}
+    // {'name': '', 'isQrRequired': false, 'isReturnQrRequired': false}
   ];
   List<Map<int, String>> PatrolList = [];
   MultiSelectController _Patrollcontroller = MultiSelectController();
@@ -792,39 +792,60 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
               Container(
                 height: 60.h,
                 width: double.maxFinite,
-                padding: EdgeInsets.symmetric(horizontal: 10.w),
+                // padding: EdgeInsets.symmetric(horizontal: 10.w),
                 decoration: BoxDecoration(
                   // color: Colors.redAccent,
                   borderRadius: BorderRadius.circular(10.r),
                   border: Border(
                     bottom: BorderSide(
                       color: Theme.of(context).brightness == Brightness.dark
-                          ? DarkColor.color19
+                          ? DarkColor.color12
                           : LightColor.color3,
                     ),
                   ),
                 ),
-                child: DropdownButton<String>(
-                  hint: Text('Select an option'),
-                  value: _selectedOption,
-                  onChanged: (newValue) {
-                    _selectedOption = newValue!;
-                    (context as Element).markNeedsBuild();
-                  },
-                  items: options.map((String option) {
-                    return DropdownMenuItem<String>(
-                      value: option,
-                      child: Text(option),
-                    );
-                  }).toList(),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    hint: InterMedium(
+                      text: 'Select an option',
+                      color: Theme.of(context).highlightColor,
+                      fontsize: 14.sp,
+                    ),
+                    value: _selectedOption,
+                    onChanged: (newValue) {
+                      _selectedOption = newValue!;
+                      (context as Element).markNeedsBuild();
+                    },
+                    items: options.map((String option) {
+                      return DropdownMenuItem<String>(
+                        value: option,
+                        child: InterMedium(
+                          text: option,
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
+                          fontsize: 14.sp,
+                        ),
+                      );
+                    }).toList(),
+                  ),
                 ),
               ),
-              TextField(
+              SetDetailsWidget(
+                keyboardType: TextInputType.number,
+                useTextField: true,
+                hintText: 'Enter count',
+                icon: Icons.numbers,
+                controller: _textController,
+                onTap: () {},
+              ),
+              /*TextField(
                 controller: _textController,
                 decoration: InputDecoration(
-                  labelText: 'Enter text',
-                ),
-              ),
+                    labelText: 'Enter text',
+                    labelStyle: TextStyle(
+                      color: Theme.of(context).highlightColor,
+                      fontSize: 16.sp,
+                    )),
+              ),*/
             ],
           ),
           actions: [
@@ -832,7 +853,11 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Cancel'),
+              child: InterMedium(
+                text: 'Cancel',
+                color: Theme.of(context).highlightColor,
+                fontsize: 14.sp,
+              ),
             ),
             TextButton(
               onPressed: () async {
@@ -868,6 +893,7 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
               child: InterMedium(
                 text: 'Save',
                 color: Theme.of(context).textTheme.bodyMedium!.color,
+                fontsize: 14.sp,
               ),
             ),
           ],
@@ -877,6 +903,7 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
   }
 
   int currentPage = 0;
+
   void NextPage() {
     setState(() {
       _pageController.animateToPage(1,
@@ -1313,14 +1340,15 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
                       // Seperate Time
                       SetDetailsWidget(
                         hintText: startTime != null
-                            ? startTime.toString()
+                            ? '${startTime!.format(context)}'
                             : 'Start Time',
                         icon: Icons.access_time_rounded,
                         onTap: () => _selectTime(context, true),
                       ),
                       SetDetailsWidget(
-                        hintText:
-                            endTime != null ? endTime.toString() : 'End Time',
+                        hintText: endTime != null
+                            ? '${endTime!.format(context)}'
+                            : 'End Time',
                         icon: Icons.access_time_rounded,
                         onTap: () => _selectTime(context, false),
                       ),
@@ -1492,45 +1520,50 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
                         ),
                       ),
 
-                      Container(
-                        margin: EdgeInsets.only(top: 10.h),
-                        height: 40.h,
-                        width: double.maxFinite,
-                        child: ListView.builder(
-                          itemCount: AsignedPatrol.length,
-                          shrinkWrap: true,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) => Container(
-                            margin: EdgeInsets.only(right: 10.w),
-                            decoration: BoxDecoration(
-                                color: Theme.of(context).cardColor,
-                                borderRadius: BorderRadius.circular(10.r)),
-                            padding: EdgeInsets.symmetric(horizontal: 10.w),
-                            height: 20.h,
-                            // width: 100,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                InterMedium(
-                                    text:
-                                        '${AsignedPatrol[index]['LinkedPatrolName']},${AsignedPatrol[index]['LinkedPatrolReqHitCount']}'),
-                                IconButton(
-                                    padding: EdgeInsets.zero,
-                                    onPressed: () {
-                                      print("delete Patrol clicked");
-                                      setState(() {
-                                        AsignedPatrol.remove(index);
-                                      });
-                                    },
-                                    icon: Icon(
-                                      Icons.close,
-                                      color: Colors.white,
-                                    ))
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
+                      AsignedPatrol.length != null
+                          ? Container(
+                              margin: EdgeInsets.only(top: 10.h),
+                              height: 40.h,
+                              width: double.maxFinite,
+                              child: ListView.builder(
+                                itemCount: AsignedPatrol.length,
+                                shrinkWrap: true,
+                                scrollDirection: Axis.horizontal,
+                                itemBuilder: (context, index) => Container(
+                                  margin: EdgeInsets.only(right: 10.w),
+                                  decoration: BoxDecoration(
+                                      color: Theme.of(context).cardColor,
+                                      borderRadius:
+                                          BorderRadius.circular(10.r)),
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 10.w),
+                                  height: 20.h,
+                                  // width: 100,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      InterMedium(
+                                          text:
+                                              '${AsignedPatrol[index]['LinkedPatrolName']},${AsignedPatrol[index]['LinkedPatrolReqHitCount']}'),
+                                      IconButton(
+                                          padding: EdgeInsets.zero,
+                                          onPressed: () {
+                                            print("delete Patrol clicked");
+                                            setState(() {
+                                              AsignedPatrol.remove(index);
+                                            });
+                                          },
+                                          icon: Icon(
+                                            Icons.close,
+                                            color: Colors.white,
+                                          ))
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            )
+                          : SizedBox(),
 
                       // TODO ${_selectedOptions[index].label} Hit Count
                       ListView.builder(
@@ -1659,13 +1692,13 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
                         ],
                       ),
 
-                      // SetDetailsWidget(
-                      //   useTextField: true,
-                      //   hintText: 'Branch(Optional)',
-                      //   icon: Icons.apartment,
-                      //   controller: _Branch,
-                      //   onTap: () {},
-                      // ),
+                      /* SetDetailsWidget(
+                        useTextField: true,
+                        hintText: 'Branch(Optional)',
+                        icon: Icons.apartment,
+                        controller: _Branch,
+                        onTap: () {},
+                      ),*/
                       Container(
                         height: 60.h,
                         padding: EdgeInsets.symmetric(horizontal: 10.w),
@@ -1908,8 +1941,9 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
                                 Row(
                                   children: [
                                     Checkbox(
-                                      activeColor: Colors.red,
-                                      checkColor: Colors.black,
+                                      activeColor:
+                                          Theme.of(context).primaryColor,
+                                      checkColor: Colors.white,
                                       value: isChecked,
                                       onChanged: (bool? value) {
                                         setState(() {
@@ -1942,7 +1976,7 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
                                       },
                                     ),
                                     Text(
-                                      'Return QR Code Required',
+                                      'Return Required',
                                       style: GoogleFonts.poppins(
                                         fontSize: 16.sp,
                                         color: Colors.grey,

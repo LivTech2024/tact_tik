@@ -609,16 +609,16 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                       ),
                                     );
                                     break;
-                                  // case 5:
-                                  //   // TODO Task Screen
-                                  //   Navigator.push(
-                                  //     context,
-                                  //     MaterialPageRoute(
-                                  //       builder: (context) =>
-                                  //           PatrollLogsScreen(),
-                                  //     ),
-                                  //   );
-                                  //   break;
+                                  case 5:
+                                    // TODO Task Screen
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            PatrollLogsScreen(),
+                                      ),
+                                    );
+                                    break;
                                   case 6:
                                     Navigator.push(
                                       context,
