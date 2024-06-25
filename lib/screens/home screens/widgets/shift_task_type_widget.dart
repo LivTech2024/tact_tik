@@ -467,7 +467,8 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                               SizedBox(
                                 width: 20.w,
                               ),
-                              Expanded(
+                              SizedBox(
+                                width: 220.w,
                                 child: SingleChildScrollView(
                                   scrollDirection: Axis.horizontal,
                                   child: InterRegular(

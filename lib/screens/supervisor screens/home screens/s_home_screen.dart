@@ -16,7 +16,7 @@ import 'package:tact_tik/screens/home%20screens/widgets/icon_text_widget.dart';
 import 'package:tact_tik/screens/supervisor%20screens/TrackingScreen/s_tracking_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/history/s_history_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/loogbook/s_loogbook_screen.dart';
-import 'package:tact_tik/screens/supervisor%20screens/home%20screens/Scheduling/create_shedule_screen.dart';
+import 'package:tact_tik/screens/supervisor%20screens/home%20screens/Scheduling/create_schedule_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/home%20screens/widgets/rounded_button.dart';
 import 'package:tact_tik/screens/supervisor%20screens/patrol_logs.dart';
 
@@ -838,7 +838,7 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => CreateSheduleScreen(
+                                  builder: (context) => CreateScheduleScreen(
                                         shiftId: '',
                                         supervisorEmail: '',
                                         BranchId: widget.guardsInfo[

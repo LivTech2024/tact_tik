@@ -16,7 +16,7 @@ import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
 import '../../../../common/sizes.dart';
 import '../../../../utils/colors.dart';
-import 'create_shedule_screen.dart';
+import 'create_schedule_screen.dart';
 
 class AllSchedulesScreen extends StatefulWidget {
   final String BranchId;
@@ -151,13 +151,12 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
           alignment: Alignment.bottomCenter,
           child: FloatingActionButton(
             shape: const CircleBorder(),
-            backgroundColor:
-                Theme.of(context).primaryColor,
+            backgroundColor: Theme.of(context).primaryColor,
             onPressed: () {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (builder) => CreateSheduleScreen(
+                      builder: (builder) => CreateScheduleScreen(
                             BranchId: widget.BranchId,
                             GuardId: '',
                             GuardName: '',
@@ -212,7 +211,10 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                               style: GoogleFonts.poppins(
                                 fontWeight: FontWeight.w300,
                                 fontSize: 18.sp,
-                                color: Theme.of(context).textTheme.bodyMedium!.color,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color,
                               ),
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
@@ -225,7 +227,10 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                 hintStyle: GoogleFonts.poppins(
                                   fontWeight: FontWeight.w300,
                                   fontSize: 18.sp,
-                                  color: Theme.of(context).textTheme.bodyMedium!.color, // Change text color to white
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .color, // Change text color to white
                                 ),
                                 hintText: 'Search',
                                 contentPadding: EdgeInsets.zero,
@@ -244,7 +249,8 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                               child: Icon(
                                 Icons.search,
                                 size: 20.w,
-                                color: Theme.of(context).brightness == Brightness.dark
+                                color: Theme.of(context).brightness ==
+                                        Brightness.dark
                                     ? DarkColor.Secondarycolor
                                     : LightColor.color1,
                               ),
@@ -278,7 +284,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                               ? 'Today'
                               : '${date.toLocal().toIso8601String().split('T').first}',
                           fontsize: 20.sp,
-                          color:  Theme.of(context).textTheme.bodyMedium!.color,
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
                         ),
                         SizedBox(height: 24.h),
                         ...schedulesForDate.map((schedule) {
@@ -342,7 +348,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                         children: [
                                           InterSemibold(
                                             text: shiftName,
-                                            color:  Theme.of(context)
+                                            color: Theme.of(context)
                                                 .textTheme
                                                 .bodyMedium!
                                                 .color,
@@ -350,7 +356,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                           ),
                                           SizedBox(height: 5.h),
                                           InterRegular(
-                                            color:  Theme.of(context)
+                                            color: Theme.of(context)
                                                 .textTheme
                                                 .bodyMedium!
                                                 .color,
@@ -384,7 +390,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                             InterRegular(
                                               text: 'Guards',
                                               fontsize: 14.sp,
-                                              color:  Theme.of(context)
+                                              color: Theme.of(context)
                                                   .textTheme
                                                   .bodyMedium!
                                                   .color,
@@ -410,7 +416,8 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                                 if (employeeImages.length > 3)
                                                   CircleAvatar(
                                                     radius: 10.r,
-                                                    backgroundColor:  Theme.of(context)
+                                                    backgroundColor:
+                                                        Theme.of(context)
                                                             .textTheme
                                                             .bodyMedium!
                                                             .color,
@@ -433,7 +440,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                           children: [
                                             InterRegular(
                                               text: 'Shift',
-                                              color:  Theme.of(context)
+                                              color: Theme.of(context)
                                                   .textTheme
                                                   .bodyMedium!
                                                   .color,
@@ -451,11 +458,14 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                                       height: 14.h,
                                                       width: 14.w,
                                                       child: SvgPicture.asset(
-                                                          'assets/images/calendar_line.svg', color: Theme.of(context).primaryColor,),
+                                                        'assets/images/calendar_line.svg',
+                                                        color: Theme.of(context)
+                                                            .primaryColor,
+                                                      ),
                                                     ),
                                                     SizedBox(width: 6.w),
                                                     InterMedium(
-                                                      color:  Theme.of(context)
+                                                      color: Theme.of(context)
                                                           .textTheme
                                                           .bodyMedium!
                                                           .color,
@@ -471,7 +481,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                                       context,
                                                       MaterialPageRoute(
                                                         builder: (context) =>
-                                                            CreateSheduleScreen(
+                                                            CreateScheduleScreen(
                                                           GuardId: '',
                                                           GuardName: '',
                                                           GuardImg: '',
@@ -484,13 +494,15 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                                       ),
                                                     );
                                                   },
-                                                  child: SvgPicture.asset(themeManager.themeMode == ThemeMode.dark
-                                                      ? 'assets/images/edit_square.svg'
-                                                      :
-                                                    'assets/images/edit_square_light.svg',
+                                                  child: SvgPicture.asset(
+                                                    themeManager.themeMode ==
+                                                            ThemeMode.dark
+                                                        ? 'assets/images/edit_square.svg'
+                                                        : 'assets/images/edit_square_light.svg',
                                                     width: 20.w,
                                                     height: 20.h,
-                                                    color: Theme.of(context).primaryColor,
+                                                    color: Theme.of(context)
+                                                        .primaryColor,
                                                   ),
                                                 ),
                                               ],
