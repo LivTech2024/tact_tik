@@ -362,9 +362,9 @@ class _ShiftInformationState extends State<ShiftInformation> {
                                                     .color,
                                                 useBorder: true,
                                               )
-                                            : SizedBox()
-                                        : SizedBox()
-                                    : SizedBox(),
+                                            : const SizedBox()
+                                        : const SizedBox()
+                                    : const SizedBox(),
                                 SizedBox(height: 100.h),
                               ],
                             ),

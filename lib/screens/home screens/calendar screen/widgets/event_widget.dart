@@ -13,21 +13,24 @@ class EventWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 3),
-      padding: const EdgeInsets.symmetric(horizontal: 5),
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(4)),
-        color: drawer.backgroundColor,
-      ),
-      child: FittedBox(
-        fit: BoxFit.fitWidth,
-        alignment: Alignment.centerLeft,
-        child: InterRegular(
-          text: drawer.name,
-          color: Colors.white,
+    if (drawer.backgroundColor == Colors.green) {
+      return Container(
+        margin: const EdgeInsets.symmetric(horizontal: 3),
+        padding: const EdgeInsets.symmetric(horizontal: 5),
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(4)),
+          color: drawer.backgroundColor,
         ),
-      ),
-    );
+        child: FittedBox(
+          fit: BoxFit.fitWidth,
+          alignment: Alignment.center,
+          child: InterRegular(
+            text: drawer.name,
+            color: Colors.white,
+          ),
+        ),
+      );
+    }
+    return const SizedBox.shrink();
   }
 }
