@@ -25,11 +25,10 @@ class ClientCheckPatrolScreen extends StatefulWidget {
   final String PatrolIdl;
   final String companyId;
 
-  ClientCheckPatrolScreen(
-      {super.key,
-        required this.PatrolIdl,
-        required this.ScreenName,
-        required this.companyId});
+  ClientCheckPatrolScreen({super.key,
+    required this.PatrolIdl,
+    required this.ScreenName,
+    required this.companyId});
 
   @override
   State<ClientCheckPatrolScreen> createState() =>
@@ -80,7 +79,8 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
             final patrolDate = DateTime.fromMillisecondsSinceEpoch(
                 patrol['PatrolDate'].millisecondsSinceEpoch);
             final guardId = patrol['PatrolLogGuardId'];
-            final matchesGuard = selectedGuardId.isEmpty || guardId == selectedGuardId;
+            final matchesGuard =
+                selectedGuardId.isEmpty || guardId == selectedGuardId;
             final matchesDate = selectedDate == null ||
                 (patrolDate.year == selectedDate!.year &&
                     patrolDate.month == selectedDate!.month &&
@@ -140,9 +140,17 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                               ? "${selectedDate!.toLocal()}".split(' ')[0]
                               : 'Select Date',
                           fontsize: 14.sp,
-                          color: Theme.of(context).textTheme.bodyMedium!.color
+                          color: Theme
+                              .of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .color
                           as Color,
-                          Iconcolor: Theme.of(context).textTheme.bodyMedium!.color as Color,
+                          Iconcolor: Theme
+                              .of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .color as Color,
                         ),
                       ),
                     ),
@@ -188,10 +196,11 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => SelectClientGuardsScreen(
-                                  companyId: widget.companyId,
-                                  onGuardSelected: onGuardSelected,
-                                ),
+                                builder: (context) =>
+                                    SelectClientGuardsScreen(
+                                      companyId: widget.companyId,
+                                      onGuardSelected: onGuardSelected,
+                                    ),
                               ),
                             );
                           },
@@ -206,9 +215,16 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                   text: 'Select',
                                   useBold: true,
                                   fontsize: 14.sp,
-                                  color: Theme.of(context).textTheme.bodySmall!.color as Color,
-                                  Iconcolor:
-                                  Theme.of(context).textTheme.bodyMedium!.color as Color,
+                                  color: Theme
+                                      .of(context)
+                                      .textTheme
+                                      .bodySmall!
+                                      .color as Color,
+                                  Iconcolor: Theme
+                                      .of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .color as Color,
                                 ),
                               ),
                               InterBold(
@@ -231,7 +247,11 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                       fontSize: 18.0,
                       fontWeight: FontWeight.bold,
                       color:
-                      Theme.of(context).textTheme.bodyMedium!.color,
+                      Theme
+                          .of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .color,
                     ),
                   ),
                 )
@@ -261,8 +281,7 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
 
                         NavigateScreen(
                           ClientOpenPatrolScreen(
-                            guardName:
-                            patrol['PatrolLogGuardName'] ?? '',
+                            guardName: patrol['PatrolLogGuardName'] ?? '',
                             startDate: DateFormat('dd/MM/yyyy')
                                 .format(patrolDate),
                             startTime:
@@ -286,27 +305,32 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                         children: [
                           SizedBox(height: 20.h),
                           InterMedium(
-                            text: DateFormat('dd/MM/yyyy').format(patrolDate),
+                            text: DateFormat('dd/MM/yyyy')
+                                .format(patrolDate),
                           ),
                           SizedBox(height: 10.h),
                           Container(
                             height: 140.h,
-                            margin: EdgeInsets.only(top: 10.h,left: 4.w,right:4.w),
+                            margin: EdgeInsets.only(
+                                top: 10.h, left: 4.w, right: 4.w),
                             width: double.maxFinite,
                             decoration: BoxDecoration(
                               boxShadow: [
                                 BoxShadow(
-                                  color: Theme.of(context).shadowColor,
+                                  color: Theme
+                                      .of(context)
+                                      .shadowColor,
                                   blurRadius: 5,
                                   spreadRadius: 2,
                                   offset: Offset(0, 3),
                                 )
                               ],
-                              color: Theme.of(context).cardColor,
+                              color: Theme
+                                  .of(context)
+                                  .cardColor,
                               borderRadius: BorderRadius.circular(14.r),
                             ),
-                            padding:
-                            EdgeInsets.symmetric(vertical: 20.h),
+                            padding: EdgeInsets.symmetric(vertical: 20.h),
                             child: Column(
                               children: [
                                 Row(
@@ -329,7 +353,8 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                               bottomRight:
                                               Radius.circular(10.r),
                                             ),
-                                            color: Theme.of(context)
+                                            color: Theme
+                                                .of(context)
                                                 .primaryColor,
                                           ),
                                         ),
@@ -348,7 +373,8 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                             text: patrol[
                                             'PatrolLogGuardName'] ??
                                                 "",
-                                            color: Theme.of(context)
+                                            color: Theme
+                                                .of(context)
                                                 .textTheme
                                                 .displaySmall!
                                                 .color as Color,
@@ -377,15 +403,15 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                             InterRegular(
                                               text: 'Started at',
                                               fontsize: 12.sp,
-                                              color: Theme.of(context)
+                                              color: Theme
+                                                  .of(context)
                                                   .textTheme
                                                   .displaySmall!
                                                   .color as Color,
                                             ),
                                             SizedBox(height: 12.h),
                                             InterMedium(
-                                              text:
-                                              DateFormat('hh:mm a')
+                                              text: DateFormat('hh:mm a')
                                                   .format(
                                                 DateTime
                                                     .fromMillisecondsSinceEpoch(
@@ -394,7 +420,8 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                                 ),
                                               ),
                                               fontsize: 12.sp,
-                                              color: Theme.of(context)
+                                              color: Theme
+                                                  .of(context)
                                                   .textTheme
                                                   .displaySmall!
                                                   .color as Color,
@@ -411,15 +438,15 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                             InterRegular(
                                               text: 'Ended at',
                                               fontsize: 12.sp,
-                                              color: Theme.of(context)
+                                              color: Theme
+                                                  .of(context)
                                                   .textTheme
                                                   .displaySmall!
                                                   .color as Color,
                                             ),
                                             SizedBox(height: 12.h),
                                             InterMedium(
-                                              text:
-                                              DateFormat('hh:mm a')
+                                              text: DateFormat('hh:mm a')
                                                   .format(
                                                 DateTime
                                                     .fromMillisecondsSinceEpoch(
@@ -428,7 +455,8 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                                 ),
                                               ),
                                               fontsize: 12.sp,
-                                              color: Theme.of(context)
+                                              color: Theme
+                                                  .of(context)
                                                   .textTheme
                                                   .displaySmall!
                                                   .color as Color,
@@ -445,7 +473,8 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                             InterRegular(
                                               text: 'Status',
                                               fontsize: 12.sp,
-                                              color: Theme.of(context)
+                                              color: Theme
+                                                  .of(context)
                                                   .textTheme
                                                   .displaySmall!
                                                   .color as Color,
@@ -456,7 +485,8 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                               'PatrolLogStatus'] ??
                                                   'incomplete',
                                               fontsize: 12.sp,
-                                              color: Theme.of(context)
+                                              color: Theme
+                                                  .of(context)
                                                   .textTheme
                                                   .displaySmall!
                                                   .color as Color,
