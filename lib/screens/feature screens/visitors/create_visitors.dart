@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/common/widgets/setTextfieldWidget.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
@@ -17,6 +18,7 @@ import 'package:textfield_tags/textfield_tags.dart';
 
 import '../../../common/sizes.dart';
 import '../../../common/widgets/button1.dart';
+import '../../../common/widgets/contact_widget.dart';
 import '../../../fonts/inter_regular.dart';
 import '../../../main.dart';
 import '../../../test_screen.dart';
@@ -29,10 +31,11 @@ class CreateVisitors extends StatefulWidget {
   final bool isCompleted;
   final bool showButton;
 
-  CreateVisitors({super.key,
-    this.visitorData,
-    required this.isCompleted,
-    required this.showButton});
+  CreateVisitors(
+      {super.key,
+      this.visitorData,
+      required this.isCompleted,
+      required this.showButton});
 
   @override
   State<CreateVisitors> createState() => _CreateVisitorsState();
@@ -78,10 +81,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _distanceToField = MediaQuery
-        .of(context)
-        .size
-        .width;
+    _distanceToField = MediaQuery.of(context).size.width;
   }
 
   List<String> convertCommaSeparatedStringToList(String data) {
@@ -126,9 +126,9 @@ class _CreateVisitorsState extends State<CreateVisitors> {
       //VisitorCompanyName
 
       final inTimeTimestamp =
-      widget.visitorData!['VisitorInTime'] as Timestamp?;
+          widget.visitorData!['VisitorInTime'] as Timestamp?;
       final outTimeTimestamp =
-      widget.visitorData!['VisitorOutTime'] as Timestamp?;
+          widget.visitorData!['VisitorOutTime'] as Timestamp?;
 
       InTime = inTimeTimestamp != null
           ? TimeOfDay.fromDateTime(inTimeTimestamp.toDate())
@@ -139,7 +139,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
       if (widget.visitorData!['VisitorAssetHandover'] != null) {
         print(widget.visitorData!['VisitorAssetHandover']);
         Set<String> opt = convertCommaSeparatedStringToList(
-            widget.visitorData!['VisitorAssetHandover'])
+                widget.visitorData!['VisitorAssetHandover'])
             .toSet(); // Convert list to set for unique values
         List<String> opt2 = convertCommaSeparatedStringToList(
             widget.visitorData!['VisitorAssetHandover']);
@@ -179,14 +179,10 @@ class _CreateVisitorsState extends State<CreateVisitors> {
         return Theme(
           data: ThemeData.dark().copyWith(
             colorScheme: ColorScheme.dark(
-              primary: Theme
-                  .of(context)
-                  .brightness == Brightness.dark
+              primary: Theme.of(context).brightness == Brightness.dark
                   ? DarkColor.Primarycolor
                   : LightColor.Secondarycolor,
-              secondary: Theme
-                  .of(context)
-                  .primaryColor,
+              secondary: Theme.of(context).primaryColor,
             ),
           ),
           child: child!,
@@ -266,18 +262,12 @@ class _CreateVisitorsState extends State<CreateVisitors> {
             await documentSnapshot.reference.update({
               'VisitorOutTime': OutTime != null
                   ? Timestamp.fromDate(DateTime(
-                DateTime
-                    .now()
-                    .year,
-                DateTime
-                    .now()
-                    .month,
-                DateTime
-                    .now()
-                    .day,
-                OutTime!.hour,
-                OutTime!.minute,
-              ))
+                      DateTime.now().year,
+                      DateTime.now().month,
+                      DateTime.now().day,
+                      OutTime!.hour,
+                      OutTime!.minute,
+                    ))
                   : null,
               'VisitorReturnAsset': AssetReturnController.text,
             });
@@ -306,10 +296,9 @@ class _CreateVisitorsState extends State<CreateVisitors> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                VisiTorsScreen(
-                  locationId: '',
-                ), // Replace with your visitor screen widget
+            builder: (context) => VisiTorsScreen(
+              locationId: '',
+            ), // Replace with your visitor screen widget
           ),
         );
         return true;
@@ -373,8 +362,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                     onPressed: () {
                       Navigator.pop(context);
                       print(
-                          "Navigtor debug: ${Navigator.of(context)
-                              .toString()}");
+                          "Navigtor debug: ${Navigator.of(context).toString()}");
                     },
                   ),
                   title: InterMedium(
@@ -393,22 +381,14 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                           InterBold(
                             text: 'Add Visitor',
                             color:
-                            Theme
-                                .of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .color,
+                                Theme.of(context).textTheme.bodyMedium!.color,
                             fontsize: 20.sp,
                           ),
                           SizedBox(height: 30.h),
                           InterBold(
                             text: 'Allocation Date',
                             color:
-                            Theme
-                                .of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .color,
+                                Theme.of(context).textTheme.bodyMedium!.color,
                             fontsize: 20.sp,
                           ),
                           SizedBox(height: 10.h),
@@ -441,11 +421,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                           InterBold(
                             text: 'Name',
                             color:
-                            Theme
-                                .of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .color,
+                                Theme.of(context).textTheme.bodyMedium!.color,
                             fontsize: 20.sp,
                           ),
                           SizedBox(height: 10.h),
@@ -459,11 +435,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                           InterBold(
                             text: 'Email',
                             color:
-                            Theme
-                                .of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .color,
+                                Theme.of(context).textTheme.bodyMedium!.color,
                             fontsize: 20.sp,
                           ),
                           SizedBox(height: 10.h),
@@ -477,15 +449,11 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                           InterBold(
                             text: 'Contact Number',
                             color:
-                            Theme
-                                .of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .color,
+                                Theme.of(context).textTheme.bodyMedium!.color,
                             fontsize: 20.sp,
                           ),
                           SizedBox(height: 10.h),
-                          SetTextfieldWidget(
+                     /*     SetTextfieldWidget(
                             hintText: 'Contact Number',
                             controller: ContactNoController,
                             enabled: !isEditMode,
@@ -495,16 +463,13 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                               FilteringTextInputFormatter
                                   .digitsOnly, // Allows only digits
                             ],
-                          ),
+                          ),*/
+                          ContactWidget(controller: ContactNoController,),
                           SizedBox(height: 20.h),
                           InterBold(
                             text: 'Asset Handover',
                             color:
-                            Theme
-                                .of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .color,
+                                Theme.of(context).textTheme.bodyMedium!.color,
                             fontsize: 20.sp,
                           ),
                           SizedBox(height: 10.h),
@@ -516,231 +481,221 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                           ),*/
                           !widget.isCompleted
                               ? TextFieldTags<DynamicTagData>(
-                            textfieldTagsController:
-                            _dynamicTagController,
-                            // initialTags: _initialTags,
-                            textSeparators: const [' ', ','],
-                            letterCase: LetterCase.normal,
-                            validator: (DynamicTagData tag) {
-                              // if (tag.tag == 'lion') {
-                              //   return 'Not envited per tiger request';
-                              // } else if (_dynamicTagController.getTags!
-                              //     .any((element) => element.tag == tag.tag)) {
-                              //   return 'Already in the club';
-                              // }
-                              return null;
-                            },
-                            inputFieldBuilder:
-                                (context, inputFieldValues) {
-                              return Container(
-                                constraints: BoxConstraints(
-                                  minHeight: 60.h,
-                                ),
-                                width: double.maxFinite,
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 20.w),
-                                decoration: BoxDecoration(
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color:
-                                      Theme
-                                          .of(context)
-                                          .shadowColor,
-                                      blurRadius: 5,
-                                      spreadRadius: 2,
-                                      offset: Offset(0, 3),
-                                    )
-                                  ],
-                                  borderRadius:
-                                  BorderRadius.circular(10.r),
-                                  color: Theme
-                                      .of(context)
-                                      .cardColor,
-                                ),
-                                margin: EdgeInsets.only(top: 10.h),
-                                child: Center(
-                                  child: TextField(
-                                    onTap: () {
-                                      _dynamicTagController.getFocusNode
-                                          ?.requestFocus();
-                                    },
-                                    controller: inputFieldValues
-                                        .textEditingController,
-                                    focusNode: inputFieldValues.focusNode,
-                                    decoration: InputDecoration(
-                                      isDense: true,
-                                      border: OutlineInputBorder(
-                                        borderSide: BorderSide.none,
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(10.r),
-                                        ),
+                                  textfieldTagsController:
+                                      _dynamicTagController,
+                                  // initialTags: _initialTags,
+                                  textSeparators: const [' ', ','],
+                                  letterCase: LetterCase.normal,
+                                  validator: (DynamicTagData tag) {
+                                    // if (tag.tag == 'lion') {
+                                    //   return 'Not envited per tiger request';
+                                    // } else if (_dynamicTagController.getTags!
+                                    //     .any((element) => element.tag == tag.tag)) {
+                                    //   return 'Already in the club';
+                                    // }
+                                    return null;
+                                  },
+                                  inputFieldBuilder:
+                                      (context, inputFieldValues) {
+                                    return Container(
+                                      constraints: BoxConstraints(
+                                        minHeight: 60.h,
                                       ),
-                                      focusedBorder: InputBorder.none,
-                                      hintStyle: GoogleFonts.poppins(
-                                        fontWeight: FontWeight.w300,
-                                        fontSize: 18.sp,
-                                        color: Theme
-                                            .of(context)
-                                            .textTheme
-                                            .bodyLarge!
-                                            .color,
+                                      width: double.maxFinite,
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 20.w),
+                                      decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color:
+                                                Theme.of(context).shadowColor,
+                                            blurRadius: 5,
+                                            spreadRadius: 2,
+                                            offset: Offset(0, 3),
+                                          )
+                                        ],
+                                        borderRadius:
+                                            BorderRadius.circular(10.r),
+                                        color: Theme.of(context).cardColor,
                                       ),
-                                      contentPadding: EdgeInsets.zero,
-                                      counterText: "",
-                                      hintText:
-                                      inputFieldValues.tags.isNotEmpty
-                                          ? ''
-                                          : "Asset Handover",
-                                      errorText: inputFieldValues.error,
-                                      prefixIconConstraints:
-                                      BoxConstraints(
-                                          maxWidth:
-                                          _distanceToField * 0.8),
-                                      prefixIcon:
-                                      inputFieldValues.tags.isNotEmpty
-                                          ? SingleChildScrollView(
-                                        controller: inputFieldValues
-                                            .tagScrollController,
-                                        scrollDirection:
-                                        Axis.vertical,
-                                        child: Padding(
-                                          padding:
-                                          EdgeInsets.only(
-                                            top: 8.h,
-                                            bottom: 8.h,
-                                            left: 8.w,
-                                          ),
-                                          child: Wrap(
-                                              runSpacing: 4.0,
-                                              spacing: 4.0,
-                                              children:
-                                              inputFieldValues
-                                                  .tags
-                                                  .map((DynamicTagData
-                                              tag) {
-                                                return Container(
-                                                  height: 40.h,
-                                                  decoration:
-                                                  BoxDecoration(
-                                                    borderRadius:
-                                                    BorderRadius.circular(
-                                                        5.r),
-                                                    color: Theme
-                                                        .of(
-                                                        context)
-                                                        .textTheme
-                                                        .bodyMedium!
-                                                        .color,
-                                                  ),
-                                                  margin: EdgeInsets
-                                                      .symmetric(
-                                                      horizontal:
-                                                      5.w),
-                                                  padding: EdgeInsets.symmetric(
-                                                      horizontal:
-                                                      10.w,
-                                                      vertical:
-                                                      5.h),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .start,
-                                                    mainAxisSize:
-                                                    MainAxisSize
-                                                        .min,
-                                                    children: [
-                                                      InterRegular(
-                                                        text:
-                                                        '${tag.tag}',
-                                                        color: Theme
-                                                            .of(context)
-                                                            .brightness ==
-                                                            Brightness.dark
-                                                            ? DarkColor.color27
-                                                            : LightColor.color1,
-                                                      ),
-                                                      SizedBox(
-                                                          width:
-                                                          4.w),
-                                                      InkWell(
-                                                        child:
-                                                        Icon(
-                                                          Icons
-                                                              .cancel,
-                                                          size:
-                                                          14.sp,
-                                                          color: Theme
-                                                              .of(context)
-                                                              .textTheme
-                                                              .displayMedium!
-                                                              .color,
+                                      margin: EdgeInsets.only(top: 10.h),
+                                      child: Center(
+                                        child: TextField(
+                                          onTap: () {
+                                            _dynamicTagController.getFocusNode
+                                                ?.requestFocus();
+                                          },
+                                          controller: inputFieldValues
+                                              .textEditingController,
+                                          focusNode: inputFieldValues.focusNode,
+                                          decoration: InputDecoration(
+                                            isDense: true,
+                                            border: OutlineInputBorder(
+                                              borderSide: BorderSide.none,
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(10.r),
+                                              ),
+                                            ),
+                                            focusedBorder: InputBorder.none,
+                                            hintStyle: GoogleFonts.poppins(
+                                              fontWeight: FontWeight.w300,
+                                              fontSize: 18.sp,
+                                              color: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyLarge!
+                                                  .color,
+                                            ),
+                                            contentPadding: EdgeInsets.zero,
+                                            counterText: "",
+                                            hintText:
+                                                inputFieldValues.tags.isNotEmpty
+                                                    ? ''
+                                                    : "Asset Handover",
+                                            errorText: inputFieldValues.error,
+                                            prefixIconConstraints:
+                                                BoxConstraints(
+                                                    maxWidth:
+                                                        _distanceToField * 0.8),
+                                            prefixIcon:
+                                                inputFieldValues.tags.isNotEmpty
+                                                    ? SingleChildScrollView(
+                                                        controller: inputFieldValues
+                                                            .tagScrollController,
+                                                        scrollDirection:
+                                                            Axis.vertical,
+                                                        child: Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                            top: 8.h,
+                                                            bottom: 8.h,
+                                                            left: 8.w,
+                                                          ),
+                                                          child: Wrap(
+                                                              runSpacing: 4.0,
+                                                              spacing: 4.0,
+                                                              children:
+                                                                  inputFieldValues
+                                                                      .tags
+                                                                      .map((DynamicTagData
+                                                                          tag) {
+                                                                return Container(
+                                                                  height: 40.h,
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            5.r),
+                                                                    color: Theme.of(
+                                                                            context)
+                                                                        .textTheme
+                                                                        .bodyMedium!
+                                                                        .color,
+                                                                  ),
+                                                                  margin: EdgeInsets
+                                                                      .symmetric(
+                                                                          horizontal:
+                                                                              5.w),
+                                                                  padding: EdgeInsets.symmetric(
+                                                                      horizontal:
+                                                                          10.w,
+                                                                      vertical:
+                                                                          5.h),
+                                                                  child: Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .start,
+                                                                    mainAxisSize:
+                                                                        MainAxisSize
+                                                                            .min,
+                                                                    children: [
+                                                                      InterRegular(
+                                                                        text:
+                                                                            '${tag.tag}',
+                                                                        color: Theme.of(context).brightness ==
+                                                                                Brightness.dark
+                                                                            ? DarkColor.color27
+                                                                            : LightColor.color1,
+                                                                      ),
+                                                                      SizedBox(
+                                                                          width:
+                                                                              4.w),
+                                                                      InkWell(
+                                                                        child:
+                                                                            Icon(
+                                                                          Icons
+                                                                              .cancel,
+                                                                          size:
+                                                                              14.sp,
+                                                                          color: Theme.of(context)
+                                                                              .textTheme
+                                                                              .displayMedium!
+                                                                              .color,
+                                                                        ),
+                                                                        onTap:
+                                                                            () {
+                                                                          inputFieldValues
+                                                                              .onTagRemoved(tag);
+                                                                        },
+                                                                      )
+                                                                    ],
+                                                                  ),
+                                                                );
+                                                              }).toList()),
                                                         ),
-                                                        onTap:
-                                                            () {
-                                                          inputFieldValues
-                                                              .onTagRemoved(
-                                                              tag);
-                                                        },
                                                       )
-                                                    ],
-                                                  ),
-                                                );
-                                              }).toList()),
+                                                    : null,
+                                          ),
+                                          cursorColor:
+                                              Theme.of(context).primaryColor,
+                                          onChanged: (value) {
+                                            final tagData = DynamicTagData(
+                                              value,
+                                            );
+                                            inputFieldValues
+                                                .onTagChanged(tagData);
+                                          },
+                                          onSubmitted: (value) {
+                                            final tagData = DynamicTagData(
+                                              value,
+                                            );
+                                            inputFieldValues
+                                                .onTagSubmitted(tagData);
+                                          },
                                         ),
-                                      )
-                                          : null,
-                                    ),
-                                    cursorColor:
-                                    Theme
-                                        .of(context)
-                                        .primaryColor,
-                                    onChanged: (value) {
-                                      final tagData =
-                                      DynamicTagData(value,);
-                                      inputFieldValues
-                                          .onTagChanged(tagData);
-                                    },
-                                    onSubmitted: (value) {
-                                      final tagData =
-                                      DynamicTagData(value,);
-                                      inputFieldValues
-                                          .onTagSubmitted(tagData);
-                                    },
+                                      ),
+                                    );
+                                  },
+                                )
+                              : SizedBox(
+                                  height: 200.h,
+                                  child: ListView(
+                                    children: TagString.isNotEmpty
+                                        ? Emptyoptions.map((item) =>
+                                                ListTile(title: Text(item)))
+                                            .toList()
+                                        : TagString.map((item) {
+                                            print("Tags ${TagString}");
+                                            return CheckboxListTile(
+                                              title: Text(item),
+                                              value: options.contains(item),
+                                              onChanged: (bool? checked) {
+                                                setState(() {
+                                                  if (checked == true) {
+                                                    if (!options
+                                                        .contains(item)) {
+                                                      options.add(item);
+                                                    }
+                                                  } else {
+                                                    options.remove(item);
+                                                  }
+                                                  print(
+                                                      "Updated options: $options");
+                                                });
+                                              },
+                                            );
+                                          }).toList(),
                                   ),
                                 ),
-                              );
-                            },
-                          )
-                              : SizedBox(
-                            height: 200.h,
-                            child: ListView(
-                              children: TagString.isNotEmpty
-                                  ? Emptyoptions.map((item) =>
-                                  ListTile(title: Text(item)))
-                                  .toList()
-                                  : TagString.map((item) {
-                                print("Tags ${TagString}");
-                                return CheckboxListTile(
-                                  title: Text(item),
-                                  value: options.contains(item),
-                                  onChanged: (bool? checked) {
-                                    setState(() {
-                                      if (checked == true) {
-                                        if (!options
-                                            .contains(item)) {
-                                          options.add(item);
-                                        }
-                                      } else {
-                                        options.remove(item);
-                                      }
-                                      print(
-                                          "Updated options: $options");
-                                    });
-                                  },
-                                );
-                              }).toList(),
-                            ),
-                          ),
 
                           // Content(
                           //     title: 'Asset HandOver',
@@ -780,11 +735,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                           InterBold(
                             text: 'Asset Return',
                             color:
-                            Theme
-                                .of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .color,
+                                Theme.of(context).textTheme.bodyMedium!.color,
                             fontsize: 20.sp,
                           ),
                           SizedBox(height: 10.h),
@@ -809,8 +760,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                               choiceItems: C2Choice.listFrom<String, String>(
                                 source: options.isEmpty
                                     ? Emptyoptions
-                                    : options
-                                    .toList(),
+                                    : options.toList(),
                                 // Use an empty list if options is null
                                 value: (i, v) => v,
                                 label: (i, v) => v,
@@ -818,9 +768,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                               ),
                               choiceCheckmark: true,
                               choiceStyle: C2ChipStyle.outlined(
-                                color: Theme
-                                    .of(context)
-                                    .primaryColor,
+                                color: Theme.of(context).primaryColor,
                               ),
                             ),
                           ),
@@ -843,7 +791,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                                 // width: 100,
                                 child: Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Icon(
                                       Icons.check,
@@ -869,11 +817,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                           InterBold(
                             text: 'License Plate Number.',
                             color:
-                            Theme
-                                .of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .color,
+                                Theme.of(context).textTheme.bodyMedium!.color,
                             fontsize: 20.sp,
                           ),
                           SizedBox(height: 10.h),
@@ -888,11 +832,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                           InterBold(
                             text: 'Set Countdown',
                             color:
-                            Theme
-                                .of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .color,
+                                Theme.of(context).textTheme.bodyMedium!.color,
                             fontsize: 20.sp,
                           ),
                           SizedBox(height: 10.h),
@@ -906,11 +846,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                           InterBold(
                             text: 'Comments',
                             color:
-                            Theme
-                                .of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .color,
+                                Theme.of(context).textTheme.bodyMedium!.color,
                             fontsize: 20.sp,
                           ),
                           SizedBox(height: 10.h),
@@ -924,11 +860,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                           InterBold(
                             text: 'No. of Person',
                             color:
-                            Theme
-                                .of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .color,
+                                Theme.of(context).textTheme.bodyMedium!.color,
                             fontsize: 20.sp,
                           ),
                           SizedBox(height: 10.h),
@@ -944,11 +876,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                           InterBold(
                             text: 'Company Name',
                             color:
-                            Theme
-                                .of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .color,
+                                Theme.of(context).textTheme.bodyMedium!.color,
                             fontsize: 20.sp,
                           ),
                           SizedBox(height: 10.h),
@@ -963,27 +891,24 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                           ),
                           widget.showButton == false
                               ? Button1(
-                            text: 'Save',
-                            onPressed: () async {
-                              bool isSuccessful =
-                              await _saveVisitorData();
-                              if (!isSuccessful) {
-                                // Handle the case when saving or updating visitor data fails
-                              }
-                            },
-                            backgroundcolor:
-                            Theme
-                                .of(context)
-                                .primaryColor,
-                            color: Theme
-                                .of(context)
-                                .textTheme
-                                .titleSmall!
-                                .color,
-                            borderRadius: 10.r,
-                            fontsize: 18.sp,
-                            height: 60.h,
-                          )
+                                  text: 'Save',
+                                  onPressed: () async {
+                                    bool isSuccessful =
+                                        await _saveVisitorData();
+                                    if (!isSuccessful) {
+                                      // Handle the case when saving or updating visitor data fails
+                                    }
+                                  },
+                                  backgroundcolor:
+                                      Theme.of(context).primaryColor,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .titleSmall!
+                                      .color,
+                                  borderRadius: 10.r,
+                                  fontsize: 18.sp,
+                                  height: 60.h,
+                                )
                               : SizedBox(),
                         ],
                       )),
