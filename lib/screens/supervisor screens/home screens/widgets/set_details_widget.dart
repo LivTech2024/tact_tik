@@ -46,54 +46,38 @@ class SetDetailsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-
-    return Container(
-      height: 60.h,
-      width: double.maxFinite,
-      decoration: BoxDecoration(
-        // color: Colors.redAccent,
-        borderRadius: BorderRadius.circular(10.r),
-         border: Border(
-          bottom: BorderSide(
-            color: Theme.of(context).brightness == Brightness.dark
-                ? DarkColor.color12
-                : LightColor.color3,
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 60.h,
+        width: double.maxFinite,
+        decoration: BoxDecoration(
+          // color: Colors.redAccent,
+          borderRadius: BorderRadius.circular(10.r),
+          border: Border(
+            bottom: BorderSide(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? DarkColor.color12
+                  : LightColor.color3,
+            ),
           ),
         ),
-      ),
-      margin: EdgeInsets.only(top: 10.h),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(width: 10.w),
-          Icon(
-            icon,
-            size: 24.w,
-            color:  Theme.of(context).textTheme.bodyMedium!.color,
-          ),
-          SizedBox(width: 10.w),
-          useTextField
-              ? Expanded(
-                  child: TextField(
-                    keyboardType: keyboardType,
-                    style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w300,
-                      fontSize: 18.sp,
-                      color:  Theme.of(context)
-                          .textTheme
-                          .bodyMedium!
-                          .color, // Change text color to white
-                    ),
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10.r),
-                        ),
-                      ),
-                      focusedBorder: InputBorder.none,
-                      hintStyle: GoogleFonts.poppins(
+        margin: EdgeInsets.only(top: 10.h),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(width: 10.w),
+            Icon(
+              icon,
+              size: 24.w,
+              color: Theme.of(context).textTheme.bodyMedium!.color,
+            ),
+            SizedBox(width: 10.w),
+            useTextField
+                ? Expanded(
+                    child: TextField(
+                      keyboardType: keyboardType,
+                      style: GoogleFonts.poppins(
                         fontWeight: FontWeight.w300,
                         fontSize: 18.sp,
                         color: Theme.of(context)
@@ -101,22 +85,36 @@ class SetDetailsWidget extends StatelessWidget {
                             .bodyMedium!
                             .color, // Change text color to white
                       ),
-                      hintText: hintText,
-                      contentPadding: EdgeInsets.zero, // Remove padding
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10.r),
+                          ),
+                        ),
+                        focusedBorder: InputBorder.none,
+                        hintStyle: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w300,
+                          fontSize: 18.sp,
+                          color: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .color, // Change text color to white
+                        ),
+                        hintText: hintText,
+                        contentPadding: EdgeInsets.zero, // Remove padding
+                      ),
+                      cursorColor: Theme.of(context).textTheme.bodySmall!.color,
+                      controller: controller,
                     ),
-                    cursorColor:  Theme.of(context).textTheme.bodySmall!.color,
-                    controller: controller,
-                  ),
-                )
-              : GestureDetector(
-                  onTap: onTap,
-                  child: InterMedium(
+                  )
+                : InterMedium(
                     text: hintText,
                     fontsize: 18.sp,
-                    color:   Theme.of(context).textTheme.bodyMedium!.color,
+                    color: Theme.of(context).textTheme.bodyMedium!.color,
                   ),
-                ),
-        ],
+          ],
+        ),
       ),
     );
   }
