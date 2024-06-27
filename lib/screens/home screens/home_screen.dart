@@ -129,6 +129,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _showWish = true;
   bool NewMessage = false;
   bool isRoleGuard = false;
+
   @override
   void refreshHomeScreen() {
     _getUserInfo();
@@ -514,8 +515,7 @@ class _HomeScreenState extends State<HomeScreen> {
             IconColors[1] = Theme.of(context).focusColor;
             IconColors[2] = Theme.of(context).focusColor;
             IconColors[3] = Theme.of(context).focusColor;
-            // ScreenIndex = 0;
-            // CalendarScreen
+            ScreenIndex = 0;
             Navigator.push(
                 context,
                 MaterialPageRoute(
