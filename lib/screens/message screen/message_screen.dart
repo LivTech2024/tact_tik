@@ -17,11 +17,9 @@ class MobileChatScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,
-            
           ),
           padding: EdgeInsets.only(left: width / width20),
           onPressed: () {
@@ -30,8 +28,6 @@ class MobileChatScreen extends StatelessWidget {
         ),
         title: InterMedium(
           text: 'Message',
-         
-   
         ),
         centerTitle: true,
       ),

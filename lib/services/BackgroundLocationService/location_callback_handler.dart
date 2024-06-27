@@ -24,13 +24,13 @@ class LocationCallbackHandler {
   @pragma('vm:entry-point')
   static Future<void> callback(LocationDto locationDto) async {
     // Initialize Firebase
-    // if (Firebase.apps.isEmpty) {
-    //   print('Firebase App is not initialized');
-    // Check if Firebase App is initialized
-    await Firebase.initializeApp();
-    // } else {
-    //   print('Firebase App is already initialized');
-    // }
+    if (Firebase.apps.isEmpty) {
+      print('Firebase App is not initialized');
+      // Check if Firebase App is initializedp
+      await Firebase.initializeApp(); 
+    } else {
+      print('Firebase App is already initialized');
+    }
     LocationServiceRepository myLocationCallbackRepository =
         LocationServiceRepository();
     // await Future.delayed(Duration(seconds: 30));

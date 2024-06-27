@@ -313,7 +313,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   .join(', ') ??
               "";
           String statusOnBreakString = filteredStatus
-              .map((status) => (status['StatusIsOnBreak'] as bool).toString())
+              .map((status) => (status['StatusIsBreak'] as bool).toString())
               .join(', ');
 
           // Print the result
@@ -334,12 +334,19 @@ class _HomeScreenState extends State<HomeScreen> {
             // statusStartedTime = DateTime.now(); // or handle this case as needed
           }
           print("Shift CUrrent Status ${statusString}");
+          SharedPreferences prefs = await SharedPreferences.getInstance();
           // print("statusStartedTimeStringDateTIme ${statusStartedTime}");
-
+          if (statusOnBreakString == "true") {
+            prefs.setBool('onBreak', true);
+            print("Break State Changed true ");
+          } else {
+            print("Break State Changed false ");
+            prefs.setBool('onBreak', false);
+          }
           if (statusString == "started") {
             SharedPreferences prefs = await SharedPreferences.getInstance();
             prefs.setBool('ShiftStarted', true);
-            prefs.setBool('onBreak', true);
+            // prefs.setBool('onBreak', true);
 
             setState(() {
               ShiftStarted = true;
@@ -349,7 +356,7 @@ class _HomeScreenState extends State<HomeScreen> {
             SharedPreferences prefs = await SharedPreferences.getInstance();
             prefs.setBool('ShiftStarted', false);
             prefs.setBool('clickedIn', false);
-            prefs.setBool('onBreak', false);
+            // prefs.setBool('onBreak', false);
 
             setState(() {
               ShiftStarted = false;
@@ -710,7 +717,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         // );
                         // customEmail();
                         // await fireStoreService.copyAndCreateDocument(
-                        //     "PatrolLogs", "0gRHVI3yWnVsjVjNGHy0");
+                        //     "PatrolLogs", "KXbrUozGvFHhq8S5K41y");
                         Navigator.push(
                           context,
                           MaterialPageRoute(
