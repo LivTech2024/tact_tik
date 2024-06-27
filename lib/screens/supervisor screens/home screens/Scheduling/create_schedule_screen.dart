@@ -1557,6 +1557,7 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
                         ),
                       ),
                       SizedBox(height: 10.h),
+
                       SizedBox(
                         width: 100.w,
                         child: Button1(
@@ -1596,8 +1597,13 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       InterMedium(
-                                          text:
-                                              '${AsignedPatrol[index]['LinkedPatrolName']},${AsignedPatrol[index]['LinkedPatrolReqHitCount']}'),
+                                        text:
+                                            'Patrol: ${AsignedPatrol[index]['LinkedPatrolName']}  Count: ${AsignedPatrol[index]['LinkedPatrolReqHitCount']}',
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .color,
+                                      ),
                                       IconButton(
                                           padding: EdgeInsets.zero,
                                           onPressed: () {
@@ -1608,7 +1614,10 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
                                           },
                                           icon: Icon(
                                             Icons.close,
-                                            color: Colors.white,
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium!
+                                                .color,
                                           ))
                                     ],
                                   ),
@@ -1906,6 +1915,9 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      SizedBox(
+                        height: 30.h,
+                      ),
                       if (tasks.isNotEmpty)
                         ListView.builder(
                           shrinkWrap: true,
@@ -2020,8 +2032,9 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
                                 Row(
                                   children: [
                                     Checkbox(
-                                      activeColor: Colors.red,
-                                      checkColor: Colors.black,
+                                      activeColor:
+                                          Theme.of(context).primaryColor,
+                                      checkColor: Colors.white,
                                       value: isReturnChecked,
                                       onChanged: (bool? value) {
                                         setState(() {
@@ -2064,7 +2077,12 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
                           },
                         )
                       else
-                        Text('No tasks available.'),
+                        InterRegular(
+                          text: 'No tasks available.',
+                          fontsize: 14.sp,
+                          color:
+                              Theme.of(context).textTheme.displaySmall!.color!,
+                        ),
                       SizedBox(height: 20.h),
                       SizedBox(
                         width: 120.w,

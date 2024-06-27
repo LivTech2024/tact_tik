@@ -708,17 +708,28 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                       ],
                     ),
                   ),
-                  Container(
-                    margin: EdgeInsets.only(right: 17.66.w),
-                    height: 74.81.h,
-                    width: 71.68.w,
-                    decoration: const BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage('assets/images/log_book.png'),
-                        // fit: BoxFit.fitWidth,
-                        filterQuality: FilterQuality.high,
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(right: 17.66.w),
+                        height: 74.81.h,
+                        width: 71.68.w,
+                        decoration: const BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage('assets/images/log_book.png'),
+                            // fit: BoxFit.fitWidth,
+                            filterQuality: FilterQuality.high,
+                          ),
+                        ),
                       ),
-                    ),
+                      InterSemibold(
+                        text: onBreak ? 'In Break' : '',
+                        color: Colors.redAccent,
+                        fontsize: 14.sp,
+                      )
+                    ],
                   ),
                 ],
               ),
