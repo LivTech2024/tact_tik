@@ -29,11 +29,10 @@ class CreateVisitors extends StatefulWidget {
   final bool isCompleted;
   final bool showButton;
 
-  CreateVisitors(
-      {super.key,
-      this.visitorData,
-      required this.isCompleted,
-      required this.showButton});
+  CreateVisitors({super.key,
+    this.visitorData,
+    required this.isCompleted,
+    required this.showButton});
 
   @override
   State<CreateVisitors> createState() => _CreateVisitorsState();
@@ -352,6 +351,8 @@ class _CreateVisitorsState extends State<CreateVisitors> {
         : LightColor.color2,
   ];
 
+  List<String> ReturnAsset = [];
+
   @override
   Widget build(BuildContext context) {
     bool isEditMode = widget.visitorData != null;
@@ -515,189 +516,201 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                           ),*/
                           !widget.isCompleted
                               ? TextFieldTags<DynamicTagData>(
-                                  textfieldTagsController:
-                                      _dynamicTagController,
-                                  // initialTags: _initialTags,
-                                  textSeparators: const [' ', ','],
-                                  letterCase: LetterCase.normal,
-                                  validator: (DynamicTagData tag) {
-                                    // if (tag.tag == 'lion') {
-                                    //   return 'Not envited per tiger request';
-                                    // } else if (_dynamicTagController.getTags!
-                                    //     .any((element) => element.tag == tag.tag)) {
-                                    //   return 'Already in the club';
-                                    // }
-                                    return null;
-                                  },
-                                  inputFieldBuilder:
-                                      (context, inputFieldValues) {
-                                    return Container(
-                                      constraints: BoxConstraints(
-                                        minHeight: 60.h,
-                                      ),
-                                      width: double.maxFinite,
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 20.w),
-                                      decoration: BoxDecoration(
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color:
-                                                Theme.of(context).shadowColor,
-                                            blurRadius: 5,
-                                            spreadRadius: 2,
-                                            offset: Offset(0, 3),
-                                          )
-                                        ],
-                                        borderRadius:
-                                            BorderRadius.circular(10.r),
-                                        color: Theme.of(context).cardColor,
-                                      ),
-                                      margin: EdgeInsets.only(top: 10.h),
-                                      child: Center(
-                                        child: TextField(
-                                          onTap: () {
-                                            _dynamicTagController.getFocusNode
-                                                ?.requestFocus();
-                                          },
-                                          controller: inputFieldValues
-                                              .textEditingController,
-                                          focusNode: inputFieldValues.focusNode,
-                                          decoration: InputDecoration(
-                                            isDense: true,
-                                            border: OutlineInputBorder(
-                                              borderSide: BorderSide.none,
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(10.r),
-                                              ),
-                                            ),
-                                            focusedBorder: InputBorder.none,
-                                            hintStyle: GoogleFonts.poppins(
-                                              fontWeight: FontWeight.w300,
-                                              fontSize: 18.sp,
-                                              color: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyLarge!
-                                                  .color,
-                                            ),
-                                            contentPadding: EdgeInsets.zero,
-                                            counterText: "",
-                                            hintText:
-                                                inputFieldValues.tags.isNotEmpty
-                                                    ? ''
-                                                    : "Asset Handover",
-                                            errorText: inputFieldValues.error,
-                                            prefixIconConstraints:
-                                                BoxConstraints(
-                                                    maxWidth:
-                                                        _distanceToField * 0.8),
-                                            prefixIcon:
-                                                inputFieldValues.tags.isNotEmpty
-                                                    ? SingleChildScrollView(
-                                                        controller: inputFieldValues
-                                                            .tagScrollController,
-                                                        scrollDirection:
-                                                            Axis.vertical,
-                                                        child: Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                            top: 8.h,
-                                                            bottom: 8.h,
-                                                            left: 8.w,
-                                                          ),
-                                                          child: Wrap(
-                                                              runSpacing: 4.0,
-                                                              spacing: 4.0,
-                                                              children:
-                                                                  inputFieldValues
-                                                                      .tags
-                                                                      .map((DynamicTagData
-                                                                          tag) {
-                                                                return Container(
-                                                                  height: 40.h,
-                                                                  decoration:
-                                                                      BoxDecoration(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            5.r),
-                                                                    color: Theme.of(
-                                                                            context)
-                                                                        .textTheme
-                                                                        .bodyMedium!
-                                                                        .color,
-                                                                  ),
-                                                                  margin: EdgeInsets
-                                                                      .symmetric(
-                                                                          horizontal:
-                                                                              5.w),
-                                                                  padding: EdgeInsets.symmetric(
-                                                                      horizontal:
-                                                                          10.w,
-                                                                      vertical:
-                                                                          5.h),
-                                                                  child: Row(
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .start,
-                                                                    mainAxisSize:
-                                                                        MainAxisSize
-                                                                            .min,
-                                                                    children: [
-                                                                      InterRegular(
-                                                                        text:
-                                                                            '${tag.tag}',
-                                                                        color: Theme.of(context).brightness ==
-                                                                                Brightness.dark
-                                                                            ? DarkColor.color27
-                                                                            : LightColor.color1,
-                                                                      ),
-                                                                      SizedBox(
-                                                                          width:
-                                                                              4.w),
-                                                                      InkWell(
-                                                                        child:
-                                                                            Icon(
-                                                                          Icons
-                                                                              .cancel,
-                                                                          size:
-                                                                              14.sp,
-                                                                          color: Theme.of(context)
-                                                                              .textTheme
-                                                                              .displayMedium!
-                                                                              .color,
-                                                                        ),
-                                                                        onTap:
-                                                                            () {
-                                                                          inputFieldValues
-                                                                              .onTagRemoved(tag);
-                                                                        },
-                                                                      )
-                                                                    ],
-                                                                  ),
-                                                                );
-                                                              }).toList()),
-                                                        ),
-                                                      )
-                                                    : null,
-                                          ),
-                                          cursorColor:
-                                              Theme.of(context).primaryColor,
-                                          onChanged: (value) {
-                                            final tagData =
-                                                DynamicTagData(value, "");
-                                            inputFieldValues
-                                                .onTagChanged(tagData);
-                                          },
-                                          onSubmitted: (value) {
-                                            final tagData =
-                                                DynamicTagData(value, "");
-                                            inputFieldValues
-                                                .onTagSubmitted(tagData);
-                                          },
+                            textfieldTagsController:
+                            _dynamicTagController,
+                            // initialTags: _initialTags,
+                            textSeparators: const [' ', ','],
+                            letterCase: LetterCase.normal,
+                            validator: (DynamicTagData tag) {
+                              // if (tag.tag == 'lion') {
+                              //   return 'Not envited per tiger request';
+                              // } else if (_dynamicTagController.getTags!
+                              //     .any((element) => element.tag == tag.tag)) {
+                              //   return 'Already in the club';
+                              // }
+                              return null;
+                            },
+                            inputFieldBuilder:
+                                (context, inputFieldValues) {
+                              return Container(
+                                constraints: BoxConstraints(
+                                  minHeight: 60.h,
+                                ),
+                                width: double.maxFinite,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 20.w),
+                                decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color:
+                                      Theme
+                                          .of(context)
+                                          .shadowColor,
+                                      blurRadius: 5,
+                                      spreadRadius: 2,
+                                      offset: Offset(0, 3),
+                                    )
+                                  ],
+                                  borderRadius:
+                                  BorderRadius.circular(10.r),
+                                  color: Theme
+                                      .of(context)
+                                      .cardColor,
+                                ),
+                                margin: EdgeInsets.only(top: 10.h),
+                                child: Center(
+                                  child: TextField(
+                                    onTap: () {
+                                      _dynamicTagController.getFocusNode
+                                          ?.requestFocus();
+                                    },
+                                    controller: inputFieldValues
+                                        .textEditingController,
+                                    focusNode: inputFieldValues.focusNode,
+                                    decoration: InputDecoration(
+                                      isDense: true,
+                                      border: OutlineInputBorder(
+                                        borderSide: BorderSide.none,
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(10.r),
                                         ),
                                       ),
-                                    );
-                                  },
-                                )
+                                      focusedBorder: InputBorder.none,
+                                      hintStyle: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.w300,
+                                        fontSize: 18.sp,
+                                        color: Theme
+                                            .of(context)
+                                            .textTheme
+                                            .bodyLarge!
+                                            .color,
+                                      ),
+                                      contentPadding: EdgeInsets.zero,
+                                      counterText: "",
+                                      hintText:
+                                      inputFieldValues.tags.isNotEmpty
+                                          ? ''
+                                          : "Asset Handover",
+                                      errorText: inputFieldValues.error,
+                                      prefixIconConstraints:
+                                      BoxConstraints(
+                                          maxWidth:
+                                          _distanceToField * 0.8),
+                                      prefixIcon:
+                                      inputFieldValues.tags.isNotEmpty
+                                          ? SingleChildScrollView(
+                                        controller: inputFieldValues
+                                            .tagScrollController,
+                                        scrollDirection:
+                                        Axis.vertical,
+                                        child: Padding(
+                                          padding:
+                                          EdgeInsets.only(
+                                            top: 8.h,
+                                            bottom: 8.h,
+                                            left: 8.w,
+                                          ),
+                                          child: Wrap(
+                                              runSpacing: 4.0,
+                                              spacing: 4.0,
+                                              children:
+                                              inputFieldValues
+                                                  .tags
+                                                  .map((DynamicTagData
+                                              tag) {
+                                                return Container(
+                                                  height: 40.h,
+                                                  decoration:
+                                                  BoxDecoration(
+                                                    borderRadius:
+                                                    BorderRadius.circular(
+                                                        5.r),
+                                                    color: Theme
+                                                        .of(
+                                                        context)
+                                                        .textTheme
+                                                        .bodyMedium!
+                                                        .color,
+                                                  ),
+                                                  margin: EdgeInsets
+                                                      .symmetric(
+                                                      horizontal:
+                                                      5.w),
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal:
+                                                      10.w,
+                                                      vertical:
+                                                      5.h),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .start,
+                                                    mainAxisSize:
+                                                    MainAxisSize
+                                                        .min,
+                                                    children: [
+                                                      InterRegular(
+                                                        text:
+                                                        '${tag.tag}',
+                                                        color: Theme
+                                                            .of(context)
+                                                            .brightness ==
+                                                            Brightness.dark
+                                                            ? DarkColor.color27
+                                                            : LightColor.color1,
+                                                      ),
+                                                      SizedBox(
+                                                          width:
+                                                          4.w),
+                                                      InkWell(
+                                                        child:
+                                                        Icon(
+                                                          Icons
+                                                              .cancel,
+                                                          size:
+                                                          14.sp,
+                                                          color: Theme
+                                                              .of(context)
+                                                              .textTheme
+                                                              .displayMedium!
+                                                              .color,
+                                                        ),
+                                                        onTap:
+                                                            () {
+                                                          inputFieldValues
+                                                              .onTagRemoved(
+                                                              tag);
+                                                        },
+                                                      )
+                                                    ],
+                                                  ),
+                                                );
+                                              }).toList()),
+                                        ),
+                                      )
+                                          : null,
+                                    ),
+                                    cursorColor:
+                                    Theme
+                                        .of(context)
+                                        .primaryColor,
+                                    onChanged: (value) {
+                                      final tagData =
+                                      DynamicTagData(value,);
+                                      inputFieldValues
+                                          .onTagChanged(tagData);
+                                    },
+                                    onSubmitted: (value) {
+                                      final tagData =
+                                      DynamicTagData(value,);
+                                      inputFieldValues
+                                          .onTagSubmitted(tagData);
+                                    },
+                                  ),
+                                ),
+                              );
+                            },
+                          )
                               : SizedBox(
                             height: 200.h,
                             child: ListView(
@@ -808,6 +821,47 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                                 color: Theme
                                     .of(context)
                                     .primaryColor,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 10.h),
+                          Container(
+                            margin: EdgeInsets.only(top: 10.h),
+                            height: 40.h,
+                            width: double.maxFinite,
+                            child: ListView.builder(
+                              itemCount: ReturnAsset.length,
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (context, index) => Container(
+                                margin: EdgeInsets.only(right: 10.w),
+                                decoration: BoxDecoration(
+                                    color: Theme.of(context).cardColor,
+                                    borderRadius: BorderRadius.circular(10.r)),
+                                padding: EdgeInsets.symmetric(horizontal: 10.w),
+                                height: 20.h,
+                                // width: 100,
+                                child: Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Icon(
+                                      Icons.check,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .color,
+                                      size: 24.sp,
+                                    ),
+                                    InterMedium(
+                                      text: 'Asset: ${ReturnAsset[index]}',
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .color,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
