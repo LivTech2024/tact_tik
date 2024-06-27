@@ -354,13 +354,8 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                       DateTime now = DateTime.now();
                       DateTime inTime =
                           DateFormat("HH:mm").parse(InTime ?? "00:00");
-                      DateTime combinedDateTime = DateTime(
-                          now.year,
-                          now.month,
-                          now.day,
-                          inTime.hour,
-                          inTime.minute,
-                          inTime.second);
+                      DateTime combinedDateTime = DateTime(now.year, now.month,
+                          now.day, inTime.hour, inTime.minute, inTime.second);
                       Timestamp patrolInTimestamp =
                           Timestamp.fromMillisecondsSinceEpoch(
                               combinedDateTime.millisecondsSinceEpoch);
@@ -374,8 +369,7 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                           timestampToTimeString(widget.PatrolStatusTime);
                       print("patrolIn time: ${patrolInTimestamp}");
 
-                      DateFormat dateFormat =
-                          DateFormat("yyyy-MM-dd HH:mm:ss");
+                      DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
                       String formattedEndDate =
                           dateFormat.format(DateTime.now());
                       Timestamp patrolOutTimestamp =
@@ -384,8 +378,8 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                           dateFormat.format(DateTime.now());
                       String formattedEndTime =
                           dateFormat.format(DateTime.now());
-                      DateFormat timeformat = DateFormat(
-                          "HH:mm:ss"); // Define the format for time
+                      DateFormat timeformat =
+                          DateFormat("HH:mm:ss"); // Define the format for time
                       // String formattedPatrolInTime =
                       //     timeformat.format(StartTime);
                       String formattedPatrolOutTime =
@@ -488,11 +482,19 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                       setState(() {
                         _isLoading = false;
                       });
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => HomeScreen()));
+                      // Navigator.pushReplacement(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (context) => HomeScreen()));
                       // }
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => HomeScreen(),
+                        ),
+                        (Route<dynamic> route) => route
+                            .isFirst, // Remove all routes until the first one
+                      );
                     },
                     color: Theme.of(context).textTheme.headlineMedium!.color,
                     borderRadius: 20.r,
