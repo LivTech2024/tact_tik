@@ -49,7 +49,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
     try {
       QuerySnapshot schedulesSnapshot = await firestore
           .collection('Shifts')
-          .where('ShiftCompanyBranchId', isEqualTo: widget.BranchId)
+          .where('ShiftCompanyId', isEqualTo: widget.CompanyId)
           .orderBy('ShiftDate', descending: true)
           .get();
 

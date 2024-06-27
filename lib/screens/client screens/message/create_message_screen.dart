@@ -30,27 +30,23 @@ class _CreateMessageScreenState extends State<CreateMessageScreen> {
 
     return SafeArea(
       child: Scaffold(
-        
-         appBar: AppBar(
-       
-              leading: IconButton(
-                icon: Icon(
-                  Icons.arrow_back_ios,
-                 
-                  size: 24.w,
-                ),
-                padding: EdgeInsets.only(left: 20.w),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-              title: InterMedium(
-                text: 'Write Message',
-                
-                letterSpacing: -0.3,
-              ),
-              centerTitle: true,
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios,
+              size: 24.w,
             ),
+            padding: EdgeInsets.only(left: 20.w),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          title: InterMedium(
+            text: 'Write Message',
+            letterSpacing: -0.3,
+          ),
+          centerTitle: true,
+        ),
         body: Stack(
           children: [
             SingleChildScrollView(
@@ -63,7 +59,7 @@ class _CreateMessageScreenState extends State<CreateMessageScreen> {
                     InterBold(
                       text: 'Employee',
                       fontsize: width / width18,
-                      color: Theme.of(context).textTheme.bodyMedium!.color ,
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
                     ),
                     SizedBox(height: 20.h),
                     // TODO : Comment out this
@@ -108,7 +104,10 @@ class _CreateMessageScreenState extends State<CreateMessageScreen> {
                             children: [
                               InterMedium(
                                 text: 'Send To Admin',
-                                color:Theme.of(context).textTheme.labelSmall!.color,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .labelSmall!
+                                    .color,
                                 fontsize: 16.sp,
                                 letterSpacing: -.3,
                               )
@@ -116,7 +115,8 @@ class _CreateMessageScreenState extends State<CreateMessageScreen> {
                           ),
                           Checkbox(
                             activeColor: Theme.of(context).primaryColor,
-                            checkColor: Theme.of(context).textTheme.bodyMedium!.color,
+                            checkColor:
+                                Theme.of(context).textTheme.bodyMedium!.color,
                             value: isChecked,
                             onChanged: (bool? value) {
                               setState(() {

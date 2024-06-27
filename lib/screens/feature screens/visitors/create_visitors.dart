@@ -79,7 +79,10 @@ class _CreateVisitorsState extends State<CreateVisitors> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _distanceToField = MediaQuery.of(context).size.width;
+    _distanceToField = MediaQuery
+        .of(context)
+        .size
+        .width;
   }
 
   List<String> convertCommaSeparatedStringToList(String data) {
@@ -124,9 +127,9 @@ class _CreateVisitorsState extends State<CreateVisitors> {
       //VisitorCompanyName
 
       final inTimeTimestamp =
-          widget.visitorData!['VisitorInTime'] as Timestamp?;
+      widget.visitorData!['VisitorInTime'] as Timestamp?;
       final outTimeTimestamp =
-          widget.visitorData!['VisitorOutTime'] as Timestamp?;
+      widget.visitorData!['VisitorOutTime'] as Timestamp?;
 
       InTime = inTimeTimestamp != null
           ? TimeOfDay.fromDateTime(inTimeTimestamp.toDate())
@@ -137,7 +140,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
       if (widget.visitorData!['VisitorAssetHandover'] != null) {
         print(widget.visitorData!['VisitorAssetHandover']);
         Set<String> opt = convertCommaSeparatedStringToList(
-                widget.visitorData!['VisitorAssetHandover'])
+            widget.visitorData!['VisitorAssetHandover'])
             .toSet(); // Convert list to set for unique values
         List<String> opt2 = convertCommaSeparatedStringToList(
             widget.visitorData!['VisitorAssetHandover']);
@@ -177,10 +180,14 @@ class _CreateVisitorsState extends State<CreateVisitors> {
         return Theme(
           data: ThemeData.dark().copyWith(
             colorScheme: ColorScheme.dark(
-              primary: Theme.of(context).brightness == Brightness.dark
+              primary: Theme
+                  .of(context)
+                  .brightness == Brightness.dark
                   ? DarkColor.Primarycolor
                   : LightColor.Secondarycolor,
-              secondary: Theme.of(context).primaryColor,
+              secondary: Theme
+                  .of(context)
+                  .primaryColor,
             ),
           ),
           child: child!,
@@ -260,12 +267,18 @@ class _CreateVisitorsState extends State<CreateVisitors> {
             await documentSnapshot.reference.update({
               'VisitorOutTime': OutTime != null
                   ? Timestamp.fromDate(DateTime(
-                      DateTime.now().year,
-                      DateTime.now().month,
-                      DateTime.now().day,
-                      OutTime!.hour,
-                      OutTime!.minute,
-                    ))
+                DateTime
+                    .now()
+                    .year,
+                DateTime
+                    .now()
+                    .month,
+                DateTime
+                    .now()
+                    .day,
+                OutTime!.hour,
+                OutTime!.minute,
+              ))
                   : null,
               'VisitorReturnAsset': AssetReturnController.text,
             });
@@ -294,9 +307,10 @@ class _CreateVisitorsState extends State<CreateVisitors> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => VisiTorsScreen(
-              locationId: '',
-            ), // Replace with your visitor screen widget
+            builder: (context) =>
+                VisiTorsScreen(
+                  locationId: '',
+                ), // Replace with your visitor screen widget
           ),
         );
         return true;
@@ -338,8 +352,6 @@ class _CreateVisitorsState extends State<CreateVisitors> {
         : LightColor.color2,
   ];
 
-  List<String> ReturnAsset = [];
-
   @override
   Widget build(BuildContext context) {
     bool isEditMode = widget.visitorData != null;
@@ -360,7 +372,8 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                     onPressed: () {
                       Navigator.pop(context);
                       print(
-                          "Navigtor debug: ${Navigator.of(context).toString()}");
+                          "Navigtor debug: ${Navigator.of(context)
+                              .toString()}");
                     },
                   ),
                   title: InterMedium(
@@ -379,14 +392,22 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                           InterBold(
                             text: 'Add Visitor',
                             color:
-                                Theme.of(context).textTheme.bodyMedium!.color,
+                            Theme
+                                .of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .color,
                             fontsize: 20.sp,
                           ),
                           SizedBox(height: 30.h),
                           InterBold(
                             text: 'Allocation Date',
                             color:
-                                Theme.of(context).textTheme.bodyMedium!.color,
+                            Theme
+                                .of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .color,
                             fontsize: 20.sp,
                           ),
                           SizedBox(height: 10.h),
@@ -419,7 +440,11 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                           InterBold(
                             text: 'Name',
                             color:
-                                Theme.of(context).textTheme.bodyMedium!.color,
+                            Theme
+                                .of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .color,
                             fontsize: 20.sp,
                           ),
                           SizedBox(height: 10.h),
@@ -433,7 +458,11 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                           InterBold(
                             text: 'Email',
                             color:
-                                Theme.of(context).textTheme.bodyMedium!.color,
+                            Theme
+                                .of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .color,
                             fontsize: 20.sp,
                           ),
                           SizedBox(height: 10.h),
@@ -447,7 +476,11 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                           InterBold(
                             text: 'Contact Number',
                             color:
-                                Theme.of(context).textTheme.bodyMedium!.color,
+                            Theme
+                                .of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .color,
                             fontsize: 20.sp,
                           ),
                           SizedBox(height: 10.h),
@@ -466,7 +499,11 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                           InterBold(
                             text: 'Asset Handover',
                             color:
-                                Theme.of(context).textTheme.bodyMedium!.color,
+                            Theme
+                                .of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .color,
                             fontsize: 20.sp,
                           ),
                           SizedBox(height: 10.h),
@@ -645,16 +682,14 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                                           cursorColor:
                                               Theme.of(context).primaryColor,
                                           onChanged: (value) {
-                                            final tagData = DynamicTagData(
-                                              value,
-                                            );
+                                            final tagData =
+                                                DynamicTagData(value, "");
                                             inputFieldValues
                                                 .onTagChanged(tagData);
                                           },
                                           onSubmitted: (value) {
-                                            final tagData = DynamicTagData(
-                                              value,
-                                            );
+                                            final tagData =
+                                                DynamicTagData(value, "");
                                             inputFieldValues
                                                 .onTagSubmitted(tagData);
                                           },
@@ -664,35 +699,35 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                                   },
                                 )
                               : SizedBox(
-                                  height: 200.h,
-                                  child: ListView(
-                                    children: TagString.isNotEmpty
-                                        ? Emptyoptions.map((item) =>
-                                                ListTile(title: Text(item)))
-                                            .toList()
-                                        : TagString.map((item) {
-                                            print("Tags ${TagString}");
-                                            return CheckboxListTile(
-                                              title: Text(item),
-                                              value: options.contains(item),
-                                              onChanged: (bool? checked) {
-                                                setState(() {
-                                                  if (checked == true) {
-                                                    if (!options
-                                                        .contains(item)) {
-                                                      options.add(item);
-                                                    }
-                                                  } else {
-                                                    options.remove(item);
-                                                  }
-                                                  print(
-                                                      "Updated options: $options");
-                                                });
-                                              },
-                                            );
-                                          }).toList(),
-                                  ),
-                                ),
+                            height: 200.h,
+                            child: ListView(
+                              children: TagString.isNotEmpty
+                                  ? Emptyoptions.map((item) =>
+                                  ListTile(title: Text(item)))
+                                  .toList()
+                                  : TagString.map((item) {
+                                print("Tags ${TagString}");
+                                return CheckboxListTile(
+                                  title: Text(item),
+                                  value: options.contains(item),
+                                  onChanged: (bool? checked) {
+                                    setState(() {
+                                      if (checked == true) {
+                                        if (!options
+                                            .contains(item)) {
+                                          options.add(item);
+                                        }
+                                      } else {
+                                        options.remove(item);
+                                      }
+                                      print(
+                                          "Updated options: $options");
+                                    });
+                                  },
+                                );
+                              }).toList(),
+                            ),
+                          ),
 
                           // Content(
                           //     title: 'Asset HandOver',
@@ -732,18 +767,20 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                           InterBold(
                             text: 'Asset Return',
                             color:
-                                Theme.of(context).textTheme.bodyMedium!.color,
+                            Theme
+                                .of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .color,
                             fontsize: 20.sp,
                           ),
                           SizedBox(height: 10.h),
-
                           /*SetTextfieldWidget(
                             hintText: 'Asset Return',
                             controller: AssetReturnController,
                             enabled: isEditMode,
                             isEditMode: isEditMode,
                           ),*/
-
                           Content(
                             title: 'Asset Return',
                             child: ChipsChoice<String>.multiple(
@@ -759,7 +796,8 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                               choiceItems: C2Choice.listFrom<String, String>(
                                 source: options.isEmpty
                                     ? Emptyoptions
-                                    : options.toList(),
+                                    : options
+                                    .toList(),
                                 // Use an empty list if options is null
                                 value: (i, v) => v,
                                 label: (i, v) => v,
@@ -767,48 +805,9 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                               ),
                               choiceCheckmark: true,
                               choiceStyle: C2ChipStyle.outlined(
-                                color: Theme.of(context).primaryColor,
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 10.h),
-                          Container(
-                            margin: EdgeInsets.only(top: 10.h),
-                            height: 40.h,
-                            width: double.maxFinite,
-                            child: ListView.builder(
-                              itemCount: ReturnAsset.length,
-                              shrinkWrap: true,
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (context, index) => Container(
-                                margin: EdgeInsets.only(right: 10.w),
-                                decoration: BoxDecoration(
-                                    color: Theme.of(context).cardColor,
-                                    borderRadius: BorderRadius.circular(10.r)),
-                                padding: EdgeInsets.symmetric(horizontal: 10.w),
-                                height: 20.h,
-                                // width: 100,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Icon(
-                                      Icons.check,
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium!
-                                          .color,
-                                      size: 24.sp,
-                                    ),
-                                    InterMedium(
-                                      text: 'Asset: ${ReturnAsset[index]}',
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium!
-                                          .color,
-                                    ),
-                                  ],
-                                ),
+                                color: Theme
+                                    .of(context)
+                                    .primaryColor,
                               ),
                             ),
                           ),
@@ -816,7 +815,11 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                           InterBold(
                             text: 'License Plate Number.',
                             color:
-                                Theme.of(context).textTheme.bodyMedium!.color,
+                            Theme
+                                .of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .color,
                             fontsize: 20.sp,
                           ),
                           SizedBox(height: 10.h),
@@ -831,7 +834,11 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                           InterBold(
                             text: 'Set Countdown',
                             color:
-                                Theme.of(context).textTheme.bodyMedium!.color,
+                            Theme
+                                .of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .color,
                             fontsize: 20.sp,
                           ),
                           SizedBox(height: 10.h),
@@ -845,7 +852,11 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                           InterBold(
                             text: 'Comments',
                             color:
-                                Theme.of(context).textTheme.bodyMedium!.color,
+                            Theme
+                                .of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .color,
                             fontsize: 20.sp,
                           ),
                           SizedBox(height: 10.h),
@@ -859,7 +870,11 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                           InterBold(
                             text: 'No. of Person',
                             color:
-                                Theme.of(context).textTheme.bodyMedium!.color,
+                            Theme
+                                .of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .color,
                             fontsize: 20.sp,
                           ),
                           SizedBox(height: 10.h),
@@ -875,7 +890,11 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                           InterBold(
                             text: 'Company Name',
                             color:
-                                Theme.of(context).textTheme.bodyMedium!.color,
+                            Theme
+                                .of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .color,
                             fontsize: 20.sp,
                           ),
                           SizedBox(height: 10.h),
@@ -890,24 +909,27 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                           ),
                           widget.showButton == false
                               ? Button1(
-                                  text: 'Save',
-                                  onPressed: () async {
-                                    bool isSuccessful =
-                                        await _saveVisitorData();
-                                    if (!isSuccessful) {
-                                      // Handle the case when saving or updating visitor data fails
-                                    }
-                                  },
-                                  backgroundcolor:
-                                      Theme.of(context).primaryColor,
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .titleSmall!
-                                      .color,
-                                  borderRadius: 10.r,
-                                  fontsize: 18.sp,
-                                  height: 60.h,
-                                )
+                            text: 'Save',
+                            onPressed: () async {
+                              bool isSuccessful =
+                              await _saveVisitorData();
+                              if (!isSuccessful) {
+                                // Handle the case when saving or updating visitor data fails
+                              }
+                            },
+                            backgroundcolor:
+                            Theme
+                                .of(context)
+                                .primaryColor,
+                            color: Theme
+                                .of(context)
+                                .textTheme
+                                .titleSmall!
+                                .color,
+                            borderRadius: 10.r,
+                            fontsize: 18.sp,
+                            height: 60.h,
+                          )
                               : SizedBox(),
                         ],
                       )),

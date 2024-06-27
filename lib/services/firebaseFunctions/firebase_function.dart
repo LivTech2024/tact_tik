@@ -1218,6 +1218,88 @@ class FireStoreService {
     }
   }
 
+//Shift Break Functions
+  Future<void> startBreak(String employeeId, String shiftId) async {
+    try {
+      DocumentReference documentReference =
+          FirebaseFirestore.instance.collection('Shifts').doc(shiftId);
+      DocumentSnapshot documentSnapshot = await documentReference.get();
+      List<dynamic> currentArray =
+          List.from(documentSnapshot['ShiftCurrentStatus'] ?? []);
+
+      int index = currentArray.indexWhere((element) =>
+          element['StatusReportedById'] == employeeId &&
+          element['Status'] == 'started');
+
+      if (index != -1) {
+        Map<String, dynamic> currentStatus = currentArray[index];
+        List<dynamic> statusBreaks =
+            List.from(currentStatus['StatusBreak'] ?? []);
+
+        final breakData = {
+          'BreakStartTime': Timestamp.now(),
+          'BreakEndTime': null,
+        };
+
+        statusBreaks.add(breakData);
+        currentStatus['StatusBreak'] = statusBreaks;
+        currentStatus['StatusIsBreak'] = true; // Update StatusIsBreak to true
+        currentArray[index] = currentStatus;
+
+        await documentReference.update({'ShiftCurrentStatus': currentArray});
+      } else {
+        print('No active shift found for the employee.');
+      }
+    } catch (e) {
+      print('Error starting break: $e');
+      // Handle the error as needed
+    }
+  }
+
+  Future<void> endBreak(String employeeId, String shiftId) async {
+    try {
+      DocumentReference documentReference =
+          FirebaseFirestore.instance.collection('Shifts').doc(shiftId);
+      DocumentSnapshot documentSnapshot = await documentReference.get();
+      List<dynamic> currentArray =
+          List.from(documentSnapshot['ShiftCurrentStatus'] ?? []);
+
+      int index = currentArray.indexWhere((element) =>
+          element['StatusReportedById'] == employeeId &&
+          element['Status'] == 'started');
+
+      if (index != -1) {
+        Map<String, dynamic> currentStatus = currentArray[index];
+        List<dynamic> statusBreaks =
+            List.from(currentStatus['StatusBreak'] ?? []);
+
+        if (statusBreaks.isNotEmpty) {
+          int lastBreakIndex = statusBreaks
+              .lastIndexWhere((breakData) => breakData['BreakEndTime'] == null);
+          if (lastBreakIndex != -1) {
+            statusBreaks[lastBreakIndex]['BreakEndTime'] = Timestamp.now();
+            currentStatus['StatusBreak'] = statusBreaks;
+            currentStatus['StatusIsBreak'] =
+                false; // Update StatusIsBreak to false
+            currentArray[index] = currentStatus;
+
+            await documentReference
+                .update({'ShiftCurrentStatus': currentArray});
+          } else {
+            print('No ongoing break found to end.');
+          }
+        } else {
+          print('No break records found.');
+        }
+      } else {
+        print('No active shift found for the employee.');
+      }
+    } catch (e) {
+      print('Error ending break: $e');
+      // Handle the error as needed
+    }
+  }
+
 //Update the User Shift Status
   Future<void> startShiftLog(
       String employeeId, String shiftId, String EmpName) async {
@@ -1234,6 +1316,8 @@ class FireStoreService {
         'StatusReportedByName': EmpName,
         'StatusStartedTime': Timestamp.now(),
         'StatusReportedTime': Timestamp.now(),
+        'StatusIsBreak': false,
+        'StatusBreak': []
       };
       int index = currentArray.indexWhere((element) =>
           element['StatusReportedById'] == employeeId &&
@@ -1891,17 +1975,17 @@ class FireStoreService {
   Future<String> ScheduleShift(
     List guards,
     String? role,
-    String Address,
-    String CompanyBranchId,
-    String CompanyId,
-    List<DateTime> Date,
+    String address,
+    String companyBranchId,
+    String companyId,
+    List<DateTime> date,
     TimeOfDay? startTime,
-    TimeOfDay? EndTime,
+    TimeOfDay? endTime,
     List<Map<dynamic, dynamic>> patrol,
     String clientID,
     String requiredEmp,
-    String photoInterval,
-    String restrictedRadius,
+    String? photoInterval,
+    String? restrictedRadius,
     bool shiftenablerestriction,
     GeoPoint coordinates,
     String locationName,
@@ -1909,11 +1993,10 @@ class FireStoreService {
     String locationAddress,
     String branchId,
     String shiftDesc,
-    String ShiftName,
+    String shiftName,
     List<Map<String, dynamic>> tasks,
   ) async {
     try {
-      print("dates ${Date}");
       List<String> convertToStringArray(List list) {
         List<String> stringArray = [];
         for (var element in list) {
@@ -1929,27 +2012,21 @@ class FireStoreService {
       final DateFormat dateFormatter = DateFormat('yyyy-MM-dd');
       final DateFormat timeFormatter = DateFormat('HH:mm');
 
-      for (DateTime date in Date) {
+      for (DateTime date in date) {
         // Create the shift document without tasks first
         final newDocRef = await shifts.add({
-          'ShiftName': ShiftName,
-          'ShiftPosition': role,
+          'ShiftName': shiftName,
+          'ShiftPosition': role ?? '',
           'ShiftDate': Timestamp.fromDate(date),
-          'ShiftStartTime': timeFormatter.format(DateTime(
-            date.year,
-            date.month,
-            date.day,
-            startTime!.hour,
-            startTime.minute,
-          )),
-          'ShiftEndTime': timeFormatter.format(DateTime(
-            date.year,
-            date.month,
-            date.day,
-            EndTime!.hour,
-            EndTime.minute,
-          )),
-          'ShiftCompanyBranchId': branchId,
+          'ShiftStartTime': startTime != null
+              ? timeFormatter.format(DateTime(date.year, date.month, date.day,
+                  startTime.hour, startTime.minute))
+              : '',
+          'ShiftEndTime': endTime != null
+              ? timeFormatter.format(DateTime(date.year, date.month, date.day,
+                  endTime.hour, endTime.minute))
+              : '',
+          'ShiftCompanyBranchId': branchId.isNotEmpty ? branchId : '',
           'ShiftDescription': shiftDesc,
           'ShiftLocationName': locationName,
           'ShiftLocationAddress': locationAddress,
@@ -1957,18 +2034,21 @@ class FireStoreService {
           'ShiftLocation': coordinates,
           'ShiftAcknowledgedByEmpId': [],
           'ShiftGuardWellnessReport': [],
-          'ShiftIsSpecialShift': "false",
+          'ShiftIsSpecialShift': false,
           'ShiftAssignedUserId': selectedGuardIds,
           'ShiftClientId': clientID,
-          'ShiftCompanyId': CompanyId,
-          'ShiftRequiredEmp': int.parse(requiredEmp),
-          'ShiftCompanyBranchId': branchId,
+          'ShiftCompanyId': companyId,
+          'ShiftRequiredEmp': int.tryParse(requiredEmp) ?? 0,
+          'ShiftCompanyBranchId': branchId.isNotEmpty ? branchId : '',
           'ShiftCurrentStatus': [],
           'ShiftCreatedAt': Timestamp.now(),
           'ShiftModifiedAt': Timestamp.now(),
-          'ShiftLinkedPatrolIds': patrol,
-          'ShiftPhotoUploadIntervalInMinutes': int.parse(photoInterval),
-          'ShiftRestrictedRadius': int.parse(restrictedRadius),
+          'ShiftLinkedPatrols': patrol,
+          'ShiftPhotoUploadIntervalInMinutes':
+              photoInterval != null ? int.tryParse(photoInterval) ?? 0 : 0,
+          'ShiftRestrictedRadius': restrictedRadius != null
+              ? int.tryParse(restrictedRadius) ?? 0
+              : 0,
           'ShiftEnableRestrictedRadius': shiftenablerestriction,
           'ShiftTask': []
         });
@@ -1987,6 +2067,7 @@ class FireStoreService {
             'ShiftTaskQrCodeReq': task['isQrRequired'] ?? false,
             'ShiftTaskReturnReq': task['isReturnQrRequired'] ?? false,
             'ShiftReturnTaskStatus': [],
+            'ShiftTaskStatus': []
           };
         }).toList();
 
@@ -1995,16 +2076,12 @@ class FireStoreService {
           'ShiftId': newDocRef.id,
           'ShiftTask': FieldValue.arrayUnion(shiftTasks),
         });
-        // await generateAndSendQrPdf(shiftTasks, "sutarvaibhav37@gmail.com");
-        // return newDocRef.id;
       }
-      return '';
-
       print('Shifts created successfully');
+      return '';
     } catch (e) {
       print('Error creating shifts: $e');
       return '';
-      // Handle the error as needed
     }
   }
 
@@ -2238,7 +2315,8 @@ class FireStoreService {
       final DateFormat timeFormatter = DateFormat('HH:mm');
 
       // Get the shift document reference
-      final shiftDocRef = shifts.doc(shiftId);
+      final shiftDocRef =
+          FirebaseFirestore.instance.collection('Shifts').doc(shiftId);
 
       // Fetch the current shift data
       DocumentSnapshot shiftSnapshot = await shiftDocRef.get();
@@ -2260,24 +2338,29 @@ class FireStoreService {
       currentPatrol.addAll(patrol);
 
       // Update the shift document
-      await shiftDocRef.update({
+      Map<String, dynamic> updateData = {
         'ShiftName': ShiftName,
-        'ShiftPosition': role,
-        'ShiftStartTime': timeFormatter.format(DateTime(
-          Date.first.year,
-          Date.first.month,
-          Date.first.day,
-          startTime!.hour,
-          startTime.minute,
-        )),
-        'ShiftEndTime': timeFormatter.format(DateTime(
-          Date.first.year,
-          Date.first.month,
-          Date.first.day,
-          EndTime!.hour,
-          EndTime.minute,
-        )),
-        'ShiftCompanyBranchId': branchId,
+        'ShiftPosition': role ?? '',
+        'ShiftStartTime': startTime != null
+            ? timeFormatter.format(DateTime(
+                Date.first.year,
+                Date.first.month,
+                Date.first.day,
+                startTime.hour,
+                startTime.minute,
+              ))
+            : '',
+        'ShiftEndTime': EndTime != null
+            ? timeFormatter.format(DateTime(
+                Date.first.year,
+                Date.first.month,
+                Date.first.day,
+                EndTime.hour,
+                EndTime.minute,
+              ))
+            : '',
+        'ShiftCompanyBranchId':
+            CompanyBranchId.isNotEmpty ? CompanyBranchId : '',
         'ShiftDescription': shiftDesc,
         'ShiftLocationName': locationName,
         'ShiftLocationAddress': locationAddress,
@@ -2286,14 +2369,20 @@ class FireStoreService {
         'ShiftAssignedUserId': selectedGuardIds,
         'ShiftClientId': clientID,
         'ShiftCompanyId': CompanyId,
-        'ShiftRequiredEmp': int.parse(requiredEmp),
-        'ShiftCompanyBranchId': branchId,
-        'ShiftLinkedPatrolIds': currentPatrol,
-        'ShiftPhotoUploadIntervalInMinutes': int.parse(photoInterval),
-        'ShiftRestrictedRadius': int.parse(restrictedRadius),
+        'ShiftRequiredEmp': requiredEmp.isNotEmpty ? int.parse(requiredEmp) : 0,
+        'ShiftPhotoUploadIntervalInMinutes':
+            photoInterval.isNotEmpty ? int.parse(photoInterval) : 0,
+        'ShiftRestrictedRadius':
+            restrictedRadius.isNotEmpty ? int.parse(restrictedRadius) : 0,
         'ShiftEnableRestrictedRadius': shiftenablerestriction,
         'ShiftModifiedAt': Timestamp.now(),
-      });
+      };
+
+      // Filter out empty or null values
+      updateData.removeWhere((key, value) => value == null || value == '');
+
+      // Update the shift document
+      await shiftDocRef.update(updateData);
 
       // Prepare the shift tasks array with the document id
       List<Map<String, dynamic>> shiftTasks = tasks.map((task) {
@@ -2303,12 +2392,13 @@ class FireStoreService {
           'ShiftTaskQrCodeReq': task['isQrRequired'] ?? false,
           'ShiftTaskReturnReq': task['isReturnQrRequired'] ?? false,
           'ShiftTaskStatus': [],
+          'ShiftReturnTaskStatus': []
         };
       }).toList();
 
       // Update the shift tasks
       await shiftDocRef.update({
-        'ShiftTasks': shiftTasks,
+        'ShiftTask': shiftTasks,
       });
 
       print('Shift updated successfully');

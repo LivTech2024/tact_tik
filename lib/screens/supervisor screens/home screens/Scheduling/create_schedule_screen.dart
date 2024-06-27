@@ -126,6 +126,10 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
           'GuardImg': widget.GuardImg ?? '',
           'GuardRole': widget.GuardRole ?? "",
         });
+        requiredEmpcontroller.text = "1";
+        if (widget.GuardRole.isNotEmpty) {
+          selectedPosition = widget.GuardRole;
+        }
       });
     }
   }
@@ -186,6 +190,17 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
     return null;
   }
 
+  TimeOfDay? stringToTimeOfDay(String time) {
+    final format = RegExp(r'^(\d{2}):(\d{2})$');
+    if (format.hasMatch(time)) {
+      final parts = time.split(':');
+      final hour = int.parse(parts[0]);
+      final minute = int.parse(parts[1]);
+      return TimeOfDay(hour: hour, minute: minute);
+    }
+    return null;
+  }
+
   void setDefaultValuesFromShiftData(Map<String, dynamic> shiftData) async {
     // Fetch and set default position
     String? shiftPosition = shiftData['ShiftPosition'];
@@ -226,13 +241,33 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
       }
     }
 
+    //To Do: Time , Date, Branc
+    setState(() {
+      startTime = stringToTimeOfDay(shiftData['ShiftStartTime'] ?? '');
+      endTime = stringToTimeOfDay(shiftData['ShiftEndTime'] ?? '');
+    });
     _ShiftName.text = shiftData['ShiftName'] ?? '';
-    requiredEmpcontroller.value = shiftData['ShiftRequiredEmp'] ?? '';
-    _Description.text = shiftData['ShiftDescription'] ?? 0;
-    requiredRadius.value = shiftData['ShiftRestrictedRadius'] ?? 0;
-    _PhotoUploadIntervalInMinutes.value =
-        shiftData['ShiftPhotoUploadIntervalInMinutes'] ?? 0;
+    requiredEmpcontroller.value = TextEditingValue(
+      text: (shiftData['ShiftRequiredEmp'] ?? 0).toString(),
+    );
+    _Description.text = shiftData['ShiftDescription'] ?? "";
+    requiredRadius.value = TextEditingValue(
+        text: (shiftData['ShiftRestrictedRadius'] ?? 0).toString());
+    _PhotoUploadIntervalInMinutes.value = TextEditingValue(
+        text: (shiftData['ShiftPhotoUploadIntervalInMinutes'] ?? 0).toString());
     _isRestrictedChecked = shiftData['ShiftEnableRestrictedRadius'] ?? false;
+    // ShiftDate
+    _selectedDates.add((shiftData['ShiftDate'] as Timestamp).toDate());
+    if (shiftData['ShiftTask'] is List) {
+      for (var task in shiftData['ShiftTask']) {
+        if (task is Map<String, dynamic>) {
+          tasks.add(task);
+        } else {
+          // Handle the case where the item is not a Map<String, dynamic>
+          print('Invalid task format');
+        }
+      }
+    }
   }
 
   void getEmployeeRoles() async {
@@ -1888,12 +1923,15 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
                           shrinkWrap: true,
                           itemCount: tasks.length,
                           itemBuilder: (context, index) {
-                            String taskName = tasks[index]['name'];
+                            String taskName = tasks[index]['ShiftTask'];
                             bool isChecked =
-                                tasks[index]['isQrRequired'] ?? false;
+                                tasks[index]['ShiftTaskQrCodeReq'] ?? false;
                             bool isReturnChecked =
-                                tasks[index]['isReturnQrRequired'] ?? false;
-
+                                tasks[index]['ShiftTaskReturnReq'] ?? false;
+                            if (index >= taskControllers.length) {
+                              taskControllers
+                                  .add(TextEditingController(text: taskName));
+                            }
                             return Column(
                               children: [
                                 ListTile(
@@ -2123,16 +2161,16 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
                                       selectedGuards,
                                       selectedPosition,
                                       address,
-                                      "CompanyBranchId",
+                                      selectedBranch!,
                                       widget.CompanyId,
                                       _selectedDates,
                                       startTime,
                                       endTime,
                                       AsignedPatrol,
                                       clientId,
-                                      requiredEmpcontroller.text,
-                                      requiredPhotocontroller.text,
-                                      requiredRadius.text,
+                                      requiredEmpcontroller.text ?? "",
+                                      requiredPhotocontroller.text ?? "",
+                                      requiredRadius.text ?? "",
                                       _isRestrictedChecked,
                                       coordinates,
                                       name,
