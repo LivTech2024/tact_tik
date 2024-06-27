@@ -607,7 +607,10 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                                       ? "Patrol Name : ${patrolData['TilePatrolName']}"
                                                       : "",
                                                   fontsize: 12.sp,
-                                                  color: Colors.white,
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .bodySmall!
+                                                      .color,
                                                 ),
                                               ],
                                             ),
