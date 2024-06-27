@@ -28,15 +28,14 @@ class DarDisplayScreen extends StatefulWidget {
   final String EmpDarShiftID;
   final String EmpDarClientID;
 
-  DarDisplayScreen(
-      {Key? key,
-      required this.EmpEmail,
-      required this.EmpID,
-      required this.EmpDarCompanyId,
-      required this.EmpDarCompanyBranchId,
-      required this.EmpDarShiftID,
-      required this.EmpDarClientID,
-      required this.Username})
+  DarDisplayScreen({Key? key,
+    required this.EmpEmail,
+    required this.EmpID,
+    required this.EmpDarCompanyId,
+    required this.EmpDarCompanyBranchId,
+    required this.EmpDarShiftID,
+    required this.EmpDarClientID,
+    required this.Username})
       : super(key: key);
 
   @override
@@ -49,8 +48,6 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
 
-  
-
   List<Color> colors = [
     themeManager.themeMode == ThemeMode.dark
         ? DarkColor.color1
@@ -62,7 +59,6 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
 
   @override
   Widget build(BuildContext context) {
-   
     // keep this code in firebase_function file  and handle its errors here
     Future<String?> _submitDAR() async {
       final _userService = UserService(firestoreService: FireStoreService());
@@ -70,17 +66,18 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
       try {
         final date = DateTime.now();
         final CollectionReference employeesDARCollection =
-            FirebaseFirestore.instance.collection('EmployeesDAR');
+        FirebaseFirestore.instance.collection('EmployeesDAR');
 
         final QuerySnapshot querySnapshot = await employeesDARCollection
             .where('EmpDarEmpId',
-                isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+            isEqualTo: FirebaseAuth.instance.currentUser!.uid)
             .where('EmpDarShiftId', isEqualTo: _userService.ShiftId)
             .get();
 
         if (querySnapshot.docs.isNotEmpty) {
           print(
-              'Document with EmpDarShiftId ${_userService.ShiftId} already exists.');
+              'Document with EmpDarShiftId ${_userService
+                  .ShiftId} already exists.');
           // return null;
         }
 
@@ -99,7 +96,8 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
         });
         await docRef.update({'EmpDarId': docRef.id});
         print(
-            'Document with EmpDarShiftId ${_userService.ShiftId} created successfully.');
+            'Document with EmpDarShiftId ${_userService
+                .ShiftId} created successfully.');
         return docRef.id;
       } catch (e) {
         print('Error creating document: $e');
@@ -155,7 +153,11 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                           text: date,
                           fontsize: 20.sp,
                           color:
-                              Theme.of(context).textTheme.displayMedium!.color,
+                          Theme
+                              .of(context)
+                              .textTheme
+                              .displayMedium!
+                              .color,
                           letterSpacing: -.3,
                         ),
                         SizedBox(height: 20.h),
@@ -169,16 +171,17 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => DarOpenAllScreen(
-                                    passdate: (document['EmpDarCreatedAt']
-                                            as Timestamp)
-                                        .toDate(),
-                                    Username: widget.Username,
-                                    Empid: widget.EmpID,
-                                    DarId: document['EmpDarId'],
-                                    editable: isNew,
-                                    shifID: widget.EmpDarShiftID,
-                                  ),
+                                  builder: (context) =>
+                                      DarOpenAllScreen(
+                                        passdate: (document['EmpDarCreatedAt']
+                                        as Timestamp)
+                                            .toDate(),
+                                        Username: widget.Username,
+                                        Empid: widget.EmpID,
+                                        DarId: document['EmpDarId'],
+                                        editable: isNew,
+                                        shifID: widget.EmpDarShiftID,
+                                      ),
                                 ),
                               );
                             },
@@ -189,13 +192,17 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                               decoration: BoxDecoration(
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Theme.of(context).shadowColor,
+                                    color: Theme
+                                        .of(context)
+                                        .shadowColor,
                                     blurRadius: 5,
                                     spreadRadius: 2,
                                     offset: Offset(0, 3),
                                   )
                                 ],
-                                color: Theme.of(context).cardColor,
+                                color: Theme
+                                    .of(context)
+                                    .cardColor,
                                 borderRadius: BorderRadius.circular(20.r),
                               ),
                               padding: EdgeInsets.symmetric(
@@ -212,29 +219,31 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                                 children: [
                                   InterBold(
                                     text: (document.data()
-                                                as Map<String, dynamic>)
-                                            .containsKey('EmpDarShiftName')
+                                    as Map<String, dynamic>)
+                                        .containsKey('EmpDarShiftName')
                                         ? document['EmpDarShiftName']
                                         : "",
                                     fontsize: 18.sp,
-                                    color: Theme.of(context)
+                                    color: Theme
+                                        .of(context)
                                         .textTheme
                                         .displayMedium!
                                         .color,
                                   ),
                                   isNew
                                       ? InterBold(
-                                          text: "New",
-                                          fontsize: 18.sp,
-                                          color: Colors.green,
-                                        )
+                                    text: "New",
+                                    fontsize: 18.sp,
+                                    color: Colors.green,
+                                  )
                                       : SizedBox(),
                                   SizedBox(height: 10.h),
                                   Flexible(
                                     child: InterRegular(
                                       text: document['EmpDarLocationName'],
                                       fontsize: 16.sp,
-                                      color: Theme.of(context)
+                                      color: Theme
+                                          .of(context)
                                           .textTheme
                                           .displayMedium!
                                           .color,
@@ -280,13 +289,17 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
-                            color: Theme.of(context).shadowColor,
+                            color: Theme
+                                .of(context)
+                                .shadowColor,
                             blurRadius: 5,
                             spreadRadius: 2,
                             offset: Offset(0, 3),
                           )
                         ],
-                        color: Theme.of(context).cardColor,
+                        color: Theme
+                            .of(context)
+                            .cardColor,
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -296,13 +309,21 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                               onTap: () {
                                 setState(() {
                                   showAllDARS = false;
-                                  colors[0] = Theme.of(context).textTheme.bodySmall!.color as Color;
-                                  colors[1] = Theme.of(context).highlightColor;
+                                  colors[0] = Theme
+                                      .of(context)
+                                      .textTheme
+                                      .bodySmall!
+                                      .color as Color;
+                                  colors[1] = Theme
+                                      .of(context)
+                                      .highlightColor;
                                 });
                               },
                               child: Container(
                                 height: 65.h,
-                                color: Theme.of(context).cardColor,
+                                color: Theme
+                                    .of(context)
+                                    .cardColor,
                                 child: Center(
                                   child: InterBold(
                                     text: 'Today',
@@ -317,7 +338,11 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                             padding: EdgeInsets.symmetric(vertical: 10.h),
                             child: VerticalDivider(
                               color:
-                                  Theme.of(context).textTheme.bodySmall!.color,
+                              Theme
+                                  .of(context)
+                                  .textTheme
+                                  .bodySmall!
+                                  .color,
                             ),
                           ),
                           Expanded(
@@ -326,13 +351,21 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                                 setState(() {
                                   showAllDARS = true;
 
-                                  colors[0] = Theme.of(context).highlightColor;
-                                  colors[1] = Theme.of(context).textTheme.bodySmall!.color  as Color;
+                                  colors[0] = Theme
+                                      .of(context)
+                                      .highlightColor;
+                                  colors[1] = Theme
+                                      .of(context)
+                                      .textTheme
+                                      .bodySmall!
+                                      .color as Color;
                                 });
                               },
                               child: Container(
                                 height: 65.h,
-                                color: Theme.of(context).cardColor,
+                                color: Theme
+                                    .of(context)
+                                    .cardColor,
                                 child: Center(
                                   child: InterBold(
                                     text: 'History',
@@ -374,6 +407,7 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
             }
           },
         ),
+
         // floatingActionButton: GestureDetector(
         //   onTap: () async {
         //     String? result = await _submitDAR();
