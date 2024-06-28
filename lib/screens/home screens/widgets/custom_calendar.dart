@@ -1,17 +1,27 @@
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:tact_tik/common/widgets/button1.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/main.dart';
 
 import '../../../common/sizes.dart';
 import '../../../utils/colors.dart';
+import '../calendar_screen.dart';
 
 final today = DateUtils.dateOnly(DateTime.now());
 
 class CustomCalendar extends StatefulWidget {
   final List<DateTime?> selectedDates;
-  const CustomCalendar({Key? key, required this.selectedDates})
+
+  const CustomCalendar(
+      {Key? key,
+      required this.selectedDates,
+      this.employeeCompanyID,
+      this.employeeId})
       : super(key: key);
+  final employeeCompanyID;
+  final employeeId;
 
   @override
   State<CustomCalendar> createState() => _CustomCalenderState();
@@ -96,10 +106,32 @@ class _CustomCalenderState extends State<CustomCalendar> {
           ),
         ),
         SizedBox(height: height / height25),
-        InterBold(
-          text: 'Weekly Shifts',
-          fontsize: width / width18,
-          color: Theme.of(context).textTheme.bodyLarge!.color,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            InterBold(
+              text: 'Weekly Shifts',
+              fontsize: width / width18,
+              color: Theme.of(context).textTheme.bodyLarge!.color,
+            ),
+            SizedBox(
+              width: 130,
+              child: Button1(
+                height: 40.h,
+                borderRadius: 10.r,
+                fontsize: 15.sp,
+                backgroundcolor: Theme.of(context).primaryColor,
+                  text: 'Advance Mode',
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CalendarScreen(
+                                companyId: widget.employeeCompanyID,
+                                employeeId: widget.employeeId)));
+                  }),
+            )
+          ],
         )
       ],
     );
