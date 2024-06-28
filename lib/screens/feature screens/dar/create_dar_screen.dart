@@ -607,7 +607,10 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                                       ? "Patrol Name : ${patrolData['TilePatrolName']}"
                                                       : "",
                                                   fontsize: 12.sp,
-                                                  color: Colors.white,
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .bodySmall!
+                                                      .color,
                                                 ),
                                               ],
                                             ),
@@ -722,7 +725,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                         width: 15.w,
                                         height: double.infinity,
                                         decoration: BoxDecoration(
-                                          color: Theme.of(context).cardColor,
+                                          color: Colors.red,
                                           borderRadius:
                                               BorderRadius.circular(10.r),
                                         ),
@@ -734,7 +737,10 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                               ? "\t\t\t\t # ${ReportData['TileReportSearchId']}  ${ReportData['TileReportName']}"
                                               : "",
                                           fontsize: 12.sp,
-                                          color: Colors.white,
+                                          color: Theme.of(context)
+                                              .textTheme
+                                              .bodySmall!
+                                              .color,
                                         ),
                                       ),
                                     ],

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/common/widgets/setTextfieldWidget.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
@@ -17,6 +18,7 @@ import 'package:textfield_tags/textfield_tags.dart';
 
 import '../../../common/sizes.dart';
 import '../../../common/widgets/button1.dart';
+import '../../../common/widgets/contact_widget.dart';
 import '../../../fonts/inter_regular.dart';
 import '../../../main.dart';
 import '../../../test_screen.dart';
@@ -338,6 +340,8 @@ class _CreateVisitorsState extends State<CreateVisitors> {
         : LightColor.color2,
   ];
 
+  List<String> ReturnAsset = [];
+
   @override
   Widget build(BuildContext context) {
     bool isEditMode = widget.visitorData != null;
@@ -449,7 +453,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                             fontsize: 20.sp,
                           ),
                           SizedBox(height: 10.h),
-                          SetTextfieldWidget(
+                     /*     SetTextfieldWidget(
                             hintText: 'Contact Number',
                             controller: ContactNoController,
                             enabled: !isEditMode,
@@ -459,7 +463,8 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                               FilteringTextInputFormatter
                                   .digitsOnly, // Allows only digits
                             ],
-                          ),
+                          ),*/
+                          ContactWidget(controller: ContactNoController,),
                           SizedBox(height: 20.h),
                           InterBold(
                             text: 'Asset Handover',
@@ -643,14 +648,16 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                                           cursorColor:
                                               Theme.of(context).primaryColor,
                                           onChanged: (value) {
-                                            final tagData =
-                                                DynamicTagData(value, "");
+                                            final tagData = DynamicTagData(
+                                              value,
+                                            );
                                             inputFieldValues
                                                 .onTagChanged(tagData);
                                           },
                                           onSubmitted: (value) {
-                                            final tagData =
-                                                DynamicTagData(value, "");
+                                            final tagData = DynamicTagData(
+                                              value,
+                                            );
                                             inputFieldValues
                                                 .onTagSubmitted(tagData);
                                           },
@@ -762,6 +769,47 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                               choiceCheckmark: true,
                               choiceStyle: C2ChipStyle.outlined(
                                 color: Theme.of(context).primaryColor,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 10.h),
+                          Container(
+                            margin: EdgeInsets.only(top: 10.h),
+                            height: 40.h,
+                            width: double.maxFinite,
+                            child: ListView.builder(
+                              itemCount: ReturnAsset.length,
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (context, index) => Container(
+                                margin: EdgeInsets.only(right: 10.w),
+                                decoration: BoxDecoration(
+                                    color: Theme.of(context).cardColor,
+                                    borderRadius: BorderRadius.circular(10.r)),
+                                padding: EdgeInsets.symmetric(horizontal: 10.w),
+                                height: 20.h,
+                                // width: 100,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Icon(
+                                      Icons.check,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .color,
+                                      size: 24.sp,
+                                    ),
+                                    InterMedium(
+                                      text: 'Asset: ${ReturnAsset[index]}',
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .color,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),

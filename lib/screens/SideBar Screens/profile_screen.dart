@@ -14,6 +14,7 @@ import 'package:tact_tik/main.dart';
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import '../../common/sizes.dart';
+import '../../common/widgets/contact_widget.dart';
 import '../../fonts/inter_regular.dart';
 import '../../fonts/inter_semibold.dart';
 import '../../utils/colors.dart';
@@ -24,7 +25,9 @@ import '../home screens/widgets/profile_edit_widget.dart';
 class ProfileScreen extends StatefulWidget {
   bool isClient;
   final String empId;
-  ProfileScreen({Key? key, required this.empId, this.isClient = false}) : super(key: key);
+
+  ProfileScreen({Key? key, required this.empId, this.isClient = false})
+      : super(key: key);
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
@@ -167,7 +170,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           shadowColor: Colors.transparent,
           leading: IconButton(
             icon: Icon(
-              isEdit ? Icons.close : Icons.arrow_back_ios,color: DarkColor.color5,
+              isEdit ? Icons.close : Icons.arrow_back_ios,
+              color: DarkColor.color5,
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -189,9 +193,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
             IconButton(
               onPressed: () {
                 if (isEdit) {
-                  if (_nameController.text.isEmpty || _phoneNoController.text.isEmpty) {
+                  if (_nameController.text.isEmpty ||
+                      _phoneNoController.text.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Please fill in both Name and Contact No')),
+                      SnackBar(
+                          content:
+                              Text('Please fill in both Name and Contact No')),
                     );
                     return;
                   }
@@ -202,7 +209,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 });
               },
               icon: Icon(
-                isEdit ? Icons.check : Icons.border_color,color: DarkColor.color5,
+                isEdit ? Icons.check : Icons.border_color,
+                color: DarkColor.color5,
               ),
             ),
           ],
@@ -241,56 +249,56 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         child: isEdit
                             ? Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            ClipOval(
-                              child: SizedBox.fromSize(
-                                size: Size.fromRadius(50.r),
-                                child: _selectedImageFile != null
-                                    ? Image.file(
-                                  File(_selectedImageFile!.path),
-                                  fit: BoxFit.cover,
-                                )
-                                    : _employeeImageUrl != null
-                                    ? Image.network(
-                                  _employeeImageUrl!,
-                                  fit: BoxFit.cover,
-                                )
-                                    : Image.asset(
-                                    'assets/images/default.png'),
-                              ),
-                            ),
-                            Positioned(
-                              right: -10.w,
-                              bottom: -4.h,
-                              child: IconButton(
-                                padding: EdgeInsets.zero,
-                                onPressed: () =>
-                                    _selectImageFromGallery(),
-                                icon: Icon(
-                                  Icons.add_a_photo,
-                                  size: 24.sp,
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium!
-                                      .color,
+                                clipBehavior: Clip.none,
+                                children: [
+                                  ClipOval(
+                                    child: SizedBox.fromSize(
+                                      size: Size.fromRadius(50.r),
+                                      child: _selectedImageFile != null
+                                          ? Image.file(
+                                              File(_selectedImageFile!.path),
+                                              fit: BoxFit.cover,
+                                            )
+                                          : _employeeImageUrl != null
+                                              ? Image.network(
+                                                  _employeeImageUrl!,
+                                                  fit: BoxFit.cover,
+                                                )
+                                              : Image.asset(
+                                                  'assets/images/default.png'),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    right: -10.w,
+                                    bottom: -4.h,
+                                    child: IconButton(
+                                      padding: EdgeInsets.zero,
+                                      onPressed: () =>
+                                          _selectImageFromGallery(),
+                                      icon: Icon(
+                                        Icons.add_a_photo,
+                                        size: 24.sp,
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .color,
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              )
+                            : ClipOval(
+                                child: SizedBox.fromSize(
+                                  size: Size.fromRadius(50.r),
+                                  child: _employeeImageUrl != null
+                                      ? Image.network(
+                                          _employeeImageUrl!,
+                                          fit: BoxFit.cover,
+                                        )
+                                      : Image.asset(
+                                          'assets/images/default.png'),
                                 ),
                               ),
-                            )
-                          ],
-                        )
-                            : ClipOval(
-                          child: SizedBox.fromSize(
-                            size: Size.fromRadius(50.r),
-                            child: _employeeImageUrl != null
-                                ? Image.network(
-                              _employeeImageUrl!,
-                              fit: BoxFit.cover,
-                            )
-                                : Image.asset(
-                                'assets/images/default.png'),
-                          ),
-                        ),
                       ),
                       SizedBox(height: 20.h),
                       PoppinsMedium(
@@ -311,71 +319,66 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       padding: EdgeInsets.symmetric(vertical: 40.h),
                       child: isEdit
                           ? Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          InterSemibold(
-                            text: 'Name',
-                            fontsize: 20.sp,
-                            color: Theme.of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .color,
-                          ),
-                          SizedBox(height: 5.h),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: SetTextfieldWidget(
-                                  hintText: '',
-                                  controller: _nameController,
-                                  enabled: true,
-                                  isEditMode: false,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                InterSemibold(
+                                  text: 'Name',
+                                  fontsize: 20.sp,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .color,
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      )
+                                SizedBox(height: 5.h),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: SetTextfieldWidget(
+                                        hintText: '',
+                                        controller: _nameController,
+                                        enabled: true,
+                                        isEditMode: false,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            )
                           : ProfileEditWidget(
-                        tittle: 'Name',
-                        content: _employeeName ?? '',
-                        onTap: () {},
-                      ),
+                              tittle: 'Name',
+                              content: _employeeName ?? '',
+                              onTap: () {},
+                            ),
                     ),
                     isEdit
                         ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        InterSemibold(
-                          text: 'Contact No',
-                          fontsize: 20.sp,
-                          color: Theme.of(context)
-                              .textTheme
-                              .bodyMedium!
-                              .color,
-                        ),
-                        SizedBox(height: 5.h),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: SetTextfieldWidget(
-                                maxlength: 11,
-                                keyboardType: TextInputType.number,
-                                hintText: '',
-                                controller: _phoneNoController,
-                                enabled: true,
-                                isEditMode: false,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              InterSemibold(
+                                text: 'Contact No',
+                                fontsize: 20.sp,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color,
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    )
+                              SizedBox(height: 5.h),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: ContactWidget(
+                                      controller: _phoneNoController,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          )
                         : ProfileEditWidget(
-                      tittle: 'Contact No',
-                      content: _employeePhone ?? '',
-                      onTap: () {},
-                    ),
+                            tittle: 'Contact No',
+                            content: _employeePhone ?? '',
+                            onTap: () {},
+                          ),
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: 40.h),
                       child: ProfileEditWidget(
