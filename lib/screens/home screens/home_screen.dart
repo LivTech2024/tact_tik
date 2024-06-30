@@ -838,13 +838,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               icon: Icons.calendar_today,
                               color: ScreenIndex == 2
                                   ? ThemeMode.dark == themeManager.themeMode
-                                      ? Theme.of(context).focusColor
-                                      : LightColor.Primarycolor
+                                  ? DarkColor.color1
+                                  : LightColor.Primarycolor
                                   : Theme.of(context).focusColor,
                               textcolor: ScreenIndex == 2
                                   ? ThemeMode.dark == themeManager.themeMode
-                                      ? Theme.of(context).focusColor
-                                      : LightColor.Primarycolor
+                                  ? DarkColor.color1
+                                  : LightColor.Primarycolor
                                   : Theme.of(context).focusColor,
                             ),
                           ),
@@ -1230,7 +1230,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       ? SliverList(
                           delegate: SliverChildBuilderDelegate(
                             (context, index) {
+
                               return Padding(
+
                                 padding: EdgeInsets.symmetric(horizontal: 30.w),
                                 child: GestureDetector(
                                   onTap: () {},

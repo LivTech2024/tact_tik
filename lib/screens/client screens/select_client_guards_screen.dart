@@ -78,7 +78,6 @@ class _SelectGuardsScreenState extends State<SelectClientGuardsScreen> {
     }
   }
 
-  String dropdownValue = 'All'; // Initialize default value
 
   @override
   Widget build(BuildContext context) {
@@ -111,33 +110,6 @@ class _SelectGuardsScreenState extends State<SelectClientGuardsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: 30.h),
-                  DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      iconSize: 24.w,
-                      dropdownColor: Theme.of(context).cardColor,
-                      style: TextStyle(
-                          color: Theme.of(context).textTheme.bodyLarge!.color),
-                      borderRadius: BorderRadius.circular(10.r),
-                      value: dropdownValue,
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          dropdownValue = newValue!;
-                        });
-                      },
-                      items: <String>[
-                        'All',
-                        'available',
-                        'unavailable'
-                      ] // Add your options here
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                  SizedBox(height: 20.h),
                   _guardsInfo.length != 0
                       ? ListView.builder(
                           physics: NeverScrollableScrollPhysics(),

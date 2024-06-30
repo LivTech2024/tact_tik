@@ -263,7 +263,7 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
                       },
                     ),
                     title: InterMedium(
-                      text: 'DAR',
+                      text: 'DAR - ${widget.Username}',
                     ),
                     centerTitle: true,
                     floating: true,
