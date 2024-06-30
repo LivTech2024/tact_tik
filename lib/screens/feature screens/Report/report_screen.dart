@@ -360,7 +360,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                                                   .color,
                                                         ),
                                                         SizedBox(
-                                                          width: 130.w,
+                                                          width: 110.w,
                                                           child: InterRegular(
                                                             text: report[
                                                                 'ReportCategoryName'],
