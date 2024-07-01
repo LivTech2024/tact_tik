@@ -154,7 +154,7 @@ class _ClientDarScreenState extends State<ClientDarScreen> {
           padding: EdgeInsets.symmetric(horizontal: 30.w),
           child: SingleChildScrollView(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 SizedBox(
                   height: 30.h,
@@ -267,6 +267,18 @@ class _ClientDarScreenState extends State<ClientDarScreen> {
                     ),
                   ],
                 ),
+                TextButton(
+                  onPressed: () {},
+                  child: InterMedium(
+                    text: 'clear',
+                    color: Theme.of(context)
+                        .textTheme
+                        .headlineSmall!
+                        .color,
+                    fontsize: 20.sp,
+                  ),
+                ),
+                SizedBox(height: 10.h),
                 ListView.builder(
                     physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,

@@ -724,6 +724,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
   }
 
   DateTime? selectedDate;
+
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
         context: context,
@@ -1278,6 +1279,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                             child: Padding(
                               padding: EdgeInsets.symmetric(horizontal: 30.w),
                               child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   Row(
                                     mainAxisAlignment:
@@ -1394,6 +1396,18 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                         ],
                                       ),
                                     ],
+                                  ),
+                                  SizedBox(height: 6.h),
+                                  TextButton(
+                                    onPressed: () {},
+                                    child: InterMedium(
+                                      text: 'clear',
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .headlineSmall!
+                                          .color,
+                                      fontsize: 20.sp,
+                                    ),
                                   ),
                                   SizedBox(
                                     height: 20.h,

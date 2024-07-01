@@ -549,26 +549,28 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                             height: 60.h,
                             padding: EdgeInsets.symmetric(horizontal: 10.w),
                             decoration: BoxDecoration(
-                              // color: Colors.redAccent,
-                              borderRadius: BorderRadius.circular(10.w),
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: Theme.of(context).brightness ==
-                                          Brightness.dark
-                                      ? DarkColor.color19
-                                      : LightColor.color3,
-                                ),
-                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Theme.of(context).shadowColor,
+                                  blurRadius: 5,
+                                  spreadRadius: 2,
+                                  offset: Offset(0, 3),
+                                )
+                              ],
+                              borderRadius: BorderRadius.circular(10.r),
+                              color: Theme.of(context).cardColor,
                             ),
                             child: DropdownButtonHideUnderline(
                               child: DropdownButton<String>(
                                 isExpanded: true,
                                 iconSize: 24.w,
-                                hint: Text(
-                                  "Select Client",
-                                  style: TextStyle(color: Colors.white),
+                                hint: InterMedium(
+                                  text: "Select Client",
+                                  fontsize: 16.w,
+                                  color:
+                                  Theme.of(context).textTheme.bodyLarge!.color,
                                 ),
-                                icon: Icon(Icons.arrow_drop_down),
+                                icon: Icon(Icons.arrow_drop_down , color: Theme.of(context).textTheme.bodyLarge!.color,size: 24.sp,),
                                 iconEnabledColor: Theme.of(context)
                                     .textTheme
                                     .bodyMedium!
@@ -640,26 +642,29 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                             height: 60.h,
                             padding: EdgeInsets.symmetric(horizontal: 10.w),
                             decoration: BoxDecoration(
-                              // color: Colors.redAccent,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Theme.of(context).shadowColor,
+                                  blurRadius: 5,
+                                  spreadRadius: 2,
+                                  offset: Offset(0, 3),
+                                )
+                              ],
                               borderRadius: BorderRadius.circular(10.r),
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: Theme.of(context).brightness ==
-                                          Brightness.dark
-                                      ? DarkColor.color19
-                                      : LightColor.color3,
-                                ),
-                              ),
+                              color: Theme.of(context).cardColor,
                             ),
                             child: DropdownButtonHideUnderline(
                               child: DropdownButton<String>(
                                 isExpanded: true,
-                                hint: Text(
-                                  "Select Location",
-                                  style: TextStyle(color: Colors.white),
+                                hint: InterMedium(
+                                  text: "Select Location",
+                                  fontsize: 16.w,
+                                  color:
+                                  Theme.of(context).textTheme.bodyLarge!.color,
                                 ),
                                 iconSize: 24.w,
-                                icon: Icon(Icons.arrow_drop_down),
+                                icon: Icon(Icons.arrow_drop_down,color:
+                                Theme.of(context).textTheme.bodyLarge!.color,size: 24.sp,),
                                 iconEnabledColor: Theme.of(context)
                                     .textTheme
                                     .bodyMedium!
@@ -1103,6 +1108,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                         borderRadius: 10.r,
                       ),
                     ),
+                    SizedBox(height: 30.h),
                   ],
                 ),
               ),

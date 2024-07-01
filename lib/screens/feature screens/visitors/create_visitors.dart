@@ -340,13 +340,17 @@ class _CreateVisitorsState extends State<CreateVisitors> {
         : LightColor.color2,
   ];
 
-  List<String> ReturnAsset = [];
+  List<Map<String, dynamic>> ReturnAsset = [
+    {'Asset': 'Asset1', 'isCheck': false},
+    {'Asset': 'Asset2', 'isCheck': false},
+    {'Asset': 'Asset3', 'isCheck': false}
+  ];
 
   @override
   Widget build(BuildContext context) {
     bool isEditMode = widget.visitorData != null;
-
     var isFieldEnabled = widget.visitorData != null;
+
     return SafeArea(
       child: Scaffold(
         body: Stack(
@@ -773,145 +777,180 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                             ),
                           ),
                           SizedBox(height: 10.h),
-                          Container(
-                            margin: EdgeInsets.only(top: 10.h),
-                            height: 40.h,
-                            width: double.maxFinite,
-                            child: ListView.builder(
-                              itemCount: ReturnAsset.length,
-                              shrinkWrap: true,
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (context, index) => Container(
-                                margin: EdgeInsets.only(right: 10.w),
-                                decoration: BoxDecoration(
-                                    color: Theme.of(context).cardColor,
-                                    borderRadius: BorderRadius.circular(10.r)),
-                                padding: EdgeInsets.symmetric(horizontal: 10.w),
-                                height: 20.h,
-                                // width: 100,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Icon(
-                                      Icons.check,
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium!
-                                          .color,
-                                      size: 24.sp,
-                                    ),
-                                    InterMedium(
-                                      text: 'Asset: ${ReturnAsset[index]}',
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium!
-                                          .color,
-                                    ),
-                                  ],
-                                ),
+                          /*ListView.builder(
+                            itemCount: ReturnAsset.length,
+                            shrinkWrap: true,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) => Container(
+                              margin: EdgeInsets.only(right: 10.w),
+                              decoration: BoxDecoration(
+                                  color: Theme.of(context).cardColor,
+                                  borderRadius: BorderRadius.circular(10.r)),
+                              padding: EdgeInsets.symmetric(horizontal: 10.w),
+                              height: 20.h,
+                              // width: 100,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  InterMedium(
+                                    text: 'Asset: ${ReturnAsset[index]['Asset']}',
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .color,
+                                  ),
+                                  Checkbox(
+                                    activeColor: Theme.of(context).primaryColor,
+                                    checkColor:
+                                    Theme.of(context).textTheme.bodyMedium!.color,
+                                    value: ReturnAsset[index]['isCheck'],
+                                    onChanged: (bool? value) {
+                                      setState(() {
+                                        ReturnAsset[index]['isCheck'] = value ?? false;
+                                      });
+                                    },
+                                  ),
+
+                                ],
                               ),
                             ),
-                          ),
-                          SizedBox(height: 20.h),
-                          InterBold(
-                            text: 'License Plate Number.',
-                            color:
-                                Theme.of(context).textTheme.bodyMedium!.color,
-                            fontsize: 20.sp,
-                          ),
-                          SizedBox(height: 10.h),
-                          SetTextfieldWidget(
-                            hintText: 'License Plate Number ',
-                            controller: LicensePlateNumberController,
-                            keyboardType: TextInputType.number,
-                            enabled: !isEditMode,
-                            isEditMode: isEditMode,
-                          ),
-                          SizedBox(height: 20.h),
-                          InterBold(
-                            text: 'Set Countdown',
-                            color:
-                                Theme.of(context).textTheme.bodyMedium!.color,
-                            fontsize: 20.sp,
-                          ),
-                          SizedBox(height: 10.h),
-                          SetTextfieldWidget(
-                            hintText: 'Set Countdown',
-                            controller: SetCountdownController,
-                            enabled: !isEditMode,
-                            isEditMode: isEditMode,
-                          ),
-                          SizedBox(height: 20.h),
-                          InterBold(
-                            text: 'Comments',
-                            color:
-                                Theme.of(context).textTheme.bodyMedium!.color,
-                            fontsize: 20.sp,
-                          ),
-                          SizedBox(height: 10.h),
-                          SetTextfieldWidget(
-                            hintText: 'Comments ',
-                            controller: CommentsController,
-                            enabled: !isEditMode,
-                            isEditMode: isEditMode,
-                          ),
-                          SizedBox(height: 20.h),
-                          InterBold(
-                            text: 'No. of Person',
-                            color:
-                                Theme.of(context).textTheme.bodyMedium!.color,
-                            fontsize: 20.sp,
-                          ),
-                          SizedBox(height: 10.h),
-                          SetTextfieldWidget(
-                            hintText: 'No. Of Person',
-                            controller: NoOfPersonController,
-                            enabled: !isEditMode,
-                            keyboardType: TextInputType.number,
-                            isEditMode: isEditMode,
-                            maxlength: 3,
-                          ),
-                          SizedBox(height: 20.h),
-                          InterBold(
-                            text: 'Company Name',
-                            color:
-                                Theme.of(context).textTheme.bodyMedium!.color,
-                            fontsize: 20.sp,
-                          ),
-                          SizedBox(height: 10.h),
-                          SetTextfieldWidget(
-                            hintText: 'Company Name',
-                            controller: CompanyNameController,
-                            enabled: !isEditMode,
-                            isEditMode: isEditMode,
-                          ),
-                          SizedBox(
-                            height: 30.h,
-                          ),
-                          widget.showButton == false
-                              ? Button1(
-                                  text: 'Save',
-                                  onPressed: () async {
-                                    bool isSuccessful =
-                                        await _saveVisitorData();
-                                    if (!isSuccessful) {
-                                      // Handle the case when saving or updating visitor data fails
-                                    }
-                                  },
-                                  backgroundcolor:
-                                      Theme.of(context).primaryColor,
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .titleSmall!
-                                      .color,
-                                  borderRadius: 10.r,
-                                  fontsize: 18.sp,
-                                  height: 60.h,
-                                )
-                              : SizedBox(),
+                          ),*/
                         ],
                       )),
+                ),
+                SliverList.builder(
+                  itemCount: ReturnAsset.length,
+                  itemBuilder: (context, index) => Container(
+                    margin:
+                        EdgeInsets.only(right: 30.w, left: 30.w, bottom: 10.h),
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).cardColor,
+                        borderRadius: BorderRadius.circular(10.r)),
+                    padding: EdgeInsets.symmetric(horizontal: 20.w),
+                    height: 60.h,
+                    // width: 100,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        InterMedium(
+                          text: 'Asset: ${ReturnAsset[index]['Asset']}',
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
+                        ),
+                        Checkbox(
+                          activeColor: Theme.of(context).primaryColor,
+                          checkColor:
+                              Theme.of(context).textTheme.bodyMedium!.color,
+                          value: ReturnAsset[index]['isCheck'],
+                          onChanged: (bool? value) {
+                            setState(() {
+                              ReturnAsset[index]['isCheck'] = value ?? false;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 30.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 20.h),
+                        InterBold(
+                          text: 'License Plate Number.',
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
+                          fontsize: 20.sp,
+                        ),
+                        SizedBox(height: 10.h),
+                        SetTextfieldWidget(
+                          hintText: 'License Plate Number ',
+                          controller: LicensePlateNumberController,
+                          keyboardType: TextInputType.number,
+                          enabled: !isEditMode,
+                          isEditMode: isEditMode,
+                        ),
+                        SizedBox(height: 20.h),
+                        InterBold(
+                          text: 'Set Countdown',
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
+                          fontsize: 20.sp,
+                        ),
+                        SizedBox(height: 10.h),
+                        SetTextfieldWidget(
+                          hintText: 'Set Countdown',
+                          controller: SetCountdownController,
+                          enabled: !isEditMode,
+                          isEditMode: isEditMode,
+                        ),
+                        SizedBox(height: 20.h),
+                        InterBold(
+                          text: 'Comments',
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
+                          fontsize: 20.sp,
+                        ),
+                        SizedBox(height: 10.h),
+                        SetTextfieldWidget(
+                          hintText: 'Comments ',
+                          controller: CommentsController,
+                          enabled: !isEditMode,
+                          isEditMode: isEditMode,
+                        ),
+                        SizedBox(height: 20.h),
+                        InterBold(
+                          text: 'No. of Person',
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
+                          fontsize: 20.sp,
+                        ),
+                        SizedBox(height: 10.h),
+                        SetTextfieldWidget(
+                          hintText: 'No. Of Person',
+                          controller: NoOfPersonController,
+                          enabled: !isEditMode,
+                          keyboardType: TextInputType.number,
+                          isEditMode: isEditMode,
+                          maxlength: 3,
+                        ),
+                        SizedBox(height: 20.h),
+                        InterBold(
+                          text: 'Company Name',
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
+                          fontsize: 20.sp,
+                        ),
+                        SizedBox(height: 10.h),
+                        SetTextfieldWidget(
+                          hintText: 'Company Name',
+                          controller: CompanyNameController,
+                          enabled: !isEditMode,
+                          isEditMode: isEditMode,
+                        ),
+                        SizedBox(
+                          height: 30.h,
+                        ),
+                        widget.showButton == false
+                            ? Button1(
+                                text: 'Save',
+                                onPressed: () async {
+                                  bool isSuccessful = await _saveVisitorData();
+                                  if (!isSuccessful) {
+                                    // Handle the case when saving or updating visitor data fails
+                                  }
+                                },
+                                backgroundcolor: Theme.of(context).primaryColor,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall!
+                                    .color,
+                                borderRadius: 10.r,
+                                fontsize: 18.sp,
+                                height: 60.h,
+                              )
+                            : SizedBox(),
+                      ],
+                    ),
+                  ),
                 )
               ],
             ),

@@ -65,6 +65,7 @@ class StartTaskScreen extends StatefulWidget {
   final String ShiftStatus;
 
   DateTime shiftStartedTime;
+
   StartTaskScreen({
     super.key,
     required this.ShiftDate,
@@ -118,6 +119,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
   String remainingTimeFormatted = "";
   Timer? _timer;
   Duration remainingTime = Duration.zero;
+
   // late SharedPreferences prefs;
   void send_mail_onOut(data) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -636,10 +638,13 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                     color: Theme.of(context).textTheme.bodyMedium!.color,
                   ),
                   SizedBox(width: 10.w),
-                  InterRegular(
-                    text: widget.ShiftAddressName,
-                    fontsize: 14.sp,
-                    color: Theme.of(context).textTheme.bodyLarge!.color,
+                  SizedBox(
+                    width: 260.w,
+                    child: InterRegular(
+                      text: widget.ShiftAddressName,
+                      fontsize: 14.sp,
+                      color: Theme.of(context).textTheme.bodyLarge!.color,
+                    ),
                   )
                 ],
               ),
