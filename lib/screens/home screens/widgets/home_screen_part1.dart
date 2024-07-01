@@ -29,6 +29,7 @@ import '../../feature screens/post_order.dart/post_order_screen.dart';
 import '../../feature screens/site_tours/site_tour_screen.dart';
 import '../../feature screens/task/task_feature_screen.dart';
 import '../../feature screens/visitors/visitors.dart';
+import '../notification_screen.dart';
 
 class Screens {
   final String name;
@@ -226,10 +227,15 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                       children: [
                         GestureDetector(
                           onTap: () {
+                            // Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //         builder: (context) => WriteMsgScreen()));
+                          //   NotificationScreen
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => WriteMsgScreen()));
+                                    builder: (context) => NotificationScreen()));
                           },
                           child: Icon(
                             Icons.notifications,
