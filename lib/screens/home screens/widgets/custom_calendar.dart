@@ -33,6 +33,7 @@ class _CustomCalenderState extends State<CustomCalendar> {
 
   @override
   Widget build(BuildContext context) {
+
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
 
@@ -78,14 +79,14 @@ class _CustomCalenderState extends State<CustomCalendar> {
                     disableModePicker: true,
                     calendarType: CalendarDatePicker2Type.multi,
                     selectedDayTextStyle: TextStyle(
-                      color: Theme.of(context).textTheme.bodyLarge!.color,
+                      color: Colors.white,
                     ),
                     selectedYearTextStyle: TextStyle(
                       color: Theme.of(context).textTheme.bodyLarge!.color,
                     ),
                     selectedDayHighlightColor:
                         Theme.of(context).brightness == Brightness.dark
-                            ? Color(0xFF704600)
+                            ? DarkColor.Primarycolor
                             : LightColor.Primarycolor,
                     currentDate: DateTime.now(),
                     selectableDayPredicate: _selectableDayPredicate,
@@ -120,6 +121,7 @@ class _CustomCalenderState extends State<CustomCalendar> {
                 height: 40.h,
                 borderRadius: 10.r,
                 fontsize: 15.sp,
+                color: Colors.white,
                 backgroundcolor: Theme.of(context).primaryColor,
                   text: 'Advance Mode',
                   onPressed: () {

@@ -477,6 +477,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
     final controller = Get.put(HomeScreenController(), permanent: true);
     final List<List<String>> data = [
       ['assets/images/panic_mode.png', 'Panic Mode'],
@@ -1127,11 +1128,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           // }
                           return Container(
                             margin: EdgeInsets.only(
-                              top: height / height20,
-                              left: width / width30,
-                              right: width / width30,
+                              top: 20.h,
+                              left: 30.w,
+                              right: 30.w,
                             ),
-                            height: height / height180,
+                            height: 180.h,
                             width: double.maxFinite,
                             child: Stack(
                               children: [
@@ -1146,9 +1147,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                         right: width / width10,
                                         bottom: height / height20),
                                     decoration: BoxDecoration(
-                                      color: DarkColor.color31,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Theme.of(context).shadowColor,
+                                          blurRadius: 5,
+                                          spreadRadius: 2,
+                                          offset: Offset(0, 3),
+                                        )
+                                      ],
+                                      color: isDark ? DarkColor.color31 : Colors.grey[500],
                                       borderRadius: BorderRadius.circular(
-                                        width / width10,
+                                        10.r,
                                       ),
                                     ),
                                     child: Row(
@@ -1180,9 +1189,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                       vertical: height / height30,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: DarkColor.color27,
-                                      borderRadius: BorderRadius.circular(
-                                          width / width10),
+                                      color: Theme.of(context).cardColor,
+                                      borderRadius: BorderRadius.circular(10.r),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Theme.of(context).shadowColor,
+                                          blurRadius: 5,
+                                          spreadRadius: 2,
+                                          offset: Offset(0, 3),
+                                        )
+                                      ],
                                     ),
                                     child: Column(
                                       mainAxisAlignment:
@@ -1196,7 +1212,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             text: schedules[
                                                     'ShiftLocationAddress'] ??
                                                 "",
-                                            color: DarkColor.color30,
+                                            color: Theme.of(context).textTheme.bodyLarge!.color as Color,
                                             Iconcolor: Colors.redAccent,
                                             space: width / width8,
                                             fontsize: width / width14,
@@ -1209,8 +1225,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                             icon: Icons.access_time,
                                             text:
                                                 '${schedules['ShiftStartTime'] ?? ""} - ${schedules['ShiftEndTime'] ?? ""}',
-                                            color: DarkColor.color30,
-                                            Iconcolor: DarkColor.Primarycolor,
+                                            color: Theme.of(context).textTheme.bodyLarge!.color as Color,
+                                            Iconcolor: Theme.of(context).primaryColor,
                                             space: width / width8,
                                             fontsize: width / width14,
                                           ),
