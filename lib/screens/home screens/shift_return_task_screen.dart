@@ -92,11 +92,9 @@ class _ShiftTaskReturnScreenState extends State<ShiftReturnTaskScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              
             ),
             padding: EdgeInsets.only(left: width / width20),
             onPressed: () {
@@ -105,7 +103,6 @@ class _ShiftTaskReturnScreenState extends State<ShiftReturnTaskScreen> {
           ),
           title: InterMedium(
             text: "Return Shift Task",
-            
           ),
           centerTitle: true,
         ),

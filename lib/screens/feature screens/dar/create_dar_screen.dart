@@ -706,8 +706,8 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                           ShiftId: 'widget.shifID',
                                           SearchId:
                                               ReportData['TileReportSearchId'],
-                                          isRoleGuard:
-                                              false, //Need to Work Here
+                                          isRoleGuard: false,
+                                          BranchId: '', //Need to Work Here
                                         ),
                                       ));
                                 },

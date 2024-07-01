@@ -200,7 +200,7 @@ class DarFunctions {
         'EmpDarLocationId': _userService.shiftLocationId,
         'EmpDarLocationName': _userService.shiftLocation,
         'EmpDarShiftId': _userService.ShiftId,
-        'EmpDarDate': Timestamp.fromDate(DateTime.now().add(Duration(days: 1))),
+        'EmpDarDate': _userService.shiftDate,
         'EmpDarCreatedAt':
             Timestamp.fromDate(DateTime.now().add(Duration(days: 1))),
         'EmpDarEmpName': _userService.userName,
@@ -282,7 +282,7 @@ class DarFunctions {
           'EmpDarLocationId:': _userService.shiftLocationId,
           'EmpDarLocationName': _userService.shiftLocation,
           'EmpDarShiftId': _userService.ShiftId,
-          'EmpDarDate': FieldValue.serverTimestamp(),
+          'EmpDarDate': _userService.shiftDate,
           'EmpDarCreatedAt': FieldValue.serverTimestamp(),
           'EmpDarEmpName': _userService.userName,
           'EmpDarEmpId': FirebaseAuth.instance.currentUser!.uid,

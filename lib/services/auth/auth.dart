@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -168,7 +170,7 @@ class Auth {
   // Future<void> addToLoggedInUsers(
   //     String empId, bool isloggedin, String usertype, String FcmToken) async {
   //   try {
-  //     fireStoreService.addLoggedInUser(
+  //     _firestore.addLoggedInUser(
   //         loggedInUserId: empId,
   //         isLoggedIn: isloggedin,
   //         loggedInUserType: usertype,
@@ -179,7 +181,54 @@ class Auth {
   //     print(e);
   //   }
   // }
+  //adding to loggedInUsers
+  Future<void> addLoggedInUser({
+    required String loggedInUserId,
+    required bool isLoggedIn,
+    required String loggedInUserType,
+    required Timestamp loggedInCreatedAt,
+    required String loggedInNotifyFcmToken,
+    required String loggedInPlatform,
+  }) async {
+    try {
+      CollectionReference loggedInCollection =
+          FirebaseFirestore.instance.collection('LoggedInUsers');
 
+      // Check if document with loggedInUserId exists
+      QuerySnapshot querySnapshot = await loggedInCollection
+          .where('LoggedInUserId', isEqualTo: loggedInUserId)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        // Document exists, update the IsLoggedIn field
+        DocumentReference docRef = querySnapshot.docs.first.reference;
+        await docRef.update({
+          'IsLoggedIn': isLoggedIn,
+        });
+        print('User status updated successfully');
+      } else {
+        // Document does not exist, create a new one
+        DocumentReference docRef = await loggedInCollection.add({
+          'LoggedInUserId': loggedInUserId,
+          'IsLoggedIn': isLoggedIn,
+          'LoggedInUserType': loggedInUserType,
+          'LoggedInCreatedAt': FieldValue.serverTimestamp(),
+          'LoggedInNotifyFcmToken': loggedInNotifyFcmToken,
+          'LoggedInPlatform': loggedInPlatform,
+        });
+
+        // Use the document ID as LoggedInId
+        String loggedInId = docRef.id;
+        await docRef.update({'LoggedInId': loggedInId});
+
+        print('Data added successfully with LoggedInId: $loggedInId');
+      }
+    } catch (e) {
+      print('Error adding data: $e');
+    }
+  }
+
+  //
   Future<void> signInWithEmailAndPassword(
       String email, String password, BuildContext context) async {
     try {
@@ -208,9 +257,37 @@ class Auth {
       await storage.ready;
 
       if (loginType == 'client') {
+        QuerySnapshot<Map<String, dynamic>> query = await _firestore
+            .collection('Clients')
+            .where('ClientEmail', isEqualTo: email)
+            .limit(1)
+            .get();
+
+        if (query.docs.isEmpty) {
+          throw FirebaseAuthException(
+              code: 'user-not-found', message: 'No user found for that email.');
+        }
+
+        DocumentSnapshot<Map<String, dynamic>> userDoc = query.docs.first;
+        Map<String, dynamic>? userData = userDoc.data();
+        print("User data from Firestore: $userData");
+
+        if (userData == null) {
+          throw Exception('User data is null');
+        }
+
+        // Extract employee details from user data
+        String employeeID = userData['ClientId'] ?? "";
         await storage.setItem("CurrentUser", email);
         await storage.setItem("Role", 'CLIENT');
-        // await addToLoggedInUsers();
+
+        await addLoggedInUser(
+            loggedInUserId: employeeID,
+            isLoggedIn: true,
+            loggedInUserType: 'client',
+            loggedInCreatedAt: Timestamp.now(),
+            loggedInNotifyFcmToken: '',
+            loggedInPlatform: Platform.operatingSystem);
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) => ClientHomeScreen()));
       } else {
@@ -265,9 +342,25 @@ class Auth {
 
         print('Role: $role');
         if (role == "SUPERVISOR") {
+          await addLoggedInUser(
+              loggedInUserId: employeeID,
+              isLoggedIn: true,
+              loggedInUserType: 'employee',
+              loggedInCreatedAt: Timestamp.now(),
+              loggedInNotifyFcmToken: '',
+              loggedInPlatform: Platform.operatingSystem);
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => SHomeScreen()));
-        } else if (role == "GUARD") {
+        } else
+        //  if (role == "GUARD")
+        {
+          await addLoggedInUser(
+              loggedInUserId: employeeID,
+              isLoggedIn: true,
+              loggedInUserType: 'employee',
+              loggedInCreatedAt: Timestamp.now(),
+              loggedInNotifyFcmToken: '',
+              loggedInPlatform: Platform.operatingSystem);
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => HomeScreen()));
         }
@@ -288,5 +381,12 @@ class Auth {
     storage.clear();
     Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => (screen)));
+
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => (screen)),
+      (Route<dynamic> route) =>
+          route.isFirst, // Remove all routes until the first one
+    );
   }
 }

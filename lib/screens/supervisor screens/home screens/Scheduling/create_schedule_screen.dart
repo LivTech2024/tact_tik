@@ -1923,7 +1923,7 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
                           shrinkWrap: true,
                           itemCount: tasks.length,
                           itemBuilder: (context, index) {
-                            String taskName = tasks[index]['ShiftTask'];
+                            String taskName = tasks[index]['ShiftTask'] ?? "";
                             bool isChecked =
                                 tasks[index]['ShiftTaskQrCodeReq'] ?? false;
                             bool isReturnChecked =

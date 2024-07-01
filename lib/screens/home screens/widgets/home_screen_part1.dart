@@ -85,9 +85,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
 
   DateTime now = DateTime.now();
 
-  int hour = DateTime
-      .now()
-      .hour;
+  int hour = DateTime.now().hour;
 
   String greeting = 'Loading..';
 
@@ -110,12 +108,12 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
     Screens('Report Screen', Icons.ac_unit_outlined),
   ];
 
-  Widget gridLayoutBuilder(BuildContext context,
-      List<Widget> items,) {
+  Widget gridLayoutBuilder(
+    BuildContext context,
+    List<Widget> items,
+  ) {
     return Container(
-      color: Theme
-          .of(context)
-          .cardColor,
+      color: Theme.of(context).cardColor,
       child: GridView.builder(
         padding: const EdgeInsets.all(8),
         itemCount: items.length,
@@ -127,10 +125,8 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
           mainAxisSpacing: 8,
         ),
         reverse:
-        SuggestionsController
-            .of<Screens>(context)
-            .effectiveDirection ==
-            VerticalDirection.up,
+            SuggestionsController.of<Screens>(context).effectiveDirection ==
+                VerticalDirection.up,
         itemBuilder: (context, index) => items[index],
       ),
     );
@@ -139,25 +135,23 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
   Future<List<Screens>> suggestionsCallback(String pattern) async =>
       Future<List<Screens>>.delayed(
         Duration(milliseconds: 300),
-            () =>
-            _screens.where((product) {
-              // print(product.name);
-              final nameLower = product.name.toLowerCase().split(' ').join('');
-              final patternLower = pattern.toLowerCase().split(' ').join('');
-              return nameLower.contains(patternLower);
-            }).toList(),
+        () => _screens.where((product) {
+          // print(product.name);
+          final nameLower = product.name.toLowerCase().split(' ').join('');
+          final patternLower = pattern.toLowerCase().split(' ').join('');
+          return nameLower.contains(patternLower);
+        }).toList(),
       );
 
   Future<List<Screens>> ClientsuggestionsCallback(String pattern) async =>
       Future<List<Screens>>.delayed(
         Duration(milliseconds: 300),
-            () =>
-            _ClientScreens.where((product) {
-              // print(product.name);
-              final nameLower = product.name.toLowerCase().split(' ').join('');
-              final patternLower = pattern.toLowerCase().split(' ').join('');
-              return nameLower.contains(patternLower);
-            }).toList(),
+        () => _ClientScreens.where((product) {
+          // print(product.name);
+          final nameLower = product.name.toLowerCase().split(' ').join('');
+          final patternLower = pattern.toLowerCase().split(' ').join('');
+          return nameLower.contains(patternLower);
+        }).toList(),
       );
 
   /*_ClientScreens*/
@@ -193,14 +187,13 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                        widget.isEmployee
+                        builder: (context) => widget.isEmployee
                             ? ProfileScreen(
-                          empId: widget.empId,
-                        )
+                                empId: widget.empId,
+                              )
                             : ClientProfileScreen(
-                          empId: widget.empId,
-                        ),
+                                empId: widget.empId,
+                              ),
                       ),
                     );
                   },
@@ -209,24 +202,22 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                     width: 55.w,
                     decoration: widget.employeeImg != ""
                         ? BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                        image: NetworkImage(widget.employeeImg ?? ""),
-                        filterQuality: FilterQuality.high,
-                        fit: BoxFit.cover,
-                      ),
-                    )
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              image: NetworkImage(widget.employeeImg ?? ""),
+                              filterQuality: FilterQuality.high,
+                              fit: BoxFit.cover,
+                            ),
+                          )
                         : BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Theme
-                          .of(context)
-                          .primaryColor,
-                      image: DecorationImage(
-                        image: AssetImage('assets/images/default.png'),
-                        filterQuality: FilterQuality.high,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+                            shape: BoxShape.circle,
+                            color: Theme.of(context).primaryColor,
+                            image: DecorationImage(
+                              image: AssetImage('assets/images/default.png'),
+                              filterQuality: FilterQuality.high,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                   ),
                 ),
                 Row(
@@ -243,8 +234,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                           child: Icon(
                             Icons.notifications,
                             // Use the notifications_active icon
-                            color: Theme
-                                .of(context)
+                            color: Theme.of(context)
                                 .textTheme
                                 .bodySmall!
                                 .color, // Change color if unread
@@ -259,8 +249,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                               padding: EdgeInsets.all(2.sp),
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: Theme
-                                    .of(context)
+                                color: Theme.of(context)
                                     .textTheme
                                     .bodySmall
                                     ?.color, // Background color for unread indicator
@@ -278,11 +267,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                         scaleX: -1,
                         child: Icon(
                           Icons.short_text_rounded,
-                          color: Theme
-                              .of(context)
-                              .textTheme
-                              .bodySmall!
-                              .color,
+                          color: Theme.of(context).textTheme.bodySmall!.color,
                           size: 40.sp,
                         ),
                       ),
@@ -295,32 +280,24 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
           SizedBox(height: widget.showWish! ? 40.h : 57.h),
           widget.showWish!
               ? Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              PoppinsSemibold(
-                text: '${greeting}',
-                color: Theme
-                    .of(context)
-                    .textTheme
-                    .bodySmall!
-                    .color,
-                letterSpacing: -.5,
-                fontsize: 35.sp,
-              ),
-              SizedBox(height: 2.h),
-              PoppinsLight(
-                text:
-                widget.userName != '' ? widget.userName : 'Loading..',
-                color: Theme
-                    .of(context)
-                    .textTheme
-                    .bodySmall!
-                    .color,
-                fontsize: 30.sp,
-              ),
-              SizedBox(height: 46.h),
-            ],
-          )
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    PoppinsSemibold(
+                      text: '${greeting}',
+                      color: Theme.of(context).textTheme.bodySmall!.color,
+                      letterSpacing: -.5,
+                      fontsize: 35.sp,
+                    ),
+                    SizedBox(height: 2.h),
+                    PoppinsLight(
+                      text:
+                          widget.userName != '' ? widget.userName : 'Loading..',
+                      color: Theme.of(context).textTheme.bodySmall!.color,
+                      fontsize: 30.sp,
+                    ),
+                    SizedBox(height: 46.h),
+                  ],
+                )
               : const SizedBox(),
           Container(
             constraints: BoxConstraints(
@@ -330,17 +307,13 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
             decoration: BoxDecoration(
               boxShadow: [
                 BoxShadow(
-                  color: Theme
-                      .of(context)
-                      .shadowColor,
+                  color: Theme.of(context).shadowColor,
                   blurRadius: 5,
                   spreadRadius: 2,
                   offset: Offset(0, 3),
                 )
               ],
-              color: Theme
-                  .of(context)
-                  .cardColor,
+              color: Theme.of(context).cardColor,
               borderRadius: BorderRadius.circular(13.r),
             ),
             child: Column(
@@ -355,101 +328,79 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                         autoFlipDirection: true,
                         controller: _controller,
                         direction: VerticalDirection.down,
-                        builder: (context, _controller, focusNode) =>
-                            TextField(
-                              maxLength: 20,
-                              maxLengthEnforcement: MaxLengthEnforcement
-                                  .enforced,
-                              onChanged: (text) {
-                                setState(() {
-                                  if (text != '') {
-                                    cleartext = true;
-                                  } else {
-                                    cleartext = false;
-                                  }
-                                });
-                              },
-                              controller: _controller,
-                              focusNode: focusNode,
-                              autofocus: false,
-                              style: GoogleFonts.poppins(
-                                fontWeight: FontWeight.w300,
-                                fontSize: 18.sp,
-                                color:
-                                Theme
-                                    .of(context)
-                                    .textTheme
-                                    .titleLarge!
-                                    .color,
+                        builder: (context, _controller, focusNode) => TextField(
+                          maxLength: 20,
+                          maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                          onChanged: (text) {
+                            setState(() {
+                              if (text != '') {
+                                cleartext = true;
+                              } else {
+                                cleartext = false;
+                              }
+                            });
+                          },
+                          controller: _controller,
+                          focusNode: focusNode,
+                          autofocus: false,
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w300,
+                            fontSize: 18.sp,
+                            color:
+                                Theme.of(context).textTheme.titleLarge!.color,
+                          ),
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10.r),
                               ),
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderSide: BorderSide.none,
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(10.r),
-                                  ),
-                                ),
-                                focusedBorder: InputBorder.none,
-                                hintStyle: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.w300,
-                                  fontSize: 18.sp,
-                                  color:
-                                  Theme
-                                      .of(context)
-                                      .textTheme
-                                      .bodyLarge!
-                                      .color,
-                                ),
-                                hintText: 'Search screen',
-                                contentPadding: EdgeInsets.zero,
-                                counterText: "",
-                              ),
-                              cursorColor: Theme
-                                  .of(context)
-                                  .primaryColor,
                             ),
+                            focusedBorder: InputBorder.none,
+                            hintStyle: GoogleFonts.poppins(
+                              fontWeight: FontWeight.w300,
+                              fontSize: 18.sp,
+                              color:
+                                  Theme.of(context).textTheme.bodyLarge!.color,
+                            ),
+                            hintText: 'Search screen',
+                            contentPadding: EdgeInsets.zero,
+                            counterText: "",
+                          ),
+                          cursorColor: Theme.of(context).primaryColor,
+                        ),
                         suggestionsCallback: widget.isEmployee
                             ? suggestionsCallback
                             : ClientsuggestionsCallback,
                         itemBuilder: (context, Screens screen) {
                           return ListTile(
                             leading:
-                            Icon(screen.icon, color: Colors.blueAccent),
+                                Icon(screen.icon, color: Colors.blueAccent),
                             title: InterRegular(
                               text: screen.name,
                               color:
-                              Theme
-                                  .of(context)
-                                  .textTheme
-                                  .bodyMedium!
-                                  .color,
+                                  Theme.of(context).textTheme.bodyMedium!.color,
                             ),
                           );
                         },
-                        emptyBuilder: (context) =>
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                vertical: 10.h,
-                                horizontal: 10.w,
-                              ),
-                              child: InterRegular(
-                                text: 'No Such Screen found',
-                                color:
-                                Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodyMedium!
-                                    .color,
-                                fontsize: 18.sp,
-                              ),
-                            ),
-                        decorationBuilder: (context, child) =>
-                            Material(
-                              type: MaterialType.card,
-                              elevation: 4,
-                              borderRadius: BorderRadius.circular(10.r),
-                              child: child,
-                            ),
+                        emptyBuilder: (context) => Padding(
+                          padding: EdgeInsets.symmetric(
+                            vertical: 10.h,
+                            horizontal: 10.w,
+                          ),
+                          child: InterRegular(
+                            text: 'No Such Screen found',
+                            color:
+                                Theme.of(context).textTheme.bodyMedium!.color,
+                            fontsize: 18.sp,
+                          ),
+                        ),
+                        decorationBuilder: (context, child) => Material(
+                          type: MaterialType.card,
+                          elevation: 4,
+                          borderRadius: BorderRadius.circular(10.r),
+                          child: child,
+                        ),
                         debounceDuration: const Duration(milliseconds: 300),
                         onSelected: (Screens value) {
                           print(
@@ -462,10 +413,9 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          ClientDarScreen(
-                                              clientId: widget.empId,
-                                              companyId:
+                                      builder: (context) => ClientDarScreen(
+                                          clientId: widget.empId,
+                                          companyId:
                                               widget.shiftCompanyId ?? ""),
                                     ));
                                 break;
@@ -474,43 +424,41 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          ClientReportScreen(
-                                            employeeId: widget.empId,
-                                            companyId: widget.shiftCompanyId,
-                                          ),
+                                      builder: (context) => ClientReportScreen(
+                                        employeeId: widget.empId,
+                                        companyId: widget.shiftCompanyId,
+                                      ),
                                     ));
                                 break;
                             }
                           } else {
                             switch (value) {
                               case 'Site Tours':
-                              // showDialog(
-                              //   context: context,
-                              //   builder: (BuildContext context) {
-                              //     return SiteTourScreen(
-                              //       height: height,
-                              //       width: width,
-                              //       schedulesList: schedules_list,
-                              //     );
-                              //   },
-                              // );
+                                // showDialog(
+                                //   context: context,
+                                //   builder: (BuildContext context) {
+                                //     return SiteTourScreen(
+                                //       height: height,
+                                //       width: width,
+                                //       schedulesList: schedules_list,
+                                //     );
+                                //   },
+                                // );
                                 break;
                               case 'DAR Screen':
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            DarDisplayScreen(
+                                        builder: (context) => DarDisplayScreen(
                                               EmpEmail: widget.empEmail,
                                               EmpID: widget.empId,
                                               EmpDarCompanyId:
-                                              widget.shiftCompanyId ?? "",
+                                                  widget.shiftCompanyId ?? "",
                                               EmpDarCompanyBranchId:
-                                              widget.branchId,
+                                                  widget.branchId,
                                               EmpDarShiftID: widget.shiftId,
                                               EmpDarClientID:
-                                              widget.shiftClientId,
+                                                  widget.shiftClientId,
                                               Username: widget.userName,
                                             )));
                                 break;
@@ -518,29 +466,28 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            ReportScreen(
+                                        builder: (context) => ReportScreen(
                                               locationId:
-                                              widget.shiftLocationId,
+                                                  widget.shiftLocationId,
                                               locationName:
-                                              widget.shiftLocationId,
+                                                  widget.shiftLocationId,
                                               companyId:
-                                              widget.shiftCompanyId ?? "",
+                                                  widget.shiftCompanyId ?? "",
                                               empId: widget.empId,
                                               empName: widget.userName,
                                               clientId: widget.shiftClientId,
                                               ShiftId: widget.shiftId,
                                               isguard: false,
+                                              BranchID: widget.branchId,
                                             )));
                                 break;
                               case 'Post Screen':
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            PostOrder(
+                                        builder: (context) => PostOrder(
                                               locationId:
-                                              widget.shiftLocationId,
+                                                  widget.shiftLocationId,
                                             )));
                                 break;
                               case 'Task Screen':
@@ -554,8 +501,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            LogBookScreen(
+                                        builder: (context) => LogBookScreen(
                                               EmpId: widget.empId,
                                             )));
                                 break;
@@ -563,10 +509,9 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            VisiTorsScreen(
+                                        builder: (context) => VisiTorsScreen(
                                               locationId:
-                                              widget.shiftLocationId,
+                                                  widget.shiftLocationId,
                                             )));
                                 break;
                               case 'Assets Screen':
@@ -575,67 +520,64 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                        // KeysScreen(
-                                        //     keyId: _employeeId)
-                                        AssetsScreen(
-                                            assetEmpId: widget.empId)));
+                                            // KeysScreen(
+                                            //     keyId: _employeeId)
+                                            AssetsScreen(
+                                                assetEmpId: widget.empId)));
                                 break;
                               case 'Key Screen':
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            KeysScreen(
+                                        builder: (context) => KeysScreen(
                                               LocationId:
-                                              widget.shiftLocationId,
+                                                  widget.shiftLocationId,
                                               keyId: widget.empId,
                                               companyId: widget.shiftCompanyId,
                                               branchId: widget.branchId,
                                             )));
-                            // AssetsScreen(
-                            //     assetEmpId:
-                            //         _employeeId)
+                              // AssetsScreen(
+                              //     assetEmpId:
+                              //         _employeeId)
                               case 'Reports Screen':
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          ClientReportScreen(
-                                            companyId: widget.shiftCompanyId,
-                                            employeeId: widget.empId,
-                                          ),
+                                      builder: (context) => ClientReportScreen(
+                                        companyId: widget.shiftCompanyId,
+                                        employeeId: widget.empId,
+                                      ),
                                     ));
                                 break;
                             }
 
                             switch (value) {
                               case 'Site Tours':
-                              // showDialog(
-                              //   context: context,
-                              //   builder: (BuildContext context) {
-                              //     return SiteTourScreen(
-                              //       height: height,
-                              //       width: width,
-                              //       schedulesList: schedules_list,
-                              //     );
-                              //   },
-                              // );
+                                // showDialog(
+                                //   context: context,
+                                //   builder: (BuildContext context) {
+                                //     return SiteTourScreen(
+                                //       height: height,
+                                //       width: width,
+                                //       schedulesList: schedules_list,
+                                //     );
+                                //   },
+                                // );
                                 break;
                               case 'DAR Screen':
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            DarDisplayScreen(
+                                        builder: (context) => DarDisplayScreen(
                                               EmpEmail: widget.empEmail,
                                               EmpID: widget.empId,
                                               EmpDarCompanyId:
-                                              widget.shiftCompanyId ?? "",
+                                                  widget.shiftCompanyId ?? "",
                                               EmpDarCompanyBranchId:
-                                              widget.branchId,
+                                                  widget.branchId,
                                               EmpDarShiftID: widget.shiftId,
                                               EmpDarClientID:
-                                              widget.shiftClientId,
+                                                  widget.shiftClientId,
                                               Username: widget.userName,
                                             )));
                                 break;
@@ -643,29 +585,28 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            ReportScreen(
+                                        builder: (context) => ReportScreen(
                                               locationId:
-                                              widget.shiftLocationId,
+                                                  widget.shiftLocationId,
                                               locationName:
-                                              widget.shiftLocationId,
+                                                  widget.shiftLocationId,
                                               companyId:
-                                              widget.shiftCompanyId ?? "",
+                                                  widget.shiftCompanyId ?? "",
                                               empId: widget.empId,
                                               empName: widget.userName,
                                               clientId: widget.shiftClientId,
                                               ShiftId: widget.shiftId,
                                               isguard: false,
+                                              BranchID: widget.branchId,
                                             )));
                                 break;
                               case 'Post Screen':
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            PostOrder(
+                                        builder: (context) => PostOrder(
                                               locationId:
-                                              widget.shiftLocationId,
+                                                  widget.shiftLocationId,
                                             )));
                                 break;
                               case 'Task Screen':
@@ -679,8 +620,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            LogBookScreen(
+                                        builder: (context) => LogBookScreen(
                                               EmpId: widget.empId,
                                             )));
                                 break;
@@ -688,10 +628,9 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            VisiTorsScreen(
+                                        builder: (context) => VisiTorsScreen(
                                               locationId:
-                                              widget.shiftLocationId,
+                                                  widget.shiftLocationId,
                                             )));
                                 break;
                               case 'Assets Screen':
@@ -700,28 +639,27 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                        // KeysScreen(
-                                        //     keyId: _employeeId)
-                                        AssetsScreen(
-                                            assetEmpId: widget.empId)));
+                                            // KeysScreen(
+                                            //     keyId: _employeeId)
+                                            AssetsScreen(
+                                                assetEmpId: widget.empId)));
                                 break;
                               case 'Key Screen':
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            KeysScreen(
+                                        builder: (context) => KeysScreen(
                                               LocationId:
-                                              widget.shiftLocationId,
+                                                  widget.shiftLocationId,
                                               keyId: widget.empId,
                                               companyId: widget.shiftCompanyId,
                                               branchId: widget.branchId,
                                             )
-                                      // AssetsScreen(
-                                      //     assetEmpId:
-                                      //         _employeeId)
+                                        // AssetsScreen(
+                                        //     assetEmpId:
+                                        //         _employeeId)
 
-                                    ));
+                                        ));
                                 break;
                             }
                           }
@@ -733,19 +671,14 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                       height: 43.h,
                       width: 43.w,
                       decoration: BoxDecoration(
-                        color: Theme
-                            .of(context)
-                            .primaryColor,
+                        color: Theme.of(context).primaryColor,
                         borderRadius: BorderRadius.circular(9.r),
                       ),
                       child: Center(
                         child: Icon(
                           Icons.search,
                           size: 19.sp,
-                          color: Theme
-                              .of(context)
-                              .iconTheme
-                              .color,
+                          color: Theme.of(context).iconTheme.color,
                         ),
                       ),
                     )
@@ -753,22 +686,18 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                 ),
                 cleartext
                     ? TextButton(
-                  onPressed: () {
-                    setState(() {
-                      cleartext = false;
-                      _controller.text = '';
-                    });
-                  },
-                  child: InterRegular(
-                    text: 'CLEAR',
-                    fontsize: 14.sp,
-                    color: Theme
-                        .of(context)
-                        .textTheme
-                        .bodySmall!
-                        .color,
-                  ),
-                )
+                        onPressed: () {
+                          setState(() {
+                            cleartext = false;
+                            _controller.text = '';
+                          });
+                        },
+                        child: InterRegular(
+                          text: 'CLEAR',
+                          fontsize: 14.sp,
+                          color: Theme.of(context).textTheme.bodySmall!.color,
+                        ),
+                      )
                     : SizedBox()
               ],
             ),

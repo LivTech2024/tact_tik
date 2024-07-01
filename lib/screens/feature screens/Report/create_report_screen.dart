@@ -35,7 +35,7 @@ class CreateReportScreen extends StatefulWidget {
   bool buttonEnable;
   final String SearchId;
   final bool isRoleGuard;
-
+  final String BranchId;
   CreateReportScreen({
     Key? key,
     required this.locationId,
@@ -49,6 +49,7 @@ class CreateReportScreen extends StatefulWidget {
     required this.ShiftId,
     required this.SearchId,
     required this.isRoleGuard,
+    required this.BranchId,
   }) : super(key: key);
 
   @override
@@ -909,8 +910,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                       child: Button1(
                         height: 50.h,
                         text: 'Submit',
-                        color:
-                            Colors.white,
+                        color: Colors.white,
                         onPressed: () async {
                           setState(() {
                             _isLoading = true;
@@ -960,7 +960,8 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                                 followedUpId: widget.reportId,
                                 image: imageUrls,
                                 createdAt: SelectedDate,
-                                shiftId: widget.ShiftId);
+                                shiftId: widget.ShiftId,
+                                companyBranchId: widget.BranchId);
                             if (isChecked == false) {
                               await fireStoreService
                                   .updateFollowUp(reportData['ReportId']);
@@ -1011,7 +1012,8 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                                     : widget.ClientId,
                                 image: imageUrls,
                                 createdAt: SelectedDate,
-                                shiftId: widget.ShiftId);
+                                shiftId: widget.ShiftId,
+                                companyBranchId: widget.BranchId ?? "");
                             Navigator.pop(context, true);
                             setState(() {
                               _isLoading = false; // Set loading state
@@ -1084,7 +1086,8 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                                     : widget.ClientId,
                                 image: imageUrls,
                                 createdAt: SelectedDate,
-                                shiftId: widget.ShiftId);
+                                shiftId: widget.ShiftId,
+                                companyBranchId: widget.BranchId);
                             // }
                             Navigator.pop(context, true);
                             setState(() {

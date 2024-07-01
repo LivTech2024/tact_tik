@@ -389,6 +389,7 @@ class _HomeScreenState extends State<HomeScreen> {
             _shiftCLientId = shiftClientId;
             _ShiftStatus = statusString;
             ShiftExist = true;
+            _branchId = _ShiftBranchId;
             // _shiftCLientId = ShiftClientId;
             // print("Date time parse: ${DateTime.parse(shiftDateStr)}");
             DateTime shiftDateTime = DateFormat.yMMMMd().parse(shiftDateStr);
@@ -717,7 +718,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         // );
                         // customEmail();
                         // await fireStoreService.copyAndCreateDocument(
-                        //     "PatrolLogs", "KXbrUozGvFHhq8S5K41y");
+                        //     "PatrolLogs", "ScnjYK4drIenK8YkS8GU");
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -1007,6 +1008,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     clientId: _shiftCLientId,
                                                     ShiftId: _shiftId,
                                                     isguard: isRoleGuard,
+                                                    BranchID: _branchId,
                                                   )));
                                       break;
                                     case 4:

@@ -27,7 +27,7 @@ class LocationCallbackHandler {
     if (Firebase.apps.isEmpty) {
       print('Firebase App is not initialized');
       // Check if Firebase App is initializedp
-      await Firebase.initializeApp(); 
+      await Firebase.initializeApp();
     } else {
       print('Firebase App is already initialized');
     }

@@ -23,7 +23,7 @@ class ReportScreen extends StatefulWidget {
   final String clientId;
   final String ShiftId;
   final bool isguard;
-
+  final String BranchID;
   const ReportScreen(
       {super.key,
       required this.locationId,
@@ -33,7 +33,8 @@ class ReportScreen extends StatefulWidget {
       required this.empName,
       required this.clientId,
       required this.ShiftId,
-      required this.isguard});
+      required this.isguard,
+      required this.BranchID});
 
   @override
   State<ReportScreen> createState() => _ReportScreenState();
@@ -156,6 +157,7 @@ class _ReportScreenState extends State<ReportScreen> {
                           ShiftId: widget.ShiftId,
                           SearchId: '',
                           isRoleGuard: widget.isguard,
+                          BranchId: widget.BranchID,
                         ))).then((value) {
               if (value == true) {
                 getAllReports();
@@ -231,7 +233,7 @@ class _ReportScreenState extends State<ReportScreen> {
               ),
               SizedBox(height: 20.h),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 30.w),
+                padding: EdgeInsets.symmetric(horizontal: 15.w),
                 child: ListView.builder(
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
@@ -283,6 +285,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                         ShiftId: widget.ShiftId,
                                         SearchId: '',
                                         isRoleGuard: widget.isguard,
+                                        BranchId: widget.BranchID,
                                       ),
                                     ),
                                   );

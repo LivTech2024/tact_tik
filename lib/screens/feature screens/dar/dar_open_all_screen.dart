@@ -944,8 +944,8 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                               buttonEnable: false,
                                               ShiftId: "",
                                               SearchId: ReportSerachID,
-                                              isRoleGuard:
-                                                  false, //Need to Work Here
+                                              isRoleGuard: false,
+                                              BranchId: '', //Need to Work Here
                                             ),
                                           ));
                                     },

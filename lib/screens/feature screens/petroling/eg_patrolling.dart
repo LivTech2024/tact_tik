@@ -1435,6 +1435,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                                       ShiftId: widget.p.ShiftId,
                                                                                       SearchId: '',
                                                                                       isRoleGuard: false,
+                                                                                      BranchId: "",
                                                                                     )));
                                                                       },
                                                                       child: InterRegular(

@@ -453,7 +453,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                             fontsize: 20.sp,
                           ),
                           SizedBox(height: 10.h),
-                     /*     SetTextfieldWidget(
+                          /*     SetTextfieldWidget(
                             hintText: 'Contact Number',
                             controller: ContactNoController,
                             enabled: !isEditMode,
@@ -464,7 +464,9 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                                   .digitsOnly, // Allows only digits
                             ],
                           ),*/
-                          ContactWidget(controller: ContactNoController,),
+                          ContactWidget(
+                            controller: ContactNoController,
+                          ),
                           SizedBox(height: 20.h),
                           InterBold(
                             text: 'Asset Handover',
@@ -648,16 +650,14 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                                           cursorColor:
                                               Theme.of(context).primaryColor,
                                           onChanged: (value) {
-                                            final tagData = DynamicTagData(
-                                              value,
-                                            );
+                                            final tagData =
+                                                DynamicTagData(value, "");
                                             inputFieldValues
                                                 .onTagChanged(tagData);
                                           },
                                           onSubmitted: (value) {
-                                            final tagData = DynamicTagData(
-                                              value,
-                                            );
+                                            final tagData =
+                                                DynamicTagData(value, "");
                                             inputFieldValues
                                                 .onTagSubmitted(tagData);
                                           },
