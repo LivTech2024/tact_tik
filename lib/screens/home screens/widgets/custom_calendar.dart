@@ -33,7 +33,6 @@ class _CustomCalenderState extends State<CustomCalendar> {
 
   @override
   Widget build(BuildContext context) {
-
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
 
@@ -118,11 +117,11 @@ class _CustomCalenderState extends State<CustomCalendar> {
             SizedBox(
               width: 130,
               child: Button1(
-                height: 40.h,
-                borderRadius: 10.r,
-                fontsize: 15.sp,
-                color: Colors.white,
-                backgroundcolor: Theme.of(context).primaryColor,
+                  height: 40.h,
+                  borderRadius: 10.r,
+                  fontsize: 15.sp,
+                  color: Colors.white,
+                  backgroundcolor: Theme.of(context).primaryColor,
                   text: 'Advance Mode',
                   onPressed: () {
                     Navigator.push(

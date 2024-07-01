@@ -393,25 +393,28 @@ class _HomeScreenState extends State<HomeScreen> {
             // _shiftCLientId = ShiftClientId;
             // print("Date time parse: ${DateTime.parse(shiftDateStr)}");
             DateTime shiftDateTime = DateFormat.yMMMMd().parse(shiftDateStr);
-            if (!selectedDates
-                .contains(DateFormat.yMMMMd().parse(shiftDateStr))) {
-              setState(() {
-                selectedDates.add(DateFormat.yMMMMd().parse(shiftDateStr));
-              });
-            }
-            if (!selectedDates.any((date) =>
-                date!.year == shiftDateTime.year &&
-                date.month == shiftDateTime.month &&
-                date.day == shiftDateTime.day)) {
-              setState(() {
-                selectedDates.add(shiftDateTime);
-              });
-            }
+            // if (!selectedDates
+            //     .contains(DateFormat.yMMMMd().parse(shiftDateStr))) {
+            //   setState(() {
+            //     selectedDates.add(DateFormat.yMMMMd().parse(shiftDateStr));
+            //   });
+            // }
+            // if (!selectedDates.any((date) =>
+            //     date!.year == shiftDateTime.year &&
+            //     date.month == shiftDateTime.month &&
+            //     date.day == shiftDateTime.day)) {
+            //   setState(() {
+            //     selectedDates.add(shiftDateTime);
+            //   });
+            // }
+            // print("SelectedDates ${selectedDates}");
             storage.setItem("shiftId", shiftId);
             storage.setItem("EmpId", EmployeeId);
 
             // _employeeImg = employeeImg;
           });
+          print("SelectedDates ${selectedDates}");
+
           print('Shift Info: ${shiftInfo.data()}');
 
           Future<void> printAllSchedules(String empId) async {
