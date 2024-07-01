@@ -352,7 +352,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                   children: [
                     Expanded(
                       child: TypeAheadField<Screens>(
-                        autoFlipDirection: true,
+                        autoFlipDirection: false,
                         controller: _controller,
                         direction: VerticalDirection.down,
                         builder: (context, _controller, focusNode) =>
@@ -360,6 +360,10 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                               maxLength: 20,
                               maxLengthEnforcement: MaxLengthEnforcement
                                   .enforced,
+                              onTapOutside: (event) {
+                                print('onTapOutside');
+                                FocusManager.instance.primaryFocus?.unfocus();
+                              },
                               onChanged: (text) {
                                 setState(() {
                                   if (text != '') {
@@ -452,6 +456,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                             ),
                         debounceDuration: const Duration(milliseconds: 300),
                         onSelected: (Screens value) {
+                          FocusManager.instance.primaryFocus?.unfocus();
                           print(
                               'home screen search bar############################################');
 

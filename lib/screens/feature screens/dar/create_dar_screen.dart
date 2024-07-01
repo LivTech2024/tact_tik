@@ -543,6 +543,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                     TilePatrolData.isNotEmpty
                         ? Column(
                             children: [
+                              SizedBox(height: 30.h),
                               InterBold(
                                 text: 'Patrol',
                                 fontsize: 20.sp,
@@ -604,7 +605,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                                 InterBold(
                                                   text: TilePatrolData
                                                           .isNotEmpty
-                                                      ? "Patrol Name : ${patrolData['TilePatrolName']}"
+                                                      ? "${patrolData['TilePatrolName']}"
                                                       : "",
                                                   fontsize: 12.sp,
                                                   color: Theme.of(context)
@@ -640,7 +641,10 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                                 InterBold(
                                                   text: '',
                                                   fontsize: 12.sp,
-                                                  color: Colors.white,
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .bodySmall!
+                                                      .color,
                                                 ),
                                                 InterBold(
                                                   text: TilePatrolData
@@ -648,7 +652,10 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                                       ? "${patrolData['TilePatrolData']}"
                                                       : "",
                                                   fontsize: 12.sp,
-                                                  color: Colors.white,
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .bodySmall!
+                                                      .color,
                                                 ),
                                               ],
                                             ),
@@ -665,6 +672,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                     TileReportData.isNotEmpty
                         ? Column(
                             children: [
+                              SizedBox(height: 30.h),
                               InterBold(
                                 text: 'Reports',
                                 fontsize: 20.sp,
