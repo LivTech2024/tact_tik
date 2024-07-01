@@ -234,14 +234,18 @@ class _DayEventsBottomSheetState extends State<DayEventsBottomSheet> {
                                                                   .color,
                                                         ),
                                                         SizedBox(width: 4.w),
-                                                        InterMedium(
-                                                          text: event.location,
-                                                          fontsize: 14.sp,
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .textTheme
-                                                                  .bodyLarge!
-                                                                  .color,
+                                                        SizedBox(
+                                                          width: 160.w,
+                                                          child: InterMedium(
+                                                            text: event.location,
+                                                            fontsize: 14.sp,
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .bodyLarge!
+                                                                .color,
+                                                            maxLines: 2,
+                                                          ),
                                                         ),
                                                       ],
                                                     ),

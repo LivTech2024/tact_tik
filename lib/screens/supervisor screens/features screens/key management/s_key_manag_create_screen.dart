@@ -15,6 +15,7 @@ import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
 import '../../../../common/sizes.dart';
 import '../../../../common/widgets/button1.dart';
+import '../../../../common/widgets/contact_widget.dart';
 import '../../../../common/widgets/setTextfieldWidget.dart';
 import '../../../../fonts/inter_bold.dart';
 import '../../../../fonts/inter_medium.dart';
@@ -929,7 +930,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                             .color,
                                       ),
                                     ),
-                              SizedBox(height: 0.h),
+                              SizedBox(height: 20.h),
                               InterBold(
                                 text: 'Contact',
                                 fontsize: 16.w,
@@ -939,13 +940,16 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                     .color,
                               ),
                               SizedBox(height: 10.h),
-                              CustomeTextField(
+                              ContactWidget(
+                                controller: _ContactController,
+                              ),
+                              /*CustomeTextField(
                                 maxlength: 11,
                                 hint: '12345678901',
                                 controller: _ContactController,
                                 showIcon: false,
                                 textInputType: TextInputType.number,
-                              ),
+                              ),*/
                               SizedBox(height: 20.h),
                               InterBold(
                                 text: 'Company Name',

@@ -598,7 +598,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                                   MainAxisAlignment.start,
                                               children: [
                                                 InterBold(
-                                                  text: 'Patrol Name',
+                                                  text: 'Patrol Name ',
                                                   fontsize: 12.sp,
                                                   color: Colors.white,
                                                 ),
