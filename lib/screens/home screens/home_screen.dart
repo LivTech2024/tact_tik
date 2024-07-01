@@ -719,7 +719,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         // );
                         // customEmail();
                         // await fireStoreService.copyAndCreateDocument(
-                        //     "PatrolLogs", "ScnjYK4drIenK8YkS8GU");
+                        //     "PatrolLogs", "wCTOAOUWoecE1DkQIBgr");
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -840,13 +840,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               icon: Icons.calendar_today,
                               color: ScreenIndex == 2
                                   ? ThemeMode.dark == themeManager.themeMode
-                                  ? DarkColor.color1
-                                  : LightColor.Primarycolor
+                                      ? DarkColor.color1
+                                      : LightColor.Primarycolor
                                   : Theme.of(context).focusColor,
                               textcolor: ScreenIndex == 2
                                   ? ThemeMode.dark == themeManager.themeMode
-                                  ? DarkColor.color1
-                                  : LightColor.Primarycolor
+                                      ? DarkColor.color1
+                                      : LightColor.Primarycolor
                                   : Theme.of(context).focusColor,
                             ),
                           ),
@@ -1157,7 +1157,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                           offset: Offset(0, 3),
                                         )
                                       ],
-                                      color: isDark ? DarkColor.color31 : Colors.grey[500],
+                                      color: isDark
+                                          ? DarkColor.color31
+                                          : Colors.grey[500],
                                       borderRadius: BorderRadius.circular(
                                         10.r,
                                       ),
@@ -1214,7 +1216,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                             text: schedules[
                                                     'ShiftLocationAddress'] ??
                                                 "",
-                                            color: Theme.of(context).textTheme.bodyLarge!.color as Color,
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .bodyLarge!
+                                                .color as Color,
                                             Iconcolor: Colors.redAccent,
                                             space: width / width8,
                                             fontsize: width / width14,
@@ -1227,8 +1232,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                             icon: Icons.access_time,
                                             text:
                                                 '${schedules['ShiftStartTime'] ?? ""} - ${schedules['ShiftEndTime'] ?? ""}',
-                                            color: Theme.of(context).textTheme.bodyLarge!.color as Color,
-                                            Iconcolor: Theme.of(context).primaryColor,
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .bodyLarge!
+                                                .color as Color,
+                                            Iconcolor:
+                                                Theme.of(context).primaryColor,
                                             space: width / width8,
                                             fontsize: width / width14,
                                           ),
@@ -1248,9 +1257,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ? SliverList(
                           delegate: SliverChildBuilderDelegate(
                             (context, index) {
-
                               return Padding(
-
                                 padding: EdgeInsets.symmetric(horizontal: 30.w),
                                 child: GestureDetector(
                                   onTap: () {},

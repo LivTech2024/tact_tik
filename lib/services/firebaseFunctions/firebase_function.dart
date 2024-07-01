@@ -2011,7 +2011,7 @@ class FireStoreService {
 
       final DateFormat dateFormatter = DateFormat('yyyy-MM-dd');
       final DateFormat timeFormatter = DateFormat('HH:mm');
-
+      final String? BranchId = await getBranchIdByName(companyBranchId);
       for (DateTime date in date) {
         // Create the shift document without tasks first
         final newDocRef = await shifts.add({
@@ -2026,7 +2026,7 @@ class FireStoreService {
               ? timeFormatter.format(DateTime(date.year, date.month, date.day,
                   endTime.hour, endTime.minute))
               : '',
-          'ShiftCompanyBranchId': branchId.isNotEmpty ? branchId : '',
+          'ShiftCompanyBranchId': BranchId ?? '',
           'ShiftDescription': shiftDesc,
           'ShiftLocationName': locationName,
           'ShiftLocationAddress': locationAddress,
@@ -2039,7 +2039,8 @@ class FireStoreService {
           'ShiftClientId': clientID,
           'ShiftCompanyId': companyId,
           'ShiftRequiredEmp': int.tryParse(requiredEmp) ?? 0,
-          'ShiftCompanyBranchId': branchId.isNotEmpty ? branchId : '',
+          // 'ShiftCompanyBranchId':
+          //     companyBranchId.isNotEmpty ? companyBranchId : '',
           'ShiftCurrentStatus': [],
           'ShiftCreatedAt': Timestamp.now(),
           'ShiftModifiedAt': Timestamp.now(),
@@ -2050,6 +2051,7 @@ class FireStoreService {
               ? int.tryParse(restrictedRadius) ?? 0
               : 0,
           'ShiftEnableRestrictedRadius': shiftenablerestriction,
+          "ShiftGuardWellnessReport": [],
           'ShiftTask': []
         });
 
@@ -2064,8 +2066,8 @@ class FireStoreService {
             'ShiftTask': task['name'],
             'ShiftTaskId':
                 "${newDocRef.id}${randomString}${index}", // Assign the modified document id to each task
-            'ShiftTaskQrCodeReq': task['isQrRequired'] ?? false,
-            'ShiftTaskReturnReq': task['isReturnQrRequired'] ?? false,
+            'ShiftTaskQrCodeReq': task['ShiftTaskQrCodeReq'] ?? false,
+            'ShiftTaskReturnReq': task['ShiftTaskReturnReq'] ?? false,
             'ShiftReturnTaskStatus': [],
             'ShiftTaskStatus': []
           };
@@ -2336,7 +2338,7 @@ class FireStoreService {
 
       // Append new patrol data
       currentPatrol.addAll(patrol);
-
+      final String? BranchId = await getBranchIdByName(CompanyBranchId);
       // Update the shift document
       Map<String, dynamic> updateData = {
         'ShiftName': ShiftName,
@@ -2359,8 +2361,7 @@ class FireStoreService {
                 EndTime.minute,
               ))
             : '',
-        'ShiftCompanyBranchId':
-            CompanyBranchId.isNotEmpty ? CompanyBranchId : '',
+        'ShiftCompanyBranchId': BranchId != null ? BranchId : '',
         'ShiftDescription': shiftDesc,
         'ShiftLocationName': locationName,
         'ShiftLocationAddress': locationAddress,
@@ -2383,14 +2384,23 @@ class FireStoreService {
 
       // Update the shift document
       await shiftDocRef.update(updateData);
-
+//  return {
+//             'ShiftTask': task['name'],
+//             'ShiftTaskId':
+//                 "${newDocRef.id}${randomString}${index}", // Assign the modified document id to each task
+//             'ShiftTaskQrCodeReq': task['isQrRequired'] ?? false,
+//             'ShiftTaskReturnReq': task['isReturnQrRequired'] ?? false,
+//             'ShiftReturnTaskStatus': [],
+//             'ShiftTaskStatus': []
+//           };
       // Prepare the shift tasks array with the document id
       List<Map<String, dynamic>> shiftTasks = tasks.map((task) {
         return {
-          'ShiftTask': task['name'],
-          'ShiftTaskId': shiftId, // Assign the shift id to each task
-          'ShiftTaskQrCodeReq': task['isQrRequired'] ?? false,
-          'ShiftTaskReturnReq': task['isReturnQrRequired'] ?? false,
+          'ShiftTask': task['ShiftTask'],
+          'ShiftTaskId':
+              task['ShiftTaskId'], // Assign the shift id to each task
+          'ShiftTaskQrCodeReq': task['ShiftTaskQrCodeReq'] ?? false,
+          'ShiftTaskReturnReq': task['ShiftTaskReturnReq'] ?? false,
           'ShiftTaskStatus': [],
           'ShiftReturnTaskStatus': []
         };
@@ -2409,6 +2419,53 @@ class FireStoreService {
   }
 
   //Get all the Schedules for Guards
+  Future<String?> getBranchNameById2(String branchId) async {
+    try {
+      final QuerySnapshot<Map<String, dynamic>> snapshot =
+          await FirebaseFirestore.instance
+              .collection('CompanyBranch')
+              .where('CompanyBranchId', isEqualTo: branchId)
+              .limit(1) // Assuming there's only one matching document
+              .get();
+
+      if (snapshot.docs.isNotEmpty) {
+        final String branchName =
+            snapshot.docs.first.data()['CompanyBranchName'] as String;
+        print("Branch name: $branchName");
+        return branchName;
+      } else {
+        print("No branch found for the given CompanyId.");
+        return null;
+      }
+    } catch (e) {
+      print("Error fetching branch name: $e");
+      return null; // Return null in case of error
+    }
+  }
+
+  Future<String?> getBranchIdByName(String branchName) async {
+    try {
+      final QuerySnapshot<Map<String, dynamic>> snapshot =
+          await FirebaseFirestore.instance
+              .collection('CompanyBranch')
+              .where('CompanyBranchName', isEqualTo: branchName)
+              .limit(1) // Assuming there's only one matching document
+              .get();
+
+      if (snapshot.docs.isNotEmpty) {
+        final String branchId =
+            snapshot.docs.first.data()['CompanyBranchId'] as String;
+        print("Branch ID: $branchId");
+        return branchId;
+      } else {
+        print("No branch found for the given branch name.");
+        return null;
+      }
+    } catch (e) {
+      print("Error fetching branch ID: $e");
+      return null; // Return null in case of error
+    }
+  }
 
   Future<List<DocumentSnapshot>> getAllSchedules(String empId) async {
     if (empId.isEmpty) {
@@ -2755,7 +2812,7 @@ class FireStoreService {
           .get();
 
       if (documentSnapshot.exists) {
-        print('SHift Task exists');
+        print('Shift Task exists');
         final shiftTasks = documentSnapshot['ShiftTask'] as List<dynamic>;
         if (shiftTasks.isNotEmpty) {
           print("Shift Task is not empty");
@@ -2771,7 +2828,8 @@ class FireStoreService {
                 print("ShiftTaskStatus is not empty");
                 for (var shiftTaskStatus in taskStatusList) {
                   if (shiftTaskStatus['TaskCompletedById'] == empId &&
-                      (shiftTaskStatus['TaskStatus'] == "pending" ||
+                      (shiftTaskStatus['TaskStatus'] == "pending" &&
+                              shiftTask['ShiftTaskReturnReq'] == true ||
                           shiftTaskStatus['TaskStatus'] == null)) {
                     return false; // If any task matches the condition, return false
                   }
@@ -4789,6 +4847,24 @@ class FireStoreService {
       final List<String> roles = snapshot.docs
           .where((doc) => doc.data()['CompanyId'] == companyid)
           .map((doc) => doc.data()['CompanyBranchName'] as String)
+          .toSet()
+          .toList();
+      print("Clientname ${roles}");
+      return roles;
+    } catch (e) {
+      print("Error fetching report titles: $e");
+      return []; // Return empty list in case of error
+    }
+  }
+
+  Future<List<String>> getAllBranchNameById(String branchId) async {
+    try {
+      final QuerySnapshot<Map<String, dynamic>> snapshot =
+          await FirebaseFirestore.instance.collection('CompanyBranch').get();
+
+      final List<String> roles = snapshot.docs
+          .where((doc) => doc.data()['CompanyId'] == branchId)
+          .map((doc) => doc.data()['CompanyBranchId'] as String)
           .toSet()
           .toList();
       print("Clientname ${roles}");

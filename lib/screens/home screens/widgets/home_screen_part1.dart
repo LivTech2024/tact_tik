@@ -328,63 +328,51 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                         autoFlipDirection: false,
                         controller: _controller,
                         direction: VerticalDirection.down,
-                        builder: (context, _controller, focusNode) =>
-                            TextField(
-                              maxLength: 20,
-                              maxLengthEnforcement: MaxLengthEnforcement
-                                  .enforced,
-                              onTapOutside: (event) {
-                                print('onTapOutside');
-                                FocusManager.instance.primaryFocus?.unfocus();
-                              },
-                              onChanged: (text) {
-                                setState(() {
-                                  if (text != '') {
-                                    cleartext = true;
-                                  } else {
-                                    cleartext = false;
-                                  }
-                                });
-                              },
-                              controller: _controller,
-                              focusNode: focusNode,
-                              autofocus: false,
-                              style: GoogleFonts.poppins(
-                                fontWeight: FontWeight.w300,
-                                fontSize: 18.sp,
-                                color:
-                                Theme
-                                    .of(context)
-                                    .textTheme
-                                    .titleLarge!
-                                    .color,
+                        builder: (context, _controller, focusNode) => TextField(
+                          maxLength: 20,
+                          maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                          onTapOutside: (event) {
+                            print('onTapOutside');
+                            FocusManager.instance.primaryFocus?.unfocus();
+                          },
+                          onChanged: (text) {
+                            setState(() {
+                              if (text != '') {
+                                cleartext = true;
+                              } else {
+                                cleartext = false;
+                              }
+                            });
+                          },
+                          controller: _controller,
+                          focusNode: focusNode,
+                          autofocus: false,
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w300,
+                            fontSize: 18.sp,
+                            color:
+                                Theme.of(context).textTheme.titleLarge!.color,
+                          ),
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10.r),
                               ),
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderSide: BorderSide.none,
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(10.r),
-                                  ),
-                                ),
-                                focusedBorder: InputBorder.none,
-                                hintStyle: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.w300,
-                                  fontSize: 18.sp,
-                                  color:
-                                  Theme
-                                      .of(context)
-                                      .textTheme
-                                      .bodyLarge!
-                                      .color,
-                                ),
-                                hintText: 'Search screen',
-                                contentPadding: EdgeInsets.zero,
-                                counterText: "",
-                              ),
-                              cursorColor: Theme
-                                  .of(context)
-                                  .primaryColor,
                             ),
+                            focusedBorder: InputBorder.none,
+                            hintStyle: GoogleFonts.poppins(
+                              fontWeight: FontWeight.w300,
+                              fontSize: 18.sp,
+                              color:
+                                  Theme.of(context).textTheme.bodyLarge!.color,
+                            ),
+                            hintText: 'Search screen',
+                            contentPadding: EdgeInsets.zero,
+                            counterText: "",
+                          ),
+                          cursorColor: Theme.of(context).primaryColor,
+                        ),
                         suggestionsCallback: widget.isEmployee
                             ? suggestionsCallback
                             : ClientsuggestionsCallback,
