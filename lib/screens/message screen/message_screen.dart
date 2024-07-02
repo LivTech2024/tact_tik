@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/message%20screen/widgets/chat_list.dart';
@@ -7,8 +9,19 @@ import '../../../common/sizes.dart';
 import '../../../fonts/inter_medium.dart';
 import '../../../fonts/inter_regular.dart';
 
-class MobileChatScreen extends StatelessWidget {
-  const MobileChatScreen({Key? key}) : super(key: key);
+class MobileChatScreen extends StatefulWidget {
+  final String receiverId;
+  final String receiverName;
+  final String companyId;
+  final String userName;
+  const MobileChatScreen({Key? key, required this.receiverId, required this.receiverName, required this.companyId, required this.userName}) : super(key: key);
+
+  @override
+  State<MobileChatScreen> createState() => _MobileChatScreenState();
+}
+
+class _MobileChatScreenState extends State<MobileChatScreen> {
+  final TextEditingController _messageController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -33,8 +46,8 @@ class MobileChatScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          const Expanded(
-            child: ChatList(),
+          Expanded(
+            child: ChatList(guardId: widget.receiverId,),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -42,6 +55,7 @@ class MobileChatScreen extends StatelessWidget {
               children: [
                 Expanded(
                     child: TextField(
+                      controller: _messageController,
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Theme.of(context).cardColor,
@@ -60,8 +74,26 @@ class MobileChatScreen extends StatelessWidget {
                   ),
                 )),
                 IconButton(
-                  onPressed: () {
-                    // Send message logic here
+                  onPressed: () async {
+                    String message = _messageController.text.trim();
+                    if (message.isNotEmpty) {
+                      User? currentUser = FirebaseAuth.instance.currentUser;
+                      if (currentUser != null) {
+                        DocumentReference docRef = await FirebaseFirestore.instance.collection('Messages').add({
+                          'MessageCompanyId': widget.companyId,
+                          'MessageCreatedAt': Timestamp.now(),
+                          'MessageCreatedById': currentUser.uid,
+                          'MessageCreatedByName': widget.userName,
+                          'MessageData': message,
+                          'MessageReceiversId': widget.receiverId,
+                          'MessageType': "message"
+                        });
+                        await docRef.update({
+                          'MessageId': docRef.id,
+                        });
+                        _messageController.clear();
+                      }
+                    }
                   },
                   icon: Icon(
                     Icons.send,
