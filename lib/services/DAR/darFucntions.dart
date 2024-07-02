@@ -7,8 +7,81 @@ class DarFunctions {
   List<Map<String, dynamic>> hourlyShiftDetails = [];
   List<Map<String, dynamic>> hourlyShiftDetails2 = [];
 
+  // void _processShiftDetails(List<Map<String, dynamic>> shiftDetails) {
+  //   hourlyShiftDetails.clear(); // Clear previous details
+  //   for (var shift in shiftDetails) {
+  //     final startTime = shift['startTime']; // Extract startTime
+  //     final endTime = shift['endTime']; // Extract endTime
+
+  //     final startTimeParts = startTime.split(':');
+  //     final endTimeParts = endTime.split(':');
+
+  //     final startHour = int.parse(startTimeParts[0]);
+  //     final startMinute = int.parse(startTimeParts[1]);
+  //     final endHour = int.parse(endTimeParts[0]);
+  //     final endMinute = int.parse(endTimeParts[1]);
+
+  //     // Handle shifts starting before and ending after midnight
+  //     if (endHour > startHour ||
+  //         (endHour == startHour && endMinute > startMinute)) {
+  //       // Shift doesn't cross midnight
+  //       for (int hour = startHour; hour < 24; hour++) {
+  //         if (hour < 24) {
+  //           // Ensure hours are within a day
+  //           final hourStart =
+  //               '${hour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
+  //           final hourEnd =
+  //               '${(hour + 1).toString().padLeft(2, '0')}:${endMinute.toString().padLeft(2, '0')}';
+
+  //           hourlyShiftDetails.add({
+  //             'startTime': hourStart,
+  //             'endTime': hourEnd,
+  //           });
+  //           print("process 1 ${hourlyShiftDetails}");
+  //         }
+  //       }
+  //     } else {
+  //       // Shift crosses midnight
+  //       for (int hour = startHour; hour < 24; hour++) {
+  //         if (hour < 24) {
+  //           // Ensure hours are within a day
+  //           final hourStart =
+  //               '${hour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
+  //           final hourEnd =
+  //               '${(hour + 1).toString().padLeft(2, '0')}:${endMinute.toString().padLeft(2, '0')}';
+
+  //           hourlyShiftDetails.add({
+  //             'startTime': hourStart,
+  //             'endTime': hourEnd,
+  //           });
+  //           print("process 2 ${hourlyShiftDetails}");
+  //         }
+  //       }
+  //       // Add tiles for remaining hours after midnight (if any)
+  //       final remainingEndHour = endHour < startHour ? endHour + 24 : endHour;
+
+  //       for (int hour = 0; hour <= remainingEndHour; hour++) {
+  //         if (hour < endHour) {
+  //           // Ensure hours are within a day
+  //           final hourStart =
+  //               '${hour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
+  //           final hourEnd =
+  //               '${(hour + 1).toString().padLeft(2, '0')}:${endMinute.toString().padLeft(2, '0')}';
+
+  //           hourlyShiftDetails2.add({
+  //             'startTime': hourStart,
+  //             'endTime': hourEnd,
+  //           });
+  //           print("process 3 ${hourlyShiftDetails2}");
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
   void _processShiftDetails(List<Map<String, dynamic>> shiftDetails) {
     hourlyShiftDetails.clear(); // Clear previous details
+    hourlyShiftDetails2.clear(); // Clear previous details for second list
+
     for (var shift in shiftDetails) {
       final startTime = shift['startTime']; // Extract startTime
       final endTime = shift['endTime']; // Extract endTime
@@ -25,55 +98,35 @@ class DarFunctions {
       if (endHour > startHour ||
           (endHour == startHour && endMinute > startMinute)) {
         // Shift doesn't cross midnight
-        for (int hour = startHour; hour < 24; hour++) {
-          if (hour < 24) {
-            // Ensure hours are within a day
-            final hourStart =
-                '${hour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
-            final hourEnd =
-                '${(hour + 1).toString().padLeft(2, '0')}:${endMinute.toString().padLeft(2, '0')}';
+        for (int hour = startHour; hour < endHour; hour++) {
+          // Ensure hours are within a day
+          final hourStart =
+              '${hour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
+          final hourEnd =
+              '${(hour + 1).toString().padLeft(2, '0')}:${endMinute.toString().padLeft(2, '0')}';
 
-            hourlyShiftDetails.add({
-              'startTime': hourStart,
-              'endTime': hourEnd,
-            });
-            print("process 1 ${hourlyShiftDetails}");
-          }
+          hourlyShiftDetails.add({
+            'startTime': hourStart,
+            'endTime': hourEnd,
+          });
+          print("process 1 ${hourlyShiftDetails}");
         }
       } else {
         // Shift crosses midnight
-        for (int hour = startHour; hour < 24; hour++) {
-          if (hour < 24) {
-            // Ensure hours are within a day
-            final hourStart =
-                '${hour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
-            final hourEnd =
-                '${(hour + 1).toString().padLeft(2, '0')}:${endMinute.toString().padLeft(2, '0')}';
-
-            hourlyShiftDetails.add({
-              'startTime': hourStart,
-              'endTime': hourEnd,
-            });
-            print("process 2 ${hourlyShiftDetails}");
-          }
-        }
-        // Add tiles for remaining hours after midnight (if any)
         final remainingEndHour = endHour < startHour ? endHour + 24 : endHour;
 
-        for (int hour = 0; hour <= remainingEndHour; hour++) {
-          if (hour < endHour) {
-            // Ensure hours are within a day
-            final hourStart =
-                '${hour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
-            final hourEnd =
-                '${(hour + 1).toString().padLeft(2, '0')}:${endMinute.toString().padLeft(2, '0')}';
+        for (int hour = startHour; hour <= remainingEndHour; hour++) {
+          // Ensure hours are within a day
+          final hourStart =
+              '${hour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
+          final hourEnd =
+              '${(hour + 1).toString().padLeft(2, '0')}:${endMinute.toString().padLeft(2, '0')}';
 
-            hourlyShiftDetails2.add({
-              'startTime': hourStart,
-              'endTime': hourEnd,
-            });
-            print("process 3 ${hourlyShiftDetails2}");
-          }
+          hourlyShiftDetails.add({
+            'startTime': hourStart,
+            'endTime': hourEnd,
+          });
+          print("process 2 ${hourlyShiftDetails}");
         }
       }
     }
