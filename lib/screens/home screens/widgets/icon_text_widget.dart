@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/utils/colors.dart';
@@ -12,7 +13,7 @@ class IconTextWidget extends StatelessWidget {
     required this.icon,
     required this.text,
     this.useBold = true,
-    this.color = DarkColor. color6,
+    this.color = DarkColor.color6,
     this.fontsize = 14,
     this.iconSize,
     this.Iconcolor = DarkColor.Primarycolor,
@@ -41,18 +42,19 @@ class IconTextWidget extends StatelessWidget {
         ),
         SizedBox(width: space ?? (width / width20)),
         Flexible(
-            child: useBold
-                ? InterBold(
-                    text: text,
-                    fontsize: fontsize,
-                    color: color,
-                    maxLine: 2,
-                  )
-                : InterMedium(
-                    text: text,
-                    fontsize: fontsize,
-                    color: color,
-                  ))
+          child: useBold
+              ? InterBold(
+                  text: text,
+                  fontsize: fontsize,
+                  color: color,
+                  maxLine: 2,
+                )
+              : InterMedium(
+                  text: text,
+                  fontsize: fontsize,
+                  color: color,
+                ),
+        )
       ],
     );
   }

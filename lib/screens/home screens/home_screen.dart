@@ -1147,10 +1147,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                     width: width / width200,
                                     height: height / height50,
                                     padding: EdgeInsets.only(
-                                        top: height / height3,
-                                        left: width / width10,
-                                        right: width / width10,
-                                        bottom: height / height20),
+                                        top: 3.h,
+                                        left: 10.w,
+                                        right: 10.w,
+                                        bottom: 20.h),
                                     decoration: BoxDecoration(
                                       boxShadow: [
                                         BoxShadow(
@@ -1176,12 +1176,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                         InterBold(
                                           text: shiftDate,
                                           color: DarkColor.color30,
-                                          fontsize: width / width16,
+                                          fontsize: 16.sp,
                                         ),
                                         InterBold(
                                           text: dayOfWeek,
                                           color: DarkColor.color30,
-                                          fontsize: width / width12,
+                                          fontsize: 12.sp,
                                         ),
                                       ],
                                     ),
@@ -1191,9 +1191,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   alignment: Alignment.bottomCenter,
                                   child: Container(
                                     width: double.maxFinite,
-                                    height: height / height150,
+                                    height: 150.h,
                                     padding: EdgeInsets.symmetric(
-                                      vertical: height / height30,
+                                      vertical: 30.h,
                                     ),
                                     decoration: BoxDecoration(
                                       color: Theme.of(context).cardColor,
@@ -1212,10 +1212,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         SizedBox(
-                                          width: width / width278,
+                                          width: 278.w,
                                           child: IconTextWidget(
                                             icon: Icons.location_on,
-                                            iconSize: width / width24,
+                                            iconSize: 24.sp,
                                             text: schedules[
                                                     'ShiftLocationAddress'] ??
                                                 "",
@@ -1224,8 +1224,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 .bodyLarge!
                                                 .color as Color,
                                             Iconcolor: Colors.redAccent,
-                                            space: width / width8,
-                                            fontsize: width / width14,
+                                            space: 8.w,
+                                            fontsize: 14.sp,
                                           ),
                                         ),
                                         SizedBox(

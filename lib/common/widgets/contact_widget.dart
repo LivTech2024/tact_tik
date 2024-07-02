@@ -28,6 +28,7 @@ class ContactWidget extends StatelessWidget {
       margin: EdgeInsets.only(top: 10.h),
       child: Center(
         child: InternationalPhoneNumberInput(
+
           textAlignVertical: TextAlignVertical.top,
           cursorColor:
           Theme.of(context).primaryColor,
@@ -48,7 +49,7 @@ class ContactWidget extends StatelessWidget {
             selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
             useBottomSheetSafeArea: true,
           ),
-          ignoreBlank: false,
+          // ignoreBlank: false,
           autoValidateMode: AutovalidateMode.disabled,
           selectorTextStyle: GoogleFonts.poppins(
             fontWeight: FontWeight.w300,
@@ -76,7 +77,7 @@ class ContactWidget extends StatelessWidget {
             contentPadding: EdgeInsets.zero,
             // counterText: "",
           ),
-          initialValue: PhoneNumber(isoCode: 'CAN'),
+          initialValue: PhoneNumber(isoCode: 'CA'),
           textFieldController: controller,
           formatInput: true,
           keyboardType: TextInputType.numberWithOptions(

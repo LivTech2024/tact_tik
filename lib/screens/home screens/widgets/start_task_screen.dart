@@ -639,6 +639,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                   ),
                   SizedBox(width: 10.w),
                   SizedBox(
+                    // location overflow solved
                     width: 260.w,
                     child: InterRegular(
                       text: widget.ShiftAddressName,
