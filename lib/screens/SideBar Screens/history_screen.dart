@@ -121,7 +121,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         ),
                         SizedBox(height: 20.h),
                         Container(
-                          height: 340.h,
+                          constraints: BoxConstraints(minHeight: 340.h,),
                           padding: EdgeInsets.only(
                             top: 20.h,
                           ),

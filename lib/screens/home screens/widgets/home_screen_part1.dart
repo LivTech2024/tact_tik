@@ -29,6 +29,7 @@ import '../../feature screens/post_order.dart/post_order_screen.dart';
 import '../../feature screens/site_tours/site_tour_screen.dart';
 import '../../feature screens/task/task_feature_screen.dart';
 import '../../feature screens/visitors/visitors.dart';
+import '../guard_notification_screen.dart';
 import '../notification_screen.dart';
 
 class Screens {
@@ -227,15 +228,18 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            // Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //         builder: (context) => WriteMsgScreen()));
-                          //   NotificationScreen
+                          //   TODO If the role is guard then Navigate to this
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => NotificationScreen()));
+                                    builder: (context) => GuardNotificationScreen()));
+
+
+                            // TODO: If the role is client and supervisor then Navigate this.
+                            // Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //         builder: (context) => NotificationScreen()));
                           },
                           child: Icon(
                             Icons.notifications,
