@@ -201,6 +201,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
             NavigateScreen(SuperInboxScreen(
               companyId: _CompanyId,
               userName: _userName,
+              isClient: false,
             ));
             break;
         }
