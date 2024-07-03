@@ -102,7 +102,8 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                           colors[1] = Theme.of(context).highlightColor;
                         });
                       },
-                      child: SizedBox(
+                      child: Container(
+                        color: Theme.of(context).cardColor,
                         child: Center(
                           child: InterBold(
                             text: 'Guards',
@@ -128,7 +129,8 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                               .color as Color;
                         });
                       },
-                      child: SizedBox(
+                      child: Container(
+                        color: Theme.of(context).cardColor,
                         child: Center(
                           child: InterBold(
                             text: 'Admin',
