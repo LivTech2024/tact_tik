@@ -52,6 +52,93 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
     return query.snapshots();
   }
 
+  Future<List<Map<String, dynamic>>> getSortedGuards(QuerySnapshot snapshot) async {
+    List<Map<String, dynamic>> guards = snapshot.docs
+        .map((doc) => doc.data() as Map<String, dynamic>)
+        .toList();
+
+    for (var guard in guards) {
+      QuerySnapshot messageSnapshot = await FirebaseFirestore.instance
+          .collection('Messages')
+          .where('MessageCreatedById', isEqualTo: guard['EmployeeId'])
+          .where('MessageReceiversId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+          .orderBy('MessageCreatedAt', descending: true)
+          .limit(1)
+          .get();
+
+      if (messageSnapshot.docs.isNotEmpty) {
+        var latestMessage = messageSnapshot.docs.first.data() as Map<String, dynamic>;
+        if (latestMessage['MessageType'] != 'panic') {
+          guard['latestMessageTime'] = latestMessage['MessageCreatedAt'];
+        } else {
+          guard['latestMessageTime'] = Timestamp.fromDate(DateTime(1970, 1, 1));
+        }
+      } else {
+        guard['latestMessageTime'] = Timestamp.fromDate(DateTime(1970, 1, 1));
+      }
+    }
+
+    guards.sort((a, b) => b['latestMessageTime'].compareTo(a['latestMessageTime']));
+
+    if (dropdownValue != 'All Guards') {
+      guards = guards.where((guard) => guard['EmployeeIsAvailable'] == dropdownValue).toList();
+    }
+
+    return guards;
+  }
+
+  Future<List<Map<String, dynamic>>> getSortedCombinedList(List<QuerySnapshot> snapshots) async {
+    List<Map<String, dynamic>> combinedList = [];
+
+    var supervisors = snapshots[0].docs;
+    combinedList.addAll(supervisors.map((doc) => {
+      'name': doc['EmployeeName'] ?? "",
+      'id': doc['EmployeeId'] ?? "",
+      'imageUrl': doc['EmployeeImg'] ?? "",
+      'isClient': false,
+    }));
+
+    if (!widget.isClient && snapshots.length > 1) {
+      var clients = snapshots[1].docs;
+      combinedList.addAll(clients.map((doc) => {
+        'name': doc['ClientName'] ?? "",
+        'id': doc['ClientId'] ?? "",
+        'imageUrl': doc['ClientHomePageBgImg'] ?? "",
+        'isClient': true,
+      }));
+    }
+
+    for (var item in combinedList) {
+      QuerySnapshot messageSnapshot = await FirebaseFirestore.instance
+          .collection('Messages')
+          .where('MessageCreatedById', isEqualTo: item['id'])
+          .where('MessageReceiversId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+          .orderBy('MessageCreatedAt', descending: true)
+          .limit(1)
+          .get();
+
+      if (messageSnapshot.docs.isNotEmpty) {
+        var latestMessage = messageSnapshot.docs.first.data() as Map<String, dynamic>;
+        if (latestMessage['MessageType'] != 'panic') {
+          item['latestMessageTime'] = latestMessage['MessageCreatedAt'];
+        } else {
+          item['latestMessageTime'] = Timestamp.fromDate(DateTime(1970, 1, 1));
+        }
+      } else {
+        item['latestMessageTime'] = Timestamp.fromDate(DateTime(1970, 1, 1));
+      }
+    }
+
+    combinedList.sort((a, b) => b['latestMessageTime'].compareTo(a['latestMessageTime']));
+
+    return combinedList;
+  }
+
+  @override
+  void initState(){
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -197,124 +284,136 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                         ),
                         SizedBox(height: 20.h),
                         StreamBuilder<QuerySnapshot>(
-                          stream: getGuardStream(),
+                          stream: FirebaseFirestore.instance
+                              .collection('Employees')
+                              .where('EmployeeRole', isEqualTo: 'GUARD')
+                              .where('EmployeeCompanyId', isEqualTo: widget.companyId)
+                              .where('EmployeeId', isNotEqualTo: FirebaseAuth.instance.currentUser!.uid)
+                              .snapshots(),
                           builder: (context, snapshot) {
                             if (!snapshot.hasData) {
                               return Center(child: CircularProgressIndicator());
                             }
 
-                            var _guardsInfo = snapshot.data!.docs;
+                            return FutureBuilder<List<Map<String, dynamic>>>(
+                              future: getSortedGuards(snapshot.data!),
+                              builder: (context, sortedSnapshot) {
+                                if (sortedSnapshot.connectionState == ConnectionState.waiting) {
+                                  return Center(child: CircularProgressIndicator());
+                                }
 
-                            return ListView.builder(
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              itemCount: _guardsInfo.length,
-                              itemBuilder: (context, index) {
-                                var guardInfo = _guardsInfo[index];
-                                String name = guardInfo['EmployeeName'] ?? "";
-                                String id = guardInfo['EmployeeId'] ?? "";
-                                String url = guardInfo['EmployeeImg'] ?? "";
+                                if (!sortedSnapshot.hasData || sortedSnapshot.data!.isEmpty) {
+                                  return Center(child: Text('No guards available'));
+                                }
 
-                                return GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => MobileChatScreen(receiverId: id, companyId: widget.companyId, receiverName: name, userName: widget.userName),
-                                      ),
-                                    );
-                                  },
-                                  child: Container(
-                                    height: 60.h,
-                                    decoration: BoxDecoration(
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Theme.of(context).shadowColor,
-                                          blurRadius: 5,
-                                          spreadRadius: 2,
-                                          offset: Offset(0, 3),
-                                        )
-                                      ],
-                                      color: Theme.of(context).cardColor,
-                                      borderRadius: BorderRadius.circular(12.r),
-                                    ),
-                                    margin: EdgeInsets.only(bottom: 10.h),
-                                    width: double.maxFinite,
-                                    child: Container(
-                                      height: 48.h,
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 20.w,
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Container(
-                                                height: 50.h,
-                                                width: 50.w,
-                                                decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  color: DarkColor.Primarycolor,
-                                                  image: DecorationImage(
-                                                    image: NetworkImage(url),
-                                                    filterQuality: FilterQuality.high,
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 20.w,
-                                              ),
-                                              InterBold(
-                                                text: name,
-                                                letterSpacing: -.3,
-                                                color: Theme.of(context).textTheme.bodyMedium!.color,
-                                              ),
-                                            ],
+                                var _guardsInfo = sortedSnapshot.data!;
+
+                                return ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  itemCount: _guardsInfo.length,
+                                  itemBuilder: (context, index) {
+                                    var guardInfo = _guardsInfo[index];
+                                    String name = guardInfo['EmployeeName'] ?? "";
+                                    String id = guardInfo['EmployeeId'] ?? "";
+                                    String url = guardInfo['EmployeeImg'] ?? "";
+
+                                    return GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => MobileChatScreen(
+                                                receiverId: id,
+                                                companyId: widget.companyId,
+                                                receiverName: name,
+                                                userName: widget.userName
+                                            ),
                                           ),
-                                          Stack(
-                                            clipBehavior: Clip.none,
+                                        );
+                                      },
+                                      child: Container(
+                                        height: 60.h,
+                                        decoration: BoxDecoration(
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Theme.of(context).shadowColor,
+                                              blurRadius: 5,
+                                              spreadRadius: 2,
+                                              offset: Offset(0, 3),
+                                            )
+                                          ],
+                                          color: Theme.of(context).cardColor,
+                                          borderRadius: BorderRadius.circular(12.r),
+                                        ),
+                                        margin: EdgeInsets.only(bottom: 10.h),
+                                        width: double.maxFinite,
+                                        child: Container(
+                                          height: 48.h,
+                                          padding: EdgeInsets.symmetric(horizontal: 20.w),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
+                                              Row(
+                                                children: [
+                                                  Container(
+                                                    height: 50.h,
+                                                    width: 50.w,
+                                                    decoration: BoxDecoration(
+                                                      shape: BoxShape.circle,
+                                                      color: DarkColor.Primarycolor,
+                                                      image: DecorationImage(
+                                                        image: NetworkImage(url),
+                                                        filterQuality: FilterQuality.high,
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  SizedBox(width: 20.w),
+                                                  InterBold(
+                                                    text: name,
+                                                    letterSpacing: -.3,
+                                                    color: Theme.of(context).textTheme.bodyMedium!.color,
+                                                  ),
+                                                ],
+                                              ),
                                               Stack(
                                                 clipBehavior: Clip.none,
                                                 children: [
-                                                  SvgPicture.asset('assets/images/chat_bubble.svg'),
-                                                  Positioned(
-                                                    top: -4,
-                                                    left: -8,
-                                                    child: Container(
-                                                      padding: EdgeInsets.symmetric(
-                                                        horizontal: 4.w,
-                                                      ),
-                                                      height: 14.h,
-                                                      constraints: BoxConstraints(
-                                                        minWidth: 20.w,
-                                                      ),
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.red,
-                                                        borderRadius: BorderRadius.circular(50.r),
-                                                      ),
-                                                      child: Center(
-                                                        child: InterBold(
-                                                          text: '2',
-                                                          fontsize: 8.sp,
-                                                          color: Theme.of(context)
-                                                              .textTheme
-                                                              .bodyMedium!
-                                                              .color,
+                                                  Stack(
+                                                    clipBehavior: Clip.none,
+                                                    children: [
+                                                      SvgPicture.asset('assets/images/chat_bubble.svg'),
+                                                      Positioned(
+                                                        top: -4,
+                                                        left: -8,
+                                                        child: Container(
+                                                          padding: EdgeInsets.symmetric(horizontal: 4.w),
+                                                          height: 14.h,
+                                                          constraints: BoxConstraints(minWidth: 20.w),
+                                                          decoration: BoxDecoration(
+                                                            color: Colors.red,
+                                                            borderRadius: BorderRadius.circular(50.r),
+                                                          ),
+                                                          child: Center(
+                                                            child: InterBold(
+                                                              text: '2',
+                                                              fontsize: 8.sp,
+                                                              color: Theme.of(context).textTheme.bodyMedium!.color,
+                                                            ),
+                                                          ),
                                                         ),
                                                       ),
-                                                    ),
+                                                    ],
                                                   ),
                                                 ],
                                               ),
                                             ],
                                           ),
-                                        ],
+                                        ),
                                       ),
-                                    ),
-                                  ),
+                                    );
+                                  },
                                 );
                               },
                             );
@@ -335,7 +434,7 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                           .collection('Employees')
                           .where('EmployeeRole', isEqualTo: 'SUPERVISOR')
                           .where('EmployeeCompanyId', isEqualTo: widget.companyId)
-                          .where('EmployeeId', isNotEqualTo: currentUser!.uid)
+                          .where('EmployeeId', isNotEqualTo: FirebaseAuth.instance.currentUser!.uid)
                           .snapshots(),
                       if (!widget.isClient)
                         FirebaseFirestore.instance
@@ -348,130 +447,94 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                         return Center(child: CircularProgressIndicator());
                       }
 
-                      List<Map<String, dynamic>> combinedList = [];
+                      return FutureBuilder<List<Map<String, dynamic>>>(
+                        future: getSortedCombinedList(snapshot.data!),
+                        builder: (context, sortedSnapshot) {
+                          if (sortedSnapshot.connectionState == ConnectionState.waiting) {
+                            return Center(child: CircularProgressIndicator());
+                          }
 
-                      var supervisors = snapshot.data![0].docs;
-                      combinedList.addAll(supervisors.map((doc) => {
-                        'name': doc['EmployeeName'] ?? "",
-                        'id': doc['EmployeeId'] ?? "",
-                        'imageUrl': doc['EmployeeImg'] ?? "",
-                        'isClient': false,
-                      }));
+                          if (!sortedSnapshot.hasData || sortedSnapshot.data!.isEmpty) {
+                            return Center(child: Text('No data available'));
+                          }
 
-                      if (!widget.isClient && snapshot.data!.length > 1) {
-                        var clients = snapshot.data![1].docs;
-                        combinedList.addAll(clients.map((doc) => {
-                          'name': doc['ClientName'] ?? "",
-                          'id': doc['ClientId'] ?? "",
-                          'imageUrl': doc['ClientHomePageBgImg'] ?? "",
-                          'isClient': true,
-                        }));
-                      }
+                          var combinedList = sortedSnapshot.data!;
 
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: combinedList.length,
-                        itemBuilder: (context, index) {
-                          var info = combinedList[index];
-                          String name = info['name'];
-                          String id = info['id'];
-                          String url = info['imageUrl'];
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: combinedList.length,
+                            itemBuilder: (context, index) {
+                              var info = combinedList[index];
+                              String name = info['name'];
+                              String id = info['id'];
+                              String url = info['imageUrl'];
 
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => MobileChatScreen(
-                                    receiverId: id,
-                                    companyId: widget.companyId,
-                                    receiverName: name,
-                                    userName: widget.userName,
-                                  ),
-                                ),
-                              );
-                            },
-                            child: Container(
-                              height: 60.h,
-                              decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Theme.of(context).shadowColor,
-                                    blurRadius: 5,
-                                    spreadRadius: 2,
-                                    offset: Offset(0, 3),
-                                  )
-                                ],
-                                color: Theme.of(context).cardColor,
-                                borderRadius: BorderRadius.circular(12.r),
-                              ),
-                              margin: EdgeInsets.only(bottom: 10.h),
-                              width: double.maxFinite,
-                              child: Container(
-                                height: 48.h,
-                                padding: EdgeInsets.symmetric(horizontal: 20.w),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Container(
-                                          height: 50.h,
-                                          width: 50.w,
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: DarkColor.Primarycolor,
-                                            image: DecorationImage(
-                                              image: NetworkImage(url),
-                                              filterQuality: FilterQuality.high,
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(width: 20.w),
-                                        InterBold(
-                                          text: name,
-                                          letterSpacing: -.3,
-                                          color: Theme.of(context).textTheme.bodyMedium!.color,
-                                        ),
-                                      ],
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => MobileChatScreen(
+                                        receiverId: id,
+                                        companyId: widget.companyId,
+                                        receiverName: name,
+                                        userName: widget.userName,
+                                      ),
                                     ),
-                                    /*Stack(
-                                      clipBehavior: Clip.none,
+                                  );
+                                },
+                                child: Container(
+                                  height: 60.h,
+                                  decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Theme.of(context).shadowColor,
+                                        blurRadius: 5,
+                                        spreadRadius: 2,
+                                        offset: Offset(0, 3),
+                                      )
+                                    ],
+                                    color: Theme.of(context).cardColor,
+                                    borderRadius: BorderRadius.circular(12.r),
+                                  ),
+                                  margin: EdgeInsets.only(bottom: 10.h),
+                                  width: double.maxFinite,
+                                  child: Container(
+                                    height: 48.h,
+                                    padding: EdgeInsets.symmetric(horizontal: 20.w),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Stack(
-                                          clipBehavior: Clip.none,
+                                        Row(
                                           children: [
-                                            SvgPicture.asset('assets/images/chat_bubble.svg'),
-                                            Positioned(
-                                              top: -4,
-                                              left: -8,
-                                              child: Container(
-                                                padding: EdgeInsets.symmetric(horizontal: 4.w),
-                                                height: 14.h,
-                                                constraints: BoxConstraints(minWidth: 20.w),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.red,
-                                                  borderRadius: BorderRadius.circular(50.r),
-                                                ),
-                                                child: Center(
-                                                  child: InterBold(
-                                                    text: '2',
-                                                    fontsize: 8.sp,
-                                                    color: Theme.of(context).textTheme.bodyMedium!.color,
-                                                  ),
+                                            Container(
+                                              height: 50.h,
+                                              width: 50.w,
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: DarkColor.Primarycolor,
+                                                image: DecorationImage(
+                                                  image: NetworkImage(url),
+                                                  filterQuality: FilterQuality.high,
+                                                  fit: BoxFit.cover,
                                                 ),
                                               ),
+                                            ),
+                                            SizedBox(width: 20.w),
+                                            InterBold(
+                                              text: name,
+                                              letterSpacing: -.3,
+                                              color: Theme.of(context).textTheme.bodyMedium!.color,
                                             ),
                                           ],
                                         ),
                                       ],
-                                    ),*/
-                                  ],
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
+                              );
+                            },
                           );
                         },
                       );
