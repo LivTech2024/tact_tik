@@ -30,6 +30,7 @@ import 'package:tact_tik/screens/feature%20screens/dar/dar_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/keys/view_keys_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/site_tours/site_tour_screen.dart';
 import 'package:tact_tik/screens/get%20started/getstarted_screen.dart';
+import 'package:tact_tik/screens/home%20screens/select_message_guards.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/custom_calendar.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/grid_widget.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/home_screen_part1.dart';
@@ -177,7 +178,8 @@ class _HomeScreenState extends State<HomeScreen> {
     try {
       QuerySnapshot messageSnapshot = await FirebaseFirestore.instance
           .collection('Messages')
-          .where('MessageReceiversId', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+          .where('MessageReceiversId',
+              isEqualTo: FirebaseAuth.instance.currentUser?.uid)
           .orderBy('MessageCreatedAt', descending: true)
           .get();
 
@@ -189,7 +191,8 @@ class _HomeScreenState extends State<HomeScreen> {
         if (message['MessageType'] != 'message') continue;
 
         String name = 'Unknown';
-        String img = 'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg';
+        String img =
+            'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg';
 
         DocumentSnapshot employeeSnapshot = await FirebaseFirestore.instance
             .collection('Employees')
@@ -197,7 +200,8 @@ class _HomeScreenState extends State<HomeScreen> {
             .get();
 
         if (employeeSnapshot.exists) {
-          Map<String, dynamic>? employeeData = employeeSnapshot.data() as Map<String, dynamic>?;
+          Map<String, dynamic>? employeeData =
+              employeeSnapshot.data() as Map<String, dynamic>?;
           name = employeeData?['EmployeeName'] ?? 'Unknown';
           img = employeeData?['EmployeeImg'] ?? img;
         } else {
@@ -207,7 +211,8 @@ class _HomeScreenState extends State<HomeScreen> {
               .get();
 
           if (clientSnapshot.exists) {
-            Map<String, dynamic>? clientData = clientSnapshot.data() as Map<String, dynamic>?;
+            Map<String, dynamic>? clientData =
+                clientSnapshot.data() as Map<String, dynamic>?;
             name = clientData?['ClientName'] ?? 'Unknown';
             img = clientData?['ClientHomePageBgImg'] ?? img;
           }
@@ -228,7 +233,6 @@ class _HomeScreenState extends State<HomeScreen> {
       print('Error fetching messages: $e');
     }
   }
-
 
   void _requestPermissions() async {
     var status = await Permission.locationWhenInUse.request();
@@ -1165,7 +1169,32 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ),
                             )
-                          : const SliverToBoxAdapter(),
+                          : ScreenIndex == 3
+                              ? SliverToBoxAdapter(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      TextButton(
+                                        onPressed: () {
+                                          //   SelectMessageGuardsScreen
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      SelectMessageGuardsScreen(
+                                                        companyId: '',
+                                                      )));
+                                        },
+                                        child: InterMedium(
+                                          text: 'Create Message',
+                                          fontsize: 14.sp,
+                                          color: Theme.of(context).textTheme.bodyLarge!.color,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                )
+                              : const SliverToBoxAdapter(),
               ScreenIndex == 2
                   ? SliverList(
                       delegate: SliverChildBuilderDelegate(
@@ -1315,132 +1344,167 @@ class _HomeScreenState extends State<HomeScreen> {
                     )
                   : ScreenIndex == 3
                       ? SliverList(
-                delegate: SliverChildBuilderDelegate(
-                      (BuildContext context, int index) {
-                    var message = messages[index];
-                    var messageTime = (message['MessageCreatedAt'] as Timestamp).toDate();
-                    var formattedTime = '${messageTime.hour.toString().padLeft(2, '0')}:${messageTime.minute.toString().padLeft(2, '0')}';
-                    var receiverId = message['MessageCreatedById'];
+                          delegate: SliverChildBuilderDelegate(
+                            (BuildContext context, int index) {
+                              var message = messages[index];
+                              var messageTime =
+                                  (message['MessageCreatedAt'] as Timestamp)
+                                      .toDate();
+                              var formattedTime =
+                                  '${messageTime.hour.toString().padLeft(2, '0')}:${messageTime.minute.toString().padLeft(2, '0')}';
+                              var receiverId = message['MessageCreatedById'];
 
-                    return GestureDetector(
-                      onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (builder) =>
-                            MobileChatScreen(
-                                receiverId: receiverId,
-                                receiverName: '',
-                                companyId: _cmpId,
-                                userName: _userName)));
-                      },
-                      child: Container(
-                        margin: EdgeInsets.only(
-                          top: 20.h,
-                          left: 30.w,
-                          right: 30.w,
-                        ),
-                        height: 76.h,
-                        width: double.maxFinite,
-                        child: Stack(
-                          children: [
-                            Align(
-                              alignment: Alignment.bottomCenter,
-                              child: Container(
-                                width: double.maxFinite,
-                                height: 76.h,
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context).cardColor,
-                                  border: Border(
-                                    bottom: BorderSide(
-                                      width: 1,
-                                      color: Theme.of(context).primaryColor,
-                                    ),
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (builder) =>
+                                              MobileChatScreen(
+                                                  receiverId: receiverId,
+                                                  receiverName: '',
+                                                  companyId: _cmpId,
+                                                  userName: _userName)));
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.only(
+                                    top: 20.h,
+                                    left: 30.w,
+                                    right: 30.w,
                                   ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Theme.of(context).shadowColor,
-                                      blurRadius: 5,
-                                      spreadRadius: 2,
-                                      offset: Offset(0, 3),
-                                    )
-                                  ],
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    // if (message['NewMessage'] == true)
-                                    //   Container(
-                                    //     height: 11.h,
-                                    //     width: 11.w,
-                                    //     decoration: BoxDecoration(
-                                    //       color: Colors.green,
-                                    //       shape: BoxShape.circle,
-                                    //     ),
-                                    //   ),
-                                    Container(
-                                      margin: EdgeInsets.only(left: 9.w),
-                                      height: 45.h,
-                                      width: 45.w,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        image: DecorationImage(
-                                          image: NetworkImage(message['EmployeeImg']),
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(width: 12.w),
-                                    SizedBox(
-                                      width: 300.w,
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Row(
-                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              InterRegular(
-                                                text: message['EmployeeName'],
-                                                fontsize: 17.sp,
-                                                color: Theme.of(context).textTheme.bodyMedium!.color!,
+                                  height: 76.h,
+                                  width: double.maxFinite,
+                                  child: Stack(
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.bottomCenter,
+                                        child: Container(
+                                          width: double.maxFinite,
+                                          height: 76.h,
+                                          decoration: BoxDecoration(
+                                            color: Theme.of(context).cardColor,
+                                            border: Border(
+                                              bottom: BorderSide(
+                                                width: 1,
+                                                color: Theme.of(context)
+                                                    .primaryColor,
                                               ),
-                                              Row(
-                                                children: [
-                                                  PoppinsRegular(
-                                                    text: formattedTime,
-                                                    color: Theme.of(context).textTheme.bodyLarge!.color!,
-                                                    fontsize: 15.sp,
-                                                  ),
-                                                  Icon(
-                                                    Icons.arrow_forward_ios,
-                                                    color: Theme.of(context).textTheme.bodyMedium!.color!,
-                                                    size: 15.sp,
-                                                  )
-                                                ],
-                                              ),
+                                            ),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Theme.of(context)
+                                                    .shadowColor,
+                                                blurRadius: 5,
+                                                spreadRadius: 2,
+                                                offset: Offset(0, 3),
+                                              )
                                             ],
                                           ),
-                                          SizedBox(height: 4.h),
-                                          Flexible(
-                                            child: InterRegular(
-                                              text: message['MessageData'],
-                                              fontsize: 15.sp,
-                                              color: Theme.of(context).textTheme.headlineSmall!.color!,
-                                            ),
+                                          child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              // if (message['NewMessage'] == true)
+                                              //   Container(
+                                              //     height: 11.h,
+                                              //     width: 11.w,
+                                              //     decoration: BoxDecoration(
+                                              //       color: Colors.green,
+                                              //       shape: BoxShape.circle,
+                                              //     ),
+                                              //   ),
+                                              Container(
+                                                margin:
+                                                    EdgeInsets.only(left: 9.w),
+                                                height: 45.h,
+                                                width: 45.w,
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  image: DecorationImage(
+                                                    image: NetworkImage(
+                                                        message['EmployeeImg']),
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(width: 12.w),
+                                              SizedBox(
+                                                width: 300.w,
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        InterRegular(
+                                                          text: message[
+                                                              'EmployeeName'],
+                                                          fontsize: 17.sp,
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .bodyMedium!
+                                                                  .color!,
+                                                        ),
+                                                        Row(
+                                                          children: [
+                                                            PoppinsRegular(
+                                                              text:
+                                                                  formattedTime,
+                                                              color: Theme.of(
+                                                                      context)
+                                                                  .textTheme
+                                                                  .bodyLarge!
+                                                                  .color!,
+                                                              fontsize: 15.sp,
+                                                            ),
+                                                            Icon(
+                                                              Icons
+                                                                  .arrow_forward_ios,
+                                                              color: Theme.of(
+                                                                      context)
+                                                                  .textTheme
+                                                                  .bodyMedium!
+                                                                  .color!,
+                                                              size: 15.sp,
+                                                            )
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    SizedBox(height: 4.h),
+                                                    Flexible(
+                                                      child: InterRegular(
+                                                        text: message[
+                                                            'MessageData'],
+                                                        fontsize: 15.sp,
+                                                        color: Theme.of(context)
+                                                            .textTheme
+                                                            .headlineSmall!
+                                                            .color!,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              )
+                                            ],
                                           ),
-                                        ],
+                                        ),
                                       ),
-                                    )
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                  childCount: messages.length,
-                ),
-              )
+                              );
+                            },
+                            childCount: messages.length,
+                          ),
+                        )
                       : SliverToBoxAdapter(),
               /*ScreenIndex == 2
                   ? SliverList(
