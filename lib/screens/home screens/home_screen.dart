@@ -1171,27 +1171,30 @@ class _HomeScreenState extends State<HomeScreen> {
                             )
                           : ScreenIndex == 3
                               ? SliverToBoxAdapter(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      TextButton(
-                                        onPressed: () {
-                                          //   SelectMessageGuardsScreen
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      SelectMessageGuardsScreen(
-                                                        companyId: '',
-                                                      )));
-                                        },
-                                        child: InterMedium(
-                                          text: 'Create Message',
-                                          fontsize: 14.sp,
-                                          color: Theme.of(context).textTheme.bodyLarge!.color,
-                                        ),
-                                      )
-                                    ],
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: 30.w),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        TextButton(
+                                          onPressed: () {
+                                            //   SelectMessageGuardsScreen
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        SelectMessageGuardsScreen(
+                                                          companyId: '',
+                                                        )));
+                                          },
+                                          child: InterMedium(
+                                            text: 'Create Message',
+                                            fontsize: 14.sp,
+                                            color: Theme.of(context).textTheme.bodyLarge!.color,
+                                          ),
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 )
                               : const SliverToBoxAdapter(),
