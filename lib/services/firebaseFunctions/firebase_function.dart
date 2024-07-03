@@ -2814,39 +2814,47 @@ class FireStoreService {
       if (documentSnapshot.exists) {
         print('Shift Task exists');
         final shiftTasks = documentSnapshot['ShiftTask'] as List<dynamic>;
+        print("Shiftask Status ${shiftTasks}");
         if (shiftTasks.isNotEmpty) {
           print("Shift Task is not empty");
           for (var shiftTask in shiftTasks) {
             // Check if ShiftReturnTaskStatus exists before accessing it
-            if (shiftTask.containsKey('ShiftReturnTaskStatus')) {
+            if (shiftTask.containsKey('ShiftReturnTaskStatus') &&
+                shiftTask['ShiftTaskReturnReq'] == true) {
               final taskStatusList =
                   shiftTask['ShiftReturnTaskStatus'] as List<dynamic>;
               if (taskStatusList == null || taskStatusList.isEmpty) {
-                return false;
+                print("ReturnTsk: 0");
+                // return true;
               }
               if (taskStatusList.isNotEmpty) {
                 print("ShiftTaskStatus is not empty");
                 for (var shiftTaskStatus in taskStatusList) {
                   if (shiftTaskStatus['TaskCompletedById'] == empId &&
+                      shiftTask['ShiftTaskReturnReq'] == true &&
                       (shiftTaskStatus['TaskStatus'] == "pending" &&
                               shiftTask['ShiftTaskReturnReq'] == true ||
                           shiftTaskStatus['TaskStatus'] == null)) {
+                    print("ReturnTsk: 1");
                     return false; // If any task matches the condition, return false
                   }
                 }
               } else {
+                print("ReturnTsk: 2");
                 return false; // If ShiftReturnTaskStatus is empty, return false
               }
             } else {
+              print("ReturnTsk: 3");
               // If ShiftReturnTaskStatus doesn't exist, return false
-              return false;
+              return true;
             }
           }
         } else {
           return true; // If ShiftTask is empty, return true
         }
       } else {
-        return false; // If document doesn't exist, return false
+        print("ReturnTsk: 4");
+        return true; // If document doesn't exist, return false
       }
       return true; // If no task matches the condition, return true
     } catch (e) {

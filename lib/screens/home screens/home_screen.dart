@@ -304,7 +304,7 @@ class _HomeScreenState extends State<HomeScreen> {
           String shiftClientId = shiftInfo["ShiftClientId"] ?? " ";
           List<Map<String, dynamic>> shiftCurrentStatus =
               List<Map<String, dynamic>>.from(shiftInfo['ShiftCurrentStatus']);
-
+          print("Shift Location Name: ${shiftLocationName}");
           List<Map<String, dynamic>> filteredStatus = shiftCurrentStatus
               .where((status) => status['StatusReportedById'] == _employeeId)
               .toList();
@@ -722,7 +722,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         // );
                         // customEmail();
                         // await fireStoreService.copyAndCreateDocument(
-                        //     "PatrolLogs", "wCTOAOUWoecE1DkQIBgr");
+                        //     "PatrolLogs", "Y2o1lVGNoKZoIUccbrWi");
                         Navigator.push(
                           context,
                           MaterialPageRoute(

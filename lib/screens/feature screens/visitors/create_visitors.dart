@@ -655,13 +655,13 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                                               Theme.of(context).primaryColor,
                                           onChanged: (value) {
                                             final tagData =
-                                                DynamicTagData(value,);
+                                                DynamicTagData(value, "");
                                             inputFieldValues
                                                 .onTagChanged(tagData);
                                           },
                                           onSubmitted: (value) {
                                             final tagData =
-                                                DynamicTagData(value,);
+                                                DynamicTagData(value, "");
                                             inputFieldValues
                                                 .onTagSubmitted(tagData);
                                           },

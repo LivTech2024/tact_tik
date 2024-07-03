@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
+import 'package:tact_tik/common/widgets/customErrorToast.dart';
 import 'package:tact_tik/common/widgets/customToast.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
@@ -462,53 +463,95 @@ class _UncheckedPatrolScreenState extends State<UncheckedPatrolScreen> {
                         borderRadius: 10.r,
                         height: 70.h,
                         backgroundcolor: Theme.of(context).primaryColor,
-                        color:
-                            Colors.white,
+                        color: Colors.white,
                         text: 'Next',
                         onPressed: () async {
                           setState(() {
                             _isloading = true;
                           });
+                          print(_checkpointReasons);
                           for (var entry in _checkpointReasons.entries) {
                             print(
-                                'Checkpoint: ${entry.key}, Reason: ${entry.value}');
+                                'FailureTest Checkpoint: ${entry.key}, Reason1: ${entry.value}');
                           }
-                          await fireStoreService
-                              .addFailureReasonToPatrol(
-                                  _checkpointReasons,
-                                  widget.PatrolID,
-                                  widget.EmployeeID,
-                                  widget.ShiftId)
-                              .then((_) {
-                            showSuccessToast(context, "Updated");
-                            print(_checkpointReasons);
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => EndCheckpointScreen(
-                                        EmpId: widget.EmployeeID,
-                                        PatrolID: widget.PatrolID,
-                                        ShiftId: widget.ShiftId,
-                                        EmpName: widget.EmployeeName,
-                                        CompletedCount: widget.CompletedCount,
-                                        PatrolRequiredCount:
-                                            widget.PatrolRequiredCount,
-                                        PatrolCompanyID: widget.PatrolCompanyID,
-                                        PatrolClientID: widget.PatrolClientID,
-                                        LocationId: widget.LocationId,
-                                        ShiftName: widget.ShiftName,
-                                        description: widget.description,
-                                        ShiftDate: widget.ShiftDate,
-                                        PatrolStatusTime:
-                                            widget.PatrolStartedTIme,
-                                      )),
-                            );
-                          }).catchError((error) {
-                            // Handle error
-                            print('Error: $error');
-                          });
-                          showSuccessToast(context, "Uploaded");
-                          print(_checkpointReasons);
+                          print("checkpointreason $_checkpointReasons");
+                          if (_checkpointReasons.isEmpty ||
+                              _checkpointReasons.values
+                                  .any((reason) => reason.isEmpty)) {
+                            showErrorToast(
+                                context, "All reasons should be filled");
+                          }
+                          bool allReasonsFilled = true;
+                          for (var patrol in patrolsData) {
+                            for (var category in patrol.categories) {
+                              for (var checkpoint in category.checkpoints) {
+                                if (checkpoint.checkPointStatus.any((status) =>
+                                    status.status == 'unchecked' &&
+                                    status.reportedById == widget.EmployeeID &&
+                                    status.statusShiftId == widget.ShiftId)) {
+                                  // Check if the reason is provided for this checkpoint
+                                  if (_checkpointReasons[checkpoint.id]
+                                          ?.isEmpty ??
+                                      true) {
+                                    allReasonsFilled = false;
+                                    break;
+                                  }
+                                }
+                              }
+                            }
+                          }
+                          // if (_checkpointReasons.values
+                          //         .any((reason) => reason.isEmpty) ||
+                          //     _checkpointReasons.isEmpty) {
+                          //   print("checkpointReasonisempty");
+
+                          //   return;
+                          // }
+                          // if (_checkpointReasons.isEmpty) {
+                          //   // print("checkpointReasonisempty");
+                          // }
+
+                          if (!allReasonsFilled) {
+                            showErrorToast(context,
+                                "Please provide reasons for all unchecked checkpoints.");
+                          } else {
+                            await fireStoreService
+                                .addFailureReasonToPatrol(
+                                    _checkpointReasons,
+                                    widget.PatrolID,
+                                    widget.EmployeeID,
+                                    widget.ShiftId)
+                                .then((_) {
+                              showSuccessToast(context, "Updated");
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => EndCheckpointScreen(
+                                          EmpId: widget.EmployeeID,
+                                          PatrolID: widget.PatrolID,
+                                          ShiftId: widget.ShiftId,
+                                          EmpName: widget.EmployeeName,
+                                          CompletedCount: widget.CompletedCount,
+                                          PatrolRequiredCount:
+                                              widget.PatrolRequiredCount,
+                                          PatrolCompanyID:
+                                              widget.PatrolCompanyID,
+                                          PatrolClientID: widget.PatrolClientID,
+                                          LocationId: widget.LocationId,
+                                          ShiftName: widget.ShiftName,
+                                          description: widget.description,
+                                          ShiftDate: widget.ShiftDate,
+                                          PatrolStatusTime:
+                                              widget.PatrolStartedTIme,
+                                        )),
+                              );
+                            }).catchError((error) {
+                              // Handle error
+                              print('Error: $error');
+                            });
+                            showSuccessToast(context, "Uploaded");
+                            // print(_checkpointReasons);
+                          }
                           setState(() {
                             _isloading = false;
                           });
@@ -544,6 +587,10 @@ class CheckReason extends StatefulWidget {
 class _CheckReasonState extends State<CheckReason> {
   bool isExpand = false;
   final TextEditingController _reasonController = TextEditingController();
+  void initState() {
+    super.initState();
+    _reasonController.text = _checkpointReasons[widget.checkpoint.id] ?? '';
+  }
 
   @override
   Widget build(BuildContext context) {
