@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
@@ -423,10 +424,19 @@ class _ShiftTaskReturnTypeWidgetState extends State<ShiftTaskReturnTypeWidget> {
                               SizedBox(
                                 width: width / width20,
                               ),
-                              InterRegular(
-                                text: widget.taskName,
-                                color: Theme.of(context).textTheme.displayMedium!.color,
-                                fontsize: width / width18,
+                              SizedBox(
+                                width: 220.w,
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: InterRegular(
+                                    text: widget.taskName,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .displayMedium!
+                                        .color,
+                                    fontsize: 18.sp,
+                                  ),
+                                ),
                               ),
                             ],
                           ),

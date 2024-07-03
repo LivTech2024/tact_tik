@@ -1,27 +1,20 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../common/enums/alert_enums.dart';
-import '../../common/widgets/alert_widget.dart';
+import '../../common/enums/guard_alert_enums.dart';
+import '../../common/widgets/guard_alert_widget.dart';
 import '../../fonts/inter_medium.dart';
 
-class NotificationScreen extends StatelessWidget {
-  const NotificationScreen({super.key});
+class GuardNotificationScreen extends StatelessWidget {
+  const GuardNotificationScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // final message = ModalRoute.of(context)!.settings.arguments as RemoteMessage;
-    // Text(
-    //   message.notification!.title.toString(),
-    //   style: TextStyle(color: Colors.white),
-    // ),
-
     List enums = [
-      AlertEnum.newExchange,
-      AlertEnum.newOffer,
-      AlertEnum.exchange,
-      AlertEnum.shiftEnded,
+      GuardAlertEnum.newOffer,
+      GuardAlertEnum.newExchange,
+      GuardAlertEnum.ShiftStatusNotification,
+      // If request is rejected then pass var (isRejected)
     ];
 
     return SafeArea(
@@ -60,7 +53,7 @@ class NotificationScreen extends StatelessWidget {
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   itemCount: enums.length,
-                  itemBuilder: (context, index) => AlertWidget(
+                  itemBuilder: (context, index) => GuardAlertWidget(
                     Enum: enums[index],
                   ),
                 ),

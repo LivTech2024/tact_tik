@@ -1,0 +1,401 @@
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:tact_tik/fonts/inter_regular.dart';
+
+import '../../fonts/inter_bold.dart';
+import '../../fonts/inter_medium.dart';
+import '../../fonts/inter_semibold.dart';
+import '../../screens/home screens/widgets/icon_text_widget.dart';
+import '../enums/guard_alert_enums.dart';
+import 'button1.dart';
+
+class GuardAlertWidget extends StatefulWidget {
+  const GuardAlertWidget({super.key, this.Enum, this.isRejected = false});
+
+  final bool isRejected;
+
+  final Enum;
+
+  @override
+  State<GuardAlertWidget> createState() => _GuardAlertWidgetState();
+}
+
+class _GuardAlertWidgetState extends State<GuardAlertWidget> {
+  Widget ProfileName() {
+    return Row(
+      children: [
+        Container(
+          height: Platform.isIOS ? 41.h : 44.h,
+          width: Platform.isIOS ? 41.w : 44.w,
+          decoration: '' != ""
+              ? BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                    image: NetworkImage('widget.employeeImg' ?? ""),
+                    filterQuality: FilterQuality.high,
+                    fit: BoxFit.cover,
+                  ),
+                )
+              : BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Theme.of(context).primaryColor,
+                  image: DecorationImage(
+                    image: AssetImage('assets/images/default.png'),
+                    filterQuality: FilterQuality.high,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+        ),
+        SizedBox(
+          width: Platform.isIOS ? 8.w : 10.w,
+        ),
+        InterBold(
+          text: 'Yash',
+          fontsize: Platform.isIOS ? 18.sp : 20.sp,
+        )
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return widget.Enum == GuardAlertEnum.newOffer
+        ? Container(
+            constraints: BoxConstraints(minHeight: 150.h),
+            margin: EdgeInsets.only(bottom: 10.h),
+            padding: EdgeInsets.only(
+                left: 24.w, top: 10.h, bottom: 10.h, right: 10.w),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5.r),
+              color: Theme.of(context).cardColor,
+              boxShadow: [
+                BoxShadow(
+                  color: Theme.of(context).shadowColor,
+                  blurRadius: 5,
+                  spreadRadius: 2,
+                  offset: Offset(0, 3),
+                )
+              ],
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                InterSemibold(
+                  text: 'GUARD  •  OFFER  •  3 MIN AGO',
+                  fontsize: Platform.isIOS ? 10.sp : 12.sp,
+                ),
+                SizedBox(
+                  height: Platform.isIOS ? 13.h : 10.h,
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    InterMedium(
+                      text: 'New Offer: ',
+                      fontsize: Platform.isIOS ? 14.sp : 16.sp,
+                    ),
+                    Flexible(
+                      child: InterMedium(
+                        text: 'Yash wants to offer Raj the Shift ',
+                        fontsize: Platform.isIOS ? 14.sp : 16.sp,
+                        maxLines: 2,
+                        letterSpacing: -.3,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: Platform.isIOS ? 26.sp : 20.sp,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Container(
+                      height: Platform.isIOS ? 41.h : 44.h,
+                      width: Platform.isIOS ? 41.w : 44.w,
+                      decoration: '' != ""
+                          ? BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                image: NetworkImage('widget.employeeImg' ?? ""),
+                                filterQuality: FilterQuality.high,
+                                fit: BoxFit.cover,
+                              ),
+                            )
+                          : BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Theme.of(context).primaryColor,
+                              image: DecorationImage(
+                                image: AssetImage('assets/images/default.png'),
+                                filterQuality: FilterQuality.high,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                    ),
+                    SizedBox(
+                      width: Platform.isIOS ? 8.w : 8.w,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        InterBold(
+                          text: 'Yash',
+                          fontsize: Platform.isIOS ? 18.sp : 20.sp,
+                        ),
+                        SizedBox(
+                          height: 5.h,
+                        ),
+                        SizedBox(
+                          height: Platform.isIOS ? 20.h : 22.h,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                constraints: BoxConstraints(
+                                    minWidth: 80.w, maxWidth: 140.w),
+                                child: IconTextWidget(
+                                  icon: Icons.location_on,
+                                  text: 'Bangalore south',
+                                  space: 3.w,
+                                  iconSize: Platform.isIOS ? 20.w : 24.w,
+                                  Iconcolor: Colors.white,
+                                ),
+                              ),
+                              SizedBox(width: 10.w),
+                              VerticalDivider(
+                                width: 1,
+                              ),
+                              SizedBox(width: 10.w),
+                              InterMedium(
+                                text: '9:30am-11:30am',
+                                fontsize: Platform.isIOS ? 14.sp : 16.sp,
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+                Visibility(
+                  visible: true, // TODO Add condition of visibility
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 20.h,
+                      ),
+                      Button1(
+                        height: 41.h,
+                        borderRadius: 5.r,
+                        backgroundcolor: Theme.of(context).primaryColor,
+                        text: 'Accept',
+                        onPressed: () {},
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
+          )
+        : widget.Enum == GuardAlertEnum.newExchange
+            ? Container(
+                constraints: BoxConstraints(minHeight: 150.h),
+                margin: EdgeInsets.only(bottom: 10.h),
+                padding: EdgeInsets.only(
+                    left: 24.w, top: 10.h, bottom: 10.h, right: 10.w),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5.r),
+                  color: Theme.of(context).cardColor,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Theme.of(context).shadowColor,
+                      blurRadius: 5,
+                      spreadRadius: 2,
+                      offset: Offset(0, 3),
+                    )
+                  ],
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    InterSemibold(
+                      text: 'GUARD  •  EXCHANGE  •  3 MIN AGO',
+                      fontsize: Platform.isIOS ? 10.sp : 12.sp,
+                    ),
+                    SizedBox(
+                      height: Platform.isIOS ? 13.h : 10.h,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        InterMedium(
+                          text: 'New Exchange: ',
+                          fontsize: Platform.isIOS ? 14.sp : 16.sp,
+                        ),
+                        Flexible(
+                          child: InterMedium(
+                            text: 'Yash wants to offer Raj the Shift ',
+                            fontsize: Platform.isIOS ? 14.sp : 16.sp,
+                            maxLines: 2,
+                            letterSpacing: -.3,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: Platform.isIOS ? 26.sp : 20.sp,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          height: Platform.isIOS ? 41.h : 44.h,
+                          width: Platform.isIOS ? 41.w : 44.w,
+                          decoration: '' != ""
+                              ? BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                    image: NetworkImage(
+                                        'widget.employeeImg' ?? ""),
+                                    filterQuality: FilterQuality.high,
+                                    fit: BoxFit.cover,
+                                  ),
+                                )
+                              : BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Theme.of(context).primaryColor,
+                                  image: DecorationImage(
+                                    image:
+                                        AssetImage('assets/images/default.png'),
+                                    filterQuality: FilterQuality.high,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                        ),
+                        SizedBox(
+                          width: Platform.isIOS ? 8.w : 8.w,
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            InterBold(
+                              text: 'Yash',
+                              fontsize: Platform.isIOS ? 18.sp : 20.sp,
+                            ),
+                            SizedBox(
+                              height: 5.h,
+                            ),
+                            SizedBox(
+                              height: Platform.isIOS ? 20.h : 22.h,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    constraints: BoxConstraints(
+                                        minWidth: 80.w, maxWidth: 140.w),
+                                    child: IconTextWidget(
+                                      icon: Icons.location_on,
+                                      text: 'Bangalore south',
+                                      space: 3.w,
+                                      iconSize: Platform.isIOS ? 20.w : 24.w,
+                                      Iconcolor: Colors.white,
+                                    ),
+                                  ),
+                                  SizedBox(width: 10.w),
+                                  VerticalDivider(
+                                    width: 1,
+                                  ),
+                                  SizedBox(width: 10.w),
+                                  InterMedium(
+                                    text: '9:30am-11:30am',
+                                    fontsize: Platform.isIOS ? 14.sp : 16.sp,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                    Visibility(
+                      visible: true, // TODO Add condition of visibility
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 20.h,
+                          ),
+                          Button1(
+                            height: 41.h,
+                            borderRadius: 5.r,
+                            backgroundcolor: Theme.of(context).primaryColor,
+                            text: 'Accept',
+                            onPressed: () {},
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              )
+            : widget.Enum == GuardAlertEnum.ShiftStatusNotification
+                ? Container(
+                    height: 100.h,
+                    width: double.maxFinite,
+                    margin: EdgeInsets.only(bottom: 10.h),
+                    padding: EdgeInsets.only(
+                        left: 24.w, top: 10.h, bottom: 10.h, right: 10.w),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5.r),
+                      color: widget.isRejected
+                          ? Color(0x66E74C3C)
+                          : /*33A652*/ Color(0x8C33A652),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Theme.of(context).shadowColor,
+                          blurRadius: 5,
+                          spreadRadius: 2,
+                          offset: Offset(0, 3),
+                        )
+                      ],
+                    ),
+                    child: Row(
+                      // crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Icon(
+                          Icons.message,
+                          size: 24.sp,
+                          color: Colors.white,
+                        ),
+                        SizedBox(width: 20.w),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            InterSemibold(
+                              text: 'SUPERVISOR  •  5 MIN AGO',
+                              fontsize: Platform.isIOS ? 10.sp : 12.sp,
+                              letterSpacing: -.25,
+                            ),
+                            InterRegular(
+                              text: 'New Message',
+                              fontsize: Platform.isIOS ? 14.sp : 16.sp,
+                            ),
+                            InterRegular(
+                              text:
+                                  'Your Offer Request Was Accepted By Supervisor',
+                              fontsize: 12.sp,
+                            )
+                          ],
+                        )
+                      ],
+                    ),
+                  )
+                : Container();
+  }
+}

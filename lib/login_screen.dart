@@ -155,6 +155,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         hintText: 'Email',
                       ),
+                      cursorColor: Theme.of(context).primaryColor,
                       keyboardType: TextInputType.emailAddress,
                     ),
                     SizedBox(height: 30.h),
