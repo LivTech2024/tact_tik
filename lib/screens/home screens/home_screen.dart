@@ -188,17 +188,35 @@ class _HomeScreenState extends State<HomeScreen> {
 
         if (message['MessageType'] != 'message') continue;
 
+        String name = 'Unknown';
+        String img = 'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg';
+
         DocumentSnapshot employeeSnapshot = await FirebaseFirestore.instance
             .collection('Employees')
             .doc(message['MessageCreatedById'])
             .get();
 
-        Map<String, dynamic>? employeeData = employeeSnapshot.data() as Map<String, dynamic>?;
+        if (employeeSnapshot.exists) {
+          Map<String, dynamic>? employeeData = employeeSnapshot.data() as Map<String, dynamic>?;
+          name = employeeData?['EmployeeName'] ?? 'Unknown';
+          img = employeeData?['EmployeeImg'] ?? img;
+        } else {
+          DocumentSnapshot clientSnapshot = await FirebaseFirestore.instance
+              .collection('Clients')
+              .doc(message['MessageCreatedById'])
+              .get();
+
+          if (clientSnapshot.exists) {
+            Map<String, dynamic>? clientData = clientSnapshot.data() as Map<String, dynamic>?;
+            name = clientData?['ClientName'] ?? 'Unknown';
+            img = clientData?['ClientHomePageBgImg'] ?? img;
+          }
+        }
 
         tempMessages.add({
           ...message,
-          'EmployeeName': employeeData?['EmployeeName'] ?? 'Unknown',
-          'EmployeeImg': employeeData?['EmployeeImg'] ?? 'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg',
+          'EmployeeName': name,
+          'EmployeeImg': img,
         });
       }
 
