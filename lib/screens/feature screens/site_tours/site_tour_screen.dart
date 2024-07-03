@@ -108,6 +108,7 @@ class SiteTourScreen extends StatelessWidget {
                         Align(
                           alignment: Alignment.topCenter,
                           child: IgnorePointer(
+                            ignoring: true,
                             child: Container(
                               height: 470.h,
                               width: double.maxFinite,
