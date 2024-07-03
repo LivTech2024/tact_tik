@@ -1192,7 +1192,9 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                 context,
                                                 MaterialPageRoute(
                                                   builder: (context) =>
-                                                      const SimpleBarcodeScannerPage(),
+                                                      const SimpleBarcodeScannerPage(
+                                                    isShowFlashIcon: true,
+                                                  ),
                                                 ));
                                             setState(() {
                                               Result = res;
