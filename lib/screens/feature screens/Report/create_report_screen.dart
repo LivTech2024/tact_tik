@@ -36,6 +36,7 @@ class CreateReportScreen extends StatefulWidget {
   final String SearchId;
   final bool isRoleGuard;
   final String BranchId;
+
   CreateReportScreen({
     Key? key,
     required this.locationId,
@@ -62,11 +63,14 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
   List<Map<String, dynamic>> DisplayIMage = [];
 
   FireStoreService fireStoreService = FireStoreService();
+
   // List<String> ClintValues = ['Client'];
   String? selectedClint = 'Client';
   String? selectedClientName;
+
   // String? selectedClientId;
   String? selectedClientId = 'Client';
+
   // List<String> LocationValues = ['Select Location'];
   List<String> tittles = [];
   Map<String, dynamic> reportData = {};
@@ -76,6 +80,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
   bool isChecked = false;
   String dropdownValue = 'Incident';
   String dropdownValueGuard = 'All Guards';
+
   // String dropdownValueLocation = 'Select Location';
   String? selectedLocationName;
   String? selectedLocationId = '';
@@ -87,6 +92,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
   DateTime? EndDate;
   Map<String, String> clientMap = {};
   Map<String, String> locationMap = {};
+
   @override
   void initState() {
     // TODO: implement initState
@@ -567,10 +573,19 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                                 hint: InterMedium(
                                   text: "Select Client",
                                   fontsize: 16.w,
-                                  color:
-                                  Theme.of(context).textTheme.bodyLarge!.color,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge!
+                                      .color,
                                 ),
-                                icon: Icon(Icons.arrow_drop_down , color: Theme.of(context).textTheme.bodyLarge!.color,size: 24.sp,),
+                                icon: Icon(
+                                  Icons.arrow_drop_down,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge!
+                                      .color,
+                                  size: 24.sp,
+                                ),
                                 iconEnabledColor: Theme.of(context)
                                     .textTheme
                                     .bodyMedium!
@@ -659,12 +674,20 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                                 hint: InterMedium(
                                   text: "Select Location",
                                   fontsize: 16.w,
-                                  color:
-                                  Theme.of(context).textTheme.bodyLarge!.color,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge!
+                                      .color,
                                 ),
                                 iconSize: 24.w,
-                                icon: Icon(Icons.arrow_drop_down,color:
-                                Theme.of(context).textTheme.bodyLarge!.color,size: 24.sp,),
+                                icon: Icon(
+                                  Icons.arrow_drop_down,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge!
+                                      .color,
+                                  size: 24.sp,
+                                ),
                                 iconEnabledColor: Theme.of(context)
                                     .textTheme
                                     .bodyMedium!
@@ -705,18 +728,24 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                                                     .bodyLarge!
                                                     .color),
                                         SizedBox(width: 10.w),
-                                        InterRegular(
-                                            text: entry.value,
-                                            color: selectedLocationName ==
-                                                    entry.value
-                                                ? Theme.of(context)
-                                                    .textTheme
-                                                    .bodyMedium!
-                                                    .color
-                                                : Theme.of(context)
-                                                    .textTheme
-                                                    .bodyLarge!
-                                                    .color),
+                                        SizedBox(
+                                          width: 280.w,
+                                          child: SingleChildScrollView(
+                                            scrollDirection: Axis.horizontal,
+                                            child: InterRegular(
+                                                text: entry.value,
+                                                color: selectedLocationName ==
+                                                        entry.value
+                                                    ? Theme.of(context)
+                                                        .textTheme
+                                                        .bodyMedium!
+                                                        .color
+                                                    : Theme.of(context)
+                                                        .textTheme
+                                                        .bodyLarge!
+                                                        .color),
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   );

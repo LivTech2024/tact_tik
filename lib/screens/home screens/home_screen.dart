@@ -30,6 +30,7 @@ import 'package:tact_tik/screens/feature%20screens/dar/dar_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/keys/view_keys_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/site_tours/site_tour_screen.dart';
 import 'package:tact_tik/screens/get%20started/getstarted_screen.dart';
+import 'package:tact_tik/screens/home%20screens/select_message_guards.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/custom_calendar.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/grid_widget.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/home_screen_part1.dart';
@@ -40,6 +41,7 @@ import 'package:tact_tik/screens/home%20screens/widgets/start_task_screen.dart';
 // import 'package:tact_tik/screens/home%20screens/widgets/start_task_screen.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/task_screen.dart';
 import 'package:tact_tik/screens/message%20screen/message_screen.dart';
+import 'package:tact_tik/screens/supervisor%20screens/home%20screens/message%20screens/super_inbox.dart';
 import 'package:tact_tik/services/EmailService/EmailJs_fucntion.dart';
 import 'package:tact_tik/services/Provider/provider.dart';
 import 'package:tact_tik/services/auth/auth.dart';
@@ -182,50 +184,58 @@ class _HomeScreenState extends State<HomeScreen> {
           .orderBy('MessageCreatedAt', descending: true)
           .get();
 
-      List<Map<String, dynamic>> tempMessages = [];
+      Map<String, Map<String, dynamic>> latestMessages = {};
 
       for (var doc in messageSnapshot.docs) {
         Map<String, dynamic> message = doc.data() as Map<String, dynamic>;
 
         if (message['MessageType'] != 'message') continue;
 
-        String name = 'Unknown';
-        String img =
-            'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg';
+        String senderId = message['MessageCreatedById'];
 
-        DocumentSnapshot employeeSnapshot = await FirebaseFirestore.instance
-            .collection('Employees')
-            .doc(message['MessageCreatedById'])
-            .get();
+        // If we haven't stored a message from this sender yet, or if this message is newer
+        if (!latestMessages.containsKey(senderId) ||
+            (message['MessageCreatedAt'] as Timestamp).toDate().isAfter(
+                (latestMessages[senderId]!['MessageCreatedAt'] as Timestamp)
+                    .toDate())) {
+          String name = 'Unknown';
+          String img =
+              'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg';
 
-        if (employeeSnapshot.exists) {
-          Map<String, dynamic>? employeeData =
-              employeeSnapshot.data() as Map<String, dynamic>?;
-          name = employeeData?['EmployeeName'] ?? 'Unknown';
-          img = employeeData?['EmployeeImg'] ?? img;
-        } else {
-          DocumentSnapshot clientSnapshot = await FirebaseFirestore.instance
-              .collection('Clients')
-              .doc(message['MessageCreatedById'])
+          DocumentSnapshot employeeSnapshot = await FirebaseFirestore.instance
+              .collection('Employees')
+              .doc(senderId)
               .get();
 
-          if (clientSnapshot.exists) {
-            Map<String, dynamic>? clientData =
-                clientSnapshot.data() as Map<String, dynamic>?;
-            name = clientData?['ClientName'] ?? 'Unknown';
-            img = clientData?['ClientHomePageBgImg'] ?? img;
-          }
-        }
+          if (employeeSnapshot.exists) {
+            Map<String, dynamic>? employeeData =
+                employeeSnapshot.data() as Map<String, dynamic>?;
+            name = employeeData?['EmployeeName'] ?? 'Unknown';
+            img = employeeData?['EmployeeImg'] ?? img;
+          } else {
+            DocumentSnapshot clientSnapshot = await FirebaseFirestore.instance
+                .collection('Clients')
+                .doc(senderId)
+                .get();
 
-        tempMessages.add({
-          ...message,
-          'EmployeeName': name,
-          'EmployeeImg': img,
-        });
+            if (clientSnapshot.exists) {
+              Map<String, dynamic>? clientData =
+                  clientSnapshot.data() as Map<String, dynamic>?;
+              name = clientData?['ClientName'] ?? 'Unknown';
+              img = clientData?['ClientHomePageBgImg'] ?? img;
+            }
+          }
+
+          latestMessages[senderId] = {
+            ...message,
+            'EmployeeName': name,
+            'EmployeeImg': img,
+          };
+        }
       }
 
       setState(() {
-        messages = tempMessages;
+        messages = latestMessages.values.toList();
       });
       print("MESSAGES: $messages");
     } catch (e) {
@@ -1171,7 +1181,42 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ),
                             )
-                          : const SliverToBoxAdapter(),
+                          : ScreenIndex == 3
+                              ? SliverToBoxAdapter(
+                                  child: Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 30.w),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        SuperInboxScreen(
+                                                          companyId:
+                                                              _employeeCompanyID,
+                                                          userName: _userName,
+                                                          isGuard: true,
+                                                          isClient: false,
+                                                        )));
+                                          },
+                                          child: InterMedium(
+                                            text: 'Create Message',
+                                            fontsize: 14.sp,
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .bodyLarge!
+                                                .color,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              : const SliverToBoxAdapter(),
               ScreenIndex == 2
                   ? SliverList(
                       delegate: SliverChildBuilderDelegate(

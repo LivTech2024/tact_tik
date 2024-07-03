@@ -238,7 +238,7 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
                     checkPointStatuses.every((s) =>
                         s['StatusReportedById'] != widget.EmployeeID &&
                         s['StatusShiftId'] == widget.ShiftId)) {
-                  reportedTime = _parseTimestamp(status['StatusReportedTime']);
+                  // reportedTime = _parseTimestamp(status['StatusReportedTime']);
                   return true;
                 }
                 return false;

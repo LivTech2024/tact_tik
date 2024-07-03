@@ -3612,6 +3612,108 @@ class FireStoreService {
     }
   }
 
+  Future<bool> checkLocationAndAddEmail(String locationId) async {
+    try {
+      // Get the document from the Locations collection
+      DocumentSnapshot docSnapshot = await FirebaseFirestore.instance
+          .collection('Locations')
+          .doc(locationId)
+          .get();
+
+      if (docSnapshot.exists) {
+        // Check if LocationSendEmailForEachPatrol is true
+        bool sendEmailForEachPatrol =
+            docSnapshot.get('LocationSendEmailForEachPatrol');
+        // if (sendEmailForEachPatrol) {
+        //   // Get the client's email
+        //   String clientEmail = docSnapshot.get('LocationManagerEmail');
+        //   // Add the client's email to the list
+        //   emailList.add(clientEmail);
+        // }
+        return sendEmailForEachPatrol;
+      } else {
+        // Document does not exist
+        return false;
+      }
+    } catch (e) {
+      print('Error checking location: $e');
+      return false;
+    }
+  }
+
+  Future<bool> ReturnLocationManagerAddEmail(String locationId) async {
+    try {
+      // Get the document from the Locations collection
+      DocumentSnapshot docSnapshot = await FirebaseFirestore.instance
+          .collection('Locations')
+          .doc(locationId)
+          .get();
+
+      if (docSnapshot.exists) {
+        // Check if LocationSendEmailForEachPatrol is true
+        bool sendEmailForEachPatrol =
+            docSnapshot.get('LocationSendEmailForEachPatrol');
+        // if (sendEmailForEachPatrol) {
+        //   // Get the client's email
+        //   String clientEmail = docSnapshot.get('LocationManagerEmail');
+        //   // Add the client's email to the list
+        //   emailList.add(clientEmail);
+        // }
+        return sendEmailForEachPatrol;
+      } else {
+        // Document does not exist
+        return false;
+      }
+    } catch (e) {
+      print('Error checking location: $e');
+      return false;
+    }
+  }
+
+  Future<String?> getLocationManagerEmail(String locationId) async {
+    try {
+      // Get the document from the Locations collection
+      DocumentSnapshot docSnapshot = await FirebaseFirestore.instance
+          .collection('Locations')
+          .doc(locationId)
+          .get();
+
+      if (docSnapshot.exists) {
+        // Get the LocationManagerEmail
+        String managerEmail = docSnapshot.get('LocationManagerEmail');
+        return managerEmail;
+      } else {
+        // Document does not exist
+        return null;
+      }
+    } catch (e) {
+      print('Error getting location manager email: $e');
+      return null;
+    }
+  }
+
+  Future<bool> shouldSendEmailToClient(String locationId) async {
+    try {
+      // Get the document from the Locations collection
+      DocumentSnapshot docSnapshot = await FirebaseFirestore.instance
+          .collection('Locations')
+          .doc(locationId)
+          .get();
+
+      if (docSnapshot.exists) {
+        // Check if LocationSendEmailToClient is true
+        bool sendEmailToClient = docSnapshot.get('LocationSendEmailToClient');
+        return sendEmailToClient;
+      } else {
+        // Document does not exist
+        return false;
+      }
+    } catch (e) {
+      print('Error checking send email to client: $e');
+      return false;
+    }
+  }
+
   //Update the shift status when the qr is scanned correctly
   Future<void> updateShiftTaskStatus(
       String ShiftTaskId, String EmpID, String ShiftId, String EmpName) async {

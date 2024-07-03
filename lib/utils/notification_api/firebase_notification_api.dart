@@ -43,14 +43,18 @@ class FirebaseNotificationApi {
   //Handle Inapp route based on Message notification
   void handleMessage(RemoteMessage? message) {
     print('Received a message while in the foreground: ${message}');
-    if (message == null) return;
+    // if (message == null) return;
     // navigatorKey.currentState
     //     ?.pushNamed('/notification_screen', arguments: message);
 
-    if (message == '/notification_screen') {
-    } else if (message == '/wellness_check') {
-      // navigatorKey.currentState
-      //     ?.pushNamed('/wellness_chec', arguments: message);
+    // if (message == '/notification_screen') {
+    // } else if (message == '/wellness_check') {
+    //   navigatorKey.currentState
+    //       ?.pushNamed('/wellness_chec', arguments: message);
+    // }
+    if (message?.data['route'] != null) {
+      String route = message?.data['route'];
+      navigatorKey.currentState?.pushNamed(route, arguments: message);
     }
   }
 

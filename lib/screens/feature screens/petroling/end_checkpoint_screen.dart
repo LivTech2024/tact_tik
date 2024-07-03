@@ -431,8 +431,25 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                       var testEmail3 = "Swastikbthiramdas@gmail.com";
                       emails.add(TestinEmail);
                       emails.add(testEmail3);
-
-                      emails.add(ClientEmail!);
+                      bool sendEmail = await fireStoreService
+                          .checkLocationAndAddEmail(widget.LocationId);
+                      if (sendEmail == true) {
+                        String? Email = await fireStoreService
+                            .getLocationManagerEmail(widget.LocationId);
+                        if (Email != null) {
+                          emails.add(Email);
+                        }
+                      }
+                      bool sendEmailToClient = await fireStoreService
+                          .shouldSendEmailToClient(widget.LocationId);
+                      if (sendEmailToClient == true && sendEmail == true) {
+                        // String? Email = await fireStoreService
+                        //     .getLocationManagerEmail(widget.LocationId);
+                        // if (Email != null) {
+                        emails.add(ClientEmail!);
+                        // }
+                      }
+                      // emails.add(ClientEmail!);
                       emails.add(AdminEmail!);
                       emails.add(defaultEmail!);
                       // var clientId = await fireStoreService

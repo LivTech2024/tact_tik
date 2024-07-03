@@ -63,8 +63,8 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
   }
 
   Future<void> _addImage() async {
-    XFile? pickedFile = await ImagePicker()
-        .pickImage(source: ImageSource.camera, imageQuality: 20);
+    XFile? pickedFile = await ImagePicker().pickImage(
+        source: ImageSource.camera, imageQuality: Platform.isIOS ? 30 : 50);
     if (pickedFile != null) {
       try {
         File file = File(pickedFile.path);
@@ -86,8 +86,8 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
   }
 
   Future<void> _addGallery() async {
-    List<XFile>? pickedFiles =
-        await ImagePicker().pickMultiImage(imageQuality: 20);
+    List<XFile>? pickedFiles = await ImagePicker()
+        .pickMultiImage(imageQuality: Platform.isIOS ? 30 : 50);
     if (pickedFiles != null) {
       for (var pickedFile in pickedFiles) {
         try {
@@ -372,7 +372,9 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
-                                const SimpleBarcodeScannerPage(),
+                                const SimpleBarcodeScannerPage(
+                              isShowFlashIcon: true,
+                            ),
                           ));
                       setState(() {
                         Result = res;

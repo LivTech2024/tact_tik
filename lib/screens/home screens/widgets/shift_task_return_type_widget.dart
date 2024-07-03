@@ -55,8 +55,8 @@ class _ShiftTaskReturnTypeWidgetState extends State<ShiftTaskReturnTypeWidget> {
   List<Map<String, dynamic>> uploads = [];
   bool _isLoading = false;
   Future<void> _addImage() async {
-    XFile? pickedFile = await ImagePicker()
-        .pickImage(source: ImageSource.camera, imageQuality: 20);
+    XFile? pickedFile = await ImagePicker().pickImage(
+        source: ImageSource.camera, imageQuality: Platform.isIOS ? 30 : 50);
     if (pickedFile != null) {
       try {
         File file = File(pickedFile.path);
@@ -78,8 +78,8 @@ class _ShiftTaskReturnTypeWidgetState extends State<ShiftTaskReturnTypeWidget> {
   }
 
   Future<void> _addGallery() async {
-    List<XFile>? pickedFiles =
-        await ImagePicker().pickMultiImage(imageQuality: 20);
+    List<XFile>? pickedFiles = await ImagePicker()
+        .pickMultiImage(imageQuality: Platform.isIOS ? 30 : 50);
     if (pickedFiles != null) {
       for (var pickedFile in pickedFiles) {
         try {
@@ -334,7 +334,9 @@ class _ShiftTaskReturnTypeWidgetState extends State<ShiftTaskReturnTypeWidget> {
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
-                                const SimpleBarcodeScannerPage(),
+                                const SimpleBarcodeScannerPage(
+                              isShowFlashIcon: true,
+                            ),
                           ));
                       setState(() {
                         Result = res;
@@ -445,10 +447,8 @@ class _ShiftTaskReturnTypeWidgetState extends State<ShiftTaskReturnTypeWidget> {
                             width: width / width34,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: Theme.of(context)
-                                  .textTheme
-                                  .titleLarge!
-                                  .color,
+                              color:
+                                  Theme.of(context).textTheme.titleLarge!.color,
                             ),
                             child: Center(
                               child: IconButton(
@@ -585,7 +585,13 @@ class _ShiftTaskReturnTypeWidgetState extends State<ShiftTaskReturnTypeWidget> {
                                 borderRadius:
                                     BorderRadius.circular(width / width8)),
                             child: Center(
-                              child: Icon(Icons.add,color: Theme.of(context).textTheme.bodyMedium!.color,),
+                              child: Icon(
+                                Icons.add,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color,
+                              ),
                             ),
                           ),
                         ),
@@ -593,7 +599,10 @@ class _ShiftTaskReturnTypeWidgetState extends State<ShiftTaskReturnTypeWidget> {
                           onPressed: _uploadImages,
                           backgroundColor: Theme.of(context).primaryColor,
                           shape: CircleBorder(),
-                          child: Icon(Icons.cloud_upload,color: Colors.white,),
+                          child: Icon(
+                            Icons.cloud_upload,
+                            color: Colors.white,
+                          ),
                         )
                       ],
                     ),

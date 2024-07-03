@@ -600,7 +600,10 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                                 InterBold(
                                                   text: 'Patrol Name:\t',
                                                   fontsize: 12.sp,
-                                                  color: Colors.white,
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .bodySmall!
+                                                      .color,
                                                 ),
                                                 InterBold(
                                                   text: TilePatrolData

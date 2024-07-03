@@ -202,6 +202,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
               companyId: _CompanyId,
               userName: _userName,
               isClient: false,
+              isGuard: false,
             ));
             break;
         }

@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import '../../../../common/widgets/button1.dart';
 import '../../../../common/widgets/customToast.dart';
 import '../../../../fonts/inter_bold.dart';
+import '../../../../fonts/inter_medium.dart';
 import '../../../../fonts/inter_regular.dart';
 
 class ExchangeRequest extends StatefulWidget {
@@ -300,6 +301,21 @@ class _ExchangeRequestState extends State<ExchangeRequest> {
           )
         : SafeArea(
             child: Scaffold(
+              appBar: AppBar(
+                leading: IconButton(
+                  icon: Icon(
+                    Icons.arrow_back_ios,
+                  ),
+                  padding: EdgeInsets.only(left: 20.w),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                title: InterMedium(
+                  text: 'Exchange Request',
+                ),
+                centerTitle: true,
+              ),
               body: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 30.w),
                 child: SingleChildScrollView(

@@ -154,6 +154,12 @@ class _LoginScreenState extends State<LoginScreen> {
                               .color, // Change text color to white
                         ),
                         hintText: 'Email',
+                        /*enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.red),
+                        ),*/
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Theme.of(context).primaryColor),
+                        ),
                       ),
                       cursorColor: Theme.of(context).primaryColor,
                       keyboardType: TextInputType.emailAddress,
@@ -208,6 +214,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         labelText: 'Password',
                         hintText: 'Enter your password',
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Theme.of(context).primaryColor),
+                        ),
                       ),
                     ),
                     SizedBox(height: 20.h),

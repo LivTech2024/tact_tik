@@ -16,6 +16,8 @@ import 'package:tact_tik/screens/authChecker/authChecker.dart';
 // import 'package:tact_tik/screens/home%20screens/message%20screen/message_screen.dart';
 // import 'package:workmanager/workmanager.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
+import 'package:tact_tik/screens/home%20screens/notification_screen.dart';
+import 'package:tact_tik/screens/home%20screens/wellness_check_screen.dart';
 import 'package:tact_tik/utils/constants.dart';
 import 'package:tact_tik/utils/notification_api/firebase_notification_api.dart';
 import 'package:tact_tik/utils/theme_manager.dart';
@@ -23,7 +25,7 @@ import 'package:tact_tik/utils/themes.dart';
 
 ThemeManager themeManager = ThemeManager();
 
-// final navigatorKey = GlobalKey<NavigatorState>();
+final navigatorKey = GlobalKey<NavigatorState>();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -78,14 +80,14 @@ class _MyAppState extends State<MyApp> {
             theme: ligthTheme,
             darkTheme: darkTheme,
             themeMode: themeManager.themeMode,
-            // navigatorKey: navigatorKey,
-            // routes: {
-            //   '/notification_screen': (context) => NotificationScreen(),
-            //   '/wellness_check': (context) => WellnessCheckScreen(
-            //         EmpName: '',
-            //         EmpId: '',
-            //       ),
-            // },
+            navigatorKey: navigatorKey,
+            routes: {
+              '/notification_screen': (context) => NotificationScreen(),
+              '/wellness_check': (context) => WellnessCheckScreen(
+                    EmpName: '',
+                    EmpId: '',
+                  ),
+            },
             home: child,
           ),
         );
