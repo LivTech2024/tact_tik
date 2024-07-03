@@ -41,6 +41,7 @@ import 'package:tact_tik/screens/home%20screens/widgets/start_task_screen.dart';
 // import 'package:tact_tik/screens/home%20screens/widgets/start_task_screen.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/task_screen.dart';
 import 'package:tact_tik/screens/message%20screen/message_screen.dart';
+import 'package:tact_tik/screens/supervisor%20screens/home%20screens/message%20screens/super_inbox.dart';
 import 'package:tact_tik/services/EmailService/EmailJs_fucntion.dart';
 import 'package:tact_tik/services/Provider/provider.dart';
 import 'package:tact_tik/services/auth/auth.dart';
@@ -178,55 +179,59 @@ class _HomeScreenState extends State<HomeScreen> {
     try {
       QuerySnapshot messageSnapshot = await FirebaseFirestore.instance
           .collection('Messages')
-          .where('MessageReceiversId',
-              isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+          .where('MessageReceiversId', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
           .orderBy('MessageCreatedAt', descending: true)
           .get();
 
-      List<Map<String, dynamic>> tempMessages = [];
+      Map<String, Map<String, dynamic>> latestMessages = {};
 
       for (var doc in messageSnapshot.docs) {
         Map<String, dynamic> message = doc.data() as Map<String, dynamic>;
 
         if (message['MessageType'] != 'message') continue;
 
-        String name = 'Unknown';
-        String img =
-            'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg';
+        String senderId = message['MessageCreatedById'];
 
-        DocumentSnapshot employeeSnapshot = await FirebaseFirestore.instance
-            .collection('Employees')
-            .doc(message['MessageCreatedById'])
-            .get();
+        // If we haven't stored a message from this sender yet, or if this message is newer
+        if (!latestMessages.containsKey(senderId) ||
+            (message['MessageCreatedAt'] as Timestamp).toDate().isAfter(
+                (latestMessages[senderId]!['MessageCreatedAt'] as Timestamp).toDate())) {
 
-        if (employeeSnapshot.exists) {
-          Map<String, dynamic>? employeeData =
-              employeeSnapshot.data() as Map<String, dynamic>?;
-          name = employeeData?['EmployeeName'] ?? 'Unknown';
-          img = employeeData?['EmployeeImg'] ?? img;
-        } else {
-          DocumentSnapshot clientSnapshot = await FirebaseFirestore.instance
-              .collection('Clients')
-              .doc(message['MessageCreatedById'])
+          String name = 'Unknown';
+          String img = 'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg';
+
+          DocumentSnapshot employeeSnapshot = await FirebaseFirestore.instance
+              .collection('Employees')
+              .doc(senderId)
               .get();
 
-          if (clientSnapshot.exists) {
-            Map<String, dynamic>? clientData =
-                clientSnapshot.data() as Map<String, dynamic>?;
-            name = clientData?['ClientName'] ?? 'Unknown';
-            img = clientData?['ClientHomePageBgImg'] ?? img;
-          }
-        }
+          if (employeeSnapshot.exists) {
+            Map<String, dynamic>? employeeData = employeeSnapshot.data() as Map<String, dynamic>?;
+            name = employeeData?['EmployeeName'] ?? 'Unknown';
+            img = employeeData?['EmployeeImg'] ?? img;
+          } else {
+            DocumentSnapshot clientSnapshot = await FirebaseFirestore.instance
+                .collection('Clients')
+                .doc(senderId)
+                .get();
 
-        tempMessages.add({
-          ...message,
-          'EmployeeName': name,
-          'EmployeeImg': img,
-        });
+            if (clientSnapshot.exists) {
+              Map<String, dynamic>? clientData = clientSnapshot.data() as Map<String, dynamic>?;
+              name = clientData?['ClientName'] ?? 'Unknown';
+              img = clientData?['ClientHomePageBgImg'] ?? img;
+            }
+          }
+
+          latestMessages[senderId] = {
+            ...message,
+            'EmployeeName': name,
+            'EmployeeImg': img,
+          };
+        }
       }
 
       setState(() {
-        messages = tempMessages;
+        messages = latestMessages.values.toList();
       });
       print("MESSAGES: $messages");
     } catch (e) {
@@ -1178,13 +1183,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                       children: [
                                         TextButton(
                                           onPressed: () {
-                                            //   SelectMessageGuardsScreen
                                             Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
-                                                        SelectMessageGuardsScreen(
-                                                          companyId: '',
+                                                        SuperInboxScreen(
+                                                          companyId: _employeeCompanyID,
+                                                          userName: _userName,
+                                                          isGuard: true,
+                                                          isClient: false,
                                                         )));
                                           },
                                           child: InterMedium(

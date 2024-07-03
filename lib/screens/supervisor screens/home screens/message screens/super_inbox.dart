@@ -16,10 +16,11 @@ import '../../../../utils/colors.dart';
 import '../../../message screen/message_screen.dart';
 
 class SuperInboxScreen extends StatefulWidget {
-  SuperInboxScreen({super.key, required this.companyId, required this.userName, required this.isClient});
+  SuperInboxScreen({super.key, required this.companyId, required this.userName, required this.isClient, required this.isGuard});
   final String userName;
   final String companyId;
   final bool isClient;
+  final bool isGuard;
   @override
   State<SuperInboxScreen> createState() => _SuperInboxScreenState();
 }
@@ -41,7 +42,8 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
     Query query = FirebaseFirestore.instance
         .collection('Employees')
         .where('EmployeeRole', isEqualTo: 'GUARD')
-        .where('EmployeeCompanyId', isEqualTo: widget.companyId);
+        .where('EmployeeCompanyId', isEqualTo: widget.companyId)
+        .where('EmployeeId', isNotEqualTo: currentUser!.uid);
 
     if (dropdownValue != 'All Guards') {
       query = query.where('EmployeeIsAvailable', isEqualTo: dropdownValue);
@@ -87,7 +89,18 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                 color: Theme.of(context).cardColor,
               ),
               padding: EdgeInsets.symmetric(vertical: 16.h),
-              child: Row(
+              child: widget.isGuard
+                  ? Container(
+                color: Theme.of(context).cardColor,
+                child: Center(
+                  child: InterBold(
+                    text: 'Guards',
+                    color: Theme.of(context).textTheme.bodyMedium!.color as Color,
+                    fontsize: 18.sp,
+                  ),
+                ),
+              )
+                  : Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Expanded(
@@ -133,7 +146,7 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                         color: Theme.of(context).cardColor,
                         child: Center(
                           child: InterBold(
-                            text: 'Admin',
+                            text: widget.isClient ? 'Admin' : "Admin & Client",
                             color: colors[1],
                             fontsize: 18.sp,
                           ),

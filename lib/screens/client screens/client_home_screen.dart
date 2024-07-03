@@ -108,29 +108,36 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
           .orderBy('MessageCreatedAt', descending: true)
           .get();
 
-      List<Map<String, dynamic>> tempMessages = [];
+      Map<String, Map<String, dynamic>> latestMessages = {};
 
       for (var doc in messageSnapshot.docs) {
         Map<String, dynamic> message = doc.data() as Map<String, dynamic>;
 
         if (message['MessageType'] != 'message') continue;
 
-        DocumentSnapshot employeeSnapshot = await FirebaseFirestore.instance
-            .collection('Employees')
-            .doc(message['MessageCreatedById'])
-            .get();
+        String senderId = message['MessageCreatedById'];
 
-        Map<String, dynamic>? employeeData = employeeSnapshot.data() as Map<String, dynamic>?;
+        if (!latestMessages.containsKey(senderId) ||
+            (message['MessageCreatedAt'] as Timestamp).toDate().isAfter(
+                (latestMessages[senderId]!['MessageCreatedAt'] as Timestamp).toDate())) {
 
-        tempMessages.add({
-          ...message,
-          'EmployeeName': employeeData?['EmployeeName'] ?? 'Unknown',
-          'EmployeeImg': employeeData?['EmployeeImg'] ?? 'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg',
-        });
+          DocumentSnapshot employeeSnapshot = await FirebaseFirestore.instance
+              .collection('Employees')
+              .doc(senderId)
+              .get();
+
+          Map<String, dynamic>? employeeData = employeeSnapshot.data() as Map<String, dynamic>?;
+
+          latestMessages[senderId] = {
+            ...message,
+            'EmployeeName': employeeData?['EmployeeName'] ?? 'Unknown',
+            'EmployeeImg': employeeData?['EmployeeImg'] ?? 'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg',
+          };
+        }
       }
 
       setState(() {
-        messages = tempMessages;
+        messages = latestMessages.values.toList();
       });
       print("MESSAGES: $messages");
     } catch (e) {
@@ -1603,7 +1610,13 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                         ),
                         GestureDetector(
                           onTap: (){
-                            Navigator.push(context, MaterialPageRoute(builder: (builder) => SuperInboxScreen(companyId: _cmpId, userName: _userName, isClient: true,)));
+                            Navigator.push(context, MaterialPageRoute(builder: (builder) =>
+                                SuperInboxScreen(
+                                  companyId: _cmpId,
+                                  userName: _userName,
+                                  isClient: true,
+                                  isGuard: false,
+                                )));
                           },
                           child: Row(
                             mainAxisAlignment:
