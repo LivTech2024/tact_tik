@@ -437,7 +437,7 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                                         ),
                                       ],
                                     ),
-                                    Stack(
+                                    /*Stack(
                                       clipBehavior: Clip.none,
                                       children: [
                                         Stack(
@@ -467,7 +467,7 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                                           ],
                                         ),
                                       ],
-                                    ),
+                                    ),*/
                                   ],
                                 ),
                               ),
