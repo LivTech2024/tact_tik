@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:bounce/bounce.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -18,6 +19,7 @@ import 'package:tact_tik/screens/client%20screens/patrol/client_open_patrol_scre
 import 'package:tact_tik/screens/client%20screens/select_client_guards_screen.dart';
 import 'package:tact_tik/screens/client%20screens/select_location_schift.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/icon_text_widget.dart';
+import 'package:tact_tik/screens/supervisor%20screens/home%20screens/message%20screens/super_inbox.dart';
 import '../../fonts/inter_bold.dart';
 import '../../fonts/inter_medium.dart';
 import '../../fonts/inter_regular.dart';
@@ -34,6 +36,7 @@ import '../SideBar Screens/profile_screen.dart';
 import '../home screens/widgets/grid_widget.dart';
 import '../home screens/widgets/home_screen_part1.dart';
 import '../home screens/widgets/homescreen_custom_navigation.dart';
+import '../message screen/message_screen.dart';
 import 'DAR/select_location_dar.dart';
 import 'Reports/client_oprn_report.dart';
 import 'Reports/client_report_screen.dart';
@@ -95,6 +98,45 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
   List<Map<String, dynamic>> patrolsList = [];
   bool _showWish = true;
   bool NewMessage = false;
+  List<Map<String, dynamic>> messages = [];
+
+  Future<void> fetchMessages() async {
+    try {
+      QuerySnapshot messageSnapshot = await FirebaseFirestore.instance
+          .collection('Messages')
+          .where('MessageReceiversId', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+          .orderBy('MessageCreatedAt', descending: true)
+          .get();
+
+      List<Map<String, dynamic>> tempMessages = [];
+
+      for (var doc in messageSnapshot.docs) {
+        Map<String, dynamic> message = doc.data() as Map<String, dynamic>;
+
+        if (message['MessageType'] != 'message') continue;
+
+        DocumentSnapshot employeeSnapshot = await FirebaseFirestore.instance
+            .collection('Employees')
+            .doc(message['MessageCreatedById'])
+            .get();
+
+        Map<String, dynamic>? employeeData = employeeSnapshot.data() as Map<String, dynamic>?;
+
+        tempMessages.add({
+          ...message,
+          'EmployeeName': employeeData?['EmployeeName'] ?? 'Unknown',
+          'EmployeeImg': employeeData?['EmployeeImg'] ?? 'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg',
+        });
+      }
+
+      setState(() {
+        messages = tempMessages;
+      });
+      print("MESSAGES: $messages");
+    } catch (e) {
+      print('Error fetching messages: $e');
+    }
+  }
 
   void NavigateScreen(Widget screen, BuildContext context) {
     void NavigateScreen(Widget screen, BuildContext context) {
@@ -120,6 +162,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
   void initState() {
     super.initState();
     _initializeData();
+    fetchMessages();
   }
 
   Future<void> _initializeData() async {
@@ -702,6 +745,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
     // Fetch patrol data from Firestore (assuming your logic exists)
     _getUserInfo();
     // getAndPrintAllSchedules();
+    fetchMessages();
   }
 
   final List<String> members = [
@@ -1557,27 +1601,32 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                               .primaryColor,
                           fontsize: 14.sp,
                         ),
-                        Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment.start,
-                          children: [
-                            Icon(
-                              Icons.add,
-                              color: Theme
-                                  .of(context)
-                                  .primaryColor,
-                              size: 20.sp,
-                            ),
-                            SizedBox(width: 4.w),
-                            InterBold(
-                              text: 'Create Message',
-                              fontsize: 14.sp,
-                              color: Theme
-                                  .of(context)
-                                  .primaryColor,
-                              maxLine: 2,
-                            )
-                          ],
+                        GestureDetector(
+                          onTap: (){
+                            Navigator.push(context, MaterialPageRoute(builder: (builder) => SuperInboxScreen(companyId: _cmpId, userName: _userName, isClient: true,)));
+                          },
+                          child: Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.start,
+                            children: [
+                              Icon(
+                                Icons.add,
+                                color: Theme
+                                    .of(context)
+                                    .primaryColor,
+                                size: 20.sp,
+                              ),
+                              SizedBox(width: 4.w),
+                              InterBold(
+                                text: 'Create Message',
+                                fontsize: 14.sp,
+                                color: Theme
+                                    .of(context)
+                                    .primaryColor,
+                                maxLine: 2,
+                              )
+                            ],
+                          ),
                         ),
                       ],
                     ),
@@ -1864,154 +1913,129 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                 ScreenIndex == 3
                     ? SliverList(
                   delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                      return Padding(
-                        padding: EdgeInsets.only(
-                          left: 30.w,
-                          right: 30.w,
-                        ),
-                        child: GestureDetector(
-                          onTap: () {
-                            NavigateScreen(
-                                ClientOpenPatrolScreen(
-                                  guardName: '',
-                                  startDate: '',
-                                  startTime: '',
-                                  endTime: '',
-                                  patrolLogCount: 0,
-                                  status: '',
-                                  feedback: '',
-                                  checkpoints: [],
-                                  data: {},
-                                ),
-                                context);
-                          },
-                          child: Container(
-                            height: 76.h,
-                            margin: EdgeInsets.only(
-                              bottom: 23.h,
-                            ),
-                            width: double.maxFinite,
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  width: 1,
-                                  color: Theme
-                                      .of(context)
-                                      .primaryColor,
-                                ),
-                              ),
-                              // color: WidgetColor,
-                            ),
-                            padding: EdgeInsets.symmetric(
-                              vertical: 7.h,
-                            ),
-                            child: Row(
-                              crossAxisAlignment:
-                              CrossAxisAlignment.center,
-                              // mainAxisAlignment:
-                              //     MainAxisAlignment
-                              //         .spaceBetween,
-                              children: [
-                                NewMessage
-                                    ? Container(
-                                  height: 11.h,
-                                  width: 11.w,
+                        (BuildContext context, int index) {
+                      var message = messages[index];
+                      var messageTime = (message['MessageCreatedAt'] as Timestamp).toDate();
+                      var formattedTime = '${messageTime.hour.toString().padLeft(2, '0')}:${messageTime.minute.toString().padLeft(2, '0')}';
+                      var receiverId = message['MessageCreatedById'];
+
+                      return GestureDetector(
+                        onTap: (){
+                          Navigator.push(context, MaterialPageRoute(builder: (builder) =>
+                              MobileChatScreen(
+                                  receiverId: receiverId,
+                                  receiverName: '',
+                                  companyId: _cmpId,
+                                  userName: _userName)));
+                        },
+                        child: Container(
+                          margin: EdgeInsets.only(
+                            top: 20.h,
+                            left: 30.w,
+                            right: 30.w,
+                          ),
+                          height: 76.h,
+                          width: double.maxFinite,
+                          child: Stack(
+                            children: [
+                              Align(
+                                alignment: Alignment.bottomCenter,
+                                child: Container(
+                                  width: double.maxFinite,
+                                  height: 76.h,
                                   decoration: BoxDecoration(
-                                    color: Colors.green,
-                                    shape: BoxShape.circle,
-                                  ),
-                                )
-                                    : SizedBox(),
-                                Container(
-                                  margin: EdgeInsets.only(left: 9.w),
-                                  height: 45.h,
-                                  width: 45.w,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    image: DecorationImage(
-                                      image: NetworkImage(
-                                        'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg',
+                                    color: Theme.of(context).cardColor,
+                                    border: Border(
+                                      bottom: BorderSide(
+                                        width: 1,
+                                        color: Theme.of(context).primaryColor,
                                       ),
-                                      fit: BoxFit.cover,
                                     ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 12.w,
-                                ),
-                                SizedBox(
-                                  width: 300.w,
-                                  child: Column(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.center,
-                                    children: [
-                                      Row(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                        MainAxisAlignment
-                                            .spaceBetween,
-                                        children: [
-                                          InterRegular(
-                                            text: 'Supervisor',
-                                            fontsize: 17.sp,
-                                            color: Theme
-                                                .of(context)
-                                                .textTheme
-                                                .headlineSmall!
-                                                .color,
-                                          ),
-                                          Row(
-                                            // mainAxisAlignment: MainAxisAlignment.end,
-                                            children: [
-                                              PoppinsRegular(
-                                                text: '9:36 AM',
-                                                color: Theme
-                                                    .of(context)
-                                                    .textTheme
-                                                    .headlineSmall!
-                                                    .color,
-                                                fontsize: 15.sp,
-                                              ),
-                                              Icon(
-                                                Icons.arrow_forward_ios,
-                                                color: Theme
-                                                    .of(context)
-                                                    .textTheme
-                                                    .bodyMedium!
-                                                    .color,
-                                                size: 15.sp,
-                                              )
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 4.h,
-                                      ),
-                                      Flexible(
-                                        child: InterRegular(
-                                          text:
-                                          'Nice. I don\'t know why people get all worked up about hawaiian pizza. I ...',
-                                          fontsize: 15.sp,
-                                          color: Theme
-                                              .of(context)
-                                              .textTheme
-                                              .headlineSmall!
-                                              .color,
-                                        ),
-                                      ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Theme.of(context).shadowColor,
+                                        blurRadius: 5,
+                                        spreadRadius: 2,
+                                        offset: Offset(0, 3),
+                                      )
                                     ],
                                   ),
-                                )
-                              ],
-                            ),
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      // if (message['NewMessage'] == true)
+                                      //   Container(
+                                      //     height: 11.h,
+                                      //     width: 11.w,
+                                      //     decoration: BoxDecoration(
+                                      //       color: Colors.green,
+                                      //       shape: BoxShape.circle,
+                                      //     ),
+                                      //   ),
+                                      Container(
+                                        margin: EdgeInsets.only(left: 9.w),
+                                        height: 45.h,
+                                        width: 45.w,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          image: DecorationImage(
+                                            image: NetworkImage(message['EmployeeImg']),
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(width: 12.w),
+                                      SizedBox(
+                                        width: 300.w,
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Row(
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                InterRegular(
+                                                  text: message['EmployeeName'],
+                                                  fontsize: 17.sp,
+                                                  color: Theme.of(context).textTheme.bodyMedium!.color!,
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    PoppinsRegular(
+                                                      text: formattedTime,
+                                                      color: Theme.of(context).textTheme.bodyLarge!.color!,
+                                                      fontsize: 15.sp,
+                                                    ),
+                                                    Icon(
+                                                      Icons.arrow_forward_ios,
+                                                      color: Theme.of(context).textTheme.bodyMedium!.color!,
+                                                      size: 15.sp,
+                                                    )
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(height: 4.h),
+                                            Flexible(
+                                              child: InterRegular(
+                                                text: message['MessageData'],
+                                                fontsize: 15.sp,
+                                                color: Theme.of(context).textTheme.headlineSmall!.color!,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       );
                     },
-                    childCount: 8,
+                    childCount: messages.length,
                   ),
                 )
                     : SliverToBoxAdapter(),

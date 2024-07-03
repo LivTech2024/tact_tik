@@ -6,7 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/main.dart';
-
+import 'package:rxdart/rxdart.dart';
 import '../../../../common/sizes.dart';
 import '../../../../fonts/inter_bold.dart';
 import '../../../../fonts/inter_regular.dart';
@@ -16,10 +16,10 @@ import '../../../../utils/colors.dart';
 import '../../../message screen/message_screen.dart';
 
 class SuperInboxScreen extends StatefulWidget {
-  SuperInboxScreen({super.key, required this.companyId, required this.userName});
+  SuperInboxScreen({super.key, required this.companyId, required this.userName, required this.isClient});
   final String userName;
   final String companyId;
-
+  final bool isClient;
   @override
   State<SuperInboxScreen> createState() => _SuperInboxScreenState();
 }
@@ -316,36 +316,66 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: 20.h),
-                  StreamBuilder<QuerySnapshot>(
-                    stream: FirebaseFirestore.instance
-                        .collection('Employees')
-                        .where('EmployeeRole', isEqualTo: 'SUPERVISOR')
-                        .where('EmployeeCompanyId', isEqualTo: widget.companyId)
-                        .where('EmployeeId', isNotEqualTo: currentUser!.uid)
-                        .snapshots(),
+                  StreamBuilder<List<QuerySnapshot>>(
+                    stream: CombineLatestStream.list([
+                      FirebaseFirestore.instance
+                          .collection('Employees')
+                          .where('EmployeeRole', isEqualTo: 'SUPERVISOR')
+                          .where('EmployeeCompanyId', isEqualTo: widget.companyId)
+                          .where('EmployeeId', isNotEqualTo: currentUser!.uid)
+                          .snapshots(),
+                      if (!widget.isClient)
+                        FirebaseFirestore.instance
+                            .collection('Clients')
+                            .where('ClientCompanyId', isEqualTo: widget.companyId)
+                            .snapshots(),
+                    ]),
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
                         return Center(child: CircularProgressIndicator());
                       }
 
-                      var _adminInfo = snapshot.data!.docs;
+                      List<Map<String, dynamic>> combinedList = [];
+
+                      var supervisors = snapshot.data![0].docs;
+                      combinedList.addAll(supervisors.map((doc) => {
+                        'name': doc['EmployeeName'] ?? "",
+                        'id': doc['EmployeeId'] ?? "",
+                        'imageUrl': doc['EmployeeImg'] ?? "",
+                        'isClient': false,
+                      }));
+
+                      if (!widget.isClient && snapshot.data!.length > 1) {
+                        var clients = snapshot.data![1].docs;
+                        combinedList.addAll(clients.map((doc) => {
+                          'name': doc['ClientName'] ?? "",
+                          'id': doc['ClientId'] ?? "",
+                          'imageUrl': doc['ClientHomePageBgImg'] ?? "",
+                          'isClient': true,
+                        }));
+                      }
 
                       return ListView.builder(
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
-                        itemCount: _adminInfo.length,
+                        itemCount: combinedList.length,
                         itemBuilder: (context, index) {
-                          var adminInfo = _adminInfo[index];
-                          String name = adminInfo['EmployeeName'] ?? "";
-                          String id = adminInfo['EmployeeId'] ?? "";
-                          String url = adminInfo['EmployeeImg'] ?? "";
+                          var info = combinedList[index];
+                          String name = info['name'];
+                          String id = info['id'];
+                          String url = info['imageUrl'];
 
                           return GestureDetector(
                             onTap: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => MobileChatScreen(receiverId: id, companyId: widget.companyId, receiverName: name, userName: widget.userName),
+                                  builder: (context) => MobileChatScreen(
+                                    receiverId: id,
+                                    companyId: widget.companyId,
+                                    receiverName: name,
+                                    userName: widget.userName,
+                                  ),
                                 ),
                               );
                             },
@@ -367,9 +397,7 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                               width: double.maxFinite,
                               child: Container(
                                 height: 48.h,
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 20.w,
-                                ),
+                                padding: EdgeInsets.symmetric(horizontal: 20.w),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
@@ -388,9 +416,7 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                                             ),
                                           ),
                                         ),
-                                        SizedBox(
-                                          width: 20.w,
-                                        ),
+                                        SizedBox(width: 20.w),
                                         InterBold(
                                           text: name,
                                           letterSpacing: -.3,
@@ -409,13 +435,9 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                                               top: -4,
                                               left: -8,
                                               child: Container(
-                                                padding: EdgeInsets.symmetric(
-                                                  horizontal: 4.w,
-                                                ),
+                                                padding: EdgeInsets.symmetric(horizontal: 4.w),
                                                 height: 14.h,
-                                                constraints: BoxConstraints(
-                                                  minWidth: 20.w,
-                                                ),
+                                                constraints: BoxConstraints(minWidth: 20.w),
                                                 decoration: BoxDecoration(
                                                   color: Colors.red,
                                                   borderRadius: BorderRadius.circular(50.r),
@@ -424,10 +446,7 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                                                   child: InterBold(
                                                     text: '2',
                                                     fontsize: 8.sp,
-                                                    color: Theme.of(context)
-                                                        .textTheme
-                                                        .bodyMedium!
-                                                        .color,
+                                                    color: Theme.of(context).textTheme.bodyMedium!.color,
                                                   ),
                                                 ),
                                               ),
