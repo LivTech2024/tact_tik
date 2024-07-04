@@ -74,8 +74,10 @@ class _MobileChatScreenState extends State<MobileChatScreen> {
                         fillColor: Theme.of(context).cardColor,
                         hintText: 'Type a message!',
                         hintStyle: GoogleFonts.inter(
-                            color:
-                                Theme.of(context).textTheme.headlineLarge!.color),
+                            color: Theme.of(context)
+                                .textTheme
+                                .headlineLarge!
+                                .color),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20.r),
                           borderSide: const BorderSide(

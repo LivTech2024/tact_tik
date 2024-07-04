@@ -90,6 +90,8 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
       String patrolLocationName = data['PatrolLocationName'];
       String patrolName = data['PatrolName'];
       String patrolId = data['PatrolId'];
+      String patrolLocationId = data['PatrolLocationId'];
+
       String patrolClientId = data['PatrolClientId'];
       // String patrolTime = data['PatrolTime'];
       int requiredCount = data['LinkedPatrolReqHitCount'];
@@ -313,7 +315,7 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
           PatrolClientID: patrolClientId,
           ShiftDate: widget.ShiftDate,
           ShiftId: widget.ShiftId,
-          LocationId: widget.ShiftLocationId,
+          LocationId: patrolLocationId,
           patrolClientId: patrolClientId,
           ShiftName: widget.ShiftName,
           CurrentStatus: CurrentPatrolStatus,

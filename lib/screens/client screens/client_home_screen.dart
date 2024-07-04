@@ -104,7 +104,8 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
     try {
       QuerySnapshot messageSnapshot = await FirebaseFirestore.instance
           .collection('Messages')
-          .where('MessageReceiversId', arrayContains: FirebaseAuth.instance.currentUser?.uid)
+          .where('MessageReceiversId',
+              arrayContains: FirebaseAuth.instance.currentUser?.uid)
           .orderBy('MessageCreatedAt', descending: true)
           .get();
 
@@ -119,19 +120,21 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
 
         if (!latestMessages.containsKey(senderId) ||
             (message['MessageCreatedAt'] as Timestamp).toDate().isAfter(
-                (latestMessages[senderId]!['MessageCreatedAt'] as Timestamp).toDate())) {
-
+                (latestMessages[senderId]!['MessageCreatedAt'] as Timestamp)
+                    .toDate())) {
           DocumentSnapshot employeeSnapshot = await FirebaseFirestore.instance
               .collection('Employees')
               .doc(senderId)
               .get();
 
-          Map<String, dynamic>? employeeData = employeeSnapshot.data() as Map<String, dynamic>?;
+          Map<String, dynamic>? employeeData =
+              employeeSnapshot.data() as Map<String, dynamic>?;
 
           latestMessages[senderId] = {
             ...message,
             'EmployeeName': employeeData?['EmployeeName'] ?? 'Unknown',
-            'EmployeeImg': employeeData?['EmployeeImg'] ?? 'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg',
+            'EmployeeImg': employeeData?['EmployeeImg'] ??
+                'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg',
           };
         }
       }
@@ -180,11 +183,13 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
 
   //TODO IMPLEMENT THIS WITH BUTTON
   //TODO PASTE THIS: generateShiftReportPdf(_userName, fetchedPatrols, shifts[index]['ShiftName'], shifts[index]['ShiftStartTime'], shifts[index]['ShiftEndTime']);
-  Future<String> generateShiftReportPdf(String? ClientName,
-      List<Map<String, dynamic>> Data,
-      String GuardName,
-      String shiftinTime,
-      String shiftOutTime,) async {
+  Future<String> generateShiftReportPdf(
+    String? ClientName,
+    List<Map<String, dynamic>> Data,
+    String GuardName,
+    String shiftinTime,
+    String shiftOutTime,
+  ) async {
     final dateFormat = DateFormat('HH:mm'); // Define the format for time
     String patrolInfoHTML = '';
     for (var item in Data) {
@@ -194,7 +199,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
         if (checkpoint['CheckPointImage'] != null) {
           for (var image in checkpoint['CheckPointImage']) {
             checkpointImages +=
-            '<img src="$image">'; // Set max-width to ensure responsiveness
+                '<img src="$image">'; // Set max-width to ensure responsiveness
             // checkpointImages +=
             //     '<p>$image</p>'; // Set max-width to ensure responsiveness
           }
@@ -204,8 +209,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
           <p>Checkpoint Name: ${checkpoint['CheckPointName']}</p>
           $checkpointImages
           <p>Comment: ${checkpoint['CheckPointComment']}</p>
-          <p>Reported At: ${dateFormat.format(
-            checkpoint['CheckPointReportedAt'].toDate())}</p>
+          <p>Reported At: ${dateFormat.format(checkpoint['CheckPointReportedAt'].toDate())}</p>
           <p>Status: ${checkpoint['CheckPointStatus']}</p>
         </div>
       ''';
@@ -421,9 +425,9 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
         String companyId = userInfo['ClientCompanyId'];
         print("Employee Id ${EmployeeId}");
         var shiftInfo =
-        await fireStoreService.getShiftByEmployeeIdFromUserInfo(EmployeeId);
+            await fireStoreService.getShiftByEmployeeIdFromUserInfo(EmployeeId);
         var patrolInfo =
-        await fireStoreService.getPatrolsByClientId(EmployeeId);
+            await fireStoreService.getPatrolsByClientId(EmployeeId);
         print("User Info ${userName}");
         print("Patrol Info ${patrolInfo}");
 
@@ -656,46 +660,32 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
               ? data['ReportCreatedAt'].toDate()
               : DateTime.now(), // default to now if missing or null
           'ReportName': (data['ReportName'] != null &&
-              data['ReportName']
-                  .toString()
-                  .isNotEmpty)
+                  data['ReportName'].toString().isNotEmpty)
               ? data['ReportName']
               : 'Not Found',
           'ReportGuardName': (data['ReportEmployeeName'] != null &&
-              data['ReportEmployeeName']
-                  .toString()
-                  .isNotEmpty)
+                  data['ReportEmployeeName'].toString().isNotEmpty)
               ? data['ReportEmployeeName']
               : 'Not Found',
           'ReportEmployeeName': (data['ReportEmployeeName'] != null &&
-              data['ReportEmployeeName']
-                  .toString()
-                  .isNotEmpty)
+                  data['ReportEmployeeName'].toString().isNotEmpty)
               ? data['ReportEmployeeName']
               : 'Not Found',
           'ReportStatus': (data['ReportStatus'] != null &&
-              data['ReportStatus']
-                  .toString()
-                  .isNotEmpty)
+                  data['ReportStatus'].toString().isNotEmpty)
               ? data['ReportStatus']
               : 'Not Found',
           'ReportCategory': (data['ReportCategoryName'] != null &&
-              data['ReportCategoryName']
-                  .toString()
-                  .isNotEmpty)
+                  data['ReportCategoryName'].toString().isNotEmpty)
               ? data['ReportCategoryName']
               : 'Not Found',
           'ReportFollowUpRequire': data['ReportIsFollowUpRequired'] ?? false,
           'ReportData': (data['ReportData'] != null &&
-              data['ReportData']
-                  .toString()
-                  .isNotEmpty)
+                  data['ReportData'].toString().isNotEmpty)
               ? data['ReportData']
               : 'Not Found',
           'ReportLocation': (data['ReportLocationName'] != null &&
-              data['ReportLocationName']
-                  .toString()
-                  .isNotEmpty)
+                  data['ReportLocationName'].toString().isNotEmpty)
               ? data['ReportLocationName']
               : 'Not Found',
         };
@@ -880,8 +870,8 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
       });
     }
 
-    ListTile buildListTile(IconData icon, String title, int index,
-        VoidCallback onPressed,
+    ListTile buildListTile(
+        IconData icon, String title, int index, VoidCallback onPressed,
         {bool isLogout = false}) {
       final bool isSelected = _selectedIndex == index;
 
@@ -889,27 +879,18 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
         leading: Icon(
           icon,
           color: isSelected
-              ? Theme
-              .of(context)
-              .primaryColor
-              : Theme
-              .of(context)
-              .textTheme
-              .headlineSmall!
-              .color, // Change color based on selection
+              ? Theme.of(context).primaryColor
+              : Theme.of(context)
+                  .textTheme
+                  .headlineSmall!
+                  .color, // Change color based on selection
           size: 24.w,
         ),
         title: PoppinsBold(
           text: title,
           color: isSelected
-              ? Theme
-              .of(context)
-              .primaryColor
-              : Theme
-              .of(context)
-              .textTheme
-              .headlineSmall!
-              .color,
+              ? Theme.of(context).primaryColor
+              : Theme.of(context).textTheme.headlineSmall!.color,
           fontsize: 14.sp,
         ),
         onTap: onPressed,
@@ -926,9 +907,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
       child: Scaffold(
         key: _scaffoldKeyClient, // Assign the GlobalKey to the Scaffold
         endDrawer: Drawer(
-          backgroundColor: Theme
-              .of(context)
-              .canvasColor,
+          backgroundColor: Theme.of(context).canvasColor,
           child: Column(
             children: [
               GestureDetector(
@@ -937,11 +916,10 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            ProfileScreen(
-                              isClient: true,
-                              empId: _employeeId,
-                            ),
+                        builder: (context) => ProfileScreen(
+                          isClient: true,
+                          empId: _employeeId,
+                        ),
                       ),
                     );
                   }
@@ -951,8 +929,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                   width: double.maxFinite,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15.r),
-                    color: Theme
-                        .of(context)
+                    color: Theme.of(context)
                         .primaryColor, // Background color for the drawer header
                   ),
                   child: Center(
@@ -977,18 +954,14 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                         SizedBox(height: 10.h),
                         PoppinsSemibold(
                           text: _userName,
-                          color: Theme
-                              .of(context)
-                              .cardColor,
+                          color: Theme.of(context).cardColor,
                           fontsize: 16.sp,
                           letterSpacing: -.3,
                         ),
                         SizedBox(height: 5.h),
                         PoppinsRegular(
                           text: _empEmail,
-                          color: Theme
-                              .of(context)
-                              .cardColor,
+                          color: Theme.of(context).cardColor,
                           fontsize: 16.sp,
                           letterSpacing: -.3,
                         )
@@ -1004,27 +977,22 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                       Icons.account_circle_outlined,
                       'Profile',
                       1,
-                          () {
+                      () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                ClientProfileScreen(
-                                  empId: _employeeId,
-                                ),
+                            builder: (context) => ClientProfileScreen(
+                              empId: _employeeId,
+                            ),
                           ),
                         );
                       },
                     ),
                     buildListTile(
-                        Theme
-                            .of(context)
-                            .brightness == Brightness.dark
+                        Theme.of(context).brightness == Brightness.dark
                             ? Icons.light_mode_outlined
                             : Icons.light_mode,
-                        Theme
-                            .of(context)
-                            .brightness == Brightness.dark
+                        Theme.of(context).brightness == Brightness.dark
                             ? 'Switch To Light Mode'
                             : 'Switch to dark mode',
                         5, () {
@@ -1103,18 +1071,14 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                 icon: Icons.map,
                                 color: ScreenIndex == 0
                                     ? ThemeMode.dark == themeManager.themeMode
-                                    ? DarkColor.color1
-                                    : LightColor.Primarycolor
-                                    : Theme
-                                    .of(context)
-                                    .focusColor,
+                                        ? DarkColor.color1
+                                        : LightColor.Primarycolor
+                                    : Theme.of(context).focusColor,
                                 textcolor: ScreenIndex == 0
                                     ? ThemeMode.dark == themeManager.themeMode
-                                    ? DarkColor.color1
-                                    : LightColor.Primarycolor
-                                    : Theme
-                                    .of(context)
-                                    .focusColor,
+                                        ? DarkColor.color1
+                                        : LightColor.Primarycolor
+                                    : Theme.of(context).focusColor,
                               ),
                             ),
                             Bounce(
@@ -1124,18 +1088,14 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                 icon: Icons.add_task,
                                 color: ScreenIndex == 1
                                     ? ThemeMode.dark == themeManager.themeMode
-                                    ? DarkColor.color1
-                                    : LightColor.Primarycolor
-                                    : Theme
-                                    .of(context)
-                                    .focusColor,
+                                        ? DarkColor.color1
+                                        : LightColor.Primarycolor
+                                    : Theme.of(context).focusColor,
                                 textcolor: ScreenIndex == 1
                                     ? ThemeMode.dark == themeManager.themeMode
-                                    ? DarkColor.color1
-                                    : LightColor.Primarycolor
-                                    : Theme
-                                    .of(context)
-                                    .focusColor,
+                                        ? DarkColor.color1
+                                        : LightColor.Primarycolor
+                                    : Theme.of(context).focusColor,
                               ),
                             ),
                             Bounce(
@@ -1145,18 +1105,14 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                 icon: Icons.grid_view_rounded,
                                 color: ScreenIndex == 2
                                     ? ThemeMode.dark == themeManager.themeMode
-                                    ? DarkColor.color1
-                                    : LightColor.Primarycolor
-                                    : Theme
-                                    .of(context)
-                                    .focusColor,
+                                        ? DarkColor.color1
+                                        : LightColor.Primarycolor
+                                    : Theme.of(context).focusColor,
                                 textcolor: ScreenIndex == 2
                                     ? ThemeMode.dark == themeManager.themeMode
-                                    ? DarkColor.color1
-                                    : LightColor.Primarycolor
-                                    : Theme
-                                    .of(context)
-                                    .focusColor,
+                                        ? DarkColor.color1
+                                        : LightColor.Primarycolor
+                                    : Theme.of(context).focusColor,
                               ),
                             ),
                             Bounce(
@@ -1165,27 +1121,23 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                 useSVG: true,
                                 SVG: NewMessage
                                     ? ScreenIndex == 3
-                                    ? 'assets/images/message_dot.svg'
-                                    : 'assets/images/no_message_dot.svg'
+                                        ? 'assets/images/message_dot.svg'
+                                        : 'assets/images/no_message_dot.svg'
                                     : ScreenIndex == 3
-                                    ? 'assets/images/message.svg'
-                                    : 'assets/images/no_message.svg',
+                                        ? 'assets/images/message.svg'
+                                        : 'assets/images/no_message.svg',
                                 text: 'Message',
                                 icon: Icons.chat_bubble_outline,
                                 color: ScreenIndex == 3
                                     ? ThemeMode.dark == themeManager.themeMode
-                                    ? DarkColor.color1
-                                    : LightColor.Primarycolor
-                                    : Theme
-                                    .of(context)
-                                    .focusColor,
+                                        ? DarkColor.color1
+                                        : LightColor.Primarycolor
+                                    : Theme.of(context).focusColor,
                                 textcolor: ScreenIndex == 3
                                     ? ThemeMode.dark == themeManager.themeMode
-                                    ? DarkColor.color1
-                                    : LightColor.Primarycolor
-                                    : Theme
-                                    .of(context)
-                                    .focusColor,
+                                        ? DarkColor.color1
+                                        : LightColor.Primarycolor
+                                    : Theme.of(context).focusColor,
                               ),
                             ),
                           ],
@@ -1197,773 +1149,42 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                 ),
                 ScreenIndex == 0
                     ? SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                      var Patrol = patrolsList[index];
-                      String PatrolName = Patrol['PatrolName'];
-                      String PatrolId = Patrol['PatrolId'];
-                      String PatrolLocation =
-                      Patrol['PatrolLocationName'];
-                      List<dynamic> PatrolCheckpoint =
-                      Patrol['PatrolCheckPoints'];
-                      int CheckpointCount = PatrolCheckpoint.length;
-                      String guardStatus = "";
-                      // String reqCount = Patrol['PatrolRequiredCount'];
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            var Patrol = patrolsList[index];
+                            String PatrolName = Patrol['PatrolName'];
+                            String PatrolId = Patrol['PatrolId'];
+                            String PatrolLocation =
+                                Patrol['PatrolLocationName'];
+                            List<dynamic> PatrolCheckpoint =
+                                Patrol['PatrolCheckPoints'];
+                            int CheckpointCount = PatrolCheckpoint.length;
+                            String guardStatus = "";
+                            // String reqCount = Patrol['PatrolRequiredCount'];
 
-                      return Padding(
-                        padding: EdgeInsets.only(
-                          left: 30.w,
-                          right: 30.w,
-                        ),
-                        child: GestureDetector(
-                          onTap: () {
-                            print("Clicked");
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        ClientCheckPatrolScreen(
-                                          companyId: _cmpId,
-                                          PatrolIdl: PatrolId,
-                                          ScreenName: PatrolName,
-                                        )));
-                          },
-                          child: Container(
-                            height: 100.h,
-                            margin: EdgeInsets.only(top: 10.h),
-                            width: double.maxFinite,
-                            decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Theme
-                                      .of(context)
-                                      .shadowColor,
-                                  blurRadius: 5,
-                                  spreadRadius: 2,
-                                  offset: Offset(0, 3),
-                                )
-                              ],
-                              color: Theme
-                                  .of(context)
-                                  .cardColor,
-                              borderRadius: BorderRadius.circular(14.r),
-                            ),
-                            padding: EdgeInsets.only(
-                                top: 20.h, bottom: 20.h, right: 20.w),
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          height: 30.h,
-                                          width: 4.w,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                            BorderRadius.only(
-                                              topRight: Radius.circular(
-                                                10.r,
-                                              ),
-                                              bottomRight:
-                                              Radius.circular(
-                                                10.r,
-                                              ),
-                                            ),
-                                            color: Theme
-                                                .of(context)
-                                                .primaryColor,
-                                          ),
-                                        ),
-                                        SizedBox(width: 14.w),
-                                        Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                          children: [
-                                            InterSemibold(
-                                              text: PatrolName ?? "",
-                                              color: Theme
-                                                  .of(context)
-                                                  .textTheme
-                                                  .bodyMedium!
-                                                  .color,
-                                              fontsize: 14.sp,
-                                            ),
-                                            SizedBox(height: 4.h),
-                                            SizedBox(
-                                              width: 200.w,
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                MainAxisAlignment
-                                                    .start,
-                                                crossAxisAlignment:
-                                                CrossAxisAlignment
-                                                    .start,
-                                                children: [
-                                                  // TODO : Add location svg
-                                                  SvgPicture.asset(
-                                                    'assets/images/location_icon.svg',
-                                                    height: 20.h,
-                                                  ),
-                                                  SizedBox(width: 5.w),
-                                                  Flexible(
-                                                    child: InterRegular(
-                                                      color: Theme
-                                                          .of(
-                                                          context)
-                                                          .textTheme
-                                                          .bodyMedium!
-                                                          .color,
-                                                      text:
-                                                      PatrolLocation,
-                                                      maxLines: 2,
-                                                      fontsize: 14.sp,
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                        children: [
-                                          InterRegular(
-                                            text: 'CheckPoints',
-                                            fontsize: 14.sp,
-                                            color: Theme
-                                                .of(context)
-                                                .textTheme
-                                                .bodyMedium!
-                                                .color,
-                                          ),
-                                          SizedBox(height: 10.h),
-                                          Row(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                            children: [
-                                              Icon(
-                                                Icons.qr_code,
-                                                color: Theme
-                                                    .of(context)
-                                                    .primaryColor,
-                                                size: 24.sp,
-                                              ),
-                                              SizedBox(width: 4.w),
-                                              InterMedium(
-                                                text: CheckpointCount
-                                                    .toString(),
-                                                fontsize: 13.sp,
-                                                color: Theme
-                                                    .of(context)
-                                                    .textTheme
-                                                    .bodyMedium!
-                                                    .color,
-                                              )
-                                            ],
-                                          )
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                    childCount: patrolsList.length,
-                  ),
-                )
-                    : ScreenIndex == 1
-                    ? SliverToBoxAdapter(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 30.w),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween,
-                          children: [
-                            GestureDetector(
-                              onTap: () => _selectDate(context),
-                              child: SizedBox(
-                                width: 140.w,
-                                child: IconTextWidget(
-                                  icon: Icons.calendar_today,
-                                  text: selectedDate != null
-                                      ? "${selectedDate!.toLocal()}"
-                                      .split(' ')[0]
-                                      : 'Select Date',
-                                  fontsize: 14.sp,
-                                  color: Theme
-                                      .of(context)
-                                      .textTheme
-                                      .bodyMedium!
-                                      .color as Color,
-                                  Iconcolor: Theme
-                                      .of(context)
-                                      .textTheme
-                                      .bodyMedium!
-                                      .color as Color,
-                                ),
+                            return Padding(
+                              padding: EdgeInsets.only(
+                                left: 30.w,
+                                right: 30.w,
                               ),
-                            ),
-                            Row(
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    SelectLocationShift
-                                        .showLocationDialog(
-                                      context,
-                                      _cmpId,
-                                      onLocationSelected,
-                                    );
-                                  },
-                                  child: Column(
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        width: 80.w,
-                                        child: IconTextWidget(
-                                          space: 6.w,
-                                          icon: Icons.add,
-                                          iconSize: 20.sp,
-                                          text: 'Select',
-                                          useBold: true,
-                                          fontsize: 14.sp,
-                                          color: Theme
-                                              .of(context)
-                                              .textTheme
-                                              .bodySmall!
-                                              .color as Color,
-                                          Iconcolor: Theme
-                                              .of(context)
-                                              .textTheme
-                                              .bodyMedium!
-                                              .color as Color,
-                                        ),
-                                      ),
-                                      InterBold(
-                                        text: 'Location',
-                                        fontsize: 16.sp,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: Platform.isIOS ? 30.w : 10.w,
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
+                              child: GestureDetector(
+                                onTap: () {
+                                  print("Clicked");
+                                  Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) =>
-                                            SelectClientGuardsScreen(
-                                              companyId: _cmpId,
-                                              onGuardSelected:
-                                              onGuardSelected,
-                                            ),
-                                      ),
-                                    );
-                                  },
-                                  child: Column(
-                                    children: [
-                                      SizedBox(
-                                        width: 80.w,
-                                        child: IconTextWidget(
-                                          space: 6.w,
-                                          icon: Icons.add,
-                                          iconSize: 20.sp,
-                                          text: 'Select',
-                                          useBold: true,
-                                          fontsize: 14.sp,
-                                          color: Theme
-                                              .of(context)
-                                              .textTheme
-                                              .bodySmall!
-                                              .color as Color,
-                                          Iconcolor: Theme
-                                              .of(context)
-                                              .textTheme
-                                              .bodyMedium!
-                                              .color as Color,
-                                        ),
-                                      ),
-                                      InterBold(
-                                        text: 'Employee',
-                                        fontsize: 16.sp,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 6.h),
-                        TextButton(
-                          onPressed: () {},
-                          child: InterMedium(
-                            text: 'clear',
-                            color: Theme
-                                .of(context)
-                                .textTheme
-                                .headlineSmall!
-                                .color,
-                            fontsize: 20.sp,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 20.h,
-                        )
-                      ],
-                    ),
-                  ),
-                )
-                    : ScreenIndex == 2
-                    ? SliverGrid(gridDelegate:
-                const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 200.0,
-                  // mainAxisSpacing: 10.0,
-                  // crossAxisSpacing: 10.0,
-                  // childAspectRatio: 4.0,
-                ),
-                  delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
-                      return Bounce(
-                        onTap: () {
-                          switch (index) {
-                            case 0:
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        ClientDarScreen(
-                                            clientId: _employeeId,
-                                            companyId: _cmpId),
-                                  ));
-                              break;
-                            case 1:
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        ClientReportScreen(
-                                          companyId: _cmpId,
-                                          employeeId: _employeeId,
-                                        ),
-                                  ));
-                              break;
-                          // case 2:
-                          //   Navigator.push(
-                          //       context,
-                          //       MaterialPageRoute(
-                          //         builder: (context) =>
-                          //             ClientDarScreen(
-                          //                 clientId: _employeeId,
-                          //                 companyId: _cmpId),
-                          //       ));
-                          //   break;
-                          }
-                        },
-                        child: gridWidget(
-                          img: data[index][0],
-                          tittle: data[index][1],
-                        ),
-                      );
-                    },
-                    childCount: data.length,
-                  ),
-                )
-                    : ScreenIndex == 3
-                    ? SliverToBoxAdapter(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 30.w,
-                    ),
-                    child: Row(
-                      mainAxisAlignment:
-                      MainAxisAlignment.spaceBetween,
-                      children: [
-                        InterBold(
-                          text: 'Received Message ',
-                          color:
-                          Theme
-                              .of(context)
-                              .primaryColor,
-                          fontsize: 14.sp,
-                        ),
-                        GestureDetector(
-                          onTap: (){
-                            Navigator.push(context, MaterialPageRoute(builder: (builder) =>
-                                SuperInboxScreen(
-                                  companyId: _cmpId,
-                                  userName: _userName,
-                                  isClient: true,
-                                  isGuard: false,
-                                )));
-                          },
-                          child: Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.start,
-                            children: [
-                              Icon(
-                                Icons.add,
-                                color: Theme
-                                    .of(context)
-                                    .primaryColor,
-                                size: 20.sp,
-                              ),
-                              SizedBox(width: 4.w),
-                              InterBold(
-                                text: 'Create Message',
-                                fontsize: 14.sp,
-                                color: Theme
-                                    .of(context)
-                                    .primaryColor,
-                                maxLine: 2,
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                )
-                    : const SliverToBoxAdapter(),
-                ScreenIndex == 1
-                    ? SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                      DateTime shiftDate = shifts[index]['ShiftDate'];
-                      String dateString = (isSameDate(
-                          shiftDate, DateTime.now()))
-                          ? 'Today'
-                          : "${shiftDate.day} / ${shiftDate.month} / ${shiftDate
-                          .year}";
-                      return Padding(
-                        padding: EdgeInsets.only(
-                          left: 30.w,
-                          right: 30.w,
-                        ),
-                        child: GestureDetector(
-                          onTap: () {
-                            NavigateScreen(
-                              ClientCheckPatrolScreen(
-                                companyId: _cmpId,
-                                PatrolIdl: '',
-                                ScreenName: '',
-                              ),
-                              context,
-                            );
-                          },
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: 10.h),
-                              InterBold(
-                                text: dateString,
-                                color: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodySmall!
-                                    .color,
-                                fontsize: 14.sp,
-                              ),
-                              SizedBox(
-                                height: 10.sp,
-                              ),
-                              Container(
-                                height: 160.h,
-                                margin: EdgeInsets.only(top: 10.h),
-                                width: double.maxFinite,
-                                decoration: BoxDecoration(
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color:
-                                      Theme
-                                          .of(context)
-                                          .shadowColor,
-                                      blurRadius: 5,
-                                      spreadRadius: 2,
-                                      offset: Offset(0, 3),
-                                    )
-                                  ],
-                                  color: Theme
-                                      .of(context)
-                                      .cardColor,
-                                  borderRadius:
-                                  BorderRadius.circular(14.sp),
-                                ),
-                                padding:
-                                EdgeInsets.symmetric(vertical: 20.h),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          height: 30.h,
-                                          width: 4.w,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                            BorderRadius.only(
-                                              topRight:
-                                              Radius.circular(10.r),
-                                              bottomRight:
-                                              Radius.circular(10.r),
-                                            ),
-                                            color: Theme
-                                                .of(context)
-                                                .primaryColor,
-                                          ),
-                                        ),
-                                        SizedBox(width: 14.w),
-                                        SizedBox(
-                                          width: 190.w,
-                                          child: Column(
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                            children: [
-                                              InterSemibold(
-                                                text: shifts[index]
-                                                ['ShiftName'],
-                                                color: Theme
-                                                    .of(context)
-                                                    .textTheme
-                                                    .titleSmall!
-                                                    .color,
-                                                fontsize: 14.sp,
-                                              ),
-                                              SizedBox(height: 5.h),
-                                              InterRegular(
-                                                text: shifts[index][
-                                                'ShiftLocationAddress'],
-                                                maxLines: 1,
-                                                fontsize: 14.sp,
-                                              ),
-                                            ],
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    SizedBox(height: 10.h),
-                                    Padding(
-                                      padding: EdgeInsets.only(
-                                        left: 18.w,
-                                        right: 24.w,
-                                      ),
-                                      child: Row(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                        MainAxisAlignment
-                                            .spaceBetween,
-                                        children: [
-                                          SizedBox(
-                                            width: 100.w,
-                                            child: Column(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment
-                                                  .start,
-                                              children: [
-                                                InterRegular(
-                                                  text: 'Guards',
-                                                  fontsize: 14.sp,
-                                                  color: Theme
-                                                      .of(context)
-                                                      .textTheme
-                                                      .titleSmall!
-                                                      .color!,
-                                                ),
-                                                SizedBox(height: 12.h),
-                                                Wrap(
-                                                  spacing: -5.0,
-                                                  children: [
-                                                    if (shifts[index]
-                                                    ['members'] !=
-                                                        null)
-                                                      for (int i = 0;
-                                                      i <
-                                                          (shifts[index]['members']
-                                                              .length >
-                                                              3
-                                                              ? 3
-                                                              : shifts[index]['members']
-                                                              .length);
-                                                      i++)
-                                                        CircleAvatar(
-                                                          radius: 10.r,
-                                                          backgroundImage:
-                                                          NetworkImage(
-                                                            shifts[index][
-                                                            'members'][i],
-                                                          ),
-                                                          backgroundColor:
-                                                          Theme
-                                                              .of(
-                                                              context)
-                                                              .primaryColor,
-                                                        ),
-                                                    if (shifts[index][
-                                                    'members'] !=
-                                                        null &&
-                                                        shifts[index][
-                                                        'members']
-                                                            .length >
-                                                            3)
-                                                      CircleAvatar(
-                                                        radius: 12.r,
-                                                        backgroundColor:
-                                                        Theme
-                                                            .of(
-                                                            context)
-                                                            .primaryColor,
-                                                        child:
-                                                        InterMedium(
-                                                          text:
-                                                          '+${shifts[index]['members']
-                                                              .length - 3}',
-                                                          fontsize: 12.sp,
-                                                        ),
-                                                      ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: 100.w,
-                                            child: Column(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment
-                                                  .start,
-                                              children: [
-                                                InterRegular(
-                                                  text: 'Started At',
-                                                  color: Theme
-                                                      .of(context)
-                                                      .textTheme
-                                                      .titleSmall!
-                                                      .color!,
-                                                  fontsize: 14.sp,
-                                                ),
-                                                SizedBox(height: 5.h),
-                                                InterMedium(
-                                                  text: shifts[index]
-                                                  ['ShiftStartTime'],
-                                                  fontsize: 14.sp,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: 100.w,
-                                            child: Column(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment
-                                                  .start,
-                                              children: [
-                                                InterRegular(
-                                                  text: 'Ended At',
-                                                  color: Theme
-                                                      .of(context)
-                                                      .textTheme
-                                                      .titleSmall!
-                                                      .color!,
-                                                  fontsize: 14.sp,
-                                                ),
-                                                SizedBox(height: 5.h),
-                                                Row(
-                                                  children: [
-                                                    SizedBox(width: 6.w),
-                                                    InterMedium(
-                                                      text: shifts[index][
-                                                      'ShiftEndTime'],
-                                                      fontsize: 14.sp,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                height: 10.h,
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                    childCount: shifts.length,
-                  ),
-                )
-                    : SliverToBoxAdapter(),
-                ScreenIndex == 3
-                    ? SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
-                      var message = messages[index];
-                      var messageTime = (message['MessageCreatedAt'] as Timestamp).toDate();
-                      var formattedTime = '${messageTime.hour.toString().padLeft(2, '0')}:${messageTime.minute.toString().padLeft(2, '0')}';
-                      var receiverId = message['MessageCreatedById'];
-
-                      return GestureDetector(
-                        onTap: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (builder) =>
-                              MobileChatScreen(
-                                  receiverId: receiverId,
-                                  receiverName: '',
-                                  companyId: _cmpId,
-                                  userName: _userName)));
-                        },
-                        child: Container(
-                          margin: EdgeInsets.only(
-                            top: 20.h,
-                            left: 30.w,
-                            right: 30.w,
-                          ),
-                          height: 76.h,
-                          width: double.maxFinite,
-                          child: Stack(
-                            children: [
-                              Align(
-                                alignment: Alignment.bottomCenter,
+                                          builder: (context) =>
+                                              ClientCheckPatrolScreen(
+                                                companyId: _cmpId,
+                                                PatrolIdl: PatrolId,
+                                                ScreenName: PatrolName,
+                                              )));
+                                },
                                 child: Container(
+                                  height: 100.h,
+                                  margin: EdgeInsets.only(top: 10.h),
                                   width: double.maxFinite,
-                                  height: 76.h,
                                   decoration: BoxDecoration(
-                                    color: Theme.of(context).cardColor,
-                                    border: Border(
-                                      bottom: BorderSide(
-                                        width: 1,
-                                        color: Theme.of(context).primaryColor,
-                                      ),
-                                    ),
                                     boxShadow: [
                                       BoxShadow(
                                         color: Theme.of(context).shadowColor,
@@ -1972,85 +1193,816 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                         offset: Offset(0, 3),
                                       )
                                     ],
+                                    color: Theme.of(context).cardColor,
+                                    borderRadius: BorderRadius.circular(14.r),
                                   ),
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                  padding: EdgeInsets.only(
+                                      top: 20.h, bottom: 20.h, right: 20.w),
+                                  child: Column(
                                     children: [
-                                      // if (message['NewMessage'] == true)
-                                      //   Container(
-                                      //     height: 11.h,
-                                      //     width: 11.w,
-                                      //     decoration: BoxDecoration(
-                                      //       color: Colors.green,
-                                      //       shape: BoxShape.circle,
-                                      //     ),
-                                      //   ),
-                                      Container(
-                                        margin: EdgeInsets.only(left: 9.w),
-                                        height: 45.h,
-                                        width: 45.w,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          image: DecorationImage(
-                                            image: NetworkImage(message['EmployeeImg']),
-                                            fit: BoxFit.cover,
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                height: 30.h,
+                                                width: 4.w,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.only(
+                                                    topRight: Radius.circular(
+                                                      10.r,
+                                                    ),
+                                                    bottomRight:
+                                                        Radius.circular(
+                                                      10.r,
+                                                    ),
+                                                  ),
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                ),
+                                              ),
+                                              SizedBox(width: 14.w),
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  InterSemibold(
+                                                    text: PatrolName ?? "",
+                                                    color: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyMedium!
+                                                        .color,
+                                                    fontsize: 14.sp,
+                                                  ),
+                                                  SizedBox(height: 4.h),
+                                                  SizedBox(
+                                                    width: 200.w,
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        // TODO : Add location svg
+                                                        SvgPicture.asset(
+                                                          'assets/images/location_icon.svg',
+                                                          height: 20.h,
+                                                        ),
+                                                        SizedBox(width: 5.w),
+                                                        Flexible(
+                                                          child: InterRegular(
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .bodyMedium!
+                                                                .color,
+                                                            text:
+                                                                PatrolLocation,
+                                                            maxLines: 2,
+                                                            fontsize: 14.sp,
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
                                           ),
-                                        ),
-                                      ),
-                                      SizedBox(width: 12.w),
-                                      SizedBox(
-                                        width: 300.w,
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Row(
-                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          SizedBox(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: [
                                                 InterRegular(
-                                                  text: message['EmployeeName'],
-                                                  fontsize: 17.sp,
-                                                  color: Theme.of(context).textTheme.bodyMedium!.color!,
+                                                  text: 'CheckPoints',
+                                                  fontsize: 14.sp,
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyMedium!
+                                                      .color,
                                                 ),
+                                                SizedBox(height: 10.h),
                                                 Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
                                                   children: [
-                                                    PoppinsRegular(
-                                                      text: formattedTime,
-                                                      color: Theme.of(context).textTheme.bodyLarge!.color!,
-                                                      fontsize: 15.sp,
-                                                    ),
                                                     Icon(
-                                                      Icons.arrow_forward_ios,
-                                                      color: Theme.of(context).textTheme.bodyMedium!.color!,
-                                                      size: 15.sp,
+                                                      Icons.qr_code,
+                                                      color: Theme.of(context)
+                                                          .primaryColor,
+                                                      size: 24.sp,
+                                                    ),
+                                                    SizedBox(width: 4.w),
+                                                    InterMedium(
+                                                      text: CheckpointCount
+                                                          .toString(),
+                                                      fontsize: 13.sp,
+                                                      color: Theme.of(context)
+                                                          .textTheme
+                                                          .bodyMedium!
+                                                          .color,
                                                     )
                                                   ],
-                                                ),
+                                                )
                                               ],
                                             ),
-                                            SizedBox(height: 4.h),
-                                            Flexible(
-                                              child: InterRegular(
-                                                text: message['MessageData'],
-                                                fontsize: 15.sp,
-                                                color: Theme.of(context).textTheme.headlineSmall!.color!,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      )
+                                          )
+                                        ],
+                                      ),
                                     ],
                                   ),
                                 ),
                               ),
-                            ],
-                          ),
+                            );
+                          },
+                          childCount: patrolsList.length,
                         ),
-                      );
-                    },
-                    childCount: messages.length,
-                  ),
-                )
+                      )
+                    : ScreenIndex == 1
+                        ? SliverToBoxAdapter(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 30.w),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () => _selectDate(context),
+                                        child: SizedBox(
+                                          width: 140.w,
+                                          child: IconTextWidget(
+                                            icon: Icons.calendar_today,
+                                            text: selectedDate != null
+                                                ? "${selectedDate!.toLocal()}"
+                                                    .split(' ')[0]
+                                                : 'Select Date',
+                                            fontsize: 14.sp,
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium!
+                                                .color as Color,
+                                            Iconcolor: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium!
+                                                .color as Color,
+                                          ),
+                                        ),
+                                      ),
+                                      Row(
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () {
+                                              SelectLocationShift
+                                                  .showLocationDialog(
+                                                context,
+                                                _cmpId,
+                                                onLocationSelected,
+                                              );
+                                            },
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                SizedBox(
+                                                  width: 80.w,
+                                                  child: IconTextWidget(
+                                                    space: 6.w,
+                                                    icon: Icons.add,
+                                                    iconSize: 20.sp,
+                                                    text: 'Select',
+                                                    useBold: true,
+                                                    fontsize: 14.sp,
+                                                    color: Theme.of(context)
+                                                        .textTheme
+                                                        .bodySmall!
+                                                        .color as Color,
+                                                    Iconcolor: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyMedium!
+                                                        .color as Color,
+                                                  ),
+                                                ),
+                                                InterBold(
+                                                  text: 'Location',
+                                                  fontsize: 16.sp,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: Platform.isIOS ? 30.w : 10.w,
+                                          ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      SelectClientGuardsScreen(
+                                                    companyId: _cmpId,
+                                                    onGuardSelected:
+                                                        onGuardSelected,
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            child: Column(
+                                              children: [
+                                                SizedBox(
+                                                  width: 80.w,
+                                                  child: IconTextWidget(
+                                                    space: 6.w,
+                                                    icon: Icons.add,
+                                                    iconSize: 20.sp,
+                                                    text: 'Select',
+                                                    useBold: true,
+                                                    fontsize: 14.sp,
+                                                    color: Theme.of(context)
+                                                        .textTheme
+                                                        .bodySmall!
+                                                        .color as Color,
+                                                    Iconcolor: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyMedium!
+                                                        .color as Color,
+                                                  ),
+                                                ),
+                                                InterBold(
+                                                  text: 'Employee',
+                                                  fontsize: 16.sp,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 6.h),
+                                  TextButton(
+                                    onPressed: () {},
+                                    child: InterMedium(
+                                      text: 'clear',
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .headlineSmall!
+                                          .color,
+                                      fontsize: 20.sp,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 20.h,
+                                  )
+                                ],
+                              ),
+                            ),
+                          )
+                        : ScreenIndex == 2
+                            ? SliverGrid(
+                                gridDelegate:
+                                    const SliverGridDelegateWithMaxCrossAxisExtent(
+                                  maxCrossAxisExtent: 200.0,
+                                  // mainAxisSpacing: 10.0,
+                                  // crossAxisSpacing: 10.0,
+                                  // childAspectRatio: 4.0,
+                                ),
+                                delegate: SliverChildBuilderDelegate(
+                                  (BuildContext context, int index) {
+                                    return Bounce(
+                                      onTap: () {
+                                        switch (index) {
+                                          case 0:
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ClientDarScreen(
+                                                          clientId: _employeeId,
+                                                          companyId: _cmpId),
+                                                ));
+                                            break;
+                                          case 1:
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ClientReportScreen(
+                                                    companyId: _cmpId,
+                                                    employeeId: _employeeId,
+                                                  ),
+                                                ));
+                                            break;
+                                          // case 2:
+                                          //   Navigator.push(
+                                          //       context,
+                                          //       MaterialPageRoute(
+                                          //         builder: (context) =>
+                                          //             ClientDarScreen(
+                                          //                 clientId: _employeeId,
+                                          //                 companyId: _cmpId),
+                                          //       ));
+                                          //   break;
+                                        }
+                                      },
+                                      child: gridWidget(
+                                        img: data[index][0],
+                                        tittle: data[index][1],
+                                      ),
+                                    );
+                                  },
+                                  childCount: data.length,
+                                ),
+                              )
+                            : ScreenIndex == 3
+                                ? SliverToBoxAdapter(
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 30.w,
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          InterBold(
+                                            text: 'Received Message ',
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                            fontsize: 14.sp,
+                                          ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (builder) =>
+                                                          SuperInboxScreen(
+                                                            companyId: _cmpId,
+                                                            userName: _userName,
+                                                            isClient: true,
+                                                            isGuard: false,
+                                                          )));
+                                            },
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Icon(
+                                                  Icons.add,
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                  size: 20.sp,
+                                                ),
+                                                SizedBox(width: 4.w),
+                                                InterBold(
+                                                  text: 'Create Message',
+                                                  fontsize: 14.sp,
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                  maxLine: 2,
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                : const SliverToBoxAdapter(),
+                ScreenIndex == 1
+                    ? SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            DateTime shiftDate = shifts[index]['ShiftDate'];
+                            String dateString = (isSameDate(
+                                    shiftDate, DateTime.now()))
+                                ? 'Today'
+                                : "${shiftDate.day} / ${shiftDate.month} / ${shiftDate.year}";
+                            return Padding(
+                              padding: EdgeInsets.only(
+                                left: 30.w,
+                                right: 30.w,
+                              ),
+                              child: GestureDetector(
+                                onTap: () {
+                                  NavigateScreen(
+                                    ClientCheckPatrolScreen(
+                                      companyId: _cmpId,
+                                      PatrolIdl: '',
+                                      ScreenName: '',
+                                    ),
+                                    context,
+                                  );
+                                },
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(height: 10.h),
+                                    InterBold(
+                                      text: dateString,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall!
+                                          .color,
+                                      fontsize: 14.sp,
+                                    ),
+                                    SizedBox(
+                                      height: 10.sp,
+                                    ),
+                                    Container(
+                                      height: 160.h,
+                                      margin: EdgeInsets.only(top: 10.h),
+                                      width: double.maxFinite,
+                                      decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color:
+                                                Theme.of(context).shadowColor,
+                                            blurRadius: 5,
+                                            spreadRadius: 2,
+                                            offset: Offset(0, 3),
+                                          )
+                                        ],
+                                        color: Theme.of(context).cardColor,
+                                        borderRadius:
+                                            BorderRadius.circular(14.sp),
+                                      ),
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 20.h),
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                height: 30.h,
+                                                width: 4.w,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.only(
+                                                    topRight:
+                                                        Radius.circular(10.r),
+                                                    bottomRight:
+                                                        Radius.circular(10.r),
+                                                  ),
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                ),
+                                              ),
+                                              SizedBox(width: 14.w),
+                                              SizedBox(
+                                                width: 190.w,
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    InterSemibold(
+                                                      text: shifts[index]
+                                                          ['ShiftName'],
+                                                      color: Theme.of(context)
+                                                          .textTheme
+                                                          .titleSmall!
+                                                          .color,
+                                                      fontsize: 14.sp,
+                                                    ),
+                                                    SizedBox(height: 5.h),
+                                                    InterRegular(
+                                                      text: shifts[index][
+                                                          'ShiftLocationAddress'],
+                                                      maxLines: 1,
+                                                      fontsize: 14.sp,
+                                                    ),
+                                                  ],
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                          SizedBox(height: 10.h),
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                              left: 18.w,
+                                              right: 24.w,
+                                            ),
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                SizedBox(
+                                                  width: 100.w,
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      InterRegular(
+                                                        text: 'Guards',
+                                                        fontsize: 14.sp,
+                                                        color: Theme.of(context)
+                                                            .textTheme
+                                                            .titleSmall!
+                                                            .color!,
+                                                      ),
+                                                      SizedBox(height: 12.h),
+                                                      Wrap(
+                                                        spacing: -5.0,
+                                                        children: [
+                                                          if (shifts[index]
+                                                                  ['members'] !=
+                                                              null)
+                                                            for (int i = 0;
+                                                                i <
+                                                                    (shifts[index]['members'].length >
+                                                                            3
+                                                                        ? 3
+                                                                        : shifts[index]['members']
+                                                                            .length);
+                                                                i++)
+                                                              CircleAvatar(
+                                                                radius: 10.r,
+                                                                backgroundImage:
+                                                                    NetworkImage(
+                                                                  shifts[index][
+                                                                      'members'][i],
+                                                                ),
+                                                                backgroundColor:
+                                                                    Theme.of(
+                                                                            context)
+                                                                        .primaryColor,
+                                                              ),
+                                                          if (shifts[index][
+                                                                      'members'] !=
+                                                                  null &&
+                                                              shifts[index][
+                                                                          'members']
+                                                                      .length >
+                                                                  3)
+                                                            CircleAvatar(
+                                                              radius: 12.r,
+                                                              backgroundColor:
+                                                                  Theme.of(
+                                                                          context)
+                                                                      .primaryColor,
+                                                              child:
+                                                                  InterMedium(
+                                                                text:
+                                                                    '+${shifts[index]['members'].length - 3}',
+                                                                fontsize: 12.sp,
+                                                              ),
+                                                            ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: 100.w,
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      InterRegular(
+                                                        text: 'Started At',
+                                                        color: Theme.of(context)
+                                                            .textTheme
+                                                            .titleSmall!
+                                                            .color!,
+                                                        fontsize: 14.sp,
+                                                      ),
+                                                      SizedBox(height: 5.h),
+                                                      InterMedium(
+                                                        text: shifts[index]
+                                                            ['ShiftStartTime'],
+                                                        fontsize: 14.sp,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: 100.w,
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      InterRegular(
+                                                        text: 'Ended At',
+                                                        color: Theme.of(context)
+                                                            .textTheme
+                                                            .titleSmall!
+                                                            .color!,
+                                                        fontsize: 14.sp,
+                                                      ),
+                                                      SizedBox(height: 5.h),
+                                                      Row(
+                                                        children: [
+                                                          SizedBox(width: 6.w),
+                                                          InterMedium(
+                                                            text: shifts[index][
+                                                                'ShiftEndTime'],
+                                                            fontsize: 14.sp,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 10.h,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                          childCount: shifts.length,
+                        ),
+                      )
+                    : SliverToBoxAdapter(),
+                ScreenIndex == 3
+                    ? SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (BuildContext context, int index) {
+                            var message = messages[index];
+                            var messageTime =
+                                (message['MessageCreatedAt'] as Timestamp)
+                                    .toDate();
+                            var formattedTime =
+                                '${messageTime.hour.toString().padLeft(2, '0')}:${messageTime.minute.toString().padLeft(2, '0')}';
+                            var receiverId = message['MessageCreatedById'];
+
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (builder) => MobileChatScreen(
+                                            receiverId: receiverId,
+                                            receiverName: '',
+                                            companyId: _cmpId,
+                                            userName: _userName)));
+                              },
+                              child: Container(
+                                margin: EdgeInsets.only(
+                                  top: 20.h,
+                                  left: 30.w,
+                                  right: 30.w,
+                                ),
+                                height: 76.h,
+                                width: double.maxFinite,
+                                child: Stack(
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.bottomCenter,
+                                      child: Container(
+                                        width: double.maxFinite,
+                                        height: 76.h,
+                                        decoration: BoxDecoration(
+                                          color: Theme.of(context).cardColor,
+                                          border: Border(
+                                            bottom: BorderSide(
+                                              width: 1,
+                                              color: Theme.of(context)
+                                                  .primaryColor,
+                                            ),
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color:
+                                                  Theme.of(context).shadowColor,
+                                              blurRadius: 5,
+                                              spreadRadius: 2,
+                                              offset: Offset(0, 3),
+                                            )
+                                          ],
+                                        ),
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            // if (message['NewMessage'] == true)
+                                            //   Container(
+                                            //     height: 11.h,
+                                            //     width: 11.w,
+                                            //     decoration: BoxDecoration(
+                                            //       color: Colors.green,
+                                            //       shape: BoxShape.circle,
+                                            //     ),
+                                            //   ),
+                                            Container(
+                                              margin:
+                                                  EdgeInsets.only(left: 9.w),
+                                              height: 45.h,
+                                              width: 45.w,
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                image: DecorationImage(
+                                                  image: NetworkImage(
+                                                      message['EmployeeImg']),
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(width: 12.w),
+                                            SizedBox(
+                                              width: 300.w,
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      InterRegular(
+                                                        text: message[
+                                                            'EmployeeName'],
+                                                        fontsize: 17.sp,
+                                                        color: Theme.of(context)
+                                                            .textTheme
+                                                            .bodyMedium!
+                                                            .color!,
+                                                      ),
+                                                      Row(
+                                                        children: [
+                                                          PoppinsRegular(
+                                                            text: formattedTime,
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .bodyLarge!
+                                                                .color!,
+                                                            fontsize: 15.sp,
+                                                          ),
+                                                          Icon(
+                                                            Icons
+                                                                .arrow_forward_ios,
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .bodyMedium!
+                                                                .color!,
+                                                            size: 15.sp,
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  SizedBox(height: 4.h),
+                                                  Flexible(
+                                                    child: InterRegular(
+                                                      text: message[
+                                                          'MessageData'],
+                                                      fontsize: 15.sp,
+                                                      color: Theme.of(context)
+                                                          .textTheme
+                                                          .headlineSmall!
+                                                          .color!,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                          childCount: messages.length,
+                        ),
+                      )
                     : SliverToBoxAdapter(),
               ],
             ),

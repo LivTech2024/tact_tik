@@ -60,8 +60,8 @@ class DarFunctions {
 
       // Handle shift details for the next day if the shift ends after midnight
       if (endDateTime.day > startDateTime.day) {
-        DateTime nextDayStart = DateTime(
-            endDateTime.year, endDateTime.month, endDateTime.day, 0, endMinute);
+        DateTime nextDayStart = DateTime(endDateTime.year, endDateTime.month,
+            endDateTime.day, 0, startMinute);
 
         current = nextDayStart;
         while (current.isBefore(endDateTime)) {

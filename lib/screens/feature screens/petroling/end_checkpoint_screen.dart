@@ -436,12 +436,14 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                       if (sendEmail == true) {
                         String? Email = await fireStoreService
                             .getLocationManagerEmail(widget.LocationId);
+                        print("Manger Email Id : ${Email}");
                         if (Email != null) {
                           emails.add(Email);
                         }
                       }
                       bool sendEmailToClient = await fireStoreService
                           .shouldSendEmailToClient(widget.LocationId);
+                      print("Send Email to Client ${sendEmailToClient}");
                       if (sendEmailToClient == true && sendEmail == true) {
                         // String? Email = await fireStoreService
                         //     .getLocationManagerEmail(widget.LocationId);

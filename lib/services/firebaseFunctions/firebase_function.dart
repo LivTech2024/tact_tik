@@ -3077,7 +3077,9 @@ class FireStoreService {
       // Upload the compressed image to Firebase Storage
       // await uploadRef.putData(F));
       // Upload the image file and get the download URL
-      await uploadRef.putFile(file);
+      await uploadRef.putFile(
+        file,
+      );
 
       // Get the download URL of the uploaded image
       String downloadURL = await uploadRef.getDownloadURL();
@@ -3134,7 +3136,7 @@ class FireStoreService {
 
               // Upload the image file and get the download URL
               List<Map<String, dynamic>> downloadURLs =
-                  await addImageToReportStorage(file);
+                  await addImageToStorageShiftTask(file);
 
               // Add the image URLs to the list
               for (var urlMap in downloadURLs) {
