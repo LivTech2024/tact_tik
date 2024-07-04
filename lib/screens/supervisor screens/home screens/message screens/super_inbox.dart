@@ -46,9 +46,8 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
   Stream<QuerySnapshot> getGuardStream() {
     Query query = FirebaseFirestore.instance
         .collection('Employees')
-        // .where('EmployeeRole', isEqualTo: 'GUARD')
-        .where('EmployeeCompanyId', isEqualTo: widget.companyId)
-        .where('EmployeeId', isNotEqualTo: currentUser!.uid);
+        .where('EmployeeRole', isNotEqualTo: 'SUPERVISOR')
+        .where('EmployeeCompanyId', isEqualTo: widget.companyId);
 
     if (dropdownValue != 'All Guards') {
       query = query.where('EmployeeIsAvailable', isEqualTo: dropdownValue);
@@ -300,15 +299,7 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                         ),
                         SizedBox(height: 20.h),
                         StreamBuilder<QuerySnapshot>(
-                          stream: FirebaseFirestore.instance
-                              .collection('Employees')
-                              .where('EmployeeRole', isEqualTo: 'GUARD')
-                              .where('EmployeeCompanyId',
-                                  isEqualTo: widget.companyId)
-                              .where('EmployeeId',
-                                  isNotEqualTo:
-                                      FirebaseAuth.instance.currentUser!.uid)
-                              .snapshots(),
+                          stream: getGuardStream(),
                           builder: (context, snapshot) {
                             if (!snapshot.hasData) {
                               return Center(child: CircularProgressIndicator());
@@ -341,6 +332,10 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                                         guardInfo['EmployeeName'] ?? "";
                                     String id = guardInfo['EmployeeId'] ?? "";
                                     String url = guardInfo['EmployeeImg'] ?? "";
+
+                                    if (id == currentUser?.uid) {
+                                      return SizedBox.shrink();
+                                    }
 
                                     return GestureDetector(
                                       onTap: () {
