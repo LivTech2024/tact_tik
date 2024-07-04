@@ -22,6 +22,7 @@ import 'package:tact_tik/screens/MapScreen/map_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/petroling/eg_patrolling.dart';
 import 'package:tact_tik/screens/feature%20screens/widgets/custome_textfield.dart';
 import 'package:tact_tik/screens/home%20screens/controller/home_screen_controller.dart';
+import 'package:tact_tik/screens/home%20screens/end_shift_screen.dart';
 import 'package:tact_tik/screens/home%20screens/home_screen.dart';
 import 'package:tact_tik/screens/home%20screens/shift_return_task_screen.dart';
 import 'package:tact_tik/screens/home%20screens/shift_task_screen.dart';
@@ -1115,8 +1116,23 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                     ]);
                               });*/
                           // <<<<<<<<<<<<<<<<<<< Dialog code
-
-
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => EndShiftScreen(
+                                        ShiftClientID: widget.ShiftClientID,
+                                        EmployeId: widget.EmployeId,
+                                        EmployeeName: widget.EmployeeName,
+                                        ShiftCompanyId: widget.ShiftCompanyId,
+                                        ShiftBranchId: widget.ShiftBranchId,
+                                        ShiftLocationId: widget.ShiftLocationId,
+                                        formattedStopwatchTime:
+                                            formattedStopwatchTime,
+                                        ShiftId: widget.ShiftId,
+                                        ShiftAddressName:
+                                            widget.ShiftAddressName,
+                                        ShiftName: widget.ShiftName,
+                                      )));
                           print('Current time is before shift end time');
                         }
                       } else {
