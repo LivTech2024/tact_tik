@@ -104,7 +104,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
     try {
       QuerySnapshot messageSnapshot = await FirebaseFirestore.instance
           .collection('Messages')
-          .where('MessageReceiversId', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+          .where('MessageReceiversId', arrayContains: FirebaseAuth.instance.currentUser?.uid)
           .orderBy('MessageCreatedAt', descending: true)
           .get();
 

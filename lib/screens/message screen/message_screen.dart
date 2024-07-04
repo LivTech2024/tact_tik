@@ -106,7 +106,7 @@ class _MobileChatScreenState extends State<MobileChatScreen> {
                             'MessageCreatedById': currentUser.uid,
                             'MessageCreatedByName': widget.userName,
                             'MessageData': message,
-                            'MessageReceiversId': widget.receiverId,
+                            'MessageReceiversId': [widget.receiverId],
                             'MessageType': "message"
                           });
                           await docRef.update({

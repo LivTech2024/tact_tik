@@ -61,14 +61,14 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
       QuerySnapshot messageSnapshot = await FirebaseFirestore.instance
           .collection('Messages')
           .where('MessageCreatedById', isEqualTo: guard['EmployeeId'])
-          .where('MessageReceiversId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+          .where('MessageReceiversId', arrayContains: FirebaseAuth.instance.currentUser!.uid)
           .orderBy('MessageCreatedAt', descending: true)
           .limit(1)
           .get();
 
       if (messageSnapshot.docs.isNotEmpty) {
         var latestMessage = messageSnapshot.docs.first.data() as Map<String, dynamic>;
-        if (latestMessage['MessageType'] != 'panic') {
+        if (latestMessage['MessageType'] == 'message') {
           guard['latestMessageTime'] = latestMessage['MessageCreatedAt'];
         } else {
           guard['latestMessageTime'] = Timestamp.fromDate(DateTime(1970, 1, 1));
@@ -112,14 +112,14 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
       QuerySnapshot messageSnapshot = await FirebaseFirestore.instance
           .collection('Messages')
           .where('MessageCreatedById', isEqualTo: item['id'])
-          .where('MessageReceiversId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+          .where('MessageReceiversId', arrayContains: FirebaseAuth.instance.currentUser!.uid)
           .orderBy('MessageCreatedAt', descending: true)
           .limit(1)
           .get();
 
       if (messageSnapshot.docs.isNotEmpty) {
         var latestMessage = messageSnapshot.docs.first.data() as Map<String, dynamic>;
-        if (latestMessage['MessageType'] != 'panic') {
+        if (latestMessage['MessageType'] == 'message') {
           item['latestMessageTime'] = latestMessage['MessageCreatedAt'];
         } else {
           item['latestMessageTime'] = Timestamp.fromDate(DateTime(1970, 1, 1));

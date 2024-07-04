@@ -23,15 +23,15 @@ class _ChatListState extends State<ChatList> {
       stream: CombineLatestStream.list([
         FirebaseFirestore.instance
             .collection('Messages')
-            .where('MessageType', isNotEqualTo: 'panic')
+            .where('MessageType', isEqualTo: 'message')
             .where('MessageCreatedById', isEqualTo: currentUser?.uid)
-            .where('MessageReceiversId', isEqualTo: widget.guardId)
+            .where('MessageReceiversId', arrayContains: widget.guardId)
             .snapshots(),
         FirebaseFirestore.instance
             .collection('Messages')
-            .where('MessageType', isNotEqualTo: 'panic')
+            .where('MessageType', isEqualTo: 'message')
             .where('MessageCreatedById', isEqualTo: widget.guardId)
-            .where('MessageReceiversId', isEqualTo: currentUser?.uid)
+            .where('MessageReceiversId', arrayContains: currentUser?.uid)
             .snapshots(),
       ]),
       builder: (context, snapshot) {
