@@ -1482,17 +1482,23 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
                                                 .color),
                                     // Conditional icon color based on selection
                                     SizedBox(width: 10.w),
-                                    InterRegular(
-                                        text: value,
-                                        color: selectedLocatin == value
-                                            ? Theme.of(context)
-                                                .textTheme
-                                                .bodyMedium!
-                                                .color
-                                            : Theme.of(context)
-                                                .textTheme
-                                                .bodyLarge!
-                                                .color),
+                                    SizedBox(
+                                      width: 280.w,
+                                      child: SingleChildScrollView(
+                                        scrollDirection: Axis.horizontal,
+                                        child: InterRegular(
+                                            text: value,
+                                            color: selectedLocatin == value
+                                                ? Theme.of(context)
+                                                    .textTheme
+                                                    .bodyMedium!
+                                                    .color
+                                                : Theme.of(context)
+                                                    .textTheme
+                                                    .bodyLarge!
+                                                    .color),
+                                      ),
+                                    ),
                                     // Conditional text color based on selection
                                   ],
                                 ),
