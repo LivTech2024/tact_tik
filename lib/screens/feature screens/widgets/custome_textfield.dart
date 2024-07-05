@@ -40,7 +40,7 @@ class CustomeTextField extends StatelessWidget {
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
-            color:Theme.of(context).shadowColor,
+            color: Theme.of(context).shadowColor,
             blurRadius: 5,
             spreadRadius: 2,
             offset: Offset(0, 3),
@@ -59,6 +59,10 @@ class CustomeTextField extends StatelessWidget {
         children: [
           Expanded(
             child: TextField(
+              onTapOutside: (event) {
+                print('onTapOutside');
+                FocusManager.instance.primaryFocus?.unfocus();
+              },
               maxLength: maxlength,
               controller: controller,
               maxLines: isExpanded ? null : 1,
@@ -66,25 +70,32 @@ class CustomeTextField extends StatelessWidget {
               style: GoogleFonts.poppins(
                 fontWeight: FontWeight.w300,
                 fontSize: width / width18,
-                color: Theme.of(context).textTheme.bodyMedium!.color, // Change text color to white
+                color: Theme.of(context)
+                    .textTheme
+                    .bodyMedium!
+                    .color, // Change text color to white
               ),
               decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(width / width10),
-                    ),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide.none,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(width / width10),
                   ),
-                  focusedBorder: InputBorder.none,
-                  hintStyle: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w300,
-                    fontSize: width / width18,
-                    color: Theme.of(context).textTheme.bodyLarge!.color, // Change text color to white
-                  ),
-                  hintText: hint,
-                  contentPadding: EdgeInsets.zero,
-                  // Remove padding
-                  counterText: ''),
+                ),
+                focusedBorder: InputBorder.none,
+                hintStyle: GoogleFonts.poppins(
+                  fontWeight: FontWeight.w300,
+                  fontSize: width / width18,
+                  color: Theme.of(context)
+                      .textTheme
+                      .bodyLarge!
+                      .color, // Change text color to white
+                ),
+                hintText: hint,
+                contentPadding: EdgeInsets.zero,
+                // Remove padding
+                counterText: '',
+              ),
               keyboardType: textInputType,
               cursorColor: DarkColor.Primarycolor,
               enabled: isEnabled,
