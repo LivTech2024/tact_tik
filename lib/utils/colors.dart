@@ -59,7 +59,6 @@ class LightColor {
   static const Color color7 = Color(0xCCFFFFFF);
   static const Color color8 = Color(0xCC393939);
   static const Color colorRed = Color(0x2DEA4335);
-
 }
 
 

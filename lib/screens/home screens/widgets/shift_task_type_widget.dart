@@ -64,7 +64,7 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
 
   Future<void> _addImage() async {
     XFile? pickedFile = await ImagePicker().pickImage(
-        source: ImageSource.camera, imageQuality: Platform.isIOS ? 30 : 50);
+        source: ImageSource.camera, imageQuality: Platform.isIOS ? 40 : 50);
     if (pickedFile != null) {
       try {
         File file = File(pickedFile.path);
@@ -87,7 +87,7 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
 
   Future<void> _addGallery() async {
     List<XFile>? pickedFiles = await ImagePicker()
-        .pickMultiImage(imageQuality: Platform.isIOS ? 30 : 50);
+        .pickMultiImage(imageQuality: Platform.isIOS ? 40 : 50);
     if (pickedFiles != null) {
       for (var pickedFile in pickedFiles) {
         try {

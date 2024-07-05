@@ -50,11 +50,18 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     DateTime today = DateTime.now();
     DateTime todayWithoutTime = DateTime(today.year, today.month, today.day);
+    DateTime startOfWeek =
+        today.subtract(Duration(days: today.weekday - 1)); // Monday
+    DateTime endOfWeek = startOfWeek.add(Duration(days: 6)); // Sunday
 
     try {
       QuerySnapshot schedulesSnapshot = await firestore
           .collection('Shifts')
           .where('ShiftCompanyId', isEqualTo: widget.CompanyId)
+          .where('ShiftDate',
+              isGreaterThanOrEqualTo: Timestamp.fromDate(startOfWeek))
+          .where('ShiftDate',
+              isLessThanOrEqualTo: Timestamp.fromDate(endOfWeek))
           .orderBy('ShiftDate', descending: true)
           .get();
 
@@ -140,7 +147,6 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
     // fetchReports();
   }
 
-
   DateTime? selectedDate;
 
   Future<void> _selectDate(BuildContext context) async {
@@ -156,7 +162,6 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
       }
     });
   }
-
 
   @override
   Widget build(BuildContext context) {

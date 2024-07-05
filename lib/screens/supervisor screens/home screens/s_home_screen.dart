@@ -9,6 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
+import 'package:tact_tik/common/widgets/customErrorToast.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/login_screen.dart';
 import 'package:tact_tik/main.dart';
@@ -733,7 +734,25 @@ class HomeScreenUserCard extends StatefulWidget {
 }
 
 class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
+  bool isAssigned = false;
+  bool loading = true;
   bool _expanded = false;
+  @override
+  void initState() {
+    super.initState();
+    _checkShiftStatus();
+  }
+
+  Future<void> _checkShiftStatus() async {
+    String empId = widget.guardsInfo['EmployeeId'];
+    bool result =
+        await fireStoreService.checkShiftsForEmployee(DateTime.now(), empId);
+    print("result of status ${result}");
+    setState(() {
+      isAssigned = result;
+      loading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -814,13 +833,19 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                     width: 16.w,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: widget.guardsInfo['EmployeeIsAvailable'] ==
-                              "available"
-                          ? Colors.green
-                          : widget.guardsInfo['EmployeeIsAvailable'] ==
-                                  "on_shift"
-                              ? Colors.orange
-                              : Colors.red,
+                      color: loading
+                          ? Colors
+                              .grey // Display a loading color while checking status
+                          : isAssigned
+                              ? Colors
+                                  .red // Display red if the employee is assigned to a shift
+                              : widget.guardsInfo['EmployeeIsAvailable'] ==
+                                      "available"
+                                  ? Colors.green
+                                  : widget.guardsInfo['EmployeeIsAvailable'] ==
+                                          "on_shift"
+                                      ? Colors.orange
+                                      : Colors.red,
                     ),
                   )
                 ],
@@ -837,32 +862,38 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => CreateScheduleScreen(
-                                        shiftId: '',
-                                        supervisorEmail: '',
-                                        BranchId: widget.guardsInfo[
-                                                "EmployeeCompanyBranchId"] ??
-                                            "",
-                                        GuardId:
-                                            widget.guardsInfo["EmployeeId"] ??
-                                                "",
-                                        GuardName:
-                                            widget.guardsInfo["EmployeeName"] ??
-                                                "",
-                                        GuardImg:
-                                            widget.guardsInfo["EmployeeImg"] ??
-                                                "",
-                                        CompanyId: widget.CompanyId ?? "",
-                                        GuardRole:
-                                            widget.guardsInfo["EmployeeRole"] ??
-                                                "",
-                                      )),
-                            );
-                          },
+                          onTap: isAssigned
+                              ? () {
+                                  showErrorToast(
+                                      context, "Guard Already Assigned");
+                                }
+                              : () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            CreateScheduleScreen(
+                                              shiftId: '',
+                                              supervisorEmail: '',
+                                              BranchId: widget.guardsInfo[
+                                                      "EmployeeCompanyBranchId"] ??
+                                                  "",
+                                              GuardId: widget.guardsInfo[
+                                                      "EmployeeId"] ??
+                                                  "",
+                                              GuardName: widget.guardsInfo[
+                                                      "EmployeeName"] ??
+                                                  "",
+                                              GuardImg: widget.guardsInfo[
+                                                      "EmployeeImg"] ??
+                                                  "",
+                                              CompanyId: widget.CompanyId ?? "",
+                                              GuardRole: widget.guardsInfo[
+                                                      "EmployeeRole"] ??
+                                                  "",
+                                            )),
+                                  );
+                                },
                           child: RoundedButton(
                             icon: Icons.add,
                           ),
