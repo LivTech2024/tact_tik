@@ -266,7 +266,7 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: 20.h),
+                        /*SizedBox(height: 20.h),
                         DropdownButtonHideUnderline(
                           child: DropdownButton<String>(
                             iconSize: 24.w,
@@ -296,7 +296,7 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                               );
                             }).toList(),
                           ),
-                        ),
+                        ),*/
                         SizedBox(height: 20.h),
                         StreamBuilder<QuerySnapshot>(
                           stream: getGuardStream(),
@@ -406,7 +406,7 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                                                   ),
                                                 ],
                                               ),
-                                              Stack(
+                                              /*Stack(
                                                 clipBehavior: Clip.none,
                                                 children: [
                                                   Stack(
@@ -451,7 +451,7 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                                                     ],
                                                   ),
                                                 ],
-                                              ),
+                                              ),*/
                                             ],
                                           ),
                                         ),

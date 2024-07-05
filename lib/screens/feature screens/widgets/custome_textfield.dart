@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tact_tik/main.dart';
 
@@ -28,63 +29,72 @@ class CustomeTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
 
     return Container(
       padding: EdgeInsets.only(
-        left: width / width20,
-        top: height / height5,
-        bottom: height / height5,
+        left: 20.w,
+        top: 5.h,
+        bottom: 5.h,
       ),
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
-            color:Theme.of(context).shadowColor,
+            color: Theme.of(context).shadowColor,
             blurRadius: 5,
             spreadRadius: 2,
             offset: Offset(0, 3),
           )
         ],
         color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(width / width10),
+        borderRadius: BorderRadius.circular(10.r),
       ),
       constraints: isExpanded
           ? BoxConstraints()
           : BoxConstraints(
-              minHeight: height / height60,
+              minHeight: 60.h,
             ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
             child: TextField(
+              onTapOutside: (event) {
+                print('onTapOutside');
+                FocusManager.instance.primaryFocus?.unfocus();
+              },
               maxLength: maxlength,
               controller: controller,
               maxLines: isExpanded ? null : 1,
               // keyboardType: Key,
               style: GoogleFonts.poppins(
                 fontWeight: FontWeight.w300,
-                fontSize: width / width18,
-                color: Theme.of(context).textTheme.bodyMedium!.color, // Change text color to white
+                fontSize: 18.sp,
+                color: Theme.of(context)
+                    .textTheme
+                    .bodyMedium!
+                    .color, // Change text color to white
               ),
               decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(width / width10),
-                    ),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide.none,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10.r),
                   ),
-                  focusedBorder: InputBorder.none,
-                  hintStyle: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w300,
-                    fontSize: width / width18,
-                    color: Theme.of(context).textTheme.bodyLarge!.color, // Change text color to white
-                  ),
-                  hintText: hint,
-                  contentPadding: EdgeInsets.zero,
-                  // Remove padding
-                  counterText: ''),
+                ),
+                focusedBorder: InputBorder.none,
+                hintStyle: GoogleFonts.poppins(
+                  fontWeight: FontWeight.w300,
+                  fontSize: 18.sp,
+                  color: Theme.of(context)
+                      .textTheme
+                      .bodyLarge!
+                      .color, // Change text color to white
+                ),
+                hintText: hint,
+                contentPadding: EdgeInsets.zero,
+                // Remove padding
+                counterText: '',
+              ),
               keyboardType: textInputType,
               cursorColor: DarkColor.Primarycolor,
               enabled: isEnabled,
@@ -96,7 +106,7 @@ class CustomeTextField extends StatelessWidget {
               icon: Icon(
                 Icons.mic,
                 color: DarkColor.color33,
-                size: width / width24,
+                size: 24.sp,
               ),
             )
         ],
