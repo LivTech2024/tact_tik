@@ -81,10 +81,67 @@ class FireStoreService {
       print("CurrentUserEmail is empty");
       return null;
     }
-
+    print("CurrentUserEmail ${currentUserEmail}");
     final querySnapshot = await userInfo
         .where("EmployeeEmail", isEqualTo: currentUserEmail)
         .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      // Return the first document found
+      print(querySnapshot.docs.first);
+      return querySnapshot.docs.first;
+    } else {
+      return null;
+    }
+  }
+
+  Future<bool> checkShiftsForEmployee(DateTime date, String empId) async {
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    // Get the start and end of the specified date
+    DateTime startOfDay = DateTime(date.year, date.month, date.day);
+    DateTime endOfDay =
+        DateTime(date.year, date.month, date.day, 23, 59, 59, 999);
+
+    try {
+      // Query the Shifts collection where ShiftDate is between start and end of the specified date
+      QuerySnapshot querySnapshot = await firestore
+          .collection('Shifts')
+          .where('ShiftDate',
+              isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
+          .where('ShiftDate', isLessThanOrEqualTo: Timestamp.fromDate(endOfDay))
+          .get();
+
+      // Loop through the documents to check ShiftAssignedUserId
+      for (QueryDocumentSnapshot doc in querySnapshot.docs) {
+        List<dynamic> assignedUsers = doc['ShiftAssignedUserId'];
+        if (assignedUsers.contains(empId)) {
+          return true; // Return true if any document contains the employee ID
+        }
+      }
+      return false; // Return false if no document contains the employee ID
+    } catch (e) {
+      print('Error checking shifts for employee: $e');
+      return false; // Return false in case of an error
+    }
+  }
+
+  Future<DocumentSnapshot?> getUserInfoByCurrentUserEmpId(String Empid) async {
+    User? currentUser = FirebaseAuth.instance.currentUser;
+
+    // if (Empid == null) {
+    //   print("No current user logged in");
+    //   return null;
+    // }
+
+    // final currentUserEmail = currentUser.email;
+    if (Empid == null || Empid.isEmpty) {
+      print("CurrentUserEmail is empty");
+      return null;
+    }
+
+    final querySnapshot =
+        await userInfo.where("EmployeeId", isEqualTo: Empid).get();
 
     if (querySnapshot.docs.isNotEmpty) {
       // Return the first document found
@@ -3069,14 +3126,6 @@ class FireStoreService {
       Reference uploadRef =
           storageRef.child("employees/shifttask/$uniqueName.jpg");
 
-      // Uint8List? compressedImage = await FlutterImageCompress.compressWithFile(
-      //   file.absolute.path,
-      //   quality: 50, // Adjust the quality as needed
-      // );
-
-      // Upload the compressed image to Firebase Storage
-      // await uploadRef.putData(F));
-      // Upload the image file and get the download URL
       await uploadRef.putFile(
         file,
       );

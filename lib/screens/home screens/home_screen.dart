@@ -857,7 +857,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         // );
                         // customEmail();
                         // await fireStoreService.copyAndCreateDocument(
-                        //     "PatrolLogs", "MOkVZ8Fx7Hpc4TmZrDFd");
+                        //     "PatrolLogs", "fx9H1STqxIl3s71bzVhf");
+                        // await darFunctions.fetchShiftDetailsAndSubmitDAR(
+                        //     _shiftId,
+                        //     _empEmail,
+                        //     _ShiftStartTime,
+                        //     _ShiftEndTime,
+                        //     _employeeId);
                         Navigator.push(
                           context,
                           MaterialPageRoute(

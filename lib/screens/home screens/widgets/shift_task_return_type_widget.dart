@@ -119,7 +119,6 @@ class _ShiftTaskReturnTypeWidgetState extends State<ShiftTaskReturnTypeWidget> {
       print('No images to upload or missing data.');
       return;
     }
-
     setState(() {
       _isLoading = true;
     });
