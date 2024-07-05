@@ -346,27 +346,28 @@ class _CalendarPageState extends State<CalendarPage> {
       print('isShiftRequestedList: $isShiftRequestedList');
 
       return CalendarEventModel(
-          others: OtherUsersModel(
-              isShiftRequested: isShiftRequestedList,
-              shiftRequestId: shiftRequestId,
-              isExchangeRequested: isExchangeRequestedList,
-              exchangeId: outputId,
-              othersShiftName: name,
-              othersShiftId: shiftId,
-              othersShiftLocation: shiftLocationName,
-              ids: otherUserIds,
-              startTime: shiftStartTime,
-              endTime: shiftEndTime),
-          name: isAssignedToCurrentUser ? name : name,
-          begin: begin,
-          end: end,
-          startTime: shiftStartTime,
-          endTime: shiftEndTime,
-          shiftId: shiftId,
-          isAssignedToCurrentUser: isAssignedToCurrentUser,
-          isShiftAcknowledgedByEmployee: isShiftAcknowledgedByEmployee,
-          eventColor: isAssignedToCurrentUser ? Colors.green : Colors.red,
-          location: shiftLocationName);
+        others: OtherUsersModel(
+            isShiftRequested: isShiftRequestedList,
+            shiftRequestId: shiftRequestId,
+            isExchangeRequested: isExchangeRequestedList,
+            exchangeId: outputId,
+            othersShiftName: name,
+            othersShiftId: shiftId,
+            othersShiftLocation: shiftLocationName,
+            ids: otherUserIds,
+            startTime: shiftStartTime,
+            endTime: shiftEndTime),
+        name: isAssignedToCurrentUser ? name : name,
+        begin: begin,
+        end: end,
+        startTime: shiftStartTime,
+        endTime: shiftEndTime,
+        shiftId: shiftId,
+        isAssignedToCurrentUser: isAssignedToCurrentUser,
+        isShiftAcknowledgedByEmployee: isShiftAcknowledgedByEmployee,
+        eventColor: isAssignedToCurrentUser ? Colors.green : Colors.red,
+        location: shiftLocationName,
+      );
     }).toList());
 
     events.sort((a, b) {

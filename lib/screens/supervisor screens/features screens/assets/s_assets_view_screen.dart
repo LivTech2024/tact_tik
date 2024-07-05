@@ -72,6 +72,7 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
 
     return SafeArea(
       child: Scaffold(
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.push(

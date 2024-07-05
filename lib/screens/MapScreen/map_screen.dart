@@ -36,6 +36,7 @@ class MapScreen extends StatelessWidget {
               }),
             ],
           ),
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
           floatingActionButton: Container(
             width: double.infinity,
             padding: const EdgeInsets.only(left: 30),

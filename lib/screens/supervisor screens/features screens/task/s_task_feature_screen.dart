@@ -17,6 +17,7 @@ class TaskFeatureScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         backgroundColor: DarkColor.Secondarycolor,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.push(
