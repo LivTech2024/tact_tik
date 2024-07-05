@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tact_tik/main.dart';
 
@@ -28,14 +29,12 @@ class CustomeTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
 
     return Container(
       padding: EdgeInsets.only(
-        left: width / width20,
-        top: height / height5,
-        bottom: height / height5,
+        left: 20.w,
+        top: 5.h,
+        bottom: 5.h,
       ),
       decoration: BoxDecoration(
         boxShadow: [
@@ -47,12 +46,12 @@ class CustomeTextField extends StatelessWidget {
           )
         ],
         color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(width / width10),
+        borderRadius: BorderRadius.circular(10.r),
       ),
       constraints: isExpanded
           ? BoxConstraints()
           : BoxConstraints(
-              minHeight: height / height60,
+              minHeight: 60.h,
             ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -69,7 +68,7 @@ class CustomeTextField extends StatelessWidget {
               // keyboardType: Key,
               style: GoogleFonts.poppins(
                 fontWeight: FontWeight.w300,
-                fontSize: width / width18,
+                fontSize: 18.sp,
                 color: Theme.of(context)
                     .textTheme
                     .bodyMedium!
@@ -79,13 +78,13 @@ class CustomeTextField extends StatelessWidget {
                 border: OutlineInputBorder(
                   borderSide: BorderSide.none,
                   borderRadius: BorderRadius.all(
-                    Radius.circular(width / width10),
+                    Radius.circular(10.r),
                   ),
                 ),
                 focusedBorder: InputBorder.none,
                 hintStyle: GoogleFonts.poppins(
                   fontWeight: FontWeight.w300,
-                  fontSize: width / width18,
+                  fontSize: 18.sp,
                   color: Theme.of(context)
                       .textTheme
                       .bodyLarge!
@@ -107,7 +106,7 @@ class CustomeTextField extends StatelessWidget {
               icon: Icon(
                 Icons.mic,
                 color: DarkColor.color33,
-                size: width / width24,
+                size: 24.sp,
               ),
             )
         ],
