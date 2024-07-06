@@ -290,6 +290,7 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
             ],
           ),
         ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: FloatingActionButton(
           onPressed: _uploadImages,
           backgroundColor: Theme.of(context).primaryColor,

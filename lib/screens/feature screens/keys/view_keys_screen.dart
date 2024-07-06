@@ -79,6 +79,7 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             // Navigator.push(

@@ -676,6 +676,7 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                             ),
                           ),
                         ),
+
                         FloatingActionButton(
                           onPressed: _uploadImages,
                           backgroundColor: Theme.of(context).primaryColor,
