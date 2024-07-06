@@ -33,15 +33,23 @@ class LogTypeWidget extends StatelessWidget {
       width: double.maxFinite,
       decoration: BoxDecoration(
         boxShadow: [
-         BoxShadow(
+          BoxShadow(
             color: Theme.of(context).shadowColor,
             blurRadius: 5,
             spreadRadius: 2,
             offset: Offset(0, 3),
           )
         ],
-       borderRadius: BorderRadius.circular(10.r),
-        color:  Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(10.r),
+        color: type == LogBookEnum.shift_start
+            ? const Color(0xFF0A5531)
+            : type == LogBookEnum.patrol_start
+                ? const Color(0xFF0A5531)
+                : type == LogBookEnum.shift_end
+                    ? const Color(0xFF9A1010)
+                    : type == LogBookEnum.patrol_end
+                        ? const Color(0xFF9A1010)
+                        : Theme.of(context).cardColor,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -59,13 +67,13 @@ class LogTypeWidget extends StatelessWidget {
                             ? Icons.apartment_outlined
                             : type == LogBookEnum.patrol_end
                                 ? Icons.apartment_outlined
-                    : type == LogBookEnum.TotalWorkTime
-                    ? Icons.av_timer
-                    : type == LogBookEnum.check_point
-                    ? Icons.qr_code_scanner
-                    : type == LogBookEnum.shift_break
-                    ? Icons.free_breakfast
-                                : Icons.error,
+                                : type == LogBookEnum.TotalWorkTime
+                                    ? Icons.av_timer
+                                    : type == LogBookEnum.check_point
+                                        ? Icons.qr_code_scanner
+                                        : type == LogBookEnum.shift_break
+                                            ? Icons.free_breakfast
+                                            : Icons.error,
                 color: Theme.of(context).primaryColor,
                 size: 24.sp,
               ),
@@ -77,20 +85,51 @@ class LogTypeWidget extends StatelessWidget {
                   InterMedium(
                     text: '$logtype',
                     fontsize: 14.sp,
-                    color:  Theme.of(context).textTheme.bodyMedium!.color,
+                    color: type == LogBookEnum.shift_start
+                        ? Colors.white
+                        : type == LogBookEnum.patrol_start
+                        ? Colors.white
+                        : type == LogBookEnum.shift_end
+                        ? Colors.white
+                        : type == LogBookEnum.patrol_end
+                        ? Colors.white
+                        : Theme.of(context).textTheme.bodyMedium!.color,
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 4.h),
-                    child: InterMedium(
-                      text: '$location',
-                     fontsize: 14.sp,maxLines: 1,
-                      color:  Theme.of(context).textTheme.bodyMedium!.color,
+                    child: SizedBox(
+                      width: 200.w,
+                      child: InterMedium(
+                        text: '$location',
+                        fontsize: 14.sp,
+                        maxLines: 1,
+                        color: type == LogBookEnum.shift_start
+                            ? Colors.white
+                            : type == LogBookEnum.patrol_start
+                            ? Colors.white
+                            : type == LogBookEnum.shift_end
+                            ? Colors.white
+                            : type == LogBookEnum.patrol_end
+                            ? Colors.white
+                            : Theme.of(context).textTheme.bodyMedium!.color,
+                      ),
                     ),
                   ),
-                  InterBold(
-                    text: 'Client: $clientname',
-                   fontsize: 14.sp,
-                    color:  Theme.of(context).textTheme.bodyMedium!.color,
+                  SizedBox(
+                    width: 200.w,
+                    child: InterBold(
+                      text: 'Shift: $clientname',
+                      fontsize: 14.sp,
+                      color: type == LogBookEnum.shift_start
+                          ? Colors.white
+                          : type == LogBookEnum.patrol_start
+                          ? Colors.white
+                          : type == LogBookEnum.shift_end
+                          ? Colors.white
+                          : type == LogBookEnum.patrol_end
+                          ? Colors.white
+                          : Theme.of(context).textTheme.bodyMedium!.color,
+                    ),
                   ),
                 ],
               ),
@@ -98,7 +137,15 @@ class LogTypeWidget extends StatelessWidget {
           ),
           InterMedium(
             text: time,
-            color:  Theme.of(context).textTheme.bodyMedium!.color,
+            color: type == LogBookEnum.shift_start
+                ? Colors.white
+                : type == LogBookEnum.patrol_start
+                ? Colors.white
+                : type == LogBookEnum.shift_end
+                ? Colors.white
+                : type == LogBookEnum.patrol_end
+                ? Colors.white
+                : Theme.of(context).textTheme.bodyMedium!.color,
             fontsize: 14.sp,
           ),
         ],

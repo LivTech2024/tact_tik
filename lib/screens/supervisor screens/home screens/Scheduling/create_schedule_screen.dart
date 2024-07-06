@@ -852,7 +852,6 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
 
   // List<String> options = [];
 
-  //
   List<Map<dynamic, dynamic>> AsignedPatrol = [];
 
   void _showInputDialog(BuildContext context, List<String> options) {
@@ -989,14 +988,14 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
   void NextPage() {
     setState(() {
       _pageController.animateToPage(1,
-          duration: Duration(milliseconds: 500), curve: Curves.ease);
+          duration: const Duration(milliseconds: 500), curve: Curves.ease);
     });
   }
 
   void PreviousPage() {
     setState(() {
       _pageController.animateToPage(0,
-          duration: Duration(milliseconds: 500), curve: Curves.ease);
+          duration: const Duration(milliseconds: 500), curve: Curves.ease);
     });
   }
 

@@ -363,18 +363,19 @@ class _TaskScreenState extends State<TaskScreen> {
                                             ),
                                             Container(
                                               margin: EdgeInsets.only(
-                                                right: width / width12,
+                                                right: 12.w,
                                               ),
-                                              height: height / height74,
+                                              height: 74.h,
                                               width: width / width70,
                                               decoration: BoxDecoration(
                                                 // color: Colors.redAccent,
                                                 image: DecorationImage(
-                                                    image: AssetImage(
-                                                        'assets/images/log_book.png'),
-                                                    fit: BoxFit.fitHeight,
-                                                    filterQuality:
-                                                        FilterQuality.high),
+                                                  image: AssetImage(
+                                                      'assets/images/log_book.png'),
+                                                  fit: BoxFit.fitHeight,
+                                                  filterQuality:
+                                                      FilterQuality.high,
+                                                ),
                                               ),
                                             )
                                           ],
