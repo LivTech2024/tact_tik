@@ -298,19 +298,17 @@ class _ShiftInformationState extends State<ShiftInformation> {
                               children: [
                                 Button1(
                                   text: widget.toRequest
-                                      ? 'Request'
+                                      ? 'Offer'
                                       : 'Acknowledge ',
                                   onPressed: () {
                                     if (widget.toRequest) {
                                       if (!widget.canExchangeRequest!) {
                                         showErrorToast(context,
-                                            'You cannot make a request previous shift.');
+                                            'You cannot offer previous shift.');
                                         return;
                                       }
-
-                                      onShiftRequest(
+                                      onShiftOffer(
                                           senderId: widget.currentUserId,
-                                          receiverId: widget.empId,
                                           shiftId: widget.shiftId);
                                     } else {
                                       onAcceptShift(
@@ -375,6 +373,50 @@ class _ShiftInformationState extends State<ShiftInformation> {
               ),
             ),
     );
+  }
+
+  Future<void> onShiftOffer({required String senderId, required String shiftId}) async {
+    try {
+      final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+      QuerySnapshot existingOffers = await firestore
+          .collection('ShiftExchange')
+          .where('ShiftOfferShiftId', isEqualTo: shiftId)
+          .limit(1)
+          .get();
+
+      if (existingOffers.docs.isNotEmpty) {
+        showErrorToast(context, "Shift is already offered.");
+        return;
+      }
+
+      DocumentSnapshot shiftDoc = await firestore.collection('Shifts').doc(shiftId).get();
+
+      if (!shiftDoc.exists) {
+        showErrorToast(context, "Shift not found.");
+        throw Exception('Shift not found');
+      }
+
+      String shiftCompanyId = shiftDoc.get('ShiftCompanyId');
+
+      DocumentReference newShiftExchangeDoc = await firestore.collection('ShiftExchange').add({
+        'ShiftOfferCreatedAt': Timestamp.now(),
+        'ShiftOfferCompanyId': shiftCompanyId,
+        'ShiftOfferSenderId': senderId,
+        'ShiftOfferShiftId': shiftId,
+        'ShiftOfferStatus': 'pending',
+      });
+
+      await newShiftExchangeDoc.update({
+        'ShiftOfferId': newShiftExchangeDoc.id,
+      });
+
+      showSuccessToast(context, "Shift offer created successfully");
+      print('Shift offer created successfully');
+    } catch (e) {
+      showErrorToast(context, "Error creating shift offer.");
+      print('Error creating shift offer: $e');
+    }
   }
 
   Future<void> onShiftRequest({
