@@ -59,9 +59,11 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
           .collection('Shifts')
           .where('ShiftCompanyId', isEqualTo: widget.CompanyId)
           .where('ShiftDate',
-              isGreaterThanOrEqualTo: Timestamp.fromDate(startOfWeek))
+              isGreaterThanOrEqualTo:
+                  Timestamp.fromDate(selectedDate ?? startOfWeek))
           .where('ShiftDate',
-              isLessThanOrEqualTo: Timestamp.fromDate(endOfWeek))
+              isLessThanOrEqualTo:
+                  Timestamp.fromDate(selectedDate ?? endOfWeek))
           .orderBy('ShiftDate', descending: true)
           .get();
 
@@ -159,8 +161,91 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
       if (picked != null) {
         selectedDate = picked;
         // fetchReports();
+        _getShift();
       }
+      // initState();
     });
+  }
+
+  DateTime parseTimeString(String timeString, DateTime referenceDate) {
+    final timeParts = timeString.split(':');
+    if (timeParts.length != 2) {
+      throw FormatException('Invalid time format');
+    }
+    final hours = int.tryParse(timeParts[0]) ?? 0;
+    final minutes = int.tryParse(timeParts[1]) ?? 0;
+    return DateTime(
+      referenceDate.year,
+      referenceDate.month,
+      referenceDate.day,
+      hours,
+      minutes,
+    );
+  }
+
+// Define a function to determine the shift status and color
+  Map<String, dynamic> determineShiftStatus(
+      DocumentSnapshot<Object?> scheduleDoc) {
+    final schedule = scheduleDoc.data() as Map<String, dynamic>?;
+
+    if (schedule == null) {
+      return {
+        'status': 'unknown',
+        'color': Colors.orangeAccent,
+      };
+    }
+
+    List<dynamic> shiftStatusArray = schedule['ShiftCurrentStatus'] ?? [];
+    if (shiftStatusArray.isEmpty) {
+      return {
+        'status': 'pending',
+        'color': Colors.orangeAccent,
+      };
+    }
+
+    Map<String, dynamic> shiftStatus = shiftStatusArray[0];
+    DateTime statusStartedTime =
+        (shiftStatus['StatusStartedTime'] as Timestamp).toDate();
+    DateTime statusReportedTime =
+        (shiftStatus['StatusReportedTime'] as Timestamp).toDate();
+
+    String shiftStartTimeString = schedule['ShiftStartTime'] ?? '00:00';
+    String shiftEndTimeString = schedule['ShiftEndTime'] ?? '23:59';
+
+    DateTime currentDate = DateTime.now();
+    DateTime shiftStartTime =
+        parseTimeString(shiftStartTimeString, currentDate);
+    DateTime shiftEndTime = parseTimeString(shiftEndTimeString, currentDate);
+
+    bool startedEarly = shiftStartTime.isBefore(statusStartedTime);
+    bool startedLate = shiftStartTime.isAfter(statusStartedTime);
+    bool endedEarly = shiftEndTime.isBefore(statusReportedTime);
+    bool endedLate = shiftEndTime.isAfter(statusReportedTime);
+
+    Color color;
+
+    if (shiftStatus['Status'] == "started") {
+      color = Colors.pinkAccent;
+    } else if (shiftStatus['Status'] == "completed") {
+      if (startedLate && endedLate) {
+        color = Colors.red;
+      } else if (startedEarly && endedEarly) {
+        color = Colors.green;
+      } else if (startedEarly && endedLate) {
+        color = Colors.orange;
+      } else if (startedLate && endedEarly) {
+        color = Colors.blue;
+      } else {
+        color = Colors.yellow;
+      }
+    } else {
+      color = Colors.blueGrey;
+    }
+
+    return {
+      'status': shiftStatus['Status'] ?? 'unknown',
+      'color': color,
+    };
   }
 
   @override
@@ -332,7 +417,12 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                     ),
                     SizedBox(height: 6.h),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        setState(() {
+                          selectedDate = null;
+                          _getShift();
+                        });
+                      },
                       child: InterMedium(
                         text: 'clear',
                         color: Theme.of(context).textTheme.headlineSmall!.color,
@@ -463,6 +553,12 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                               schedule.data() as Map<String, dynamic>?;
                           List<dynamic> employeeImages =
                               scheduleData?['EmployeeImages'] ?? [];
+                          Map<String, dynamic> statusInfo =
+                              determineShiftStatus(schedule);
+                          String status = statusInfo['status'];
+                          Color statusColor = statusInfo['color'];
+                          print("Status Color ${statusColor}");
+                          print("Status${status}");
 
                           return Container(
                             height: 160.h,
@@ -477,7 +573,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                   offset: Offset(0, 3),
                                 )
                               ],
-                              color: Theme.of(context).cardColor,
+                              color: statusColor,
                               borderRadius: BorderRadius.circular(14.r),
                             ),
                             padding: EdgeInsets.symmetric(vertical: 20.h),
