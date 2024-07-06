@@ -3117,34 +3117,212 @@ class FireStoreService {
     }
   }
 
+  // Future<List<Map<String, dynamic>>> addImageToStorageShiftTask(
+  //     File file) async {
+  //   try {
+  //     String uniqueName = DateTime.now().toString();
+  //     Reference storageRef = FirebaseStorage.instance.ref();
+
+  //     Reference uploadRef =
+  //         storageRef.child("employees/shifttask/$uniqueName.jpg");
+
+  //     await uploadRef.putFile(
+  //       file,
+  //     );
+
+  //     // Get the download URL of the uploaded image
+  //     String downloadURL = await uploadRef.getDownloadURL();
+
+  //     // Return the download URL in a list
+  //     print({'downloadURL': downloadURL});
+  //     return [
+  //       {'downloadURL': downloadURL}
+  //     ];
+  //   } catch (e) {
+  //     print(e);
+  //     throw e;
+  //   }
+  // }
+
+  // //add wellness to the collection
+  // Future<void> addImagesToShiftTasks(
+  //     List<Map<String, dynamic>> uploads,
+  //     String ShiftTaskId,
+  //     String ShiftId,
+  //     String EmpId,
+  //     String EmpName,
+  //     bool shiftTaskReturnStatus) async {
+  //   try {
+  //     print("Uploads from Firebase: $uploads");
+  //     print("Shift Task ID from Firebase: $ShiftTaskId");
+
+  //     if (ShiftId.isEmpty) {
+  //       print("Shift ID is empty");
+  //       return;
+  //     }
+
+  //     final DocumentReference shiftDocRef =
+  //         FirebaseFirestore.instance.collection("Shifts").doc(ShiftId);
+  //     final DocumentSnapshot shiftDoc = await shiftDocRef.get();
+
+  //     if (!shiftDoc.exists) {
+  //       print("Shift document not found");
+  //       return;
+  //     }
+
+  //     List<dynamic> shiftTasks = shiftDoc['ShiftTask'];
+  //     print("Shift Doc exists with ${shiftTasks.length} tasks");
+
+  //     for (int i = 0; i < shiftTasks.length; i++) {
+  //       if (shiftTasks[i]['ShiftTaskId'] == ShiftTaskId) {
+  //         print("Processing ShiftTaskId: $ShiftTaskId");
+  //         List<String> imgUrls = [];
+
+  //         for (var upload in uploads) {
+  //           if (upload['type'] == 'image') {
+  //             File file = upload['file'];
+  //             print("Uploading file: $file");
+
+  //             // Upload the image file and get the download URL
+  //             List<Map<String, dynamic>> downloadURLs =
+  //                 await addImageToStorageShiftTask(file);
+
+  //             // Add the image URLs to the list
+  //             for (var urlMap in downloadURLs) {
+  //               if (urlMap.containsKey('downloadURL')) {
+  //                 imgUrls.add(urlMap['downloadURL'] as String);
+  //               }
+  //             }
+  //           }
+  //         }
+
+  //         // Create ShiftTaskStatus object with image URLs
+  //         Map<String, dynamic> shiftTaskStatus = {
+  //           "TaskStatus": "completed",
+  //           "TaskCompletedById": EmpId,
+  //           "TaskCompletedByName": EmpName,
+  //           "TaskCompletionTime": DateTime.now(),
+  //           "TaskPhotos": imgUrls,
+  //         };
+
+  //         if (shiftTaskReturnStatus) {
+  //           shiftTaskStatus["ShiftTaskReturnStatus"] = true;
+  //         }
+
+  //         // Update the ShiftTaskStatus array with the new object
+  //         shiftTasks[i]['ShiftTaskStatus'] = [shiftTaskStatus];
+
+  //         // Update the Firestore document with the new ShiftTaskStatus
+  //         await shiftDocRef.update({'ShiftTask': shiftTasks});
+  //         print("ShiftTask updated successfully");
+  //         break; // Exit loop after updating
+  //       }
+  //     }
+  //   } catch (e) {
+  //     print('Error adding images to ShiftTaskPhotos: $e');
+  //     throw e;
+  //   }
+  // }
+
+  // Future<void> addImagesToShiftReturnTasks(
+  //     List<Map<String, dynamic>> uploads,
+  //     String ShiftTaskId,
+  //     String ShiftId,
+  //     String EmpId,
+  //     String EmpName,
+  //     bool shiftTaskReturnStatus) async {
+  //   try {
+  //     print("Uploads from FIrebase: $uploads");
+  //     print("Shift Task ID from FIrebase: $ShiftTaskId");
+
+  //     if (ShiftId.isEmpty) {
+  //       print("Shift ID from FIrebase: $ShiftId");
+  //     } else {
+  //       print("Shift ID is empty");
+  //     }
+
+  //     // String empId = storage.getItem('EmpId') ?? "";
+  //     if (ShiftId.isEmpty) {
+  //       print("LocalStorage shiftId is null or empty");
+  //     }
+  //     final DocumentReference shiftDocRef =
+  //         FirebaseFirestore.instance.collection("Shifts").doc(ShiftId);
+  //     final DocumentSnapshot shiftDoc = await shiftDocRef.get();
+  //     print(DocumentSnapshot);
+  //     if (shiftDoc.exists) {
+  //       List<dynamic> shiftTasks = shiftDoc['ShiftTask'];
+  //       print("Shift Doc exists");
+  //       print(shiftTasks.length);
+  //       for (int i = 0; i < shiftTasks.length; i++) {
+  //         print("Success: $ShiftTaskId");
+  //         List<String> imgUrls = [];
+  //         for (var upload in uploads) {
+  //           if (upload['type'] == 'image') {
+  //             File file = upload['file'];
+  //             print(file);
+  //             // Upload the image file and get the download URL
+  //             List<Map<String, dynamic>> downloadURLs =
+  //                 await addImageToStorageShiftTask(file);
+  //             // Add the image URLs to the list
+  //             for (var urlMap in downloadURLs) {
+  //               if (urlMap.containsKey('downloadURL')) {
+  //                 imgUrls.add(urlMap['downloadURL'] as String);
+  //               }
+  //             }
+  //           }
+  //         }
+
+  //         if (shiftTasks[i]['ShiftTaskId'] == ShiftTaskId) {
+  //           // Create ShiftTaskStatus object with image URLs
+  //           Map<String, dynamic> shiftTaskStatus = {
+  //             "TaskStatus": "completed",
+  //             "TaskCompletedById": EmpId ?? "",
+  //             "TaskCompletedByName": EmpName,
+  //             "TaskCompletionTime": DateTime.now(),
+  //             "TaskPhotos": imgUrls,
+  //             // "ShiftTaskReturnStatus": true,
+  //           };
+  //           if (shiftTaskReturnStatus) {
+  //             // shiftTaskStatus["ShiftTaskReturnStatus"] = true;
+  //             shiftTasks[i]['ShiftReturnTaskStatus'] = [shiftTaskStatus];
+  //           }
+  //           // Update the ShiftTaskStatus array with the new object
+  //           shiftTasks[i]['ShiftReturnTaskStatus'] = [shiftTaskStatus];
+
+  //           // Update the Firestore document with the new ShiftTaskStatus
+  //           await shiftDocRef.update({'ShiftTask': shiftTasks});
+  //           break; // Exit loop after updating
+  //         }
+  //       }
+  //     } else {
+  //       print("Shift document not found");
+  //     }
+  //   } catch (e) {
+  //     print('Error adding images to ShiftTaskPhotos: $e');
+  //     throw e;
+  //   }
+  // }
   Future<List<Map<String, dynamic>>> addImageToStorageShiftTask(
       File file) async {
     try {
       String uniqueName = DateTime.now().toString();
       Reference storageRef = FirebaseStorage.instance.ref();
-
       Reference uploadRef =
           storageRef.child("employees/shifttask/$uniqueName.jpg");
 
-      await uploadRef.putFile(
-        file,
-      );
+      await uploadRef.putFile(file);
 
       // Get the download URL of the uploaded image
       String downloadURL = await uploadRef.getDownloadURL();
-
-      // Return the download URL in a list
-      print({'downloadURL': downloadURL});
       return [
         {'downloadURL': downloadURL}
       ];
     } catch (e) {
-      print(e);
+      print('Error uploading image: $e');
       throw e;
     }
   }
 
-  //add wellness to the collection
   Future<void> addImagesToShiftTasks(
       List<Map<String, dynamic>> uploads,
       String ShiftTaskId,
@@ -3153,9 +3331,6 @@ class FireStoreService {
       String EmpName,
       bool shiftTaskReturnStatus) async {
     try {
-      print("Uploads from Firebase: $uploads");
-      print("Shift Task ID from Firebase: $ShiftTaskId");
-
       if (ShiftId.isEmpty) {
         print("Shift ID is empty");
         return;
@@ -3171,32 +3346,28 @@ class FireStoreService {
       }
 
       List<dynamic> shiftTasks = shiftDoc['ShiftTask'];
-      print("Shift Doc exists with ${shiftTasks.length} tasks");
+
+      List<String> imgUrls = [];
+      List<Future<void>> uploadFutures = [];
+
+      for (var upload in uploads) {
+        if (upload['type'] == 'image') {
+          File file = upload['file'];
+          uploadFutures
+              .add(addImageToStorageShiftTask(file).then((downloadURLs) {
+            for (var urlMap in downloadURLs) {
+              if (urlMap.containsKey('downloadURL')) {
+                imgUrls.add(urlMap['downloadURL'] as String);
+              }
+            }
+          }));
+        }
+      }
+
+      await Future.wait(uploadFutures);
 
       for (int i = 0; i < shiftTasks.length; i++) {
         if (shiftTasks[i]['ShiftTaskId'] == ShiftTaskId) {
-          print("Processing ShiftTaskId: $ShiftTaskId");
-          List<String> imgUrls = [];
-
-          for (var upload in uploads) {
-            if (upload['type'] == 'image') {
-              File file = upload['file'];
-              print("Uploading file: $file");
-
-              // Upload the image file and get the download URL
-              List<Map<String, dynamic>> downloadURLs =
-                  await addImageToStorageShiftTask(file);
-
-              // Add the image URLs to the list
-              for (var urlMap in downloadURLs) {
-                if (urlMap.containsKey('downloadURL')) {
-                  imgUrls.add(urlMap['downloadURL'] as String);
-                }
-              }
-            }
-          }
-
-          // Create ShiftTaskStatus object with image URLs
           Map<String, dynamic> shiftTaskStatus = {
             "TaskStatus": "completed",
             "TaskCompletedById": EmpId,
@@ -3209,15 +3380,13 @@ class FireStoreService {
             shiftTaskStatus["ShiftTaskReturnStatus"] = true;
           }
 
-          // Update the ShiftTaskStatus array with the new object
           shiftTasks[i]['ShiftTaskStatus'] = [shiftTaskStatus];
-
-          // Update the Firestore document with the new ShiftTaskStatus
-          await shiftDocRef.update({'ShiftTask': shiftTasks});
-          print("ShiftTask updated successfully");
           break; // Exit loop after updating
         }
       }
+
+      await shiftDocRef.update({'ShiftTask': shiftTasks});
+      print("ShiftTask updated successfully");
     } catch (e) {
       print('Error adding images to ShiftTaskPhotos: $e');
       throw e;
@@ -3232,73 +3401,64 @@ class FireStoreService {
       String EmpName,
       bool shiftTaskReturnStatus) async {
     try {
-      print("Uploads from FIrebase: $uploads");
-      print("Shift Task ID from FIrebase: $ShiftTaskId");
-
       if (ShiftId.isEmpty) {
-        print("Shift ID from FIrebase: $ShiftId");
-      } else {
         print("Shift ID is empty");
+        return;
       }
 
-      // String empId = storage.getItem('EmpId') ?? "";
-      if (ShiftId.isEmpty) {
-        print("LocalStorage shiftId is null or empty");
-      }
       final DocumentReference shiftDocRef =
           FirebaseFirestore.instance.collection("Shifts").doc(ShiftId);
       final DocumentSnapshot shiftDoc = await shiftDocRef.get();
-      print(DocumentSnapshot);
-      if (shiftDoc.exists) {
-        List<dynamic> shiftTasks = shiftDoc['ShiftTask'];
-        print("Shift Doc exists");
-        print(shiftTasks.length);
-        for (int i = 0; i < shiftTasks.length; i++) {
-          print("Success: $ShiftTaskId");
-          List<String> imgUrls = [];
-          for (var upload in uploads) {
-            if (upload['type'] == 'image') {
-              File file = upload['file'];
-              print(file);
-              // Upload the image file and get the download URL
-              List<Map<String, dynamic>> downloadURLs =
-                  await addImageToStorageShiftTask(file);
-              // Add the image URLs to the list
-              for (var urlMap in downloadURLs) {
-                if (urlMap.containsKey('downloadURL')) {
-                  imgUrls.add(urlMap['downloadURL'] as String);
-                }
+
+      if (!shiftDoc.exists) {
+        print("Shift document not found");
+        return;
+      }
+
+      List<dynamic> shiftTasks = shiftDoc['ShiftTask'];
+
+      List<String> imgUrls = [];
+      List<Future<void>> uploadFutures = [];
+
+      for (var upload in uploads) {
+        if (upload['type'] == 'image') {
+          File file = upload['file'];
+          uploadFutures
+              .add(addImageToStorageShiftTask(file).then((downloadURLs) {
+            for (var urlMap in downloadURLs) {
+              if (urlMap.containsKey('downloadURL')) {
+                imgUrls.add(urlMap['downloadURL'] as String);
               }
             }
-          }
-
-          if (shiftTasks[i]['ShiftTaskId'] == ShiftTaskId) {
-            // Create ShiftTaskStatus object with image URLs
-            Map<String, dynamic> shiftTaskStatus = {
-              "TaskStatus": "completed",
-              "TaskCompletedById": EmpId ?? "",
-              "TaskCompletedByName": EmpName,
-              "TaskCompletionTime": DateTime.now(),
-              "TaskPhotos": imgUrls,
-              // "ShiftTaskReturnStatus": true,
-            };
-            if (shiftTaskReturnStatus) {
-              // shiftTaskStatus["ShiftTaskReturnStatus"] = true;
-              shiftTasks[i]['ShiftReturnTaskStatus'] = [shiftTaskStatus];
-            }
-            // Update the ShiftTaskStatus array with the new object
-            shiftTasks[i]['ShiftReturnTaskStatus'] = [shiftTaskStatus];
-
-            // Update the Firestore document with the new ShiftTaskStatus
-            await shiftDocRef.update({'ShiftTask': shiftTasks});
-            break; // Exit loop after updating
-          }
+          }));
         }
-      } else {
-        print("Shift document not found");
       }
+
+      await Future.wait(uploadFutures);
+
+      for (int i = 0; i < shiftTasks.length; i++) {
+        if (shiftTasks[i]['ShiftTaskId'] == ShiftTaskId) {
+          Map<String, dynamic> shiftTaskStatus = {
+            "TaskStatus": "completed",
+            "TaskCompletedById": EmpId ?? "",
+            "TaskCompletedByName": EmpName,
+            "TaskCompletionTime": DateTime.now(),
+            "TaskPhotos": imgUrls,
+          };
+
+          if (shiftTaskReturnStatus) {
+            shiftTasks[i]['ShiftReturnTaskStatus'] = [shiftTaskStatus];
+          } else {
+            shiftTasks[i]['ShiftReturnTaskStatus'] = [shiftTaskStatus];
+          }
+
+          break; // Exit loop after updating
+        }
+      }
+
+      await shiftDocRef.update({'ShiftTask': shiftTasks});
     } catch (e) {
-      print('Error adding images to ShiftTaskPhotos: $e');
+      print('Error adding images to ShiftReturnTaskPhotos: $e');
       throw e;
     }
   }

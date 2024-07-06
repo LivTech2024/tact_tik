@@ -68,7 +68,6 @@ import 'controller/home_screen_controller.dart';
 
 class HomeScreen extends StatefulWidget {
   final VoidCallback? refreshCallback;
-
   const HomeScreen({super.key, this.refreshCallback});
 
   @override
