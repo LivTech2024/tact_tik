@@ -1970,6 +1970,7 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
                       ),
                       if (tasks.isNotEmpty)
                         ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: tasks.length,
                           itemBuilder: (context, index) {

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tact_tik/common/widgets/customErrorToast.dart';
@@ -256,7 +257,7 @@ class _TaskScreenState extends State<TaskScreen> {
                       : Center(
                           child: InterMedium(
                             text: 'Loading...',
-                            color: DarkColor.Primarycolor,
+                            color: Theme.of(context).primaryColor,
                             fontsize: width / width14,
                           ),
                         ),
@@ -441,11 +442,11 @@ class _TaskScreenState extends State<TaskScreen> {
                                 : Center(
                                     child: InterMedium(
                                       text: 'Loading...',
-                                      color: DarkColor.Primarycolor,
-                                      fontsize: width / width14,
+                                      color: Theme.of(context).primaryColor,
+                                      fontsize: 14.sp,
                                     ),
                                   ),
-                          ) /**/
+                          )
                         : Center(
                             child: InterMedium(
                               text: 'No Shifts',
@@ -460,7 +461,7 @@ class _TaskScreenState extends State<TaskScreen> {
                     if (widget.ShiftDate.isNotEmpty)
                       Button1(
                         text: 'Start Shift',
-                        fontsize: width / width18,
+                        fontsize: 18.sp,
                         color: Colors.white,
                         backgroundcolor:
                             Theme.of(context).brightness == Brightness.dark
@@ -597,7 +598,7 @@ class _TaskScreenState extends State<TaskScreen> {
                     else
                       const SizedBox(),
                     SizedBox(
-                      height: height / height10,
+                      height: 10.h,
                     ),
                     /*GestureDetector(
                       onTap: () {

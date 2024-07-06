@@ -9,6 +9,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -19,6 +20,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
+import 'package:tact_tik/fonts/inter_semibold.dart';
 import 'package:tact_tik/fonts/poppins_bold.dart';
 import 'package:tact_tik/fonts/poppins_regular.dart';
 import 'package:tact_tik/fonts/poppis_semibold.dart';
@@ -1062,14 +1064,22 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                       ),
                               )
-                            : SizedBox(
+                            : Container(
+                          height: 400.h,
+                          width: double.maxFinite,
+                          color: Colors.redAccent,
                                 child: Center(
-                                  child: InterBold(
-                                    text: 'No shift Assigned yet',
-                                    color: Theme.of(context)
-                                        .textTheme
-                                        .displaySmall!
-                                        .color,
+                                  child: Column(
+                                    children: [
+                                      SvgPicture.asset('assets/images/no_shift.svg'),
+                                      InterSemibold(
+                                        text: 'No shift Assigned yet',
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .displaySmall!
+                                            .color,
+                                      )
+                                    ],
                                   ),
                                 ),
                               ),
