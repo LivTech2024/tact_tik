@@ -1065,13 +1065,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                               )
                             : Container(
-                          height: 400.h,
-                          width: double.maxFinite,
-                          color: Colors.redAccent,
+                                height: 400.h,
+                                width: double.maxFinite,
+                                color: Colors.redAccent,
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      SvgPicture.asset('assets/images/no_shift.svg'),
+                                      SvgPicture.asset(
+                                          'assets/images/no_shift.svg'),
                                       InterSemibold(
                                         text: 'No shift Assigned yet',
                                         color: Theme.of(context)
