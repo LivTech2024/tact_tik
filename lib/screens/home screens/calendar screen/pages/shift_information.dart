@@ -380,7 +380,7 @@ class _ShiftInformationState extends State<ShiftInformation> {
       final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
       QuerySnapshot existingOffers = await firestore
-          .collection('ShiftExchange')
+          .collection('ShiftOffer')
           .where('ShiftOfferShiftId', isEqualTo: shiftId)
           .limit(1)
           .get();
@@ -399,7 +399,7 @@ class _ShiftInformationState extends State<ShiftInformation> {
 
       String shiftCompanyId = shiftDoc.get('ShiftCompanyId');
 
-      DocumentReference newShiftExchangeDoc = await firestore.collection('ShiftExchange').add({
+      DocumentReference newShiftExchangeDoc = await firestore.collection('ShiftOffer').add({
         'ShiftOfferCreatedAt': Timestamp.now(),
         'ShiftOfferCompanyId': shiftCompanyId,
         'ShiftOfferSenderId': senderId,
