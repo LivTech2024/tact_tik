@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/common/sizes.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
@@ -77,7 +78,7 @@ class _HistoryScreenState extends State<SHistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
 
     return SafeArea(
       child: Scaffold(
@@ -113,10 +114,19 @@ class _HistoryScreenState extends State<SHistoryScreen> {
             shiftHistory.isEmpty
                 ? SliverFillRemaining(
               child: Center(
-                child: InterMedium(
-                  text: 'No Data Found',
-                  fontsize: 18.sp,
-                  color:  Theme.of(context).textTheme.bodyMedium!.color,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: 300.h,
+                      child: SvgPicture.asset(isDark ? 'assets/images/no_data_dark.svg' :'assets/images/no_data.svg'),
+                    ),
+                    InterSemibold(
+                      text: 'Nothing to preview',
+                      fontsize: 16.sp,
+                      color: Theme.of(context).textTheme.bodyLarge!.color,
+                    )
+                  ],
                 ),
               ),
             ) :

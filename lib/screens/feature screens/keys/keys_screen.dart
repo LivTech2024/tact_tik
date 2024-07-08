@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/main.dart';
@@ -9,6 +10,7 @@ import 'package:tact_tik/screens/feature%20screens/keys/view_keys_screen.dart';
 import '../../../common/sizes.dart';
 import '../../../fonts/inter_bold.dart';
 import '../../../fonts/inter_regular.dart';
+import '../../../fonts/inter_semibold.dart';
 import '../../../utils/colors.dart';
 import '../../supervisor screens/features screens/key management/s_key_manag_create_screen.dart';
 
@@ -68,6 +70,7 @@ class _KeysScreenState extends State<KeysScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
     return SafeArea(
       child: Scaffold(
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -135,13 +138,19 @@ class _KeysScreenState extends State<KeysScreen> {
                 if (documents == null || documents.isEmpty) {
                   return SliverToBoxAdapter(
                     child: Center(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 20.h),
-                        child: InterMedium(
-                          text: 'No Keys Assigned at Guard',
-                          fontsize: 20.sp,
-                          color: Theme.of(context).textTheme.bodySmall!.color,
-                        ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: 300.h,
+                            child: SvgPicture.asset(isDark ? 'assets/images/no_data_dark.svg' :'assets/images/no_data.svg'),
+                          ),
+                          InterSemibold(
+                            text: 'Nothing to preview',
+                            fontsize: 16.sp,
+                            color: Theme.of(context).textTheme.bodyLarge!.color,
+                          )
+                        ],
                       ),
                     ),
                   );

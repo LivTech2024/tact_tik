@@ -68,6 +68,7 @@ import 'controller/home_screen_controller.dart';
 
 class HomeScreen extends StatefulWidget {
   final VoidCallback? refreshCallback;
+
   const HomeScreen({super.key, this.refreshCallback});
 
   @override
@@ -1075,7 +1076,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                         height: 150.h,
                                         width: 200.w,
                                         child: SvgPicture.asset(
-                                          'assets/images/no_shift.svg',
+                                          isDark
+                                              ? 'assets/images/no_shift.svg'
+                                              : 'assets/images/no_shift_light.svg',
                                         ),
                                       ),
                                       SizedBox(height: 30.h),

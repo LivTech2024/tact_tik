@@ -216,6 +216,7 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
     // Combine postOrderPdfUrl and postOrderOtherData for display
     List<String> allUrls = [];
     if (postOrderPdfUrl.isNotEmpty) {
@@ -417,19 +418,25 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
                                 _downloadAndOpenPdf(context, url);
                               },
                               child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 6.w,
+                                ),
                                 margin: EdgeInsets.only(bottom: 10.h),
                                 width: 200.w,
-                                height: 46.h,
+                                height: 70.h,
                                 decoration: BoxDecoration(
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Theme.of(context).shadowColor,
-                                      blurRadius: 10.r,
+                                      color: Theme.of(context)
+                                          .shadowColor,
+                                      blurRadius: 5,
+                                      spreadRadius: 2,
                                       offset: Offset(0, 3),
-                                    ),
+                                    )
                                   ],
-                                  borderRadius: BorderRadius.circular(10.r),
-                                  color: Theme.of(context).cardColor,
+                                  borderRadius:
+                                  BorderRadius.circular(10.r),
+                                  color: isDark ? Color(0xFF1F1E1E)  : LightColor.Secondarycolor,
                                 ),
                                 child: Row(
                                   mainAxisAlignment:
@@ -437,13 +444,24 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
                                   children: [
                                     Row(
                                       children: [
-                                        Padding(
-                                          padding: EdgeInsets.symmetric(
+                                        Container(
+                                          height: 48.h,
+                                          width: 48.w,
+                                          margin: EdgeInsets.symmetric(
                                             horizontal: 6.w,
                                           ),
+                                          padding: EdgeInsets.all(14.sp),
+                                          decoration: BoxDecoration(
+                                            color: isDark ? Color(0xFF393939) : Color(0xFFAE7CFE),
+                                            borderRadius:
+                                            BorderRadius.circular(
+                                                10.r),
+                                          ),
                                           child: SvgPicture.asset(
-                                            'assets/images/pdf.svg',
-                                            width: 32.w,
+                                            'assets/images/pdf_new.svg',
+                                            width: 20.w,
+                                            color: isDark ? Theme.of(context)
+                                                .primaryColor : Colors.white,
                                           ),
                                         ),
                                         Column(
@@ -453,12 +471,12 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
                                               MainAxisAlignment.center,
                                           children: [
                                             SizedBox(
-                                              width:300.w,
+                                              width:240.w,
                                               child: PoppinsMedium(
                                                 text: otherFileName,
                                                 color: Theme.of(context)
                                                     .textTheme
-                                                    .bodyMedium!
+                                                    .bodyLarge!
                                                     .color,
                                                 fontsize: 12.sp,
                                               ),
@@ -467,12 +485,21 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
                                               text: otherFileSize,
                                               color: Theme.of(context)
                                                   .textTheme
-                                                  .bodyMedium!
+                                                  .headlineSmall!
                                                   .color,
                                               fontsize: 12.sp,
                                             )
                                           ],
                                         ),
+                                        IconButton(
+                                          onPressed: () {},
+                                          icon: Icon(
+                                            Icons.download,
+                                            color: Theme.of(context)
+                                                .primaryColor,
+                                            size: 24.sp,
+                                          ),
+                                        )
                                       ],
                                     ),
                                   ],

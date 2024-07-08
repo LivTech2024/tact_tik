@@ -16,6 +16,7 @@ import 'package:tact_tik/utils/colors.dart';
 import 'package:tact_tik/utils/utils_functions.dart';
 
 import '../../../common/sizes.dart';
+import '../../../fonts/inter_semibold.dart';
 import '../../../utils/theme_manager.dart';
 import 'dar_open_all_screen.dart';
 
@@ -46,6 +47,7 @@ class DarDisplayScreen extends StatefulWidget {
 class _DarDisplayScreenState extends State<DarDisplayScreen> {
   bool showAllDARS = false;
 
+
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   List<Color> colors = [
@@ -59,6 +61,7 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
     // keep this code in firebase_function file  and handle its errors here
     Future<String?> _submitDAR() async {
       final _userService = UserService(firestoreService: FireStoreService());
@@ -119,7 +122,20 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
               final documents = snapshot.data?.docs;
               if (documents == null || documents.isEmpty) {
                 return Center(
-                  child: Text('No DAR entries found.', style: TextStyle()),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        height: 300.h,
+                        child: SvgPicture.asset(isDark ? 'assets/images/no_data_dark.svg' :'assets/images/no_data.svg'),
+                      ),
+                      InterSemibold(
+                        text: 'Nothing to preview',
+                        fontsize: 16.sp,
+                        color: Theme.of(context).textTheme.bodyLarge!.color,
+                      )
+                    ],
+                  ),
                 );
               }
 
