@@ -377,87 +377,82 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                 ),
                 SliverToBoxAdapter(
                   child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 30.w),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(height: 30.h),
-                          InterBold(
-                            text: 'Add Visitor',
-                            color:
-                                Theme.of(context).textTheme.bodyMedium!.color,
-                            fontsize: 20.sp,
-                          ),
-                          SizedBox(height: 30.h),
-                          InterBold(
-                            text: 'Allocation Date',
-                            color:
-                                Theme.of(context).textTheme.bodyMedium!.color,
-                            fontsize: 20.sp,
-                          ),
-                          SizedBox(height: 10.h),
-                          Row(
-                            children: [
-                              SetTimeWidget(
-                                hintText: InTime == null
-                                    ? 'In Time'
-                                    : '${_formatTime(InTime!, true)}',
-                                onTap: () => _selectTime(context, true),
-                                flex: 2,
-                                isEnabled: true,
-                                enabled: !isEditMode,
-                                isEditMode: isEditMode,
-                              ),
-                              SizedBox(width: 6.w),
-                              SetTimeWidget(
-                                hintText: OutTime == null
-                                    ? 'Out Time'
-                                    : '${_formatTime(OutTime!, false)}',
-                                onTap: () => _selectTime(context, false),
-                                flex: 2,
-                                isEnabled: isEditMode,
-                                enabled: isEditMode,
-                                isEditMode: isEditMode,
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 20.h),
-                          InterBold(
-                            text: 'Name',
-                            color:
-                                Theme.of(context).textTheme.bodyMedium!.color,
-                            fontsize: 20.sp,
-                          ),
-                          SizedBox(height: 10.h),
-                          SetTextfieldWidget(
-                            hintText: 'Name',
-                            controller: nameController,
-                            enabled: !isEditMode,
-                            isEditMode: isEditMode,
-                          ),
-                          SizedBox(height: 20.h),
-                          InterBold(
-                            text: 'Email',
-                            color:
-                                Theme.of(context).textTheme.bodyMedium!.color,
-                            fontsize: 20.sp,
-                          ),
-                          SizedBox(height: 10.h),
-                          SetTextfieldWidget(
-                            hintText: 'Email',
-                            controller: EmailController,
-                            enabled: !isEditMode,
-                            isEditMode: isEditMode,
-                          ),
-                          SizedBox(height: 20.h),
-                          InterBold(
-                            text: 'Contact Number',
-                            color:
-                                Theme.of(context).textTheme.bodyMedium!.color,
-                            fontsize: 20.sp,
-                          ),
-                          SizedBox(height: 10.h),
-                          /*     SetTextfieldWidget(
+                    padding: EdgeInsets.symmetric(horizontal: 30.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 30.h),
+                        InterBold(
+                          text: 'Add Visitor',
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
+                          fontsize: 20.sp,
+                        ),
+                        SizedBox(height: 30.h),
+                        InterBold(
+                          text: 'Allocation Date',
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
+                          fontsize: 20.sp,
+                        ),
+                        SizedBox(height: 10.h),
+                        Row(
+                          children: [
+                            SetTimeWidget(
+                              hintText: InTime == null
+                                  ? 'In Time'
+                                  : '${_formatTime(InTime!, true)}',
+                              onTap: () => _selectTime(context, true),
+                              flex: 2,
+                              isEnabled: true,
+                              enabled: !isEditMode,
+                              isEditMode: isEditMode,
+                            ),
+                            SizedBox(width: 6.w),
+                            SetTimeWidget(
+                              hintText: OutTime == null
+                                  ? 'Out Time'
+                                  : '${_formatTime(OutTime!, false)}',
+                              onTap: () => _selectTime(context, false),
+                              flex: 2,
+                              isEnabled: isEditMode,
+                              enabled: isEditMode,
+                              isEditMode: isEditMode,
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 20.h),
+                        InterBold(
+                          text: 'Name',
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
+                          fontsize: 20.sp,
+                        ),
+                        SizedBox(height: 10.h),
+                        SetTextfieldWidget(
+                          hintText: 'Name',
+                          controller: nameController,
+                          enabled: !isEditMode,
+                          isEditMode: isEditMode,
+                        ),
+                        SizedBox(height: 20.h),
+                        InterBold(
+                          text: 'Email',
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
+                          fontsize: 20.sp,
+                        ),
+                        SizedBox(height: 10.h),
+                        SetTextfieldWidget(
+                          hintText: 'Email',
+                          controller: EmailController,
+                          enabled: !isEditMode,
+                          isEditMode: isEditMode,
+                        ),
+                        SizedBox(height: 20.h),
+                        InterBold(
+                          text: 'Contact Number',
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
+                          fontsize: 20.sp,
+                        ),
+                        SizedBox(height: 10.h),
+                        /*     SetTextfieldWidget(
                             hintText: 'Contact Number',
                             controller: ContactNoController,
                             enabled: !isEditMode,
@@ -468,316 +463,270 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                                   .digitsOnly, // Allows only digits
                             ],
                           ),*/
-                          ContactWidget(
-                            controller: ContactNoController,
-                          ),
-                          SizedBox(height: 20.h),
-                          InterBold(
-                            text: 'Asset Handover',
-                            color:
-                                Theme.of(context).textTheme.bodyMedium!.color,
-                            fontsize: 20.sp,
-                          ),
-                          SizedBox(height: 10.h),
-                          /*SetTextfieldWidget(
+                        ContactWidget(
+                          controller: ContactNoController,
+                        ),
+                        SizedBox(height: 20.h),
+                        InterBold(
+                          text: 'Asset Handover',
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
+                          fontsize: 20.sp,
+                        ),
+                        SizedBox(height: 10.h),
+                        /*SetTextfieldWidget(
                             hintText: 'Asset Handover',
                             controller: AssetHandoverController,
                             enabled: !isEditMode,
                             isEditMode: isEditMode,
                           ),*/
-                          !widget.isCompleted
-                              ? TextFieldTags<DynamicTagData>(
-                                  textfieldTagsController:
-                                      _dynamicTagController,
-                                  // initialTags: _initialTags,
-                                  textSeparators: const [' ', ','],
-                                  letterCase: LetterCase.normal,
-                                  validator: (DynamicTagData tag) {
-                                    // if (tag.tag == 'lion') {
-                                    //   return 'Not envited per tiger request';
-                                    // } else if (_dynamicTagController.getTags!
-                                    //     .any((element) => element.tag == tag.tag)) {
-                                    //   return 'Already in the club';
-                                    // }
-                                    return null;
-                                  },
-                                  inputFieldBuilder:
-                                      (context, inputFieldValues) {
-                                    return Container(
-                                      constraints: BoxConstraints(
-                                        minHeight: 60.h,
-                                      ),
-                                      width: double.maxFinite,
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 20.w),
-                                      decoration: BoxDecoration(
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color:
-                                                Theme.of(context).shadowColor,
-                                            blurRadius: 5,
-                                            spreadRadius: 2,
-                                            offset: Offset(0, 3),
-                                          )
-                                        ],
-                                        borderRadius:
-                                            BorderRadius.circular(10.r),
-                                        color: Theme.of(context).cardColor,
-                                      ),
-                                      margin: EdgeInsets.only(top: 10.h),
-                                      child: Center(
-                                        child: TextField(
-                                          onTap: () {
-                                            _dynamicTagController.getFocusNode
-                                                ?.requestFocus();
-                                          },
-                                          controller: inputFieldValues
-                                              .textEditingController,
-                                          focusNode: inputFieldValues.focusNode,
-                                          decoration: InputDecoration(
-                                            isDense: true,
-                                            border: OutlineInputBorder(
-                                              borderSide: BorderSide.none,
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(10.r),
-                                              ),
+                        !widget.isCompleted
+                            ? TextFieldTags<DynamicTagData>(
+                                textfieldTagsController: _dynamicTagController,
+                                // initialTags: _initialTags,
+                                textSeparators: const [' ', ','],
+                                letterCase: LetterCase.normal,
+                                validator: (DynamicTagData tag) {
+                                  // if (tag.tag == 'lion') {
+                                  //   return 'Not envited per tiger request';
+                                  // } else if (_dynamicTagController.getTags!
+                                  //     .any((element) => element.tag == tag.tag)) {
+                                  //   return 'Already in the club';
+                                  // }
+                                  return null;
+                                },
+                                inputFieldBuilder: (context, inputFieldValues) {
+                                  return Container(
+                                    constraints: BoxConstraints(
+                                      minHeight: 60.h,
+                                    ),
+                                    width: double.maxFinite,
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 20.w),
+                                    decoration: BoxDecoration(
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Theme.of(context).shadowColor,
+                                          blurRadius: 5,
+                                          spreadRadius: 2,
+                                          offset: Offset(0, 3),
+                                        )
+                                      ],
+                                      borderRadius: BorderRadius.circular(10.r),
+                                      color: Theme.of(context).cardColor,
+                                    ),
+                                    margin: EdgeInsets.only(top: 10.h),
+                                    child: Center(
+                                      child: TextField(
+                                        onTap: () {
+                                          _dynamicTagController.getFocusNode
+                                              ?.requestFocus();
+                                        },
+                                        controller: inputFieldValues
+                                            .textEditingController,
+                                        focusNode: inputFieldValues.focusNode,
+                                        decoration: InputDecoration(
+                                          isDense: true,
+                                          border: OutlineInputBorder(
+                                            borderSide: BorderSide.none,
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(10.r),
                                             ),
-                                            focusedBorder: InputBorder.none,
-                                            hintStyle: GoogleFonts.poppins(
-                                              fontWeight: FontWeight.w300,
-                                              fontSize: 18.sp,
-                                              color: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyLarge!
-                                                  .color,
-                                            ),
-                                            contentPadding: EdgeInsets.zero,
-                                            counterText: "",
-                                            hintText:
-                                                inputFieldValues.tags.isNotEmpty
-                                                    ? ''
-                                                    : "Asset Handover",
-                                            errorText: inputFieldValues.error,
-                                            prefixIconConstraints:
-                                                BoxConstraints(
-                                                    maxWidth:
-                                                        _distanceToField * 0.8),
-                                            prefixIcon:
-                                                inputFieldValues.tags.isNotEmpty
-                                                    ? SingleChildScrollView(
-                                                        controller: inputFieldValues
-                                                            .tagScrollController,
-                                                        scrollDirection:
-                                                            Axis.vertical,
-                                                        child: Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                            top: 8.h,
-                                                            bottom: 8.h,
-                                                            left: 8.w,
-                                                          ),
-                                                          child: Wrap(
-                                                              runSpacing: 4.0,
-                                                              spacing: 4.0,
-                                                              children:
-                                                                  inputFieldValues
-                                                                      .tags
-                                                                      .map((DynamicTagData
-                                                                          tag) {
-                                                                return Container(
-                                                                  height: 40.h,
-                                                                  decoration:
-                                                                      BoxDecoration(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            5.r),
+                                          ),
+                                          focusedBorder: InputBorder.none,
+                                          hintStyle: GoogleFonts.poppins(
+                                            fontWeight: FontWeight.w300,
+                                            fontSize: 18.sp,
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .bodyLarge!
+                                                .color,
+                                          ),
+                                          contentPadding: EdgeInsets.zero,
+                                          counterText: "",
+                                          hintText:
+                                              inputFieldValues.tags.isNotEmpty
+                                                  ? ''
+                                                  : "Asset Handover",
+                                          errorText: inputFieldValues.error,
+                                          prefixIconConstraints: BoxConstraints(
+                                              maxWidth: _distanceToField * 0.8),
+                                          prefixIcon: inputFieldValues
+                                                  .tags.isNotEmpty
+                                              ? SingleChildScrollView(
+                                                  controller: inputFieldValues
+                                                      .tagScrollController,
+                                                  scrollDirection:
+                                                      Axis.vertical,
+                                                  child: Padding(
+                                                    padding: EdgeInsets.only(
+                                                      top: 8.h,
+                                                      bottom: 8.h,
+                                                      left: 8.w,
+                                                    ),
+                                                    child: Wrap(
+                                                        runSpacing: 4.0,
+                                                        spacing: 4.0,
+                                                        children: inputFieldValues
+                                                            .tags
+                                                            .map((DynamicTagData
+                                                                tag) {
+                                                          return Container(
+                                                            height: 40.h,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          5.r),
+                                                              color: Theme.of(
+                                                                      context)
+                                                                  .textTheme
+                                                                  .bodyMedium!
+                                                                  .color,
+                                                            ),
+                                                            margin: EdgeInsets
+                                                                .symmetric(
+                                                                    horizontal:
+                                                                        5.w),
+                                                            padding: EdgeInsets
+                                                                .symmetric(
+                                                                    horizontal:
+                                                                        10.w,
+                                                                    vertical:
+                                                                        5.h),
+                                                            child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .start,
+                                                              mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .min,
+                                                              children: [
+                                                                InterRegular(
+                                                                  text:
+                                                                      '${tag.tag}',
+                                                                  color: Theme.of(context)
+                                                                              .brightness ==
+                                                                          Brightness
+                                                                              .dark
+                                                                      ? DarkColor
+                                                                          .color27
+                                                                      : LightColor
+                                                                          .color1,
+                                                                ),
+                                                                SizedBox(
+                                                                    width: 4.w),
+                                                                InkWell(
+                                                                  child: Icon(
+                                                                    Icons
+                                                                        .cancel,
+                                                                    size: 14.sp,
                                                                     color: Theme.of(
                                                                             context)
                                                                         .textTheme
-                                                                        .bodyMedium!
+                                                                        .displayMedium!
                                                                         .color,
                                                                   ),
-                                                                  margin: EdgeInsets
-                                                                      .symmetric(
-                                                                          horizontal:
-                                                                              5.w),
-                                                                  padding: EdgeInsets.symmetric(
-                                                                      horizontal:
-                                                                          10.w,
-                                                                      vertical:
-                                                                          5.h),
-                                                                  child: Row(
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .start,
-                                                                    mainAxisSize:
-                                                                        MainAxisSize
-                                                                            .min,
-                                                                    children: [
-                                                                      InterRegular(
-                                                                        text:
-                                                                            '${tag.tag}',
-                                                                        color: Theme.of(context).brightness ==
-                                                                                Brightness.dark
-                                                                            ? DarkColor.color27
-                                                                            : LightColor.color1,
-                                                                      ),
-                                                                      SizedBox(
-                                                                          width:
-                                                                              4.w),
-                                                                      InkWell(
-                                                                        child:
-                                                                            Icon(
-                                                                          Icons
-                                                                              .cancel,
-                                                                          size:
-                                                                              14.sp,
-                                                                          color: Theme.of(context)
-                                                                              .textTheme
-                                                                              .displayMedium!
-                                                                              .color,
-                                                                        ),
-                                                                        onTap:
-                                                                            () {
-                                                                          inputFieldValues
-                                                                              .onTagRemoved(tag);
-                                                                        },
-                                                                      )
-                                                                    ],
-                                                                  ),
-                                                                );
-                                                              }).toList()),
-                                                        ),
-                                                      )
-                                                    : null,
-                                          ),
-                                          cursorColor:
-                                              Theme.of(context).primaryColor,
-                                          onChanged: (value) {
-                                            final tagData =
-                                                DynamicTagData(value, );
-                                            inputFieldValues
-                                                .onTagChanged(tagData);
-                                          },
-                                          onSubmitted: (value) {
-                                            final tagData =
-                                                DynamicTagData(value, );
-                                            inputFieldValues
-                                                .onTagSubmitted(tagData);
-                                          },
+                                                                  onTap: () {
+                                                                    inputFieldValues
+                                                                        .onTagRemoved(
+                                                                            tag);
+                                                                  },
+                                                                )
+                                                              ],
+                                                            ),
+                                                          );
+                                                        }).toList()),
+                                                  ),
+                                                )
+                                              : null,
                                         ),
+                                        cursorColor:
+                                            Theme.of(context).primaryColor,
+                                        onChanged: (value) {
+                                          final tagData = DynamicTagData(
+                                            value,
+                                          );
+                                          inputFieldValues
+                                              .onTagChanged(tagData);
+                                        },
+                                        onSubmitted: (value) {
+                                          final tagData = DynamicTagData(
+                                            value,
+                                          );
+                                          inputFieldValues
+                                              .onTagSubmitted(tagData);
+                                        },
                                       ),
-                                    );
-                                  },
-                                )
-                              : SizedBox(
-                                  height: 200.h,
-                                  child: ListView(
-                                    children: TagString.isNotEmpty
-                                        ? Emptyoptions.map((item) =>
-                                                ListTile(title: Text(item)))
-                                            .toList()
-                                        : TagString.map((item) {
-                                            print("Tags ${TagString}");
-                                            return CheckboxListTile(
-                                              title: Text(item),
-                                              value: options.contains(item),
-                                              onChanged: (bool? checked) {
-                                                setState(() {
-                                                  if (checked == true) {
-                                                    if (!options
-                                                        .contains(item)) {
-                                                      options.add(item);
-                                                    }
-                                                  } else {
-                                                    options.remove(item);
+                                    ),
+                                  );
+                                },
+                              )
+                            : SizedBox(
+                                height: 200.h,
+                                child: ListView(
+                                  children: TagString.isNotEmpty
+                                      ? Emptyoptions.map((item) =>
+                                          ListTile(title: Text(item))).toList()
+                                      : TagString.map((item) {
+                                          print("Tags ${TagString}");
+                                          return CheckboxListTile(
+                                            title: Text(item),
+                                            value: options.contains(item),
+                                            onChanged: (bool? checked) {
+                                              setState(() {
+                                                if (checked == true) {
+                                                  if (!options.contains(item)) {
+                                                    options.add(item);
                                                   }
-                                                  print(
-                                                      "Updated options: $options");
-                                                });
-                                              },
-                                            );
-                                          }).toList(),
-                                  ),
+                                                } else {
+                                                  options.remove(item);
+                                                }
+                                                print(
+                                                    "Updated options: $options");
+                                              });
+                                            },
+                                          );
+                                        }).toList(),
                                 ),
+                              ),
+                        SizedBox(height: 10.h),
+                        // Content(
+                        //     title: 'Asset HandOver',
+                        //     child: ChipsChoice<String>.multiple(
+                        //       value: tags.toList(),
+                        //       placeholder: "asset",
+                        //       onChanged: (val) {
+                        //         print("Selected assets: $val");
+                        //         setState(() {
+                        //           // val.forEach((item) {
+                        //           //   if (!options.contains(item)) {
+                        //           //     options.add(item);
+                        //           //   }
+                        //           // });
+                        //           options.addAll(val.where(
+                        //               (item) => !options.contains(item)));
+                        //           // tags = val
+                        //           //     .toSet(); // Update tags with selected values
+                        //         });
+                        //         print("Updated options: $options");
+                        //       },
+                        //       choiceItems:
+                        //           C2Choice.listFrom<String, String>(
+                        //         source: tags.isEmpty
+                        //             ? Emptyoptions
+                        //             : tags.toList(),
+                        //         value: (i, v) => v,
+                        //         label: (i, v) => v,
+                        //         tooltip: (i, v) => v,
+                        //       ),
+                        //       choiceStyle: C2ChipStyle.outlined(
+                        //         color: Theme.of(context).primaryColor,
+                        //       ),
+                        //     ),
+                        //   ),
 
-                          // Content(
-                          //     title: 'Asset HandOver',
-                          //     child: ChipsChoice<String>.multiple(
-                          //       value: tags.toList(),
-                          //       placeholder: "asset",
-                          //       onChanged: (val) {
-                          //         print("Selected assets: $val");
-                          //         setState(() {
-                          //           // val.forEach((item) {
-                          //           //   if (!options.contains(item)) {
-                          //           //     options.add(item);
-                          //           //   }
-                          //           // });
-                          //           options.addAll(val.where(
-                          //               (item) => !options.contains(item)));
-                          //           // tags = val
-                          //           //     .toSet(); // Update tags with selected values
-                          //         });
-                          //         print("Updated options: $options");
-                          //       },
-                          //       choiceItems:
-                          //           C2Choice.listFrom<String, String>(
-                          //         source: tags.isEmpty
-                          //             ? Emptyoptions
-                          //             : tags.toList(),
-                          //         value: (i, v) => v,
-                          //         label: (i, v) => v,
-                          //         tooltip: (i, v) => v,
-                          //       ),
-                          //       choiceStyle: C2ChipStyle.outlined(
-                          //         color: Theme.of(context).primaryColor,
-                          //       ),
-                          //     ),
-                          //   ),
-                          SizedBox(height: 20.h),
-                          InterBold(
-                            text: 'Asset Return',
-                            color:
-                                Theme.of(context).textTheme.bodyMedium!.color,
-                            fontsize: 20.sp,
-                          ),
-                          SizedBox(height: 10.h),
-                          /*SetTextfieldWidget(
-                            hintText: 'Asset Return',
-                            controller: AssetReturnController,
-                            enabled: isEditMode,
-                            isEditMode: isEditMode,
-                          ),*/
-                          Content(
-                            title: 'Asset Return',
-                            child: ChipsChoice<String>.multiple(
-                              value: options.toList(),
-                              placeholder: "asset",
-                              // onChanged: (val) {
-                              //   setState(() {
-                              //     options = val.toSet();
-                              //   });
-                              // },
-                              onChanged: (val) =>
-                                  setState(() => options = val.toSet()),
-                              choiceItems: C2Choice.listFrom<String, String>(
-                                source: options.isEmpty
-                                    ? Emptyoptions
-                                    : options.toList(),
-                                // Use an empty list if options is null
-                                value: (i, v) => v,
-                                label: (i, v) => v,
-                                tooltip: (i, v) => v,
-                              ),
-                              choiceCheckmark: true,
-                              choiceStyle: C2ChipStyle.outlined(
-                                color: Theme.of(context).primaryColor,
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 10.h),
-                          /*ListView.builder(
+                        /*ListView.builder(
                             itemCount: ReturnAsset.length,
                             shrinkWrap: true,
                             scrollDirection: Axis.horizontal,
@@ -816,8 +765,9 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                               ),
                             ),
                           ),*/
-                        ],
-                      )),
+                      ],
+                    ),
+                  ),
                 ),
                 SliverList.builder(
                   itemCount: ReturnAsset.length,
@@ -858,6 +808,47 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        SizedBox(height: 20.h),
+                        InterBold(
+                          text: 'Asset Return',
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
+                          fontsize: 20.sp,
+                        ),
+                        SizedBox(height: 10.h),
+                        /*SetTextfieldWidget(
+                            hintText: 'Asset Return',
+                            controller: AssetReturnController,
+                            enabled: isEditMode,
+                            isEditMode: isEditMode,
+                          ),*/
+                        Content(
+                          title: 'Asset Return',
+                          child: ChipsChoice<String>.multiple(
+                            value: options.toList(),
+                            placeholder: "asset",
+                            // onChanged: (val) {
+                            //   setState(() {
+                            //     options = val.toSet();
+                            //   });
+                            // },
+                            onChanged: (val) =>
+                                setState(() => options = val.toSet()),
+                            choiceItems: C2Choice.listFrom<String, String>(
+                              source: options.isEmpty
+                                  ? Emptyoptions
+                                  : options.toList(),
+                              // Use an empty list if options is null
+                              value: (i, v) => v,
+                              label: (i, v) => v,
+                              tooltip: (i, v) => v,
+                            ),
+                            choiceCheckmark: true,
+                            choiceStyle: C2ChipStyle.outlined(
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 10.h),
                         SizedBox(height: 20.h),
                         InterBold(
                           text: 'License Plate Number.',
