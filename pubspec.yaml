@@ -100,7 +100,8 @@ dependencies:
   textfield_tags: ^3.0.1
   toastification: ^1.2.1
   url_launcher: ^6.2.6
-
+  hive: ^2.2.1
+  hive_flutter: ^1.1.0
 dev_dependencies:
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

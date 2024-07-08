@@ -234,16 +234,6 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
                   return true;
                 }
                 return false;
-              }) ||
-              checkPointStatuses.any((status) {
-                if (status['Status'] != 'unchecked' &&
-                    checkPointStatuses.every((s) =>
-                        s['StatusReportedById'] != widget.EmployeeID &&
-                        s['StatusShiftId'] == widget.ShiftId)) {
-                  // reportedTime = _parseTimestamp(status['StatusReportedTime']);
-                  return true;
-                }
-                return false;
               })) {
             setState(() {
               allChecked =

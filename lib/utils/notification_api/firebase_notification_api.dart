@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:hive/hive.dart';
 // import 'package:localstorage/localstorage.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tact_tik/main.dart';
@@ -54,9 +55,21 @@ class FirebaseNotificationApi {
     // }
     if (message?.data['route'] != null) {
       String route = message?.data['route'];
+      print("Route from Message ${route}");
       navigatorKey.currentState?.pushNamed(route, arguments: message);
     }
   }
+
+  // void _storeNotification(String? title, String? body) async {
+  //   // prit
+  //   var box = Hive.box('notifications');
+  //   var notification = {
+  //     'title': title ?? 'No Title',
+  //     'body': body ?? 'No Body',
+  //     'timestamp': DateTime.now().toIso8601String(),
+  //   };
+  //   await box.add(notification);
+  // }
 
   Future initPushNotification() async {
     FirebaseMessaging.instance.getInitialMessage().then((handleMessage));
@@ -64,6 +77,7 @@ class FirebaseNotificationApi {
       // handleMessage(message);
       final notification = message.notification;
       if (notification == null) return;
+      // _storeNotification(notification.title, notification.body);
       _localnotification.show(
           notification.hashCode,
           notification.title,
@@ -80,7 +94,7 @@ class FirebaseNotificationApi {
       Get.dialog(
         AlertDialog(
           title: Text(notification.title ?? 'Notification'),
-          content: Text(notification.body ?? 'You have a new notification'),
+          content: Text(notification.body ?? 'You have a new notificp ation'),
           actions: [
             TextButton(
               onPressed: () {

@@ -2434,6 +2434,8 @@ class FireStoreService {
             restrictedRadius.isNotEmpty ? int.parse(restrictedRadius) : 0,
         'ShiftEnableRestrictedRadius': shiftenablerestriction,
         'ShiftModifiedAt': Timestamp.now(),
+        'ShiftTask': tasks,
+        'ShiftLinkedPatrols': patrol
       };
 
       // Filter out empty or null values

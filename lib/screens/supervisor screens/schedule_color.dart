@@ -17,4 +17,3 @@ const LinearGradient ScheduleColor9 = LinearGradient(
   end: Alignment.centerRight,
   colors: <Color>[Color(0xFFB054E6), Color(0xFFE64551)],
 );
-

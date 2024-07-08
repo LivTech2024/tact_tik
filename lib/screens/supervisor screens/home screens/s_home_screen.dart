@@ -862,38 +862,32 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         GestureDetector(
-                          onTap: isAssigned
-                              ? () {
-                                  showErrorToast(
-                                      context, "Guard Already Assigned");
-                                }
-                              : () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            CreateScheduleScreen(
-                                              shiftId: '',
-                                              supervisorEmail: '',
-                                              BranchId: widget.guardsInfo[
-                                                      "EmployeeCompanyBranchId"] ??
-                                                  "",
-                                              GuardId: widget.guardsInfo[
-                                                      "EmployeeId"] ??
-                                                  "",
-                                              GuardName: widget.guardsInfo[
-                                                      "EmployeeName"] ??
-                                                  "",
-                                              GuardImg: widget.guardsInfo[
-                                                      "EmployeeImg"] ??
-                                                  "",
-                                              CompanyId: widget.CompanyId ?? "",
-                                              GuardRole: widget.guardsInfo[
-                                                      "EmployeeRole"] ??
-                                                  "",
-                                            )),
-                                  );
-                                },
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => CreateScheduleScreen(
+                                        shiftId: '',
+                                        supervisorEmail: '',
+                                        BranchId: widget.guardsInfo[
+                                                "EmployeeCompanyBranchId"] ??
+                                            "",
+                                        GuardId:
+                                            widget.guardsInfo["EmployeeId"] ??
+                                                "",
+                                        GuardName:
+                                            widget.guardsInfo["EmployeeName"] ??
+                                                "",
+                                        GuardImg:
+                                            widget.guardsInfo["EmployeeImg"] ??
+                                                "",
+                                        CompanyId: widget.CompanyId ?? "",
+                                        GuardRole:
+                                            widget.guardsInfo["EmployeeRole"] ??
+                                                "",
+                                      )),
+                            );
+                          },
                           child: RoundedButton(
                             icon: Icons.add,
                           ),

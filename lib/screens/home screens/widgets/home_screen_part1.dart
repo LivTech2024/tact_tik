@@ -228,12 +228,12 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                       children: [
                         GestureDetector(
                           onTap: () {
-                          //   TODO If the role is guard then Navigate to this
+                            //   TODO If the role is guard then Navigate to this
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => GuardNotificationScreen()));
-
+                                    builder: (context) =>
+                                        GuardNotificationScreen()));
 
                             // TODO: If the role is client and supervisor then Navigate this.
                             // Navigator.push(

@@ -187,22 +187,17 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
                                 }
 
                                 return GestureDetector(
-                                  onTap: isAssigned
-                                      ? () {
-                                          showErrorToast(context,
-                                              "Guard Already Assigned");
-                                        }
-                                      : () {
-                                          Navigator.pop(
-                                            context,
-                                            {
-                                              'name': name,
-                                              'id': id,
-                                              'url': url,
-                                              'role': role
-                                            },
-                                          );
-                                        },
+                                  onTap: () {
+                                    Navigator.pop(
+                                      context,
+                                      {
+                                        'name': name,
+                                        'id': id,
+                                        'url': url,
+                                        'role': role
+                                      },
+                                    );
+                                  },
                                   child: Container(
                                     decoration: BoxDecoration(
                                       boxShadow: [

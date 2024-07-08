@@ -859,7 +859,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         // );
                         // customEmail();
                         // await fireStoreService.copyAndCreateDocument(
-                        //     "PatrolLogs", "fx9H1STqxIl3s71bzVhf");
+                        //     "PatrolLogs", "1ImGyIZu8Wpp8quI0eGW");
                         // await darFunctions.fetchShiftDetailsAndSubmitDAR(
                         //     _shiftId,
                         //     _empEmail,
@@ -1088,22 +1088,30 @@ class _HomeScreenState extends State<HomeScreen> {
                                         fontsize: 16.sp,
                                       ),
                                       SizedBox(height: 20.h),
-                                      InterRegular(text: 'Go to calendar to check shift',
-                                        color: Theme.of(context)
-                                            .textTheme.labelSmall!.color,
-                                        fontsize: 14.sp,),
-                                      InterBold(text: 'or',
-                                        color: Theme.of(context)
-                                            .textTheme
-                                            .displaySmall!
-                                            .color,
-                                        fontsize: 20.sp,),
-                                      InterRegular(text: 'Refresh page',
+                                      InterRegular(
+                                        text: 'Go to calendar to check shift',
                                         color: Theme.of(context)
                                             .textTheme
                                             .labelSmall!
                                             .color,
-                                        fontsize: 14.sp,),
+                                        fontsize: 14.sp,
+                                      ),
+                                      InterBold(
+                                        text: 'or',
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .displaySmall!
+                                            .color,
+                                        fontsize: 20.sp,
+                                      ),
+                                      InterRegular(
+                                        text: 'Refresh page',
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .labelSmall!
+                                            .color,
+                                        fontsize: 14.sp,
+                                      ),
                                     ],
                                   ),
                                 ),

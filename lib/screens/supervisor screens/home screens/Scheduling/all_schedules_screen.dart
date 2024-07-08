@@ -14,6 +14,7 @@ import 'package:tact_tik/fonts/inter_regular.dart';
 import 'package:tact_tik/fonts/inter_semibold.dart';
 import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/supervisor%20screens/home%20screens/s_home_screen.dart';
+import 'package:tact_tik/screens/supervisor%20screens/schedule_color.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
 import '../../../../common/sizes.dart';
@@ -199,7 +200,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
     if (shiftStatusArray.isEmpty) {
       return {
         'status': 'pending',
-        'color': Colors.orangeAccent,
+        'color': ScheduleColor1,
       };
     }
 
@@ -225,8 +226,9 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
     Color color;
 
     if (shiftStatus['Status'] == "started") {
-      color = Colors.pinkAccent;
+      color = ScheduleColor2;
     } else if (shiftStatus['Status'] == "completed") {
+      // color = c;s
       if (startedLate && endedLate) {
         color = Colors.red;
       } else if (startedEarly && endedEarly) {

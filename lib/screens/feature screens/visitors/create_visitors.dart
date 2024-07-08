@@ -293,14 +293,15 @@ class _CreateVisitorsState extends State<CreateVisitors> {
         });
 
         // Navigate to the visitor screen after saving or updating visitor data
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => VisiTorsScreen(
-              locationId: '',
-            ), // Replace with your visitor screen widget
-          ),
-        );
+        // Navigator.pushReplacement(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => VisiTorsScreen(
+        //       locationId: '',
+        //     ), // Replace with your visitor screen widget
+        //   ),
+        // );
+        Navigator.pop(context);
         return true;
       } catch (error) {
         _showSnackbar('Error saving visitor data: $error');
@@ -340,11 +341,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
         : LightColor.color2,
   ];
 
-  List<Map<String, dynamic>> ReturnAsset = [
-    {'Asset': 'Asset1', 'isCheck': false},
-    {'Asset': 'Asset2', 'isCheck': false},
-    {'Asset': 'Asset3', 'isCheck': false}
-  ];
+  List<Map<String, dynamic>> ReturnAsset = [];
 
   @override
   Widget build(BuildContext context) {
