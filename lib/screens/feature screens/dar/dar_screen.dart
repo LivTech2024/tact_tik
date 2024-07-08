@@ -47,7 +47,6 @@ class DarDisplayScreen extends StatefulWidget {
 class _DarDisplayScreenState extends State<DarDisplayScreen> {
   bool showAllDARS = false;
 
-
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   List<Color> colors = [
@@ -127,7 +126,9 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                     children: [
                       SizedBox(
                         height: 300.h,
-                        child: SvgPicture.asset(isDark ? 'assets/images/no_data_dark.svg' :'assets/images/no_data.svg'),
+                        child: SvgPicture.asset(isDark
+                            ? 'assets/images/no_data_dark.svg'
+                            : 'assets/images/no_data.svg'),
                       ),
                       InterSemibold(
                         text: 'Nothing to preview',
@@ -152,6 +153,7 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
 
               List<Widget> buildDarEntries() {
                 List<Widget> entries = [];
+                bool hasNewEntries = false;
                 groupedByDate.forEach((date, darEntries) {
                   if (showAllDARS) {
                     // In History tab, filter out DARs with isNew true
@@ -174,8 +176,15 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                         ...darEntries.map((document) {
                           bool isNew = isNewEntry(document);
                           if (!showAllDARS && !isNew) {
-                            return SizedBox();
+                            return SizedBox(
+                              height: 10.h,
+                              child: Text(
+                                "No dar ",
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            );
                           }
+                          hasNewEntries = true;
                           return GestureDetector(
                             onTap: () {
                               Navigator.push(
@@ -263,6 +272,20 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                     ));
                   }
                 });
+                if (!showAllDARS && !hasNewEntries) {
+                  entries.add(
+                    Center(
+                      child: SizedBox(
+                        height: 300.h,
+                        child: SvgPicture.asset(
+                          Theme.of(context).brightness == Brightness.dark
+                              ? 'assets/images/no_data_dark.svg'
+                              : 'assets/images/no_data.svg',
+                        ),
+                      ),
+                    ),
+                  );
+                }
                 return entries;
               }
 
@@ -340,7 +363,6 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                               onTap: () {
                                 setState(() {
                                   showAllDARS = true;
-
                                   colors[0] = Theme.of(context).highlightColor;
                                   colors[1] = Theme.of(context)
                                       .textTheme
@@ -392,45 +414,6 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
             }
           },
         ),
-
-        // floatingActionButton: GestureDetector(
-        //   onTap: () async {
-        //     String? result = await _submitDAR();
-        //     if (result != null) {
-        //       print('DAR Submitted successfully');
-        //     }
-        //     Navigator.push(
-        //       context,
-        //       MaterialPageRoute(
-        //         builder: (context) => CreateDarScreen(
-        //           EmpEmail: widget.EmpEmail,
-        //           EmpID: widget.EmpID,
-        //           Username: widget.Username,
-        //           EmpDarCompanyId: widget.EmpDarCompanyId,
-        //           EmpDarCompanyBranchId: widget.EmpDarCompanyBranchId,
-        //           EmpDarShiftID: widget.EmpDarShiftID,
-        //           EmpDarClientID: widget.EmpDarClientID,
-        //         ),
-        //       ),
-        //     );
-        //   },
-        //   child: Container(
-        //     height: height / height15,
-        //     width: height / height15,
-        //     decoration: BoxDecoration(
-        //       color: Primarycolor,
-        //       shape: BoxShape.circle,
-        //     ),
-        //     child: Center(
-        //       child: SvgPicture.asset(
-        //         'assets/images/create.svg',
-        //         width: width / width18,
-        //         height: height / height18,
-        //         color: Colors.white,
-        //       ),
-        //     ),
-        //   ),
-        // ),
       ),
     );
   }

@@ -44,23 +44,18 @@ class _PayStubScreenState extends State<PayStubScreen> {
 
         return SafeArea(
           child: Scaffold(
-            
             appBar: AppBar(
-            
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back_ios,
-                 
                 ),
                 padding: EdgeInsets.only(left: width / width20),
                 onPressed: () {
                   Navigator.pop(context);
                 },
               ),
-
               title: InterMedium(
                 text: 'Paystub',
-              
               ),
               centerTitle: true,
             ),
@@ -92,12 +87,13 @@ class _PayStubScreenState extends State<PayStubScreen> {
                         child: InterBold(
                           text: 'Pay Discrepancy',
                           fontsize: width / width18,
-                          color: DarkColor.  Primarycolor,
+                          color: DarkColor.Primarycolor,
                         ),
                       ),
                       Button1(
                         text: 'Open',
-                        color: Theme.of(context).textTheme.headlineMedium!.color,
+                        color:
+                            Theme.of(context).textTheme.headlineMedium!.color,
                         onPressed: () {
                           Navigator.push(
                             context,
