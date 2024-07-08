@@ -10,6 +10,7 @@ import 'package:rxdart/rxdart.dart';
 import '../../../../common/sizes.dart';
 import '../../../../fonts/inter_bold.dart';
 import '../../../../fonts/inter_regular.dart';
+import '../../../../fonts/inter_semibold.dart';
 import '../../../../fonts/poppins_bold.dart';
 import '../../../../services/firebaseFunctions/firebase_function.dart';
 import '../../../../utils/colors.dart';
@@ -154,6 +155,8 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -507,7 +510,21 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                                 if (!sortedSnapshot.hasData ||
                                     sortedSnapshot.data!.isEmpty) {
                                   return Center(
-                                      child: Text('No data available'));
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        SizedBox(
+                                          height: 300.h,
+                                          child: SvgPicture.asset(isDark ? 'assets/images/no_data_dark.svg' :'assets/images/no_data.svg'),
+                                        ),
+                                        InterSemibold(
+                                          text: 'Nothing to preview',
+                                          fontsize: 16.sp,
+                                          color: Theme.of(context).textTheme.bodyLarge!.color,
+                                        )
+                                      ],
+                                    ),
+                                  );
                                 }
 
                                 var combinedList = sortedSnapshot.data!;

@@ -83,6 +83,7 @@ class _PostOrderState extends State<PostOrder> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
     // final double height = MediaQuery.of(context).size.height;
     // final double width = MediaQuery.of(context).size.width;
 
@@ -113,7 +114,24 @@ class _PostOrderState extends State<PostOrder> {
               return Center(child: Text('Error fetching data'));
             }
             if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return Center(child: Text('No data available'));
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: 300.h,
+                      child: SvgPicture.asset(isDark
+                          ? 'assets/images/no_data_dark.svg'
+                          : 'assets/images/no_data.svg'),
+                    ),
+                    InterSemibold(
+                      text: 'Nothing to preview',
+                      fontsize: 16.sp,
+                      color: Theme.of(context).textTheme.bodyLarge!.color,
+                    )
+                  ],
+                ),
+              );
             }
 
             Map<String, List<Map<String, dynamic>>> locationData =
@@ -204,7 +222,6 @@ class _PostOrderState extends State<PostOrder> {
                                     padding:
                                         EdgeInsets.symmetric(horizontal: 30.w),
                                     child: Container(
-                                      
                                       constraints: BoxConstraints(
                                         minHeight: 250.h,
                                       ),
@@ -246,7 +263,8 @@ class _PostOrderState extends State<PostOrder> {
                                           Container(
                                             constraints:
                                                 BoxConstraints(minWidth: 200.w),
-                                            height: 46.h,
+                                            height: 70.h,
+                                            padding: EdgeInsets.symmetric(horizontal: 6.w),
                                             decoration: BoxDecoration(
                                               boxShadow: [
                                                 BoxShadow(
@@ -259,17 +277,28 @@ class _PostOrderState extends State<PostOrder> {
                                               ],
                                               borderRadius:
                                                   BorderRadius.circular(10.r),
-                                              color: Colors.white,
+                                              color: isDark ? Color(0xFF1F1E1E)  : LightColor.Secondarycolor,
                                             ),
                                             child: Row(
                                               children: [
-                                                Padding(
-                                                  padding: EdgeInsets.symmetric(
+                                                Container(
+                                                  height: 48.h,
+                                                  width: 48.w,
+                                                  margin: EdgeInsets.symmetric(
                                                     horizontal: 6.w,
                                                   ),
+                                                  padding: EdgeInsets.all(14.sp),
+                                                  decoration: BoxDecoration(
+                                                    color: isDark ? Color(0xFF393939) : Color(0xFFAE7CFE),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10.r),
+                                                  ),
                                                   child: SvgPicture.asset(
-                                                    'assets/images/pdf.svg',
-                                                    width: 32.w,
+                                                    'assets/images/pdf_new.svg',
+                                                    width: 20.w,
+                                                    color: isDark ? Theme.of(context)
+                                                        .primaryColor : Colors.white,
                                                   ),
                                                 ),
                                                 Column(
@@ -279,12 +308,12 @@ class _PostOrderState extends State<PostOrder> {
                                                       MainAxisAlignment.center,
                                                   children: [
                                                     SizedBox(
-                                                      width: 280.w,
+                                                      width: 200.w,
                                                       child: PoppinsMedium(
                                                         text: fileName,
                                                         color: Theme.of(context)
                                                             .textTheme
-                                                            .titleLarge!
+                                                            .bodyLarge!
                                                             .color,
                                                         fontsize: 12.sp,
                                                       ),
@@ -293,11 +322,20 @@ class _PostOrderState extends State<PostOrder> {
                                                       text: fileSize,
                                                       color: Theme.of(context)
                                                           .textTheme
-                                                          .titleMedium!
+                                                          .headlineSmall!
                                                           .color,
                                                       fontsize: 12.sp,
                                                     )
                                                   ],
+                                                ),
+                                                IconButton(
+                                                  onPressed: () {},
+                                                  icon: Icon(
+                                                    Icons.download,
+                                                    color: Theme.of(context)
+                                                        .primaryColor,
+                                                    size: 24.sp,
+                                                  ),
                                                 )
                                               ],
                                             ),
@@ -354,7 +392,8 @@ class _PostOrderState extends State<PostOrder> {
                                                                 .shadowColor,
                                                             blurRadius: 5,
                                                             spreadRadius: 2,
-                                                            offset: Offset(0, 3),
+                                                            offset:
+                                                                Offset(0, 3),
                                                           )
                                                         ],
                                                         borderRadius:
@@ -368,8 +407,7 @@ class _PostOrderState extends State<PostOrder> {
                                                             .symmetric(
                                                                 horizontal:
                                                                     6.w),
-                                                        child: SvgPicture
-                                                            .asset(
+                                                        child: SvgPicture.asset(
                                                           'assets/images/pdf.svg',
                                                           width: 32.sp,
                                                         ),

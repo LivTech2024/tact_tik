@@ -68,6 +68,7 @@ import 'controller/home_screen_controller.dart';
 
 class HomeScreen extends StatefulWidget {
   final VoidCallback? refreshCallback;
+
   const HomeScreen({super.key, this.refreshCallback});
 
   @override
@@ -1075,7 +1076,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                         height: 150.h,
                                         width: 200.w,
                                         child: SvgPicture.asset(
-                                          'assets/images/no_shift.svg',
+                                          isDark
+                                              ? 'assets/images/no_shift.svg'
+                                              : 'assets/images/no_shift_light.svg',
                                         ),
                                       ),
                                       SizedBox(height: 30.h),
@@ -1088,22 +1091,30 @@ class _HomeScreenState extends State<HomeScreen> {
                                         fontsize: 16.sp,
                                       ),
                                       SizedBox(height: 20.h),
-                                      InterRegular(text: 'Go to calendar to check shift',
-                                        color: Theme.of(context)
-                                            .textTheme.labelSmall!.color,
-                                        fontsize: 14.sp,),
-                                      InterBold(text: 'or',
-                                        color: Theme.of(context)
-                                            .textTheme
-                                            .displaySmall!
-                                            .color,
-                                        fontsize: 20.sp,),
-                                      InterRegular(text: 'Refresh page',
+                                      InterRegular(
+                                        text: 'Go to calendar to check shift',
                                         color: Theme.of(context)
                                             .textTheme
                                             .labelSmall!
                                             .color,
-                                        fontsize: 14.sp,),
+                                        fontsize: 14.sp,
+                                      ),
+                                      InterBold(
+                                        text: 'or',
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .displaySmall!
+                                            .color,
+                                        fontsize: 20.sp,
+                                      ),
+                                      InterRegular(
+                                        text: 'Refresh page',
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .labelSmall!
+                                            .color,
+                                        fontsize: 14.sp,
+                                      ),
                                     ],
                                   ),
                                 ),

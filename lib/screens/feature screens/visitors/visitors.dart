@@ -44,6 +44,7 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
     return SafeArea(
       child: Scaffold(
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -119,7 +120,7 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
                   centerTitle: true,
                   floating: true,
                 ),
-                SliverList(
+                groupedDocuments.keys.isNotEmpty ? SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {
                       final date = groupedDocuments.keys.elementAt(index);
@@ -374,6 +375,23 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
                       );
                     },
                     childCount: groupedDocuments.keys.length,
+                  ),
+                ) : SliverToBoxAdapter(
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 300.h,
+                          child: SvgPicture.asset(isDark ? 'assets/images/no_data_dark.svg' :'assets/images/no_data.svg'),
+                        ),
+                        InterSemibold(
+                          text: 'Nothing to preview',
+                          fontsize: 16.sp,
+                          color: Theme.of(context).textTheme.bodyLarge!.color,
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ],
