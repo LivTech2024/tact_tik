@@ -31,11 +31,12 @@ class CreateVisitors extends StatefulWidget {
   final bool isCompleted;
   final bool showButton;
 
-  CreateVisitors(
-      {super.key,
-      this.visitorData,
-      required this.isCompleted,
-      required this.showButton});
+  CreateVisitors({
+    super.key,
+    this.visitorData,
+    required this.isCompleted,
+    required this.showButton,
+  });
 
   @override
   State<CreateVisitors> createState() => _CreateVisitorsState();
@@ -62,13 +63,10 @@ class _CreateVisitorsState extends State<CreateVisitors> {
   Set<String> options = {};
   List<String> Emptyoptions = [""];
   List<String> TagString = [];
-
   TimeOfDay? InTime;
   TimeOfDay? OutTime;
   bool _isLoading = false;
   bool showCreate = true;
-  List<Map<String, dynamic>> ReturnAsset = [];
-  Set<String> allAssets = {};
   String? selectedKeyName;
   String? selectedKeyId;
   List<DocumentSnapshot> keys = [];
@@ -76,7 +74,6 @@ class _CreateVisitorsState extends State<CreateVisitors> {
 
   // late final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
   //     GlobalKey<ScaffoldMessengerState>();
-
   late UserService _userService;
 
   @override
@@ -85,12 +82,8 @@ class _CreateVisitorsState extends State<CreateVisitors> {
     _distanceToField = MediaQuery.of(context).size.width;
   }
 
-  List<String> convertCommaSeparatedStringToList(String commaSeparatedString) {
-    return commaSeparatedString
-        .split(',')
-        .map((e) => e.trim())
-        .where((e) => e.isNotEmpty)
-        .toList();
+  List<String> convertCommaSeparatedStringToList(String data) {
+    return data.split(',').map((e) => e.trim()).toList();
   }
 
   @override
@@ -142,57 +135,19 @@ class _CreateVisitorsState extends State<CreateVisitors> {
           ? TimeOfDay.fromDateTime(outTimeTimestamp.toDate())
           : null;
       if (widget.visitorData!['VisitorAssetHandover'] != null) {
-        List<String> visitorAssetHandover = convertCommaSeparatedStringToList(
+        print(widget.visitorData!['VisitorAssetHandover']);
+        Set<String> opt = convertCommaSeparatedStringToList(
+                widget.visitorData!['VisitorAssetHandover'])
+            .toSet(); // Convert list to set for unique values
+        List<String> opt2 = convertCommaSeparatedStringToList(
             widget.visitorData!['VisitorAssetHandover']);
-        allAssets.addAll(visitorAssetHandover);
-      }
-
-      if (widget.visitorData!['VisitorReturnAsset'] != null) {
-        List<String> visitorReturnAssets = convertCommaSeparatedStringToList(
-            widget.visitorData!['VisitorReturnAsset']);
-        allAssets.addAll(visitorReturnAssets);
-
-        // Add checked items to the options set
-        visitorReturnAssets.forEach((item) {
-          options.add(item);
+        setState(() {
+          tags = opt;
+          TagString = opt2;
         });
+        print("Tag ${tags}");
+        print("opt ${opt}");
       }
-
-      // Populate ReturnAsset with all items and their check status
-      ReturnAsset = allAssets.map((item) {
-        bool isChecked = options.contains(item);
-        return {'value': item, 'isCheck': isChecked};
-      }).toList();
-      // if (widget.visitorData!['VisitorAssetHandover'] != null) {
-      //   print(widget.visitorData!['VisitorAssetHandover']);
-      //   Set<String> opt = convertCommaSeparatedStringToList(
-      //           widget.visitorData!['VisitorAssetHandover'])
-      //       .toSet(); // Convert list to set for unique values
-      //   List<String> opt2 = convertCommaSeparatedStringToList(
-      //       widget.visitorData!['VisitorAssetHandover']);
-      //   setState(() {
-      //     tags = opt;
-      //     TagString = opt2;
-      //     ReturnAsset =
-      //         opt2.map((item) => {'value': item, 'isCheck': false}).toList();
-      //     ;
-      //   });
-      //   print("Tag ${tags}");
-      //   print("opt ${opt}");
-      // }
-      // if (widget.visitorData!['VisitorReturnAsset'] != null) {
-      //   List<String> visitorReturnAssets =
-      //       widget.visitorData!['VisitorReturnAsset'].split(',');
-      //   List<String> opt2 = convertCommaSeparatedStringToList(
-      //       widget.visitorData!['VisitorReturnAsset']);
-      //   ReturnAsset = opt2.map((item) {
-      //     bool isChecked = visitorReturnAssets.contains(item);
-      //     if (isChecked) {
-      //       options.add(item);
-      //     }
-      //     return {'value': item, 'isCheck': isChecked};
-      //   }).toList();
-      // }
     }
   }
 
@@ -214,7 +169,6 @@ class _CreateVisitorsState extends State<CreateVisitors> {
 
   Future<TimeOfDay?> showCustomTimePicker(BuildContext context) async {
     TimeOfDay? selectedTime;
-
     selectedTime = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.now(),
@@ -232,7 +186,6 @@ class _CreateVisitorsState extends State<CreateVisitors> {
         );
       },
     );
-
     return selectedTime;
   }
 
@@ -253,49 +206,48 @@ class _CreateVisitorsState extends State<CreateVisitors> {
 
   Future<bool> _saveVisitorData() async {
     if (_validateInputs()) {
-      // try {
-      print('VisitorInTime');
-      print('');
-      print('');
-      print('');
+      try {
+        await _userService.getShiftInfo();
+        String? shiftLocationId = _userService.shiftLocationId;
+        String? shiftLocation = _userService.shiftLocation;
 
-      await _userService.getShiftInfo();
-      String? shiftLocationId = _userService.shiftLocationId;
-      String? shiftLocation = _userService.shiftLocation;
+        // String? employeeId = _userService.employeeId;
 
-      FirebaseFirestore firestore = FirebaseFirestore.instance;
-      String commaSeparatedTags = (_dynamicTagController.getTags ?? [])
-          .map((dynamicTagData) => dynamicTagData.tag)
-          .join(',');
+        // print("employeekiId : $employeeId");
 
-      if (widget.visitorData == null) {
-        // Create a new visitor document
-        DocumentReference docRef = firestore.collection('Visitors').doc();
-        String visitorId = docRef.id;
-        await firestore.collection('Visitors').add({
-          'VisitorInTime': Timestamp.now(),
-          'VisitorName': nameController.text,
-          'VisitorEmail': EmailController.text,
-          'VisitorContactNumber': ContactNoController.text,
-          'VisitorAssetHandover': commaSeparatedTags,
-          'VisitorLicenseNumber': LicensePlateNumberController.text,
-          'VisitorAssetDurationInMinute': SetCountdownController.text,
-          'VisitorComment': CommentsController.text,
-          'VisitorNoOfPerson': NoOfPersonController.text,
-          'VisitorCompanyId': _userService.shiftCompanyId,
-          'VisitorCompanyBranchId': _userService.shiftCompanyBranchId,
-          'VisitorCompanyName': CompanyNameController.text,
-          'VisitorId': visitorId,
-          'VisitorCreatedAt': Timestamp.now(),
-          'VisitorLocationId': shiftLocationId,
-          'VisitorLocationName': shiftLocation,
-          'VisitorOutTime': null,
-          'VisitorReturnAsset': null,
-        });
-      } else {
-        String commaSeparatedOptions = options.join(',');
-        String? visitorId = widget.visitorData!['VisitorId'];
-        if (visitorId != null) {
+        FirebaseFirestore firestore = FirebaseFirestore.instance;
+        String commaSeparatedTags = _dynamicTagController.getTags!
+            .map((dynamicTagData) => dynamicTagData.tag)
+            .join(',');
+        if (widget.visitorData == null) {
+          // Create a new visitor document
+          DocumentReference docRef = firestore.collection('Visitors').doc();
+          String visitorId = docRef.id;
+          await firestore.collection('Visitors').add({
+            // 'VisitorInTime': InTime != null ? InTime!.format(context) : null,
+            'VisitorInTime': Timestamp.now(),
+            'VisitorName': nameController.text,
+            'VisitorEmail': EmailController.text,
+            'VisitorContactNumber': ContactNoController.text,
+            'VisitorAssetHandover': commaSeparatedTags,
+            'VisitorLicenseNumber': LicensePlateNumberController.text,
+            'VisitorAssetDurationInMinute': SetCountdownController.text,
+            'VisitorComment': CommentsController.text,
+            'VisitorNoOfPerson': NoOfPersonController.text,
+            'VisitorCompanyId': _userService.shiftCompanyId,
+            'VisitorCompanyBranchId': _userService.shiftCompanyBranchId,
+            'VisitorCompanyName': CompanyNameController.text,
+            'VisitorId': visitorId,
+            'VisitorCreatedAt': Timestamp.now(),
+            'VisitorLocationId': shiftLocationId,
+            'VisitorLocationName': shiftLocation,
+            'VisitorOutTime': null,
+            'VisitorReturnAsset': null,
+          });
+        } else {
+          String visitorId = widget.visitorData!['VisitorId'];
+          print("visitors:$visitorId");
+
           QuerySnapshot querySnapshot = await firestore
               .collection('Visitors')
               .where('VisitorId', isEqualTo: visitorId)
@@ -313,38 +265,43 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                       OutTime!.minute,
                     ))
                   : null,
-              'VisitorReturnAsset': commaSeparatedOptions,
+              'VisitorReturnAsset': AssetReturnController.text,
             });
             _showSnackbar('Visitor data updated successfully!');
           } else {
             _showSnackbar('Visitor document does not exist!');
           }
-        } else {
-          _showSnackbar('VisitorId is null!');
         }
+
+        // Clear all the controllers
+        nameController.clear();
+        EmailController.clear();
+        ContactNoController.clear();
+        AssetHandoverController.clear();
+        LicensePlateNumberController.clear();
+        SetCountdownController.clear();
+        CommentsController.clear();
+        NoOfPersonController.clear();
+        CompanyNameController.clear();
+        setState(() {
+          InTime = null;
+          OutTime = null;
+        });
+
+        // Navigate to the visitor screen after saving or updating visitor data
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => VisiTorsScreen(
+              locationId: '',
+            ), // Replace with your visitor screen widget
+          ),
+        );
+        return true;
+      } catch (error) {
+        _showSnackbar('Error saving visitor data: $error');
+        return false;
       }
-
-      // Clear all the controllers
-      nameController.clear();
-      EmailController.clear();
-      ContactNoController.clear();
-      AssetHandoverController.clear();
-      LicensePlateNumberController.clear();
-      SetCountdownController.clear();
-      CommentsController.clear();
-      NoOfPersonController.clear();
-      CompanyNameController.clear();
-      setState(() {
-        InTime = null;
-        OutTime = null;
-      });
-
-      Navigator.pop(context);
-      return true;
-      // } catch (error) {
-      //   _showSnackbar('Error saving visitor data1: $error');
-      //   return false;
-      // }
     }
     return false;
   }
@@ -377,6 +334,12 @@ class _CreateVisitorsState extends State<CreateVisitors> {
     themeManager.themeMode == ThemeMode.dark
         ? DarkColor.color25
         : LightColor.color2,
+  ];
+
+  List<Map<String, dynamic>> ReturnAsset = [
+    {'Asset': 'Asset1', 'isCheck': false},
+    {'Asset': 'Asset2', 'isCheck': false},
+    {'Asset': 'Asset3', 'isCheck': false}
   ];
 
   @override
@@ -512,6 +475,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                             enabled: !isEditMode,
                             isEditMode: isEditMode,
                           ),*/
+
                         !widget.isCompleted
                             ? TextFieldTags<DynamicTagData>(
                                 textfieldTagsController: _dynamicTagController,
@@ -677,14 +641,16 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                                         cursorColor:
                                             Theme.of(context).primaryColor,
                                         onChanged: (value) {
-                                          final tagData =
-                                              DynamicTagData(value, "");
+                                          final tagData = DynamicTagData(
+                                            value,
+                                          );
                                           inputFieldValues
                                               .onTagChanged(tagData);
                                         },
                                         onSubmitted: (value) {
-                                          final tagData =
-                                              DynamicTagData(value, "");
+                                          final tagData = DynamicTagData(
+                                            value,
+                                          );
                                           inputFieldValues
                                               .onTagSubmitted(tagData);
                                         },
@@ -693,36 +659,35 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                                   );
                                 },
                               )
-                            :
-                            // : SizedBox(
-                            //     height: 0.h,
-                            //     // child: ListView(
-                            //     //   children: TagString.isNotEmpty
-                            //     //       ? Emptyoptions.map((item) =>
-                            //     //           ListTile(title: Text(item))).toList()
-                            //     //       : TagString.map((item) {
-                            //     //           print("Tags ${TagString}");
-                            //     //           return CheckboxListTile(
-                            //     //             title: Text(item),
-                            //     //             value: options.contains(item),
-                            //     //             onChanged: (bool? checked) {
-                            //     //               setState(() {
-                            //     //                 if (checked == true) {
-                            //     //                   if (!options.contains(item)) {
-                            //     //                     options.add(item);
-                            //     //                   }
-                            //     //                 } else {
-                            //     //                   options.remove(item);
-                            //     //                 }
-                            //     //                 print(
-                            //     //                     "Updated options: $options");
-                            //     //               });
-                            //     //             },
-                            //     //           );
-                            //     //         }).toList(),
-                            //     // ),
-                            //   ),
-                            SizedBox(height: 10.h),
+                            : SizedBox(
+                                height: 200.h,
+                                child: ListView(
+                                  children: TagString.isNotEmpty
+                                      ? Emptyoptions.map((item) =>
+                                          ListTile(title: Text(item))).toList()
+                                      : TagString.map((item) {
+                                          print("Tags ${TagString}");
+                                          return CheckboxListTile(
+                                            title: Text(item),
+                                            value: options.contains(item),
+                                            onChanged: (bool? checked) {
+                                              setState(() {
+                                                if (checked == true) {
+                                                  if (!options.contains(item)) {
+                                                    options.add(item);
+                                                  }
+                                                } else {
+                                                  options.remove(item);
+                                                }
+                                                print(
+                                                    "Updated options: $options");
+                                              });
+                                            },
+                                          );
+                                        }).toList(),
+                                ),
+                              ),
+                        SizedBox(height: 10.h),
                         // Content(
                         //     title: 'Asset HandOver',
                         //     child: ChipsChoice<String>.multiple(
@@ -803,48 +768,36 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                 ),
                 SliverList.builder(
                   itemCount: ReturnAsset.length,
-                  itemBuilder: (context, index) {
-                    // Ensure that 'isCheck' is not null
-                    bool isChecked = ReturnAsset[index]['isCheck'] ?? false;
-
-                    return Container(
-                      margin: EdgeInsets.only(
-                          right: 30.w, left: 30.w, bottom: 10.h),
-                      decoration: BoxDecoration(
+                  itemBuilder: (context, index) => Container(
+                    margin:
+                        EdgeInsets.only(right: 30.w, left: 30.w, bottom: 10.h),
+                    decoration: BoxDecoration(
                         color: Theme.of(context).cardColor,
-                        borderRadius: BorderRadius.circular(10.r),
-                      ),
-                      padding: EdgeInsets.symmetric(horizontal: 20.w),
-                      height: 60.h,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          InterMedium(
-                            text:
-                                'Asset: ${ReturnAsset[index]['value']}', // Use 'value' key
-                            color:
-                                Theme.of(context).textTheme.bodyMedium!.color,
-                          ),
-                          Checkbox(
-                            activeColor: Theme.of(context).primaryColor,
-                            checkColor:
-                                Theme.of(context).textTheme.bodyMedium!.color,
-                            value: isChecked,
-                            onChanged: (bool? value) {
-                              setState(() {
-                                ReturnAsset[index]['isCheck'] = value ?? false;
-                              });
-                              if (value == true) {
-                                options.add(ReturnAsset[index]['value']);
-                              } else {
-                                options.remove(ReturnAsset[index]['value']);
-                              }
-                            },
-                          ),
-                        ],
-                      ),
-                    );
-                  },
+                        borderRadius: BorderRadius.circular(10.r)),
+                    padding: EdgeInsets.symmetric(horizontal: 20.w),
+                    height: 60.h,
+                    // width: 100,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        InterMedium(
+                          text: 'Asset: ${ReturnAsset[index]['Asset']}',
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
+                        ),
+                        Checkbox(
+                          activeColor: Theme.of(context).primaryColor,
+                          checkColor:
+                              Theme.of(context).textTheme.bodyMedium!.color,
+                          value: ReturnAsset[index]['isCheck'],
+                          onChanged: (bool? value) {
+                            setState(() {
+                              ReturnAsset[index]['isCheck'] = value ?? false;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
                 SliverToBoxAdapter(
                   child: Padding(
@@ -875,7 +828,8 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                             //     options = val.toSet();
                             //   });
                             // },
-                            onChanged: (val) => setState(() => {}),
+                            onChanged: (val) =>
+                                setState(() => options = val.toSet()),
                             choiceItems: C2Choice.listFrom<String, String>(
                               source: options.isEmpty
                                   ? Emptyoptions
@@ -968,9 +922,9 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                                 text: 'Save',
                                 onPressed: () async {
                                   bool isSuccessful = await _saveVisitorData();
-                                  // if (!isSuccessful) {
-                                  //   // Handle the case when saving or updating visitor data fails
-                                  // }
+                                  if (!isSuccessful) {
+                                    // Handle the case when saving or updating visitor data fails
+                                  }
                                 },
                                 backgroundcolor: Theme.of(context).primaryColor,
                                 color: Theme.of(context)

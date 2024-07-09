@@ -5,9 +5,11 @@ class DarkColor {
   static const Color AppBarcolor = Color(0xFF252525);
   static const Color Primarycolorlight = Color(0x80CBA769);
   static const Color Secondarycolor = Color(0xFF010101);
-  static const Color WidgetColor = Color(0xFF151515);
+  static const Color WidgetColor = Color(0xFF252525);
+  static const Color WidgetColorLigth = Color(0x40252525);
   static const Color color1 = Colors.white;
   static const Color color2 = Color(0xFFD0D0D0);
+  static const Color textLigth = Color(0x40656262);
   static const Color color3 = Color(0x80D9D9D9);
   static const Color color4 = Color(0xFF515151);
   static const Color color5 = Color(0xFFD4D1D1);
@@ -49,6 +51,7 @@ class LightColor {
   static const Color Primarycolorlight = Color(0x388336FE);
   static const Color Secondarycolor = Color(0xFFF9F9F9);
   static const Color WidgetColor = Color(0xFFFFFFFF);
+  static const Color WidgetColorLigth = Color(0x408E8686);
   static const Color AppBarcolor = Color(0xFFFFFFFF);
   static const Color color1 = Colors.white;
   static const Color color2 = Color(0x2D151515);
