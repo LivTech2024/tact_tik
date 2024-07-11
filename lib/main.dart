@@ -119,7 +119,7 @@ class _MyAppState extends State<MyApp> {
             );
           }
         },
-        child: PayDiscrepancyDisplay(),
+        child: AuthChecker(),
       ),
     );
   }
