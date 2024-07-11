@@ -12,12 +12,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:tact_tik/common/widgets/guard_alert_widget.dart';
 import 'package:tact_tik/fonts/inter_semibold.dart';
 import 'package:tact_tik/screens/authChecker/authChecker.dart';
 
 // import 'package:tact_tik/screens/home%20screens/message%20screen/message_screen.dart';
 // import 'package:workmanager/workmanager.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
+import 'package:tact_tik/screens/home%20screens/guard_notification_screen.dart';
 import 'package:tact_tik/screens/home%20screens/notification_screen.dart';
 import 'package:tact_tik/screens/home%20screens/wellness_check_screen.dart';
 import 'package:tact_tik/utils/constants.dart';
@@ -91,6 +93,7 @@ class _MyAppState extends State<MyApp> {
                     EmpName: '',
                     EmpId: '',
                   ),
+              '/alert_screen': (ontext) => GuardNotificationScreen()
             },
             home: child,
           ),

@@ -189,7 +189,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     // startStopwatch();
 
     // clickedIn update this status
-    checkWellnessReport(); // Call the wellness check function
+    if (widget.ShiftStatus == 'started') {
+      checkWellnessReport(); // Call the wellness check function
+    }
   }
 
   void reload() {

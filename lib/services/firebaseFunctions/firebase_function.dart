@@ -2477,6 +2477,68 @@ class FireStoreService {
     }
   }
 
+  // Future<int> getIntervalfromSettings(String CompanyId) async {
+  //   CollectionReference settings =
+  //       FirebaseFirestore.instance.collection('Settings');
+
+  //   // Fetch the document for the specific patrol
+  //   QuerySnapshot<Object?> snapshot =
+  //       await settings.where("SettingCompanyId", isEqualTo: CompanyId).get();
+  // }
+  Future<int> getIntervalFromSettings(String companyId) async {
+    CollectionReference settings =
+        FirebaseFirestore.instance.collection('Settings');
+
+    // Fetch the document for the specific company
+    QuerySnapshot<Object?> snapshot =
+        await settings.where("SettingCompanyId", isEqualTo: companyId).get();
+
+    if (snapshot.docs.isNotEmpty) {
+      var data = snapshot.docs.first.data() as Map<String, dynamic>;
+      return data['SettingEmpShiftTimeMarginInMins'] ??
+          10; // Default to 0 if not found
+    } else {
+      // Handle the case when no document is found
+      return 10; // Default to 0 or throw an exception based on your requirements
+    }
+  }
+
+  Future<bool> getuncheckedstatus(
+      String PatrolId, String ShiftId, String EmpId) async {
+    try {
+      // Reference to the Firestore collection
+      CollectionReference patrols =
+          FirebaseFirestore.instance.collection('Patrols');
+
+      // Fetch the document for the specific patrol
+      DocumentSnapshot snapshot = await patrols.doc(PatrolId).get();
+
+      // Check if the document exists
+      if (snapshot.exists) {
+        // Get the patrol checkpoints
+        List<dynamic> checkpoints = snapshot.get('PatrolCheckPoints');
+
+        // Iterate over the checkpoints to check their status
+        for (var checkpoint in checkpoints) {
+          List<dynamic> statuses = checkpoint['CheckPointStatus'];
+
+          for (var status in statuses) {
+            if (status['Status'] == 'unchecked' &&
+                status['StatusShiftId'] == ShiftId &&
+                status['StatusReportedById'] == EmpId) {
+              return true;
+            }
+          }
+        }
+      }
+
+      return false; // No unchecked status found for the given conditions
+    } catch (e) {
+      print("Error: $e");
+      return false;
+    }
+  }
+
   //Get all the Schedules for Guards
   Future<String?> getBranchNameById2(String branchId) async {
     try {
@@ -5403,6 +5465,24 @@ class FireStoreService {
     } catch (e) {
       print("Error fetching key name: $e");
       return null; // or handle the error as needed
+    }
+  }
+
+  //Exchange update status
+  Future<void> UpdateExchangeStatus(String docId, String Status) async {
+    try {
+      // Get a reference to the ShiftExchange collection
+      CollectionReference exchangeCollection =
+          FirebaseFirestore.instance.collection('ShiftExchange');
+
+      // Update the document with the provided docId
+      await exchangeCollection.doc(docId).update({
+        "ShiftExchReqStatus": Status, // Update status to "started"
+      });
+
+      print("Shift exchange status updated successfully!");
+    } catch (e) {
+      print("Error updating shift exchange status: $e");
     }
   }
 

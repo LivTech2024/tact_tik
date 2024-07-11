@@ -375,7 +375,8 @@ class _ShiftInformationState extends State<ShiftInformation> {
     );
   }
 
-  Future<void> onShiftOffer({required String senderId, required String shiftId}) async {
+  Future<void> onShiftOffer(
+      {required String senderId, required String shiftId}) async {
     try {
       final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
@@ -390,7 +391,8 @@ class _ShiftInformationState extends State<ShiftInformation> {
         return;
       }
 
-      DocumentSnapshot shiftDoc = await firestore.collection('Shifts').doc(shiftId).get();
+      DocumentSnapshot shiftDoc =
+          await firestore.collection('Shifts').doc(shiftId).get();
 
       if (!shiftDoc.exists) {
         showErrorToast(context, "Shift not found.");
@@ -399,7 +401,8 @@ class _ShiftInformationState extends State<ShiftInformation> {
 
       String shiftCompanyId = shiftDoc.get('ShiftCompanyId');
 
-      DocumentReference newShiftExchangeDoc = await firestore.collection('ShiftOffer').add({
+      DocumentReference newShiftExchangeDoc =
+          await firestore.collection('ShiftOffer').add({
         'ShiftOfferCreatedAt': Timestamp.now(),
         'ShiftOfferCompanyId': shiftCompanyId,
         'ShiftOfferSenderId': senderId,
@@ -539,7 +542,7 @@ class _ShiftInformationState extends State<ShiftInformation> {
         }
 
         List<String> acknowledgedByEmpIds =
-            List<String>.from(snapshot['ShiftAcknowledgedByEmpId']);
+          List<String>.from(snapshot['ShiftAcknowledgedByEmpId']);
 
         if (!acknowledgedByEmpIds.contains(empId)) {
           acknowledgedByEmpIds.add(empId);
@@ -598,7 +601,7 @@ class _ShiftInformationState extends State<ShiftInformation> {
           'ShiftExchReqSenderId': currentUserId,
           'ShiftExchReqReceiverId': empId,
           'ShiftExchReceiverShiftId': shiftId,
-          'ShiftExchReqStatus': 'pending',
+          'ShiftExchReqStatus': 'started',
           'ShiftExchSenderShiftId': sendersShiftId,
           'ShiftExchReqCreatedAt': DateTime.now(),
           'ShiftExchReqModifiedAt': DateTime.now(),

@@ -435,7 +435,7 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                         var TestinEmail = "sutarvaibhav37@gmail.com";
                         var defaultEmail = "tacttikofficial@gmail.com";
                         var defaultEmail2 = "pankaj.kumar1312@yahoo.com";
-                        emails.add(defaultEmail2);
+                        // emails.add(defaultEmail2);
                         var testEmail3 = "Swastikbthiramdas@gmail.com";
                         emails.add(TestinEmail);
                         emails.add(testEmail3);
@@ -451,17 +451,21 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                         }
                         bool sendEmailToClient = await fireStoreService
                             .shouldSendEmailToClient(widget.LocationId);
+                        print("Location Id ${widget.LocationId}");
                         print("Send Email to Client ${sendEmailToClient}");
                         if (sendEmailToClient == true && sendEmail == true) {
                           // String? Email = await fireStoreService
                           //     .getLocationManagerEmail(widget.LocationId);
-                          // if (Email != null) {
+                          // if (Email != null) {/
+                          print("Client Email Added");
                           emails.add(ClientEmail!);
                           // }
+                        } else {
+                          print("Client Email is not being added");
                         }
                         // emails.add(ClientEmail!);
                         emails.add(AdminEmail!);
-                        emails.add(defaultEmail!);
+                        // emails.add(defaultEmail!);
                         // var clientId = await fireStoreService
                         //     .getShiftClientID(
                         //         widget.p.ShiftId);

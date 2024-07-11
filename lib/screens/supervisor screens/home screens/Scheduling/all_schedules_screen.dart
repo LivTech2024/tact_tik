@@ -13,6 +13,7 @@ import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
 import 'package:tact_tik/fonts/inter_semibold.dart';
 import 'package:tact_tik/main.dart';
+import 'package:tact_tik/screens/new%20guard/personel_details.dart';
 import 'package:tact_tik/screens/supervisor%20screens/home%20screens/s_home_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/schedule_color.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
@@ -186,9 +187,8 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
 
 // Define a function to determine the shift status and color
   Map<String, dynamic> determineShiftStatus(
-      DocumentSnapshot<Object?> scheduleDoc) {
+      DocumentSnapshot<Object?> scheduleDoc, int timeMarginInMins) {
     final schedule = scheduleDoc.data() as Map<String, dynamic>?;
-
     if (schedule == null) {
       return {
         'status': 'unknown',
@@ -200,54 +200,98 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
     if (shiftStatusArray.isEmpty) {
       return {
         'status': 'pending',
-        'color': ScheduleColor1,
+        'color': Colors.amber.shade200, // #fed7aa
       };
     }
 
-    Map<String, dynamic> shiftStatus = shiftStatusArray[0];
-    DateTime statusStartedTime =
-        (shiftStatus['StatusStartedTime'] as Timestamp).toDate();
-    DateTime statusReportedTime =
-        (shiftStatus['StatusReportedTime'] as Timestamp).toDate();
-
+    Timestamp shiftDateTimestamp = schedule['ShiftDate'];
+    DateTime shiftDate = shiftDateTimestamp.toDate();
     String shiftStartTimeString = schedule['ShiftStartTime'] ?? '00:00';
     String shiftEndTimeString = schedule['ShiftEndTime'] ?? '23:59';
 
-    DateTime currentDate = DateTime.now();
     DateTime shiftStartTime =
-        parseTimeString(shiftStartTimeString, currentDate);
-    DateTime shiftEndTime = parseTimeString(shiftEndTimeString, currentDate);
+        _parseShiftDateTime(shiftDate, shiftStartTimeString);
+    DateTime shiftEndTime = _parseShiftDateTime(shiftDate, shiftEndTimeString);
 
-    bool startedEarly = shiftStartTime.isBefore(statusStartedTime);
-    bool startedLate = shiftStartTime.isAfter(statusStartedTime);
-    bool endedEarly = shiftEndTime.isBefore(statusReportedTime);
-    bool endedLate = shiftEndTime.isAfter(statusReportedTime);
-
-    Color color;
-
-    if (shiftStatus['Status'] == "started") {
-      color = ScheduleColor2;
-    } else if (shiftStatus['Status'] == "completed") {
-      // color = c;s
-      if (startedLate && endedLate) {
-        color = Colors.red;
-      } else if (startedEarly && endedEarly) {
-        color = Colors.green;
-      } else if (startedEarly && endedLate) {
-        color = Colors.orange;
-      } else if (startedLate && endedEarly) {
-        color = Colors.blue;
-      } else {
-        color = Colors.yellow;
-      }
-    } else {
-      color = Colors.blueGrey;
+    if (shiftEndTime.isBefore(shiftStartTime)) {
+      shiftEndTime = shiftEndTime.add(Duration(days: 1));
     }
 
-    return {
-      'status': shiftStatus['Status'] ?? 'unknown',
-      'color': color,
-    };
+    Color color = Colors.grey.shade200; // #e5e7eb
+
+    try {
+      // *Pending
+      if (shiftStatusArray.any((s) => s['Status'] == 'pending')) {
+        color = Colors.amber.shade200; // #fed7aa
+      }
+
+      // *Started
+      if (shiftStatusArray.any((s) => s['Status'] == 'started')) {
+        color = Colors.pink.shade100; // #fbcfe8
+      }
+
+      // *Completed
+      if (shiftStatusArray.every((s) => s['Status'] == 'completed')) {
+        color = Colors.green.shade400; // #4ade80
+      }
+
+      // *Started Late
+      if (shiftStatusArray.any((s) {
+        DateTime statusStartedTime =
+            (s['StatusStartedTime'] as Timestamp).toDate();
+        return _getMinutesDifference(statusStartedTime, shiftStartTime) >
+            timeMarginInMins;
+      })) {
+        color = Colors.purple.shade400; // #a855f7
+      }
+
+      // *Ended Early
+      if (shiftStatusArray.any((s) {
+        if (s['Status'] != 'completed') return false;
+        DateTime statusReportedTime =
+            (s['StatusReportedTime'] as Timestamp).toDate();
+        return _getMinutesDifference(shiftEndTime, statusReportedTime) >
+            timeMarginInMins;
+      })) {
+        color = Colors.red.shade400; // #ef4444
+      }
+
+      // *Ended Late
+      if (shiftStatusArray.any((s) {
+        if (s['Status'] != 'completed') return false;
+        DateTime statusReportedTime =
+            (s['StatusReportedTime'] as Timestamp).toDate();
+        return _getMinutesDifference(statusReportedTime, shiftEndTime) >
+            timeMarginInMins;
+      })) {
+        color = Colors.blue.shade300; // #60a5fa
+      }
+
+      return {
+        'status': shiftStatusArray.first['Status'] ?? 'unknown',
+        'color': color,
+      };
+    } catch (error) {
+      return {
+        'status': 'unknown',
+        'color': color,
+      };
+    }
+  }
+
+  DateTime _parseShiftDateTime(DateTime date, String time) {
+    final timeParts = time.split(':');
+    return DateTime(
+      date.year,
+      date.month,
+      date.day,
+      int.parse(timeParts[0]),
+      int.parse(timeParts[1]),
+    );
+  }
+
+  int _getMinutesDifference(DateTime time1, DateTime time2) {
+    return time1.difference(time2).inMinutes.abs();
   }
 
   @override
@@ -555,8 +599,9 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                               schedule.data() as Map<String, dynamic>?;
                           List<dynamic> employeeImages =
                               scheduleData?['EmployeeImages'] ?? [];
+                          // int Interval =  fireStoreService.getIntervalFromSettings(schedule['ShiftStartTime']);
                           Map<String, dynamic> statusInfo =
-                              determineShiftStatus(schedule);
+                              determineShiftStatus(schedule, 10);
                           String status = statusInfo['status'];
                           Color statusColor = statusInfo['color'];
                           print("Status Color ${statusColor}");

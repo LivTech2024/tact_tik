@@ -1562,7 +1562,13 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                     "This Patrol has not being Started");
                                 return;
                               }
-                              if (widget.p.Allchecked == false) {
+                              var status =
+                                  await fireStoreService.getuncheckedstatus(
+                                      widget.p.PatrolId,
+                                      widget.p.ShiftId,
+                                      widget.p.EmpId);
+                              print("Status of unchecked $status");
+                              if (status == true) {
                                 showErrorToast(context,
                                     "Complete all the checkpoints ${widget.p.PatrolId}");
                                 Navigator.push(
@@ -1590,10 +1596,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                   widget.p.PatrolStartedTIme,
                                               ShiftName: widget.p.ShiftName,
                                             )));
-                                // showCustomDialog(
-                                //     context,
-                                //     "Incomplete Checkpoints, Do you want to ",
-                                //     "Incomplete Checkpoints, Do you want to ");
+
                                 return;
                               }
                               //check for the checkpoint status if any one is unchecked then dailog box display checked

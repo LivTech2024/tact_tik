@@ -7,11 +7,11 @@ enum GuardAlertEnum {
 extension ConvertMessage on String {
   GuardAlertEnum toEnum() {
     switch (this) {
-      case 'ShiftStatusNotification':
+      case 'Notification':
         return GuardAlertEnum.ShiftStatusNotification;
-      case 'newExchange':
+      case 'SHIFTEXCHANGE':
         return GuardAlertEnum.newExchange;
-      case 'newOffer':
+      case 'SHIFTOFFER':
         return GuardAlertEnum.newOffer;
       default:
         return GuardAlertEnum.ShiftStatusNotification;
