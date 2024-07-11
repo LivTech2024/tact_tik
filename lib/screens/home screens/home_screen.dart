@@ -56,6 +56,7 @@ import '../../fonts/roboto_medium.dart';
 import '../../utils/utils.dart';
 import '../SideBar Screens/employment_letter.dart';
 import '../SideBar Screens/history_screen.dart';
+import '../SideBar Screens/paystub_screen.dart';
 import '../SideBar Screens/profile_screen.dart';
 import '../feature screens/assets/assets_screen.dart';
 import '../feature screens/keys/keys_screen.dart';
@@ -816,7 +817,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    EmploymentLetterScreen()));
+                                    PayStubScreen()));
                       },
                     ),
                     buildListTile(

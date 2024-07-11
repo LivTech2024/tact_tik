@@ -7,6 +7,7 @@ import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
+import 'package:tact_tik/screens/SideBar%20Screens/pay_discrepancy_display.dart';
 import '../../utils/colors.dart';
 import '../../fonts/inter_bold.dart';
 import '../../fonts/inter_regular.dart';
@@ -67,52 +68,61 @@ class _PayStubScreenState extends State<PayStubScreen> {
                 final pdfUrl =
                     'https://firebasestorage.googleapis.com/v0/b/security-app-3b156.appspot.com/o/EmploymentLetter%2Fshift_patrol_report%20(1).pdf?alt=media&token=f0283d6c-1375-45b8-88a6-69cb9d93c452';
 
-                return Container(
-                  height: height / height260,
-                  width: double.maxFinite,
-                  margin: EdgeInsets.symmetric(horizontal: width / width30),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).cardColor,
-                    borderRadius: BorderRadius.circular(width / width12),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(
-                          top: height / height20,
-                          left: width / width10,
+                return GestureDetector(
+                  onTap: (){
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                PayDiscrepancyDisplay()));
+                  },
+                  child: Container(
+                    height: 260.h,
+                    width: double.maxFinite,
+                    margin: EdgeInsets.symmetric(horizontal: 30.w),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).cardColor,
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(
+                            top: 20.h,
+                            left: 10.w,
+                          ),
+                          child: InterBold(
+                            text: 'Pay Discrepancy',
+                            fontsize: 18.sp,
+                            color: DarkColor.Primarycolor,
+                          ),
                         ),
-                        child: InterBold(
-                          text: 'Pay Discrepancy',
-                          fontsize: width / width18,
-                          color: DarkColor.Primarycolor,
-                        ),
-                      ),
-                      Button1(
-                        text: 'Open',
-                        color:
-                            Theme.of(context).textTheme.headlineMedium!.color,
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => PDFViewerPage(
-                                title: name,
-                                pdfUrl: pdfUrl,
+                        Button1(
+                          text: 'Open',
+                          color:
+                              Theme.of(context).textTheme.headlineMedium!.color,
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => PDFViewerPage(
+                                  title: name,
+                                  pdfUrl: pdfUrl,
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                        backgroundcolor: Theme.of(context).primaryColor,
-                        useBorderRadius: true,
-                        MyBorderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(12.r),
-                          bottomRight: Radius.circular(12.r),
-                        ),
-                      )
-                    ],
+                            );
+                          },
+                          backgroundcolor: Theme.of(context).primaryColor,
+                          useBorderRadius: true,
+                          MyBorderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(12.r),
+                            bottomRight: Radius.circular(12.r),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 );
               },

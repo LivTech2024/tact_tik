@@ -127,9 +127,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     //fetch all the patrol ids assigned to him using
     List<String> emails = [];
     var ClientEmail =
-        await fireStoreService.getClientEmail(widget.ShiftClientID);
+    await fireStoreService.getClientEmail(widget.ShiftClientID);
     var AdminEmail =
-        await fireStoreService.getAdminEmail(widget.ShiftCompanyId);
+    await fireStoreService.getAdminEmail(widget.ShiftCompanyId);
     var TestinEmail = "pankaj.kumar1312@yahoo.com";
     var defaultEmail = "tacttikofficial@gmail.com";
     var ClientName = await fireStoreService.getClientName(widget.ShiftClientID);
@@ -141,7 +141,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     int? savedInTimeMillis = prefs.getInt('InTime');
     DateTime.fromMillisecondsSinceEpoch(savedInTimeMillis!);
     DateTime savedDateTime =
-        DateTime.fromMillisecondsSinceEpoch(savedInTimeMillis);
+    DateTime.fromMillisecondsSinceEpoch(savedInTimeMillis);
     String formattedDateTime = DateFormat('HH:mm:ss').format(savedDateTime);
     // var testEmail4 = "ys146228@gmail.com";
     // var TestinEmail = "sutarvaibhav37@gmail.com";
@@ -315,7 +315,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     print("Company Id ${widget.ShiftCompanyId}");
 
     final interval =
-        await fireStoreService.wellnessFetch(widget.ShiftCompanyId);
+    await fireStoreService.wellnessFetch(widget.ShiftCompanyId);
     if (interval > 0) {
       Timer.periodic(Duration(minutes: interval), (timer) {
         showDialog(
@@ -325,12 +325,20 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
               title: Text(
                 'Wellness Report',
                 style: TextStyle(
-                    color: Theme.of(context).textTheme.bodyMedium!.color),
+                    color: Theme
+                        .of(context)
+                        .textTheme
+                        .bodyMedium!
+                        .color),
               ),
               content: Text(
                 'Please upload your wellness report.',
                 style: TextStyle(
-                    color: Theme.of(context).textTheme.bodyMedium!.color),
+                    color: Theme
+                        .of(context)
+                        .textTheme
+                        .bodyMedium!
+                        .color),
               ),
               actions: <Widget>[
                 TextButton(
@@ -339,10 +347,11 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => WellnessCheckScreen(
-                          EmpId: widget.EmployeId,
-                          EmpName: widget.EmployeeName,
-                        ),
+                        builder: (context) =>
+                            WellnessCheckScreen(
+                              EmpId: widget.EmployeId,
+                              EmpName: widget.EmployeeName,
+                            ),
                       ),
                     ).then((value) {
                       if (value == true) {
@@ -507,7 +516,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     DateTime deadline = shiftStartTime.add(const Duration(minutes: 10));
 
     Duration remainingTimeToStart =
-        deadline.difference(widget.shiftStartedTime);
+    deadline.difference(widget.shiftStartedTime);
 
     if (remainingTimeToStart.isNegative) {
       print("The user is already late.");
@@ -517,13 +526,14 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
         setState(() {
           isLate = true;
           lateTime =
-              "${lateDuration.inHours}h : ${lateDuration.inMinutes % 60}m";
+          "${lateDuration.inHours}h : ${lateDuration.inMinutes % 60}m";
           print("Late time: $lateTime");
         });
       }
     } else {
       print(
-          "Remaining time to start the shift: ${remainingTimeToStart.inMinutes} minutes.");
+          "Remaining time to start the shift: ${remainingTimeToStart
+              .inMinutes} minutes.");
     }
     remainingTime = shiftEndTime.difference(now);
     // _startTimer();
@@ -546,7 +556,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
           if (remainingTime.inSeconds > 0) {
             remainingTime = remainingTime - Duration(seconds: 1);
             remainingTimeFormatted =
-                "${remainingTime.inHours}h : ${remainingTime.inMinutes % 60}m : ${remainingTime.inSeconds % 60}s";
+            "${remainingTime.inHours}h : ${remainingTime.inMinutes %
+                60}m : ${remainingTime.inSeconds % 60}s";
             print("Timer $remainingTimeFormatted");
           } else {
             _timer!.cancel();
@@ -586,8 +597,14 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
   @override
   Widget build(BuildContext context) {
     final homeScreenController = HomeScreenController.instance;
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
+    final double height = MediaQuery
+        .of(context)
+        .size
+        .height;
+    final double width = MediaQuery
+        .of(context)
+        .size
+        .width;
     TextEditingController CommentController = TextEditingController();
     // Get the current time
 
@@ -599,7 +616,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     print("Late Time: ${lateTime}");
 
     String formattedStopwatchTime =
-        '${(_stopwatchSeconds ~/ 3600).toString().padLeft(2, '0')} : ${((_stopwatchSeconds ~/ 60) % 60).toString().padLeft(2, '0')} : ${(_stopwatchSeconds % 60).toString().padLeft(2, '0')}';
+        '${(_stopwatchSeconds ~/ 3600).toString().padLeft(
+        2, '0')} : ${((_stopwatchSeconds ~/ 60) % 60).toString().padLeft(
+        2, '0')} : ${(_stopwatchSeconds % 60).toString().padLeft(2, '0')}';
     setState(() {
       stopwatchtime = formattedStopwatchTime;
     });
@@ -611,13 +630,17 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
           decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
-                color: Theme.of(context).shadowColor,
+                color: Theme
+                    .of(context)
+                    .shadowColor,
                 blurRadius: 5,
                 spreadRadius: 2,
                 offset: Offset(0, 3),
               )
             ],
-            color: Theme.of(context).cardColor,
+            color: Theme
+                .of(context)
+                .cardColor,
           ),
           padding: EdgeInsets.only(left: 26.w, right: 12.47.w, bottom: 10.h),
           child: Column(
@@ -627,7 +650,11 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
               SizedBox(height: 10.h),
               InterBold(
                 text: widget.ShiftDate,
-                color: Theme.of(context).textTheme.bodyMedium!.color,
+                color: Theme
+                    .of(context)
+                    .textTheme
+                    .bodyMedium!
+                    .color,
                 fontsize: 18.sp,
               ),
               SizedBox(height: 10.h),
@@ -636,7 +663,11 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                   InterMedium(
                     text: 'location:',
                     fontsize: 14.sp,
-                    color: Theme.of(context).textTheme.bodyMedium!.color,
+                    color: Theme
+                        .of(context)
+                        .textTheme
+                        .bodyMedium!
+                        .color,
                   ),
                   SizedBox(width: 10.w),
                   SizedBox(
@@ -645,7 +676,11 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                     child: InterRegular(
                       text: widget.ShiftAddressName,
                       fontsize: 14.sp,
-                      color: Theme.of(context).textTheme.bodyLarge!.color,
+                      color: Theme
+                          .of(context)
+                          .textTheme
+                          .bodyLarge!
+                          .color,
                     ),
                   )
                 ],
@@ -664,24 +699,33 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         InterMedium(
                           text: 'In time',
                           fontsize: 28.sp,
-                          color: Theme.of(context).textTheme.bodyMedium!.color,
+                          color: Theme
+                              .of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .color,
                         ),
                         SizedBox(height: 10.h),
                         InterRegular(
                           text: widget.ShiftStartTime,
                           fontsize: 18.99.sp,
-                          color: Theme.of(context).textTheme.bodyMedium!.color,
+                          color: Theme
+                              .of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .color,
                         ),
                         SizedBox(height: 10.h),
                         clickedIn
                             ? InterSemibold(
-                                /// Todo isLate Time here
-                                text: isLate ? "Late $lateTime" : 'on time',
-                                color: isLate
-                                    ? Colors.redAccent
-                                    : DarkColor.color8,
-                                fontsize: 14.sp,
-                              )
+
+                          /// Todo isLate Time here
+                          text: isLate ? "Late $lateTime" : 'on time',
+                          color: isLate
+                              ? Colors.redAccent
+                              : DarkColor.color8,
+                          fontsize: 14.sp,
+                        )
                             : const SizedBox(),
                       ],
                     ),
@@ -695,13 +739,21 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         InterMedium(
                           text: 'Out time',
                           fontsize: 28.sp,
-                          color: Theme.of(context).textTheme.bodyMedium!.color,
+                          color: Theme
+                              .of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .color,
                         ),
                         SizedBox(height: 10.h),
                         InterRegular(
                           text: widget.ShiftEndTime,
                           fontsize: 18.99.sp,
-                          color: Theme.of(context).textTheme.bodyMedium!.color,
+                          color: Theme
+                              .of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .color,
                         ),
                         SizedBox(height: 10.h),
                         InterSemibold(
@@ -751,7 +803,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
           decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
-                color: Theme.of(context).shadowColor,
+                color: Theme
+                    .of(context)
+                    .shadowColor,
                 blurRadius: 5,
                 spreadRadius: 2,
                 offset: const Offset(0, 3),
@@ -767,222 +821,238 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                   child: Bounce(
                     onTap: buttonClicked
                         ? () async {
-                            //Check for the current location check for shifttask
-                            setState(() {
-                              buttonClicked = false;
-                            });
+                      //Check for the current location check for shifttask
+                      setState(() {
+                        buttonClicked = false;
+                      });
 
-                            bool? taskStatus =
-                                await fireStoreService.checkShiftTaskStatus(
-                                    widget.EmployeId, widget.ShiftId);
+                      bool? taskStatus =
+                      await fireStoreService.checkShiftTaskStatus(
+                          widget.EmployeId, widget.ShiftId);
 
-                            //CHeck the Time here
-                            if (taskStatus == false) {
-                              print("taskStatus ${taskStatus}");
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => ShiftTaskScreen(
-                                            shiftId: widget.ShiftId,
-                                            Name: "Shift Task",
-                                            EmpId: widget.EmployeId,
-                                            EmpName: widget.EmployeeName,
-                                          )));
-                            } else {
-                              print('Shift Date ${widget.ShiftDate}');
-                              //Check for the late timer or early
-                              List<String> StartTimeParts =
-                                  widget.ShiftStartTime.split(':');
-                              DateTime shiftDate = DateFormat('MMMM d, yyyy')
-                                  .parse(widget.ShiftDate);
-                              DateTime shiftEndDateTime = DateTime(
-                                  DateTime.now().year,
-                                  DateTime.now().month,
-                                  DateTime.now().day,
-                                  int.parse(StartTimeParts[0]),
-                                  int.parse(StartTimeParts[1]));
-                              print('Shift Date ${widget.ShiftDate}');
-                              print(
-                                  "Formatted Shift End time $shiftEndDateTime");
-                              DateTime currentTime = DateTime.now();
-                              Duration bufferDuration =
-                                  const Duration(minutes: 10);
-                              DateTime bufferStart =
-                                  shiftEndDateTime.subtract(bufferDuration);
-                              // DateTime bufferEnd = shiftEndDateTime.add(bufferDuration);
+                      //CHeck the Time here
+                      if (taskStatus == false) {
+                        print("taskStatus ${taskStatus}");
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    ShiftTaskScreen(
+                                      shiftId: widget.ShiftId,
+                                      Name: "Shift Task",
+                                      EmpId: widget.EmployeId,
+                                      EmpName: widget.EmployeeName,
+                                    )));
+                      } else {
+                        print('Shift Date ${widget.ShiftDate}');
+                        //Check for the late timer or early
+                        List<String> StartTimeParts =
+                        widget.ShiftStartTime.split(':');
+                        DateTime shiftDate = DateFormat('MMMM d, yyyy')
+                            .parse(widget.ShiftDate);
+                        DateTime shiftEndDateTime = DateTime(
+                            DateTime
+                                .now()
+                                .year,
+                            DateTime
+                                .now()
+                                .month,
+                            DateTime
+                                .now()
+                                .day,
+                            int.parse(StartTimeParts[0]),
+                            int.parse(StartTimeParts[1]));
+                        print('Shift Date ${widget.ShiftDate}');
+                        print(
+                            "Formatted Shift End time $shiftEndDateTime");
+                        DateTime currentTime = DateTime.now();
+                        Duration bufferDuration =
+                        const Duration(minutes: 10);
+                        DateTime bufferStart =
+                        shiftEndDateTime.subtract(bufferDuration);
+                        // DateTime bufferEnd = shiftEndDateTime.add(bufferDuration);
 
-                              print("Buffer Start Time: $bufferStart");
-                              // print("Buffer End Time: $bufferEnd");
-                              if (shiftDate !=
-                                  DateTime(currentTime.year, currentTime.month,
-                                      currentTime.day)) {
-                                print(shiftDate);
-                                print(DateTime(currentTime.year,
-                                    currentTime.month, currentTime.day));
-                                print(shiftDate !=
-                                    DateTime(currentTime.year,
-                                        currentTime.month, currentTime.day));
-                                showErrorToast(context, "Not On SHift Date");
-                              } else {
-                                // if (currentTime.isAfter(bufferStart)) {
-                                //   showErrorToast(context, "Started Late");
-                                // }
-                                if (currentTime.isBefore(bufferStart)) {
-                                  showErrorToast(
-                                      context, "Start shift on Time");
-                                } else {
-                                  ///TODO paste this code to start timer and start locations fetch before you start to push new locations clear previous locations
-                                  FirebaseFirestore firestore =
-                                      FirebaseFirestore.instance;
-                                  // // Create a new document reference
-
-                                  // Reference to the Firestore collection
-                                  CollectionReference employeeRoutes =
-                                      firestore.collection('EmployeeRoutes');
-
-                                  // Query to check if a document with the same EmployeId and ShiftId exists
-                                  QuerySnapshot querySnapshot =
-                                      await employeeRoutes
-                                          .where('EmpRouteEmpId',
-                                              isEqualTo: widget.EmployeId)
-                                          .where('EmpRouteShiftId',
-                                              isEqualTo: widget.ShiftId)
-                                          .get();
-                                  if (querySnapshot.docs.isEmpty) {
-                                    // If no document exists, create a new one
-                                    DocumentReference docRef =
-                                        employeeRoutes.doc();
-                                    // Data to be added
-                                    Map<String, dynamic> empRouteData = {
-                                      'EmpRouteCreatedAt': Timestamp.now(),
-                                      'EmpRouteDate': Timestamp.now(),
-                                      'EmpRouteEmpId': widget.EmployeId,
-                                      'EmployeeName': widget.EmployeeName,
-                                      'EmpRouteId': docRef.id,
-                                      'EmpRouteLocations': [],
-                                      'EmpRouteShiftId': widget.ShiftId,
-                                      'EmpRouteShiftStatus': 'started',
-                                      'EmployeeShiftStartTime':
-                                          widget.ShiftStartTime,
-                                      'EmployeeShiftEndTime':
-                                          widget.ShiftEndTime,
-                                      'EmployeeShiftShiftName':
-                                          widget.ShiftName,
-                                      'EmpRouteEmpRole':
-                                          userStorage.getItem("Role"),
-                                    };
-                                    try {
-                                      // Add the document to the collection
-                                      await docRef.set(empRouteData);
-                                      print(
-                                          'Employee route created with ID: ${docRef.id}');
-                                    } catch (e) {
-                                      print(
-                                          'Error creating employee route: $e');
-                                    }
-                                  }
-                                  // start stop watch
-                                  // await controller.startStopWatch();
-                                  _startTimer();
-                                  //
-                                  // // start bg service that get locations and send it to the firebase
-                                  await homeScreenController
-                                      .startBgLocationService();
-
-                                  setState(() {
-                                    _isLoading = true;
-                                  });
-                                  await darFunctions
-                                      .fetchShiftDetailsAndSubmitDAR();
-                                  SharedPreferences prefs =
-                                      await SharedPreferences.getInstance();
-                                  await fireStoreService.changePatrolStatus(
-                                      widget.ShiftId, widget.EmployeId);
-                                  bool? status = await fireStoreService
-                                      .checkShiftReturnTaskStatus(
-                                          widget.EmployeId, widget.ShiftId);
-                                  var clientName = await fireStoreService
-                                      .getClientName(widget.ShiftClientID);
-                                  await fireStoreService.addToLog(
-                                      'shift_start',
-                                      widget.ShiftAddressName,
-                                      clientName ?? "",
-                                      widget.EmployeId,
-                                      widget.EmployeeName,
-                                      widget.ShiftCompanyId,
-                                      widget.ShiftBranchId,
-                                      widget.ShiftClientID,
-                                      widget.ShiftLocationId,
-                                      widget.ShiftName);
-                                  fireStoreService.startShiftLog(
-                                      widget.EmployeId,
-                                      widget.ShiftId,
-                                      widget.EmployeeName);
-                                  widget.onRefresh();
-                                  updateLateTimeAndStartTimer();
-                                  setState(() {
-                                    // if (!clickedIn) {
-                                    clickedIn = true;
-                                    prefs.setBool('clickedIn', clickedIn);
-                                    DateTime currentTime = DateTime.now();
-                                    inTime = currentTime;
-                                    prefs.setInt('InTime',
-                                        currentTime.millisecondsSinceEpoch);
-                                    prefs.setInt('savedInTime',
-                                        currentTime.millisecondsSinceEpoch);
-                                    Timestamp.now();
-                                    if (status == false) {
-                                      print("Staus is false");
-                                    } else {
-                                      print("Staus is true");
-                                    }
-                                    fireStoreService
-                                        .fetchreturnShiftTasks(widget.ShiftId);
-                                    // startStopwatch();
-                                    // } else {
-                                    print('already clicked');
-                                    // }
-                                  });
-                                  setState(() {
-                                    _isLoading = false;
-                                  });
-                                }
-                                setState(() {
-                                  _isLoading = false;
-                                });
-                                showSuccessToast(context, "On current Date");
-                              }
-                              // setState(() {
-                              //   buttonClicked = true;
-                              // });
-                            }
-                          }
-                        : () {
+                        print("Buffer Start Time: $bufferStart");
+                        // print("Buffer End Time: $bufferEnd");
+                        if (shiftDate !=
+                            DateTime(currentTime.year, currentTime.month,
+                                currentTime.day)) {
+                          print(shiftDate);
+                          print(DateTime(currentTime.year,
+                              currentTime.month, currentTime.day));
+                          print(shiftDate !=
+                              DateTime(currentTime.year,
+                                  currentTime.month, currentTime.day));
+                          showErrorToast(context, "Not On SHift Date");
+                        } else {
+                          // if (currentTime.isAfter(bufferStart)) {
+                          //   showErrorToast(context, "Started Late");
+                          // }
+                          if (currentTime.isBefore(bufferStart)) {
                             showErrorToast(
-                                context, "Already Clicked please wait");
-                          },
+                                context, "Start shift on Time");
+                          } else {
+                            ///TODO paste this code to start timer and start locations fetch before you start to push new locations clear previous locations
+                            FirebaseFirestore firestore =
+                                FirebaseFirestore.instance;
+                            // // Create a new document reference
+
+                            // Reference to the Firestore collection
+                            CollectionReference employeeRoutes =
+                            firestore.collection('EmployeeRoutes');
+
+                            // Query to check if a document with the same EmployeId and ShiftId exists
+                            QuerySnapshot querySnapshot =
+                            await employeeRoutes
+                                .where('EmpRouteEmpId',
+                                isEqualTo: widget.EmployeId)
+                                .where('EmpRouteShiftId',
+                                isEqualTo: widget.ShiftId)
+                                .get();
+                            if (querySnapshot.docs.isEmpty) {
+                              // If no document exists, create a new one
+                              DocumentReference docRef =
+                              employeeRoutes.doc();
+                              // Data to be added
+                              Map<String, dynamic> empRouteData = {
+                                'EmpRouteCreatedAt': Timestamp.now(),
+                                'EmpRouteDate': Timestamp.now(),
+                                'EmpRouteEmpId': widget.EmployeId,
+                                'EmployeeName': widget.EmployeeName,
+                                'EmpRouteId': docRef.id,
+                                'EmpRouteLocations': [],
+                                'EmpRouteShiftId': widget.ShiftId,
+                                'EmpRouteShiftStatus': 'started',
+                                'EmployeeShiftStartTime':
+                                widget.ShiftStartTime,
+                                'EmployeeShiftEndTime':
+                                widget.ShiftEndTime,
+                                'EmployeeShiftShiftName':
+                                widget.ShiftName,
+                                'EmpRouteEmpRole':
+                                userStorage.getItem("Role"),
+                              };
+                              try {
+                                // Add the document to the collection
+                                await docRef.set(empRouteData);
+                                print(
+                                    'Employee route created with ID: ${docRef
+                                        .id}');
+                              } catch (e) {
+                                print(
+                                    'Error creating employee route: $e');
+                              }
+                            }
+                            // start stop watch
+                            // await controller.startStopWatch();
+                            _startTimer();
+                            //
+                            // // start bg service that get locations and send it to the firebase
+                            await homeScreenController
+                                .startBgLocationService();
+
+                            setState(() {
+                              _isLoading = true;
+                            });
+                            await darFunctions
+                                .fetchShiftDetailsAndSubmitDAR();
+                            SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+                            await fireStoreService.changePatrolStatus(
+                                widget.ShiftId, widget.EmployeId);
+                            bool? status = await fireStoreService
+                                .checkShiftReturnTaskStatus(
+                                widget.EmployeId, widget.ShiftId);
+                            var clientName = await fireStoreService
+                                .getClientName(widget.ShiftClientID);
+                            await fireStoreService.addToLog(
+                                'shift_start',
+                                widget.ShiftAddressName,
+                                clientName ?? "",
+                                widget.EmployeId,
+                                widget.EmployeeName,
+                                widget.ShiftCompanyId,
+                                widget.ShiftBranchId,
+                                widget.ShiftClientID,
+                                widget.ShiftLocationId,
+                                widget.ShiftName);
+                            fireStoreService.startShiftLog(
+                                widget.EmployeId,
+                                widget.ShiftId,
+                                widget.EmployeeName);
+                            widget.onRefresh();
+                            updateLateTimeAndStartTimer();
+                            setState(() {
+                              // if (!clickedIn) {
+                              clickedIn = true;
+                              prefs.setBool('clickedIn', clickedIn);
+                              DateTime currentTime = DateTime.now();
+                              inTime = currentTime;
+                              prefs.setInt('InTime',
+                                  currentTime.millisecondsSinceEpoch);
+                              prefs.setInt('savedInTime',
+                                  currentTime.millisecondsSinceEpoch);
+                              Timestamp.now();
+                              if (status == false) {
+                                print("Staus is false");
+                              } else {
+                                print("Staus is true");
+                              }
+                              fireStoreService
+                                  .fetchreturnShiftTasks(widget.ShiftId);
+                              // startStopwatch();
+                              // } else {
+                              print('already clicked');
+                              // }
+                            });
+                            setState(() {
+                              _isLoading = false;
+                            });
+                          }
+                          setState(() {
+                            _isLoading = false;
+                          });
+                          showSuccessToast(context, "On current Date");
+                        }
+                        // setState(() {
+                        //   buttonClicked = true;
+                        // });
+                      }
+                    }
+                        : () {
+                      showErrorToast(
+                          context, "Already Clicked please wait");
+                    },
 
                     /// TODO changed here
                     // WidgetColorLigth
                     child: Container(
                       color: clickedIn
-                          ? (Theme.of(context).brightness == Brightness.dark
-                              ? DarkColor.WidgetColorLigth
-                              : LightColor.WidgetColorLigth)
-                          : (Theme.of(context).brightness == Brightness.dark
-                              ? DarkColor.WidgetColor
-                              : LightColor.WidgetColor),
+                          ? (Theme
+                          .of(context)
+                          .brightness == Brightness.dark
+                          ? DarkColor.WidgetColorLigth
+                          : LightColor.WidgetColorLigth)
+                          : (Theme
+                          .of(context)
+                          .brightness == Brightness.dark
+                          ? DarkColor.WidgetColor
+                          : LightColor.WidgetColor),
                       child: Center(
                         child: InterBold(
                           text: 'Start Shift',
                           fontsize: 18.sp,
                           color: clickedIn
-                              ? (Theme.of(context).brightness == Brightness.dark
-                                  ? DarkColor.textLigth
-                                  : LightColor.color2)
-                              : (Theme.of(context).brightness == Brightness.dark
-                                  ? DarkColor.color5
-                                  : LightColor.color3),
+                              ? (Theme
+                              .of(context)
+                              .brightness == Brightness.dark
+                              ? DarkColor.textLigth
+                              : LightColor.color2)
+                              : (Theme
+                              .of(context)
+                              .brightness == Brightness.dark
+                              ? DarkColor.color5
+                              : LightColor.color3),
                         ),
                       ),
                     ),
@@ -1035,11 +1105,17 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                       // });
 
                       List<String> endTimeParts =
-                          widget.ShiftEndTime.split(':');
+                      widget.ShiftEndTime.split(':');
                       DateTime shiftEndDateTime = DateTime(
-                          DateTime.now().year,
-                          DateTime.now().month,
-                          DateTime.now().day,
+                          DateTime
+                              .now()
+                              .year,
+                          DateTime
+                              .now()
+                              .month,
+                          DateTime
+                              .now()
+                              .day,
                           int.parse(endTimeParts[0]),
                           int.parse(endTimeParts[1]));
                       print("Formatted SHiftEnd time ${shiftEndDateTime}");
@@ -1049,7 +1125,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 
                       // Calculate the time ranges for the buffer period
                       DateTime bufferStart =
-                          shiftEndDateTime.subtract(bufferDuration);
+                      shiftEndDateTime.subtract(bufferDuration);
 
                       DateTime bufferEnd = shiftEndDateTime.add(bufferDuration);
 
@@ -1059,15 +1135,16 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                       if (currentTime.isBefore(bufferStart) ||
                           currentTime.isAfter(bufferEnd)) {
                         bool? status =
-                            await fireStoreService.checkShiftReturnTaskStatus2(
-                                widget.EmployeId, widget.ShiftId);
+                        await fireStoreService.checkShiftReturnTaskStatus2(
+                            widget.EmployeId, widget.ShiftId);
                         print("Status for shiftReturn Task ${status}");
 
                         if (status == false) {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ShiftReturnTaskScreen(
+                                builder: (context) =>
+                                    ShiftReturnTaskScreen(
                                       shiftId: widget.ShiftId,
                                       Empid: widget.EmployeId,
                                       ShiftName: widget.ShiftAddressName,
@@ -1127,7 +1204,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => EndShiftScreen(
+                                  builder: (context) =>
+                                      EndShiftScreen(
                                         ShiftClientID: widget.ShiftClientID,
                                         EmployeId: widget.EmployeId,
                                         EmployeeName: widget.EmployeeName,
@@ -1135,10 +1213,10 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                         ShiftBranchId: widget.ShiftBranchId,
                                         ShiftLocationId: widget.ShiftLocationId,
                                         formattedStopwatchTime:
-                                            formattedStopwatchTime,
+                                        formattedStopwatchTime,
                                         ShiftId: widget.ShiftId,
                                         ShiftAddressName:
-                                            widget.ShiftAddressName,
+                                        widget.ShiftAddressName,
                                         ShiftName: widget.ShiftName,
                                       )));
                           print('Current time is before shift end time');
@@ -1174,17 +1252,18 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         // await homeScreenController.stopBgLocationService();
                         // //Check for the Current time if it is early then the shiftEndTime or more thant the shift endtime return alterbox or else not
                         SharedPreferences prefs =
-                            await SharedPreferences.getInstance();
+                        await SharedPreferences.getInstance();
 
                         bool? status =
-                            await fireStoreService.checkShiftReturnTaskStatus2(
-                                widget.EmployeId, widget.ShiftId);
+                        await fireStoreService.checkShiftReturnTaskStatus2(
+                            widget.EmployeId, widget.ShiftId);
                         print("Status for shiftReturn Task ${status}");
                         if (status == false) {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ShiftReturnTaskScreen(
+                                builder: (context) =>
+                                    ShiftReturnTaskScreen(
                                       shiftId: widget.ShiftId,
                                       Empid: widget.EmployeId,
                                       ShiftName: widget.ShiftAddressName,
@@ -1199,9 +1278,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                               .instance
                               .collection('EmployeeRoutes')
                               .where('EmpRouteEmpId',
-                                  isEqualTo: widget.EmployeId)
+                              isEqualTo: widget.EmployeId)
                               .where('EmpRouteShiftStatus',
-                                  isEqualTo: 'started')
+                              isEqualTo: 'started')
                               .get();
 
                           if (routeSnapshot.docs.isNotEmpty) {
@@ -1215,10 +1294,12 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                               'EmpRouteCompletedAt': Timestamp.now(),
                             });
                             print(
-                                'Shift ended for employee: ${widget.EmployeId}');
+                                'Shift ended for employee: ${widget
+                                    .EmployeId}');
                           } else {
                             print(
-                                'No active route found for employee:  ${widget.EmployeId}');
+                                'No active route found for employee:  ${widget
+                                    .EmployeId}');
                           }
                           print(
                               'Current time is after or equal to shift end time');
@@ -1284,23 +1365,31 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                     },
                     child: Container(
                       color: clickedIn
-                          ? (Theme.of(context).brightness == Brightness.dark
-                              ? DarkColor.WidgetColor
-                              : LightColor.WidgetColor)
-                          : (Theme.of(context).brightness == Brightness.dark
-                              ? DarkColor.WidgetColorLigth
-                              : LightColor.WidgetColorLigth),
+                          ? (Theme
+                          .of(context)
+                          .brightness == Brightness.dark
+                          ? DarkColor.WidgetColor
+                          : LightColor.WidgetColor)
+                          : (Theme
+                          .of(context)
+                          .brightness == Brightness.dark
+                          ? DarkColor.WidgetColorLigth
+                          : LightColor.WidgetColorLigth),
                       child: Center(
                         child: InterBold(
                           text: 'End Shift',
                           fontsize: 18.sp,
                           color: clickedIn
-                              ? (Theme.of(context).brightness == Brightness.dark
-                                  ? DarkColor.color5
-                                  : LightColor.color3)
-                              : (Theme.of(context).brightness == Brightness.dark
-                                  ? DarkColor.textLigth
-                                  : LightColor.color2),
+                              ? (Theme
+                              .of(context)
+                              .brightness == Brightness.dark
+                              ? DarkColor.color5
+                              : LightColor.color3)
+                              : (Theme
+                              .of(context)
+                              .brightness == Brightness.dark
+                              ? DarkColor.textLigth
+                              : LightColor.color2),
                         ),
                       ),
                     ),
@@ -1314,94 +1403,102 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
         SizedBox(height: clickedIn ? 10.h : 0.h),
         clickedIn
             ? Button1(
-                height: 65.h,
-                // text: controller.isPaused.value ? 'Resume' : 'Break',
-                text: !onBreak ? 'Break' : 'Resume',
-                fontsize: 18.sp,
-                color: Theme.of(context).textTheme.titleSmall!.color,
-                backgroundcolor: clickedIn
-                    ? (Theme.of(context).brightness == Brightness.dark
-                    ? DarkColor.WidgetColor
-                    : LightColor.WidgetColor)
-                    : (Theme.of(context).brightness == Brightness.dark
-                    ? DarkColor.WidgetColorLigth
-                    : LightColor.WidgetColorLigth),
-                onPressed: () async {
-                  await fireStoreService.fetchPatrolData(
-                      widget.ShiftId, widget.EmployeId);
-                  // var data = await fireStoreService.fetchDataForPdf(
-                  //     widget.EmployeId, widget.ShiftId);
-                  // print("Fetched Data for generating pdf: ${data}");
-                  SharedPreferences prefs =
-                      await SharedPreferences.getInstance();
-                  // setState(() {
-                  //   isPaused = !isPaused;
-                  //   onBreak = false;
-                  //   prefs.setBool('pauseState', isPaused);
-                  // });
-                  // isPaused ? stopStopwatch() : startStopwatch();
-                  if (!onBreak) {
-                    // var data = await fireStoreService.fetchDataForPdf(
-                    //     widget.EmployeId, widget.ShiftId);
-                    setState(() {
-                      _isLoading = true;
-                    });
-                    var clientName = await fireStoreService
-                        .getClientName(widget.ShiftClientID);
-                    // print("Fetched Data for generating pdf: ${data}");
-                    await fireStoreService.startBreak(
-                        widget.EmployeId, widget.ShiftId);
-                    await fireStoreService.addToLog(
-                        'shift_break',
-                        widget.ShiftAddressName ?? "",
-                        clientName ?? "",
-                        widget.EmployeId ?? "",
-                        widget.EmployeeName ?? "",
-                        widget.ShiftCompanyId ?? "",
-                        widget.ShiftBranchId ?? "",
-                        widget.ShiftClientID ?? "",
-                        widget.ShiftLocationId ?? "",
-                        widget.ShiftName ?? "");
-                    widget.onRefresh();
-                    // stopStopwatch();
-                    // setState(() {
-                    //   onBreak = true;
-                    //   prefs.setBool('onBreak', onBreak);
-                    // });s
-                    // fireStoreService.BreakShiftLog(widget.EmployeId);/
-                    setState(() {
-                      _isLoading = false;
-                    });
-                  } else {
-                    // onBreak = false;
-                    setState(() {
-                      _isLoading = true;
-                    });
-                    var clientName = await fireStoreService
-                        .getClientName(widget.ShiftClientID);
-                    await fireStoreService.addToLog(
-                        'shift_resume',
-                        widget.ShiftAddressName,
-                        clientName ?? "",
-                        widget.EmployeId,
-                        widget.EmployeeName,
-                        widget.ShiftCompanyId,
-                        widget.ShiftBranchId,
-                        widget.ShiftClientID,
-                        widget.ShiftLocationId,
-                        widget.ShiftName);
-                    // prefs.setBool('onBreak', onBreak);
-                    // startStopwatch();s
-                    await fireStoreService.endBreak(
-                        widget.EmployeId, widget.ShiftId);
-                    widget.onRefresh();
-                    setState(() {
-                      _isLoading = false;
-                    });
-                    // fireStoreService.ResumeShiftLog(widget.EmployeId);
-                  }
-                },
-              )
+          height: 65.h,
+          // text: controller.isPaused.value ? 'Resume' : 'Break',
+          text: !onBreak ? 'Break' : 'Resume',
+          fontsize: 18.sp,
+          color: Theme
+              .of(context)
+              .textTheme
+              .titleSmall!
+              .color,
+          backgroundcolor: clickedIn
+              ? (Theme
+              .of(context)
+              .brightness == Brightness.dark
+              ? DarkColor.WidgetColor
+              : LightColor.WidgetColor)
+              : (Theme
+              .of(context)
+              .brightness == Brightness.dark
+              ? DarkColor.WidgetColorLigth
+              : LightColor.WidgetColorLigth),
+          onPressed: () async {
+            await fireStoreService.fetchPatrolData(
+                widget.ShiftId, widget.EmployeId);
+            // var data = await fireStoreService.fetchDataForPdf(
+            //     widget.EmployeId, widget.ShiftId);
+            // print("Fetched Data for generating pdf: ${data}");
+            SharedPreferences prefs =
+            await SharedPreferences.getInstance();
+            // setState(() {
+            //   isPaused = !isPaused;
+            //   onBreak = false;
+            //   prefs.setBool('pauseState', isPaused);
+            // });
+            // isPaused ? stopStopwatch() : startStopwatch();
+            if (!onBreak) {
+              // var data = await fireStoreService.fetchDataForPdf(
+              //     widget.EmployeId, widget.ShiftId);
+              setState(() {
+                _isLoading = true;
+              });
+              var clientName = await fireStoreService
+                  .getClientName(widget.ShiftClientID);
+              // print("Fetched Data for generating pdf: ${data}");
+              await fireStoreService.startBreak(
+                  widget.EmployeId, widget.ShiftId);
+              await fireStoreService.addToLog(
+                  'shift_break',
+                  widget.ShiftAddressName ?? "",
+                  clientName ?? "",
+                  widget.EmployeId ?? "",
+                  widget.EmployeeName ?? "",
+                  widget.ShiftCompanyId ?? "",
+                  widget.ShiftBranchId ?? "",
+                  widget.ShiftClientID ?? "",
+                  widget.ShiftLocationId ?? "",
+                  widget.ShiftName ?? "");
+              widget.onRefresh();
+              // stopStopwatch();
+              // setState(() {
+              //   onBreak = true;
+              //   prefs.setBool('onBreak', onBreak);
+              // });s
+              // fireStoreService.BreakShiftLog(widget.EmployeId);/
+              setState(() {
+                _isLoading = false;
+              });
+            } else {
+              // onBreak = false;
+              setState(() {
+                _isLoading = true;
+              });
+              var clientName = await fireStoreService
+                  .getClientName(widget.ShiftClientID);
+              await fireStoreService.addToLog(
+                  'shift_resume',
+                  widget.ShiftAddressName,
+                  clientName ?? "",
+                  widget.EmployeId,
+                  widget.EmployeeName,
+                  widget.ShiftCompanyId,
+                  widget.ShiftBranchId,
+                  widget.ShiftClientID,
+                  widget.ShiftLocationId,
+                  widget.ShiftName);
+              // prefs.setBool('onBreak', onBreak);
+              // startStopwatch();s
+              await fireStoreService.endBreak(
+                  widget.EmployeId, widget.ShiftId);
+              widget.onRefresh();
+              setState(() {
+                _isLoading = false;
+              });
+              // fireStoreService.ResumeShiftLog(widget.EmployeId);
+            }
+          },
+        )
             : const SizedBox(),
         SizedBox(height: 10.h),
         // SizedBox(height: height / height10),
@@ -1411,24 +1508,33 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
             text: 'Check Patrolling',
             fontsize: 18.sp,
             color: clickedIn || onBreak
-                ? (Theme.of(context).brightness == Brightness.dark
-                    ? DarkColor.color5
-                    : LightColor.color1)
-                : (Theme.of(context).brightness == Brightness.dark
-                    ? DarkColor.textLigth
-                    : LightColor.color5),
+                ? (Theme
+                .of(context)
+                .brightness == Brightness.dark
+                ? DarkColor.color5
+                : LightColor.color1)
+                : (Theme
+                .of(context)
+                .brightness == Brightness.dark
+                ? DarkColor.textLigth
+                : LightColor.color5),
             backgroundcolor: clickedIn || onBreak
-                ? (Theme.of(context).brightness == Brightness.dark
+                ? (Theme
+                .of(context)
+                .brightness == Brightness.dark
                 ? DarkColor.WidgetColor
                 : LightColor.Primarycolor)
-                : (Theme.of(context).brightness == Brightness.dark
+                : (Theme
+                .of(context)
+                .brightness == Brightness.dark
                 ? DarkColor.WidgetColorLigth
                 : LightColor.Primarycolorlight),
             onPressed: () {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => MyPatrolsList(
+                      builder: (context) =>
+                          MyPatrolsList(
                             ShiftLocationId: widget.ShiftLocationId,
                             EmployeeID: widget.EmployeId,
                             EmployeeName: widget.EmployeeName,
@@ -1457,9 +1563,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
       final pdf = pw.Document();
 
       final ByteData logoImageData1 =
-          await rootBundle.load('assets/TPS RGB.png');
+      await rootBundle.load('assets/TPS RGB.png');
       final ByteData logoImageData2 =
-          await rootBundle.load('assets/Tactik.jpeg');
+      await rootBundle.load('assets/Tactik.jpeg');
       final Uint8List logoImageBytes1 = logoImageData1.buffer.asUint8List();
       final Uint8List logoImageBytes2 = logoImageData2.buffer.asUint8List();
       final logo1 = pw.MemoryImage(logoImageBytes1);
@@ -1469,25 +1575,27 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
         pw.MultiPage(
           pageTheme: pw.PageTheme(
             pageFormat: PdfPageFormat.a4,
-            buildBackground: (context) => pw.FullPage(
-              ignoreMargins: true,
-              child: pw.Stack(
-                children: [
-                  pw.Positioned(
-                    left: 0,
-                    top: 0,
-                    child: pw.Image(logo1, width: 150.w, height: 150.h),
+            buildBackground: (context) =>
+                pw.FullPage(
+                  ignoreMargins: true,
+                  child: pw.Stack(
+                    children: [
+                      pw.Positioned(
+                        left: 0,
+                        top: 0,
+                        child: pw.Image(logo1, width: 150.w, height: 150.h),
+                      ),
+                      pw.Positioned(
+                        right: 10.w,
+                        top: 15.h,
+                        child: pw.Image(logo2, width: 100.w, height: 90.h),
+                      ),
+                    ],
                   ),
-                  pw.Positioned(
-                    right: 10.w,
-                    top: 15.h,
-                    child: pw.Image(logo2, width: 100.w, height: 90.h),
-                  ),
-                ],
-              ),
-            ),
+                ),
           ),
-          build: (context) => [
+          build: (context) =>
+          [
             pw.Column(
               crossAxisAlignment: pw.CrossAxisAlignment.center,
               children: [
@@ -1589,7 +1697,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                             pw.Padding(
                               padding: pw.EdgeInsets.all(8.sp),
                               child: pw.Text(patrol['PatrolLogFeedbackComment']
-                                      as String? ??
+                              as String? ??
                                   'N/A'),
                             ),
                           ],
