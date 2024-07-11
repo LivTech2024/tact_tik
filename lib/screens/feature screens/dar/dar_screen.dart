@@ -275,13 +275,21 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                 if (!showAllDARS && !hasNewEntries) {
                   entries.add(
                     Center(
-                      child: SizedBox(
-                        height: 300.h,
-                        child: SvgPicture.asset(
-                          Theme.of(context).brightness == Brightness.dark
-                              ? 'assets/images/no_data_dark.svg'
-                              : 'assets/images/no_data.svg',
-                        ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: 300.h,
+                            child: SvgPicture.asset(isDark
+                                ? 'assets/images/no_data_dark.svg'
+                                : 'assets/images/no_data.svg'),
+                          ),
+                          InterSemibold(
+                            text: 'Nothing to preview',
+                            fontsize: 16.sp,
+                            color: Theme.of(context).textTheme.bodyLarge!.color,
+                          )
+                        ],
                       ),
                     ),
                   );

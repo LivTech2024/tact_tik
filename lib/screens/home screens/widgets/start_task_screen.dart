@@ -749,7 +749,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
         Container(
           height: 65.h,
           width: double.maxFinite,
-          padding: EdgeInsets.symmetric(vertical: 5.h),
+          // padding: EdgeInsets.symmetric(vertical: 5.h),
           decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
@@ -759,7 +759,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                 offset: const Offset(0, 3),
               )
             ],
-            color: Theme.of(context).cardColor,
+            // color: Theme.of(context).cardColor,
           ),
           child: Row(
             children: [
@@ -965,15 +965,22 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                           },
 
                     /// TODO changed here
+                    // WidgetColorLigth
                     child: Container(
-                      color: Theme.of(context).cardColor,
+                      color: clickedIn
+                          ? (Theme.of(context).brightness == Brightness.dark
+                              ? DarkColor.WidgetColorLigth
+                              : LightColor.WidgetColorLigth)
+                          : (Theme.of(context).brightness == Brightness.dark
+                              ? DarkColor.WidgetColor
+                              : LightColor.WidgetColor),
                       child: Center(
                         child: InterBold(
                           text: 'Start Shift',
                           fontsize: 18.sp,
                           color: clickedIn
                               ? (Theme.of(context).brightness == Brightness.dark
-                                  ? DarkColor.color3
+                                  ? DarkColor.textLigth
                                   : LightColor.color2)
                               : (Theme.of(context).brightness == Brightness.dark
                                   ? DarkColor.color5
@@ -984,9 +991,10 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                   ),
                 ),
               ),
-              VerticalDivider(
+              /*VerticalDivider(
                 color: Theme.of(context).textTheme.bodyMedium!.color,
-              ),
+              ),*/
+              SizedBox(width: 10.w),
               Expanded(
                 child: IgnorePointer(
                   ignoring: !clickedIn,
@@ -1277,7 +1285,13 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                       // }
                     },
                     child: Container(
-                      color: Theme.of(context).cardColor,
+                      color: clickedIn
+                          ? (Theme.of(context).brightness == Brightness.dark
+                              ? DarkColor.WidgetColor
+                              : LightColor.WidgetColor)
+                          : (Theme.of(context).brightness == Brightness.dark
+                              ? DarkColor.WidgetColorLigth
+                              : LightColor.WidgetColorLigth),
                       child: Center(
                         child: InterBold(
                           text: 'End Shift',
@@ -1287,7 +1301,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                   ? DarkColor.color5
                                   : LightColor.color3)
                               : (Theme.of(context).brightness == Brightness.dark
-                                  ? DarkColor.color3
+                                  ? DarkColor.textLigth
                                   : LightColor.color2),
                         ),
                       ),
@@ -1298,6 +1312,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
             ],
           ),
         ),
+
         SizedBox(height: clickedIn ? 10.h : 0.h),
         clickedIn
             ? Button1(
@@ -1306,7 +1321,13 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                 text: !onBreak ? 'Break' : 'Resume',
                 fontsize: 18.sp,
                 color: Theme.of(context).textTheme.titleSmall!.color,
-                backgroundcolor: Theme.of(context).cardColor,
+                backgroundcolor: clickedIn
+                    ? (Theme.of(context).brightness == Brightness.dark
+                    ? DarkColor.WidgetColor
+                    : LightColor.WidgetColor)
+                    : (Theme.of(context).brightness == Brightness.dark
+                    ? DarkColor.WidgetColorLigth
+                    : LightColor.WidgetColorLigth),
                 onPressed: () async {
                   await fireStoreService.fetchPatrolData(
                       widget.ShiftId, widget.EmployeId);
@@ -1391,16 +1412,20 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
           child: Button1(
             text: 'Check Patrolling',
             fontsize: 18.sp,
-            color: clickedIn
+            color: clickedIn || onBreak
                 ? (Theme.of(context).brightness == Brightness.dark
                     ? DarkColor.color5
                     : LightColor.color1)
                 : (Theme.of(context).brightness == Brightness.dark
-                    ? DarkColor.color3
+                    ? DarkColor.textLigth
                     : LightColor.color5),
-            backgroundcolor: Theme.of(context).brightness == Brightness.dark
+            backgroundcolor: clickedIn || onBreak
+                ? (Theme.of(context).brightness == Brightness.dark
                 ? DarkColor.WidgetColor
-                : LightColor.Primarycolor,
+                : LightColor.Primarycolor)
+                : (Theme.of(context).brightness == Brightness.dark
+                ? DarkColor.WidgetColorLigth
+                : LightColor.Primarycolorlight),
             onPressed: () {
               Navigator.push(
                   context,
