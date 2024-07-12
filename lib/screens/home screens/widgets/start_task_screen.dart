@@ -1323,11 +1323,11 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                 color: Theme.of(context).textTheme.titleSmall!.color,
                 backgroundcolor: clickedIn
                     ? (Theme.of(context).brightness == Brightness.dark
-                    ? DarkColor.WidgetColor
-                    : LightColor.WidgetColor)
+                        ? DarkColor.WidgetColor
+                        : LightColor.WidgetColor)
                     : (Theme.of(context).brightness == Brightness.dark
-                    ? DarkColor.WidgetColorLigth
-                    : LightColor.WidgetColorLigth),
+                        ? DarkColor.WidgetColorLigth
+                        : LightColor.WidgetColorLigth),
                 onPressed: () async {
                   await fireStoreService.fetchPatrolData(
                       widget.ShiftId, widget.EmployeId);
@@ -1421,11 +1421,11 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                     : LightColor.color5),
             backgroundcolor: clickedIn || onBreak
                 ? (Theme.of(context).brightness == Brightness.dark
-                ? DarkColor.WidgetColor
-                : LightColor.Primarycolor)
+                    ? DarkColor.WidgetColor
+                    : LightColor.Primarycolor)
                 : (Theme.of(context).brightness == Brightness.dark
-                ? DarkColor.WidgetColorLigth
-                : LightColor.Primarycolorlight),
+                    ? DarkColor.WidgetColorLigth
+                    : LightColor.Primarycolorlight),
             onPressed: () {
               Navigator.push(
                   context,

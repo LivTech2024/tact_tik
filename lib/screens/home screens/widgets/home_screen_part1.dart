@@ -9,6 +9,7 @@ import 'package:tact_tik/main.dart';
 import 'package:tact_tik/pay_discrepancy_screen.dart';
 import 'package:tact_tik/screens/client%20screens/DAR/client_dar.dart';
 import 'package:tact_tik/screens/client%20screens/Reports/client_report_screen.dart';
+import 'package:tact_tik/screens/home%20screens/admin_notification_screen.dart';
 import 'package:tact_tik/screens/new%20guard/new_guard_screen.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
 import 'package:tact_tik/write_msg_screen.dart';
@@ -56,6 +57,7 @@ class HomeScreenPart1 extends StatefulWidget {
   final VoidCallback drawerOnClicked;
   final bool? showWish;
   final bool isClient;
+  final String Role;
 
   const HomeScreenPart1({
     Key? key,
@@ -74,6 +76,7 @@ class HomeScreenPart1 extends StatefulWidget {
     required this.shiftLocationId,
     required this.shiftLocationName,
     required this.isClient,
+    required this.Role,
   }) : super(key: key);
 
   @override
@@ -228,12 +231,32 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            //   TODO If the role is guard then Navigate to this
-                            Navigator.push(
+                            print("isEmployee ${widget.Role}");
+                            if (widget.Role == "GUARD") {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          GuardNotificationScreen(
+                                            employeeId: widget.empId,
+                                          )));
+                            } else {
+                              Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        GuardNotificationScreen()));
+                                  builder: (context) => AdminNotificationScreen(
+                                      employeeId: widget.empId),
+                                ),
+                              );
+                            }
+                            //   TODO If the role is guard then Navigate to this
+                            // Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //         builder: (context) =>
+                            //             GuardNotificationScreen(
+                            //               employeeId: widget.empId,
+                            //             )));
 
                             // TODO: If the role is client and supervisor then Navigate this.
                             // Navigator.push(

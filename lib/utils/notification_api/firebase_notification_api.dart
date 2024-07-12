@@ -59,7 +59,7 @@ class FirebaseNotificationApi {
       navigatorKey.currentState?.pushNamed(route, arguments: message);
     }
   }
-
+// AIzaSyDd_MBd7IV8MRQKpyrhW9O1BGLlp-mlOSc
   // void _storeNotification(String? title, String? body) async {
   //   // prit
   //   var box = Hive.box('notifications');
@@ -109,7 +109,10 @@ class FirebaseNotificationApi {
     // showDialog(context: context, builder: builder)
     FirebaseMessaging.onMessageOpenedApp.listen(handleMessage);
     FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-        alert: true, sound: true, badge: true);
+      alert: true,
+      sound: true,
+      badge: true,
+    );
     // FirebaseMessaging.onMessage.listen(handleMessage);
   }
 }

@@ -403,7 +403,7 @@ class _CalendarPageState extends State<CalendarPage> {
         .where('ShiftExchReqReceiverId', isEqualTo: employeeId)
         .where('ShiftExchReqSenderId', isEqualTo: senderId)
         .where('ShiftExchSenderShiftId', isEqualTo: shiftId)
-        .where('ShiftExchReqStatus', isEqualTo: 'pending')
+        .where('ShiftExchReqStatus', isEqualTo: 'started')
         .get();
 
     // Check if any documents exist

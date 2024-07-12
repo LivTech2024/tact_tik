@@ -93,7 +93,9 @@ class _MyAppState extends State<MyApp> {
                     EmpName: '',
                     EmpId: '',
                   ),
-              '/alert_screen': (ontext) => GuardNotificationScreen()
+              '/alert_screen': (ontext) => GuardNotificationScreen(
+                    employeeId: '',
+                  )
             },
             home: child,
           ),

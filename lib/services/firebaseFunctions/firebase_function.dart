@@ -5469,6 +5469,23 @@ class FireStoreService {
   }
 
   //Exchange update status
+  Future<void> UpdateExchangeNotiStatus(String docId, String Status) async {
+    try {
+      // Get a reference to the ShiftExchange collection
+      CollectionReference exchangeCollection =
+          FirebaseFirestore.instance.collection('Notification');
+
+      // Update the document with the provided docId
+      await exchangeCollection.doc(docId).update({
+        "NotificationStatus": Status, // Update status to "started"
+      });
+
+      print("Shift exchange status updated successfully!");
+    } catch (e) {
+      print("Error updating shift exchange status: $e");
+    }
+  }
+
   Future<void> UpdateExchangeStatus(String docId, String Status) async {
     try {
       // Get a reference to the ShiftExchange collection

@@ -9,7 +9,8 @@ import '../../common/widgets/guard_alert_widget.dart';
 import '../../fonts/inter_medium.dart';
 
 class GuardNotificationScreen extends StatefulWidget {
-  const GuardNotificationScreen({super.key});
+  final String employeeId;
+  const GuardNotificationScreen({super.key, required this.employeeId});
 
   @override
   _GuardNotificationScreenState createState() =>
@@ -27,11 +28,11 @@ class _GuardNotificationScreenState extends State<GuardNotificationScreen> {
 
   Future<void> fetchNotifications() async {
     try {
+      print("EmployeeiD ${_userService.employeeID}");
       QuerySnapshot snapshot = await FirebaseFirestore.instance
           .collection('Notification')
-          .where('NotificationIds', arrayContains: _userService.employeeId)
-          .where('NotificationStatus', isNotEqualTo: 'completed')
-          // .orderBy('NotificationCreatedAt', descending: true)
+          .where('NotificationIds', arrayContains: widget.employeeId)
+          .orderBy('NotificationCreatedAt', descending: true)
           .get();
 
       print("Notification Snapshot:");
@@ -45,6 +46,7 @@ class _GuardNotificationScreenState extends State<GuardNotificationScreen> {
 
       setState(() {
         notifications = snapshot.docs
+            .where((doc) => doc['NotificationStatus'] != 'completed')
             .map((doc) => NotificationModel.fromFirestore(doc))
             .toList();
       });
@@ -107,6 +109,10 @@ class _GuardNotificationScreenState extends State<GuardNotificationScreen> {
                     shiftExchangeData: notifications[index].shiftExchangeData,
                     shiftOfferData: notifications[index].shiftOfferData,
                     notiId: notifications[index].notificationId,
+                    status: notifications[index].notificationStatus,
+                    onRefresh: () {
+                      fetchNotifications();
+                    },
                   ),
                 ),
               ],
@@ -165,7 +171,6 @@ class ShiftExchangeData {
   final String exchangeShiftRequestedId;
   final String exchangeShiftRequestedName;
   final String exchangeShiftName;
-
   ShiftExchangeData({
     required this.exchangeShiftId,
     required this.exchangeShiftTime,

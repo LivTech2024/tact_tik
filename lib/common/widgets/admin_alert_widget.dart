@@ -16,8 +16,8 @@ import '../../screens/home screens/widgets/icon_text_widget.dart';
 import '../enums/guard_alert_enums.dart';
 import 'button1.dart';
 
-class GuardAlertWidget extends StatefulWidget {
-  const GuardAlertWidget({
+class SupervisorAlertWidget extends StatefulWidget {
+  const SupervisorAlertWidget({
     super.key,
     this.Enum,
     this.isRejected = false,
@@ -28,7 +28,7 @@ class GuardAlertWidget extends StatefulWidget {
     this.shiftExchangeData,
     required this.notiId,
     required this.status,
-    required this.onRefresh,
+    required this.refresh,
   });
 
   final String message;
@@ -40,12 +40,12 @@ class GuardAlertWidget extends StatefulWidget {
   final GuardAlertEnum? Enum; // Use GuardAlertEnum type
   final ShiftOfferData? shiftOfferData;
   final ShiftExchangeData? shiftExchangeData;
-  final VoidCallback onRefresh;
+  final VoidCallback refresh;
   @override
-  State<GuardAlertWidget> createState() => _GuardAlertWidgetState();
+  State<SupervisorAlertWidget> createState() => _GuardAlertWidgetState();
 }
 
-class _GuardAlertWidgetState extends State<GuardAlertWidget> {
+class _GuardAlertWidgetState extends State<SupervisorAlertWidget> {
   GuardAlertEnum get _alertType => widget.type.toEnum();
 
   String _formatDate(DateTime date) {
@@ -195,31 +195,32 @@ class _GuardAlertWidgetState extends State<GuardAlertWidget> {
             child: Column(
               children: [
                 SizedBox(height: 20.h),
-                Button1(
-                  height: 41.h,
-                  borderRadius: 5.r,
-                  backgroundcolor: Theme.of(context).primaryColor,
-                  text: 'Accept',
-                  onPressed: widget.status != "started"
-                      ? () {
-                          showErrorToast(context, "Already accepted");
-                        }
-                      : () async {
-                          // var id = ShiftExchangeData
-                          await fireStoreService.UpdateExchangeNotiStatus(
-                              widget.notiId, "pending");
-                          if (ShiftExchangeData != null) {
-                            await fireStoreService.UpdateExchangeStatus(
-                                exchangeData.exchangeShiftRequestedId,
-                                "pending");
-                          }
-                          print("Id ${widget.notiId}");
-                          showSuccessToast(context, "${widget.notiId}");
-                          showSuccessToast(context,
-                              "${exchangeData.exchangeShiftRequestedId}");
-                          widget.onRefresh();
-                        },
-                ),
+                widget.status != "pending"
+                    ? Button1(
+                        height: 41.h,
+                        borderRadius: 5.r,
+                        backgroundcolor: Theme.of(context).primaryColor,
+                        text: 'Accept',
+                        onPressed: widget.status != "pending"
+                            ? () {
+                                showErrorToast(context, "Already accepted");
+                              }
+                            : () async {
+                                // var id = ShiftExchangeData
+                                await fireStoreService.UpdateExchangeNotiStatus(
+                                    widget.notiId, "completed");
+                                if (ShiftExchangeData != null) {
+                                  await fireStoreService.UpdateExchangeStatus(
+                                      exchangeData.exchangeShiftRequestedId,
+                                      "completed");
+                                }
+                                print("Id ${widget.notiId}");
+                                showSuccessToast(context, "${widget.notiId}");
+                                showSuccessToast(context,
+                                    "${exchangeData.exchangeShiftRequestedId}");
+                              },
+                      )
+                    : SizedBox(),
               ],
             ),
           ),
@@ -278,7 +279,7 @@ class _GuardAlertWidgetState extends State<GuardAlertWidget> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   InterSemibold(
-                    text: 'Guard  •  ${_formatDate(widget.createdAt)}',
+                    text: 'SUPERVISOR  •  ${_formatDate(widget.createdAt)}',
                     fontsize: Platform.isIOS ? 10.sp : 12.sp,
                     letterSpacing: -.25,
                   ),

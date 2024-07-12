@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:tact_tik/screens/location_filter_page.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
 class UserService {
@@ -13,17 +15,29 @@ class UserService {
   String? shiftCompanyId;
   String? shiftCompanyBranchId;
   String? shiftName;
-  String? employeeId;
+  String? employeeID;
   Timestamp? shiftDate;
   // Timestamp? shiftDate; //shiftDate
   UserService({required FireStoreService firestoreService});
   Future<void> getShiftInfo() async {
+    var currentUser = FirebaseAuth.instance.currentUser;
+
+    if (currentUser == null) {
+      print("No current user logged in");
+      return null;
+    }
+
+    final currentUserEmail = currentUser.email;
+    print("Current User Email ${currentUserEmail}");
     var userInfo = await fireStoreService.getUserInfoByCurrentUserEmail2();
     if (userInfo != null) {
       userName = userInfo['EmployeeName'];
       String employeeId = userInfo['EmployeeId'];
       // String empEmail = userInfo['EmployeeEmail'];
       // String empImage = userInfo['EmployeeImg'] ?? "";
+      if (employeeId.isNotEmpty || employeeId != null) {
+        employeeID = employeeId;
+      }
       var shiftInfo =
           await fireStoreService.getShiftByEmployeeIdFromUserInfo(employeeId);
       print('User Info: ${userInfo.data()}');

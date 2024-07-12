@@ -76,6 +76,8 @@ class _SHomeScreenState extends State<SHomeScreen> {
   double _shiftLongitude = 0;
   String _employeeId = "";
   String _empEmail = "";
+  String _empRole = "";
+
   String _CompanyId = "";
   String _BranchId = "";
 
@@ -120,6 +122,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
           _employeeId = EmployeeId;
           _empEmail = EmpEmail;
           _BranchId = BranchId;
+          _empRole = EmpRole;
         });
         print('User Info: ${userInfo.data()}');
       } else {
@@ -399,6 +402,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                 drawerOnClicked: () {
                   _scaffoldKeyS.currentState?.openEndDrawer();
                 },
+                Role: _empRole,
               ),
             ),
             SliverToBoxAdapter(

@@ -69,7 +69,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
   ];
 
   Future<Map<String, List<Map<String, dynamic>>>> fetchReports() async {
-    final employeeId = _userService.employeeId;
+    final employeeId = _userService.employeeID;
     print("testtfwdf:$employeeId");
 
     final reportsCollection =

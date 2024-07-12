@@ -542,7 +542,7 @@ class _ShiftInformationState extends State<ShiftInformation> {
         }
 
         List<String> acknowledgedByEmpIds =
-          List<String>.from(snapshot['ShiftAcknowledgedByEmpId']);
+            List<String>.from(snapshot['ShiftAcknowledgedByEmpId']);
 
         if (!acknowledgedByEmpIds.contains(empId)) {
           acknowledgedByEmpIds.add(empId);
@@ -605,6 +605,7 @@ class _ShiftInformationState extends State<ShiftInformation> {
           'ShiftExchSenderShiftId': sendersShiftId,
           'ShiftExchReqCreatedAt': DateTime.now(),
           'ShiftExchReqModifiedAt': DateTime.now(),
+          'ShiftExchShiftDate': dataJson['ShiftDate']
         });
       });
       print('sender\'s id : $currentUserId');

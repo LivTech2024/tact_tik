@@ -75,7 +75,7 @@ class LocationServiceRepository {
       FireStoreService fireStoreService = FireStoreService();
       _userService = UserService(firestoreService: FireStoreService());
       print(_userService.ShiftId);
-      print(_userService.employeeId);
+      print(_userService.employeeID);
 
       // Fetch the employee's current route document
       QuerySnapshot routeSnapshot = await FirebaseFirestore.instance
