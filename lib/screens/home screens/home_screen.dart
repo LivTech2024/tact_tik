@@ -122,6 +122,8 @@ class _HomeScreenState extends State<HomeScreen> {
   String _patrolLocationName = "";
   String _patrolName = "";
   int _patrolRestrictedRadius = 0;
+  int _photouploadInterval = 0;
+
   String _patrolTime = "";
   String _patrolDate = "";
   bool isWithinRadius = true;
@@ -443,6 +445,8 @@ class _HomeScreenState extends State<HomeScreen> {
           String companyBranchId = shiftInfo["ShiftCompanyBranchId"] ?? " ";
           String shiftCompanyId = shiftInfo["ShiftCompanyId"] ?? " ";
           String shiftClientId = shiftInfo["ShiftClientId"] ?? " ";
+          int photoInterval =
+              shiftInfo['ShiftPhotoUploadIntervalInMinutes'] ?? 0;
           List<Map<String, dynamic>> shiftCurrentStatus =
               List<Map<String, dynamic>>.from(shiftInfo['ShiftCurrentStatus']);
           print("Shift Location Name: ${shiftLocationName}");
@@ -531,6 +535,7 @@ class _HomeScreenState extends State<HomeScreen> {
             _ShiftStatus = statusString;
             ShiftExist = true;
             _branchId = _ShiftBranchId;
+            _photouploadInterval = photoInterval;
             // _shiftCLientId = ShiftClientId;
             // print("Date time parse: ${DateTime.parse(shiftDateStr)}");
             DateTime shiftDateTime = DateFormat.yMMMMd().parse(shiftDateStr);
@@ -818,8 +823,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    PayStubScreen()));
+                                builder: (context) => PayStubScreen()));
                       },
                     ),
                     buildListTile(
@@ -1060,6 +1064,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ShiftName: _ShiftName,
                                         ShiftStatus: _ShiftStatus,
                                         shiftStartedTime: ShiftStartedTime,
+                                        photoUploadInterval:
+                                            _photouploadInterval,
                                       )
                                     : Center(
                                         child: InterMedium(

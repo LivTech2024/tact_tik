@@ -24,6 +24,7 @@ import 'package:tact_tik/screens/feature%20screens/widgets/custome_textfield.dar
 import 'package:tact_tik/screens/home%20screens/controller/home_screen_controller.dart';
 import 'package:tact_tik/screens/home%20screens/end_shift_screen.dart';
 import 'package:tact_tik/screens/home%20screens/home_screen.dart';
+import 'package:tact_tik/screens/home%20screens/shift_photo_upload.dart';
 import 'package:tact_tik/screens/home%20screens/shift_return_task_screen.dart';
 import 'package:tact_tik/screens/home%20screens/shift_task_screen.dart';
 import 'package:tact_tik/screens/home%20screens/wellness_check_screen.dart';
@@ -57,7 +58,7 @@ class StartTaskScreen extends StatefulWidget {
   final String EmployeeName;
   final String ShiftLocationId;
   final String ShiftName;
-
+  final int photoUploadInterval;
   final bool ShiftIN;
   final VoidCallback resetShiftStarted;
   final VoidCallback onRefresh;
@@ -85,7 +86,8 @@ class StartTaskScreen extends StatefulWidget {
     required this.onRefresh,
     required this.ShiftName,
     required this.ShiftStatus,
-    required this.shiftStartedTime, //refresh the homescreen
+    required this.shiftStartedTime,
+    required this.photoUploadInterval, //refresh the homescreen
     //refresh the homescreen
 
     // required this.ShiftLocation,
@@ -191,6 +193,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     // clickedIn update this status
     if (widget.ShiftStatus == 'started') {
       checkWellnessReport(); // Call the wellness check function
+      checkphotoUpload();
     }
   }
 
@@ -382,6 +385,84 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     }
   }
 
+  Future<void> checkphotoUpload() async {
+    print("Company Id ${widget.ShiftCompanyId}");
+
+    final interval = widget.photoUploadInterval;
+
+    if (interval > 0) {
+      // Get the current time
+      final now = DateTime.now();
+      final prefs = await SharedPreferences.getInstance();
+
+      // Retrieve the last notification time from SharedPreferences
+      final lastNotificationTimeMillis =
+          prefs.getInt('lastPhotoUploadTime') ?? 0;
+      final lastNotificationTime =
+          DateTime.fromMillisecondsSinceEpoch(lastNotificationTimeMillis);
+      print("lastPhotoUploadTime $lastNotificationTime");
+
+      // Calculate the time difference in minutes
+      final differenceInMinutes =
+          now.difference(lastNotificationTime).inMinutes;
+      print("lastPhotoUploadTimeDiff $differenceInMinutes");
+
+      // Show the dialog if the interval has passed
+      if (differenceInMinutes >= interval) {
+        print(
+            "differenceInMinutes $differenceInMinutes : lastPhotoUploadTimeDiff $interval");
+
+        // Show the dialog
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(
+                'Shift Photo Upload',
+                style: TextStyle(
+                    color: Theme.of(context).textTheme.bodyMedium!.color),
+              ),
+              content: Text(
+                'Please upload your shift photo.',
+                style: TextStyle(
+                    color: Theme.of(context).textTheme.bodyMedium!.color),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('Open'),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ShiftPhotoUpload(
+                          EmpId: widget.EmployeId,
+                          EmpName: widget.EmployeeName,
+                        ),
+                      ),
+                    ).then((value) async {
+                      if (value == true) {
+                        // Save the current time as the last notification time
+                        await prefs.setInt(
+                            'lastPhotoUploadTime', now.millisecondsSinceEpoch);
+                        Navigator.pop(context);
+                      }
+                    });
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      } else {
+        // Schedule the next check at the next interval
+        final nextCheckTime =
+            lastNotificationTime.add(Duration(minutes: interval));
+        final timeUntilNextCheck = nextCheckTime.difference(now).inMinutes;
+
+        Timer(Duration(minutes: timeUntilNextCheck), checkphotoUpload);
+      }
+    }
+  }
   // void updateLateTimeAndStartTimer() {
   //   print('update late time and start timer function');
   //   DateTime now = DateTime.now();

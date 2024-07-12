@@ -2882,6 +2882,58 @@ class FireStoreService {
     }
   }
 
+  Future<void> addImagesToShiftPhotoReport(List<Map<String, dynamic>> uploads,
+      String comment, String EmpId, String EmpName) async {
+    try {
+      final LocalStorage storage = LocalStorage('ShiftDetails');
+      String shiftId = storage.getItem('shiftId');
+      String empId = storage.getItem('EmpId') ?? "";
+      final querySnapshot =
+          await shifts.where("ShiftId", isEqualTo: shiftId).get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        final doc = querySnapshot.docs.first;
+
+        List<Map<String, dynamic>> wellnessReports =
+            List.from(doc["ShiftPhotoUploadReport"]);
+        List<String> imgUrls = [];
+        for (var upload in uploads) {
+          if (upload['type'] == 'image') {
+            File file = upload['file'];
+            print(file);
+            // Upload the image file and get the download URL
+            List<Map<String, dynamic>> downloadURLs =
+                await addImageToStorageShiftPhotoTask(file);
+            // Add the image URLs to the list
+            for (var urlMap in downloadURLs) {
+              if (urlMap.containsKey('downloadURL')) {
+                imgUrls.add(urlMap['downloadURL'] as String);
+              }
+            }
+          }
+        }
+
+        wellnessReports.add({
+          "ShiftPhotoUploadEmpId": EmpId,
+          "ShiftPhotoUploadEmpName": EmpName,
+          "ShiftPhotoUploadReportedAt": DateTime.now(),
+          // "WellnessComment": comment,
+          "ShiftPhotoUploadImg": imgUrls,
+        });
+
+        // Update the Firestore document with the new wellness reports
+        await doc.reference.update({
+          "ShiftPhotoUploadReport": wellnessReports,
+        });
+      } else {
+        print("No document found with shiftId: $shiftId");
+      }
+    } catch (e) {
+      print('Error adding images to ShiftGuardWellnessReport: $e');
+      throw e;
+    }
+  }
+
   //validate if the shift task are completef
   Future<bool?> checkShiftTaskStatus(String empId, String shiftID) async {
     try {
@@ -3373,6 +3425,27 @@ class FireStoreService {
       Reference storageRef = FirebaseStorage.instance.ref();
       Reference uploadRef =
           storageRef.child("employees/shifttask/$uniqueName.jpg");
+
+      await uploadRef.putFile(file);
+
+      // Get the download URL of the uploaded image
+      String downloadURL = await uploadRef.getDownloadURL();
+      return [
+        {'downloadURL': downloadURL}
+      ];
+    } catch (e) {
+      print('Error uploading image: $e');
+      throw e;
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> addImageToStorageShiftPhotoTask(
+      File file) async {
+    try {
+      String uniqueName = DateTime.now().toString();
+      Reference storageRef = FirebaseStorage.instance.ref();
+      Reference uploadRef =
+          storageRef.child("employees/shiftphoto/$uniqueName.jpg");
 
       await uploadRef.putFile(file);
 

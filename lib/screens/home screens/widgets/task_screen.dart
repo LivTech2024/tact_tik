@@ -252,6 +252,7 @@ class _TaskScreenState extends State<TaskScreen> {
                           ShiftName: widget.ShiftName,
                           ShiftStatus: widget.ShiftStatus,
                           shiftStartedTime: widget.shiftStartedTime,
+                          photoUploadInterval: 0,
                           // onRefreshStartTaskScreen: widget.onRefreshStartTaskScreen,
                         )
                       : Center(
