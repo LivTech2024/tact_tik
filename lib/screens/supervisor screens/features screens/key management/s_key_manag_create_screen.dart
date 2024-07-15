@@ -1323,7 +1323,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                               hideSubmit == false
                                   ? Button1(
                                       text: 'Save',
-                                      
+
                                       onPressed: _isCreatingKey
                                           ? () {
                                               showErrorToast(
@@ -1378,7 +1378,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                             },
                                       // _saveData();
 
-                                      color:Colors.white,
+                                      color: Colors.white,
                                       borderRadius: 10.r,
                                       backgroundcolor:
                                           Theme.of(context).primaryColor,

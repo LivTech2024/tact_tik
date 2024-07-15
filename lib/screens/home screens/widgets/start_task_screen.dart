@@ -387,7 +387,6 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 
   Future<void> checkphotoUpload() async {
     print("Company Id ${widget.ShiftCompanyId}");
-
     final interval = widget.photoUploadInterval;
 
     if (interval > 0) {
@@ -400,69 +399,62 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
           prefs.getInt('lastPhotoUploadTime') ?? 0;
       final lastNotificationTime =
           DateTime.fromMillisecondsSinceEpoch(lastNotificationTimeMillis);
-      print("lastPhotoUploadTime $lastNotificationTime");
+      print("last upload Interval ${interval}");
+
+      print("last upload Tme ${lastNotificationTime}");
 
       // Calculate the time difference in minutes
       final differenceInMinutes =
           now.difference(lastNotificationTime).inMinutes;
-      print("lastPhotoUploadTimeDiff $differenceInMinutes");
 
       // Show the dialog if the interval has passed
       if (differenceInMinutes >= interval) {
-        print(
-            "differenceInMinutes $differenceInMinutes : lastPhotoUploadTimeDiff $interval");
-
-        // Show the dialog
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text(
-                'Shift Photo Upload',
-                style: TextStyle(
-                    color: Theme.of(context).textTheme.bodyMedium!.color),
-              ),
-              content: Text(
-                'Please upload your shift photo.',
-                style: TextStyle(
-                    color: Theme.of(context).textTheme.bodyMedium!.color),
-              ),
-              actions: <Widget>[
-                TextButton(
-                  child: const Text('Open'),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ShiftPhotoUpload(
-                          EmpId: widget.EmployeId,
-                          EmpName: widget.EmployeeName,
-                        ),
-                      ),
-                    ).then((value) async {
-                      if (value == true) {
-                        // Save the current time as the last notification time
-                        await prefs.setInt(
-                            'lastPhotoUploadTime', now.millisecondsSinceEpoch);
-                        Navigator.pop(context);
-                      }
-                    });
-                  },
+        Timer.periodic(Duration(minutes: interval), (timer) {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text(
+                  'Shift Photo Upload',
+                  style: TextStyle(
+                      color: Theme.of(context).textTheme.bodyMedium!.color),
                 ),
-              ],
-            );
-          },
-        );
-      } else {
-        // Schedule the next check at the next interval
-        final nextCheckTime =
-            lastNotificationTime.add(Duration(minutes: interval));
-        final timeUntilNextCheck = nextCheckTime.difference(now).inMinutes;
-
-        Timer(Duration(minutes: timeUntilNextCheck), checkphotoUpload);
+                content: Text(
+                  'Please upload your shift upload.',
+                  style: TextStyle(
+                      color: Theme.of(context).textTheme.bodyMedium!.color),
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text('Open'),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ShiftPhotoUpload(
+                            EmpId: widget.EmployeId,
+                            EmpName: widget.EmployeeName,
+                          ),
+                        ),
+                      ).then((value) async {
+                        if (value == true) {
+                          // Save the current time as the last notification time
+                          await prefs.setInt('lastPhotoUploadTime',
+                              now.millisecondsSinceEpoch);
+                          Navigator.pop(context);
+                        }
+                      });
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+        });
       }
     }
   }
+
   // void updateLateTimeAndStartTimer() {
   //   print('update late time and start timer function');
   //   DateTime now = DateTime.now();

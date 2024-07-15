@@ -48,7 +48,7 @@ class _GuardNotificationScreenState extends State<AdminNotificationScreen> {
 
       setState(() {
         notifications = snapshot.docs
-            .where((doc) => doc['NotificationStatus'] != 'completed')
+            // .where((doc) => doc['NotificationStatus'] != 'started')
             .map((doc) => NotificationModel.fromFirestore(doc))
             .toList();
       });

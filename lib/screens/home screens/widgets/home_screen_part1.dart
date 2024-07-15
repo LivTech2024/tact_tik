@@ -232,15 +232,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                         GestureDetector(
                           onTap: () {
                             print("isEmployee ${widget.Role}");
-                            if (widget.Role == "GUARD") {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          GuardNotificationScreen(
-                                            employeeId: widget.empId,
-                                          )));
-                            } else {
+                            if (widget.Role == "SUPERVISOR") {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -248,6 +240,15 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                                       employeeId: widget.empId),
                                 ),
                               );
+                            } else {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          GuardNotificationScreen(
+                                            employeeId: widget.empId,
+                                          )));
+                              //
                             }
                             //   TODO If the role is guard then Navigate to this
                             // Navigator.push(

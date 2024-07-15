@@ -142,7 +142,7 @@ class _MyAppState extends State<MyApp> {
               useMaterial3: true,
               brightness: Brightness.dark,
               textTheme: GoogleFonts.poppinsTextTheme(
-                Theme.of(context).textTheme,
+              Theme.of(context).textTheme,
               ),
             ),
             home: child,

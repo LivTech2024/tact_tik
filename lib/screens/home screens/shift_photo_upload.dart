@@ -49,7 +49,7 @@ class _ShiftPhotoUploadState extends State<ShiftPhotoUpload> {
     print("Uploads ${uploads}");
     try {
       await fireStoreService
-          .addImagesToShiftGuardWellnessReport(
+          .addImagesToShiftPhotoReport(
               uploads, _controller.text, widget.EmpId, widget.EmpName)
           .whenComplete(() {
         Navigator.pop(context);

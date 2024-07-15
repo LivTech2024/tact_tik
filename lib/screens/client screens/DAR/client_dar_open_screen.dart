@@ -189,7 +189,8 @@ class _ClientDarOpenScreenState extends State<ClientDarOpenScreen> {
     if (pdfResponse.statusCode == 200) {
       print('PDF generated successfully');
       final pdfBase64 = base64Encode(pdfResponse.bodyBytes);
-      final file = await savePdfLocally(pdfBase64, 'security_report_${Timestamp.now().toString()}.pdf');
+      final file = await savePdfLocally(
+          pdfBase64, 'security_report_${Timestamp.now().toString()}.pdf');
       Navigator.push(
         context,
         MaterialPageRoute(

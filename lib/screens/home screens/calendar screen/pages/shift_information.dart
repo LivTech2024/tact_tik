@@ -292,69 +292,94 @@ class _ShiftInformationState extends State<ShiftInformation> {
                     ),
                     !widget.isToday!
                         ? IgnorePointer(
-                      ignoring: isAlreadyAcknowledged || _clicked,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          if (!widget.toRequest && !(widget.toRequest && !widget.isToday! && widget.sendersShiftId!.isNotEmpty))
-                            Button1(
-                              text: 'Offer',
-                              onPressed: () {
-                                if (!widget.canExchangeRequest!) {
-                                  showErrorToast(context, 'You cannot offer previous shift.');
-                                  return;
-                                }
-                                onShiftOffer(
-                                    senderId: widget.currentUserId,
-                                    shiftId: widget.shiftId);
-                              },
-                              backgroundcolor: isAlreadyAcknowledged || _clicked
-                                  ? Theme.of(context).primaryColorLight
-                                  : Theme.of(context).primaryColor,
-                              borderRadius: 10.r,
-                              fontsize: 18.sp,
-                              color: Theme.of(context).textTheme.bodyMedium!.color,
+                            ignoring: isAlreadyAcknowledged || _clicked,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                if (!widget.toRequest &&
+                                    !(widget.toRequest &&
+                                        !widget.isToday! &&
+                                        widget.sendersShiftId!.isNotEmpty))
+                                  Button1(
+                                    text: 'Offer',
+                                    onPressed: () {
+                                      // if (!widget.canExchangeRequest!) {
+                                      //   showErrorToast(context,
+                                      //       'You cannot offer previous shift.');
+                                      //   return;
+                                      // }
+                                      onShiftOffer(
+                                          senderId: widget.currentUserId,
+                                          shiftId: widget.shiftId);
+                                    },
+                                    backgroundcolor: isAlreadyAcknowledged ||
+                                            _clicked
+                                        ? Theme.of(context).primaryColorLight
+                                        : Theme.of(context).primaryColor,
+                                    borderRadius: 10.r,
+                                    fontsize: 18.sp,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .color,
+                                  ),
+                                SizedBox(
+                                  height: height80,
+                                ),
+                                if (!widget.toRequest &&
+                                    !(widget.toRequest &&
+                                        !widget.isToday! &&
+                                        widget.sendersShiftId!.isNotEmpty))
+                                  Button1(
+                                    text: 'Acknowledge',
+                                    onPressed: () {
+                                      onAcceptShift(
+                                          widget.empId, widget.shiftId);
+                                    },
+                                    backgroundcolor: isAlreadyAcknowledged ||
+                                            _clicked
+                                        ? Theme.of(context).primaryColorLight
+                                        : Theme.of(context).primaryColor,
+                                    borderRadius: 10.r,
+                                    fontsize: 18.sp,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .color,
+                                  ),
+                                if (widget.toRequest &&
+                                    !widget.isToday! &&
+                                    widget.sendersShiftId!.isNotEmpty)
+                                  Button1(
+                                    text: 'Exchange',
+                                    onPressed: () {
+                                      if (!widget.canExchangeRequest!) {
+                                        showErrorToast(context,
+                                            'You cannot exchange previous shift.');
+                                        return;
+                                      }
+                                      onExchangeShift(
+                                          widget.currentUserId,
+                                          widget.empId,
+                                          widget.shiftId,
+                                          widget.sendersShiftId!);
+                                    },
+                                    backgroundcolor: isAlreadyAcknowledged ||
+                                            _clicked
+                                        ? Theme.of(context).primaryColorLight
+                                        : Theme.of(context).primaryColor,
+                                    borderRadius: 10.r,
+                                    fontsize: 18.sp,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .color,
+                                    useBorder: true,
+                                  ),
+                                SizedBox(height: 100.h),
+                              ],
                             ),
-                          SizedBox(height: height80,),
-                          if (!widget.toRequest && !(widget.toRequest && !widget.isToday! && widget.sendersShiftId!.isNotEmpty))
-                            Button1(
-                              text: 'Acknowledge',
-                              onPressed: () {
-                                onAcceptShift(widget.empId, widget.shiftId);
-                              },
-                              backgroundcolor: isAlreadyAcknowledged || _clicked
-                                  ? Theme.of(context).primaryColorLight
-                                  : Theme.of(context).primaryColor,
-                              borderRadius: 10.r,
-                              fontsize: 18.sp,
-                              color: Theme.of(context).textTheme.bodyMedium!.color,
-                            ),
-                          if (widget.toRequest && !widget.isToday! && widget.sendersShiftId!.isNotEmpty)
-                            Button1(
-                              text: 'Exchange',
-                              onPressed: () {
-                                if (!widget.canExchangeRequest!) {
-                                  showErrorToast(context, 'You cannot exchange previous shift.');
-                                  return;
-                                }
-                                onExchangeShift(
-                                    widget.currentUserId,
-                                    widget.empId,
-                                    widget.shiftId,
-                                    widget.sendersShiftId!);
-                              },
-                              backgroundcolor: isAlreadyAcknowledged || _clicked
-                                  ? Theme.of(context).primaryColorLight
-                                  : Theme.of(context).primaryColor,
-                              borderRadius: 10.r,
-                              fontsize: 18.sp,
-                              color: Theme.of(context).textTheme.bodyMedium!.color,
-                              useBorder: true,
-                            ),
-                          SizedBox(height: 100.h),
-                        ],
-                      ),
-                    )
+                          )
                         : const SizedBox(),
                   ],
                 ),

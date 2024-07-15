@@ -27,13 +27,13 @@ class SelectLocationReport {
           backgroundColor: Theme.of(context).cardColor,
           headerTheme: HeaderThemeData(
             searchFieldIconColor:
-            Theme.of(context).textTheme.headlineMedium!.color,
+                Theme.of(context).textTheme.headlineMedium!.color,
             headerTextStyle: TextStyle(
                 color:
-                Theme.of(context).textTheme.headlineMedium!.color as Color,
+                    Theme.of(context).textTheme.headlineMedium!.color as Color,
                 fontSize: 15.sp),
             closeIconColor:
-            Theme.of(context).textTheme.headlineMedium!.color as Color,
+                Theme.of(context).textTheme.headlineMedium!.color as Color,
             backgroundColor: Theme.of(context).cardColor,
             searchFieldHintTextStyle: TextStyle(
               color: Theme.of(context).textTheme.headlineMedium!.color,
@@ -60,7 +60,7 @@ class SelectLocationReport {
           } else {
             onLocationSelected(list.map((selectedLocation) {
               return locationDocs.firstWhere((doc) =>
-              doc['LocationName'] == selectedLocation)['LocationId'];
+                  doc['LocationName'] == selectedLocation)['LocationId'];
             }).toList());
           }
           Navigator.pop(context);

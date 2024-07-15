@@ -195,7 +195,7 @@ class _GuardAlertWidgetState extends State<SupervisorAlertWidget> {
             child: Column(
               children: [
                 SizedBox(height: 20.h),
-                widget.status != "pending"
+                widget.status == "pending"
                     ? Button1(
                         height: 41.h,
                         borderRadius: 5.r,
