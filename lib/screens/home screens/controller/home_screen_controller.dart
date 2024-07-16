@@ -203,7 +203,7 @@ class HomeScreenController extends GetxController {
         disposeCallback: LocationCallbackHandler.disposeCallback,
         iosSettings: const IOSSettings(
           accuracy: LocationAccuracy.HIGH,
-          distanceFilter: 100,
+          distanceFilter: 0,
           stopWithTerminate: false,
         ),
         autoStop: false,

@@ -92,7 +92,8 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
           if (selectedLocationAddress.isNotEmpty) {
             String? shiftLocationAddress = data['ShiftLocationId'] as String?;
             if (shiftLocationAddress == null ||
-                !shiftLocationAddress.contains(shiftLocationAddress)) {
+                !shiftLocationAddress
+                    .contains(selectedLocationAddress[0].toString())) {
               continue;
             }
           }

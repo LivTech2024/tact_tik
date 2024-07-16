@@ -41,6 +41,7 @@ class GuardAlertWidget extends StatefulWidget {
   final ShiftOfferData? shiftOfferData;
   final ShiftExchangeData? shiftExchangeData;
   final VoidCallback onRefresh;
+
   @override
   State<GuardAlertWidget> createState() => _GuardAlertWidgetState();
 }
@@ -129,8 +130,8 @@ class _GuardAlertWidgetState extends State<GuardAlertWidget> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   InterBold(
-                    text: exchangeData!.exchangeShiftRequestedName ??
-                        offerData!.offerShiftRequestedName ??
+                    text: exchangeData?.exchangeShiftRequestedName ??
+                        offerData?.offerShiftRequestedName ??
                         'Employee Name', // Replace with dynamic name if available
                     fontsize: Platform.isIOS ? 18.sp : 20.sp,
                   ),
@@ -208,15 +209,16 @@ class _GuardAlertWidgetState extends State<GuardAlertWidget> {
                           // var id = ShiftExchangeData
                           await fireStoreService.UpdateExchangeNotiStatus(
                               widget.notiId, "pending");
-                          if (ShiftExchangeData != null) {
+                          if (widget.shiftExchangeData != null) {
                             await fireStoreService.UpdateExchangeStatus(
-                                exchangeData.exchangeShiftRequestedId,
+                                widget.shiftExchangeData!
+                                    .exchangeShiftRequestedId,
                                 "pending");
                           }
                           print("Id ${widget.notiId}");
                           showSuccessToast(context, "${widget.notiId}");
                           showSuccessToast(context,
-                              "${exchangeData.exchangeShiftRequestedId}");
+                              "${widget.shiftExchangeData?.exchangeShiftRequestedId}");
                           widget.onRefresh();
                         },
                 ),
@@ -278,17 +280,61 @@ class _GuardAlertWidgetState extends State<GuardAlertWidget> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   InterSemibold(
-                    text: 'Guard  •  ${_formatDate(widget.createdAt)}',
+                    text: "Shift status",
                     fontsize: Platform.isIOS ? 10.sp : 12.sp,
-                    letterSpacing: -.25,
+                    color: Colors.white,
                   ),
                   InterRegular(
-                    text: 'New Message',
+                    text: "Message: ${widget.message}",
                     fontsize: Platform.isIOS ? 14.sp : 16.sp,
+                    color: Colors.white,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      case GuardAlertEnum.other:
+        return Container(
+          height: 100.h,
+          width: double.maxFinite,
+          margin: EdgeInsets.only(bottom: 10.h),
+          padding:
+              EdgeInsets.only(left: 24.w, top: 10.h, bottom: 10.h, right: 10.w),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5.r),
+            color: Theme.of(context).cardColor,
+            boxShadow: [
+              BoxShadow(
+                color: Theme.of(context).shadowColor,
+                blurRadius: 5,
+                spreadRadius: 2,
+                offset: Offset(0, 3),
+              )
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Icon(
+                Icons.info,
+                size: 24.sp,
+                color: Colors.white,
+              ),
+              SizedBox(width: 20.w),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  InterSemibold(
+                    text: "Info",
+                    fontsize: Platform.isIOS ? 10.sp : 12.sp,
+                    color: Colors.white,
                   ),
                   InterRegular(
-                    text: widget.message,
-                    fontsize: 12.sp,
+                    text: "Message: ${widget.message}",
+                    fontsize: Platform.isIOS ? 14.sp : 16.sp,
+                    color: Colors.white,
                   ),
                 ],
               ),
@@ -296,7 +342,24 @@ class _GuardAlertWidgetState extends State<GuardAlertWidget> {
           ),
         );
       default:
-        return Container();
+        return SizedBox.shrink(); // Return an empty widget if no matching type
+    }
+  }
+}
+
+enum GuardAlertEnum { newOffer, newExchange, ShiftStatusNotification, other }
+
+extension GuardAlertEnumExtension on String {
+  GuardAlertEnum toEnum() {
+    switch (this) {
+      case 'newOffer':
+        return GuardAlertEnum.newOffer;
+      case 'newExchange':
+        return GuardAlertEnum.newExchange;
+      case 'ShiftStatusNotification':
+        return GuardAlertEnum.ShiftStatusNotification;
+      default:
+        return GuardAlertEnum.other;
     }
   }
 }
