@@ -1,9 +1,4 @@
-enum AlertEnum {
-  newOffer,
-  newExchange,
-  exchange,
-  shiftEnded
-}
+enum AlertEnum { newOffer, newExchange, exchange, shiftEnded }
 
 extension ConvertMessage on String {
   AlertEnum toEnum() {

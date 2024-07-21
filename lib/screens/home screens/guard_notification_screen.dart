@@ -10,7 +10,9 @@ import '../../fonts/inter_medium.dart';
 
 class GuardNotificationScreen extends StatefulWidget {
   final String employeeId;
-  const GuardNotificationScreen({super.key, required this.employeeId});
+  final String companyId;
+  const GuardNotificationScreen(
+      {super.key, required this.employeeId, required this.companyId});
 
   @override
   _GuardNotificationScreenState createState() =>
@@ -28,7 +30,7 @@ class _GuardNotificationScreenState extends State<GuardNotificationScreen> {
 
   Future<void> fetchNotifications() async {
     try {
-      print("EmployeeiD ${_userService.employeeID}");
+      print("EmployeeID: ${_userService.employeeID}");
       QuerySnapshot snapshot = await FirebaseFirestore.instance
           .collection('Notification')
           .where('NotificationIds', arrayContains: widget.employeeId)
@@ -44,17 +46,40 @@ class _GuardNotificationScreenState extends State<GuardNotificationScreen> {
         print("No notifications found.");
       }
 
+      List<NotificationModel> fetchedNotifications = snapshot.docs
+          .where((doc) => doc['NotificationStatus'] != 'completed')
+          .map((doc) => NotificationModel.fromFirestore(doc))
+          .toList();
+
+      List<NotificationModel> shiftOfferNotifications = [];
+      List<NotificationModel> otherNotifications = [];
+
+      for (var notification in fetchedNotifications) {
+        if (notification.type == 'SHIFTOFFER') {
+          // Fetch additional data for SHIFTOFFER notifications
+          QuerySnapshot shiftOfferSnapshot = await FirebaseFirestore.instance
+              .collection('Notification')
+              .where('NotificationCompanyId', isEqualTo: widget.companyId)
+              .orderBy('NotificationCreatedAt', descending: true)
+              .get();
+
+          shiftOfferNotifications.addAll(shiftOfferSnapshot.docs
+              .map((doc) => NotificationModel.fromFirestore(doc))
+              .toList());
+        } else {
+          otherNotifications.add(notification);
+        }
+      }
+
       setState(() {
-        notifications = snapshot.docs
-            .where((doc) => doc['NotificationStatus'] != 'completed')
-            .map((doc) => NotificationModel.fromFirestore(doc))
-            .toList();
+        notifications = otherNotifications + shiftOfferNotifications;
       });
 
       print("Notifications:");
       for (var notification in notifications) {
         print(
             "Message: ${notification.message}, Type: ${notification.type}, CreatedAt: ${notification.createdAt.toDate()}");
+        print("Notifications Display ${notification}");
       }
     } catch (e) {
       print("Error fetching notifications: $e");
@@ -132,7 +157,7 @@ class NotificationModel {
   final ShiftExchangeData? shiftExchangeData;
   final ShiftOfferData? shiftOfferData;
   final String notificationId;
-// NotificationId
+
   NotificationModel({
     required this.message,
     required this.type,
@@ -146,13 +171,12 @@ class NotificationModel {
   factory NotificationModel.fromFirestore(DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 
-    // Parsing data and handling optional fields
     return NotificationModel(
       message: data['NotificationMessage'] ?? '',
       type: data['NotificationType'] ?? '',
       createdAt: data['NotificationCreatedAt'] ?? Timestamp.now(),
       notificationStatus: data['NotificationStatus'] ?? '',
-      notificationId: data['NotificationId'],
+      notificationId: data['NotificationId'] ?? '',
       shiftExchangeData: data['ShiftExchangeData'] != null
           ? ShiftExchangeData.fromMap(data['ShiftExchangeData'])
           : null,
@@ -171,6 +195,7 @@ class ShiftExchangeData {
   final String exchangeShiftRequestedId;
   final String exchangeShiftRequestedName;
   final String exchangeShiftName;
+
   ShiftExchangeData({
     required this.exchangeShiftId,
     required this.exchangeShiftTime,

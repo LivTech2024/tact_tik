@@ -129,8 +129,8 @@ class _GuardAlertWidgetState extends State<SupervisorAlertWidget> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   InterBold(
-                    text: exchangeData!.exchangeShiftRequestedName ??
-                        offerData!.offerShiftRequestedName ??
+                    text: exchangeData?.exchangeShiftRequestedName ??
+                        offerData?.offerShiftRequestedName ??
                         'Employee Name', // Replace with dynamic name if available
                     fontsize: Platform.isIOS ? 18.sp : 20.sp,
                   ),
@@ -211,13 +211,13 @@ class _GuardAlertWidgetState extends State<SupervisorAlertWidget> {
                                     widget.notiId, "completed");
                                 if (ShiftExchangeData != null) {
                                   await fireStoreService.UpdateExchangeStatus(
-                                      exchangeData.exchangeShiftRequestedId,
+                                      exchangeData!.exchangeShiftRequestedId,
                                       "completed");
                                 }
                                 print("Id ${widget.notiId}");
                                 showSuccessToast(context, "${widget.notiId}");
                                 showSuccessToast(context,
-                                    "${exchangeData.exchangeShiftRequestedId}");
+                                    "${exchangeData!.exchangeShiftRequestedId}");
                               },
                       )
                     : SizedBox(),

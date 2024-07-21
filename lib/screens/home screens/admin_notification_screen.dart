@@ -58,6 +58,7 @@ class _GuardNotificationScreenState extends State<AdminNotificationScreen> {
         print(
             "Message: ${notification.message}, Type: ${notification.type}, CreatedAt: ${notification.createdAt.toDate()}");
       }
+      //todo error for null values
     } catch (e) {
       print("Error fetching notifications: $e");
     }

@@ -244,7 +244,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
     if (schedule == null) {
       return {
         'status': 'unknown',
-        'color': Colors.orangeAccent,
+        'color': Colors.amber.shade200,
       };
     }
 

@@ -247,6 +247,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                                       builder: (context) =>
                                           GuardNotificationScreen(
                                             employeeId: widget.empId,
+                                            companyId: widget.shiftCompanyId,
                                           )));
                               //
                             }
