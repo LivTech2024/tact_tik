@@ -866,8 +866,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         //   "formattedEndTime",
                         // );
                         // customEmail();
-                        // await fireStoreService.copyAndCreateDocument(
-                        //     "PatrolLogs", "5bTZZg87PCJumA9u2zjS");
+                        await fireStoreService.copyAndCreateDocument(
+                            "PatrolLogs", "MOkVZ8Fx7Hpc4TmZrDFd");
                         // await darFunctions.fetchShiftDetailsAndSubmitDAR(
                         //     _shiftId,
                         //     _empEmail,

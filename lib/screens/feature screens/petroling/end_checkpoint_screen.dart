@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tact_tik/common/widgets/customErrorToast.dart';
 import 'package:tact_tik/main.dart';
+import 'package:tact_tik/screens/feature%20screens/widgets/custome_textfield.dart';
 import 'package:tact_tik/screens/home%20screens/home_screen.dart';
 import 'package:tact_tik/services/EmailService/EmailJs_fucntion.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
@@ -170,13 +171,18 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                       ],
                     ),
                     SizedBox(height: 10.h),
-                    TextField(
+                    // TextField(
+                    //   controller: Controller,
+                    //   decoration: InputDecoration(
+                    //     hintText: 'Add Comment',
+                    //   ),
+                    //   style: TextStyle(
+                    //       color: Theme.of(context).textTheme.bodyMedium!.color),
+                    // ),
+                    CustomeTextField(
+                      hint: 'Add Comment',
                       controller: Controller,
-                      decoration: InputDecoration(
-                        hintText: 'Add Comment',
-                      ),
-                      style: TextStyle(
-                          color: Theme.of(context).textTheme.bodyMedium!.color),
+                      isEnabled: true,
                     ),
                     SizedBox(height: 100.h)
                   ],

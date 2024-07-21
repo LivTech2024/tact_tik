@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tact_tik/common/widgets/customErrorToast.dart';
 import 'package:tact_tik/main.dart';
+import 'package:tact_tik/screens/feature%20screens/widgets/custome_textfield.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:toastification/toastification.dart';
 
@@ -251,17 +252,22 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                     //   ],
                     // ),
                     SizedBox(height: 10.h),
-                    TextField(
+                    // TextField(
+                    //   controller: Controller,
+                    //   decoration: InputDecoration(
+                    //       hintText: 'Add Comment',
+                    //       hintStyle: TextStyle(
+                    //           color: Theme.of(context)
+                    //               .textTheme
+                    //               .bodyMedium!
+                    //               .color)),
+                    //   style: TextStyle(
+                    //       color: Theme.of(context).textTheme.bodyMedium!.color),
+                    // ),
+                    CustomeTextField(
+                      hint: 'Add Comment',
                       controller: Controller,
-                      decoration: InputDecoration(
-                          hintText: 'Add Comment',
-                          hintStyle: TextStyle(
-                              color: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium!
-                                  .color)),
-                      style: TextStyle(
-                          color: Theme.of(context).textTheme.bodyMedium!.color),
+                      isEnabled: true,
                     ),
                     SizedBox(height: 20.h),
                     GridView.builder(
@@ -317,7 +323,7 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                                 children: [
                                   Icon(
                                     Icons.add,
-                                    size: width / width20,
+                                    size: width / width40,
                                     color: Theme.of(context)
                                         .textTheme
                                         .bodyMedium!
