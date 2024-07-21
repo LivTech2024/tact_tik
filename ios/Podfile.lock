@@ -283,10 +283,14 @@ PODS:
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
+  - speech_to_text (0.0.1):
+    - Flutter
+    - Try
   - sqflite (0.0.3):
     - Flutter
     - FlutterMacOS
   - SwiftyGif (5.4.5)
+  - Try (2.1.1)
   - Turf (2.8.0)
   - url_launcher_ios (0.0.1):
     - Flutter
@@ -327,6 +331,7 @@ DEPENDENCIES:
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - pointer_interceptor_ios (from `.symlinks/plugins/pointer_interceptor_ios/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
+  - speech_to_text (from `.symlinks/plugins/speech_to_text/ios`)
   - sqflite (from `.symlinks/plugins/sqflite/darwin`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
 
@@ -373,6 +378,7 @@ SPEC REPOS:
     - SDWebImage
     - SDWebImageWebPCoder
     - SwiftyGif
+    - Try
     - Turf
 
 EXTERNAL SOURCES:
@@ -443,6 +449,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/pointer_interceptor_ios/ios"
   shared_preferences_foundation:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
+  speech_to_text:
+    :path: ".symlinks/plugins/speech_to_text/ios"
   sqflite:
     :path: ".symlinks/plugins/sqflite/darwin"
   url_launcher_ios:
@@ -527,11 +535,13 @@ SPEC CHECKSUMS:
   SDWebImage: dfe95b2466a9823cf9f0c6d01217c06550d7b29a
   SDWebImageWebPCoder: e38c0a70396191361d60c092933e22c20d5b1380
   shared_preferences_foundation: b4c3b4cddf1c21f02770737f147a3f5da9d39695
+  speech_to_text: b43a7d99aef037bd758ed8e45d79bbac035d2dfe
   sqflite: 673a0e54cc04b7d6dba8d24fb8095b31c3a99eec
   SwiftyGif: 706c60cf65fa2bc5ee0313beece843c8eb8194d4
+  Try: 5ef669ae832617b3cee58cb2c6f99fb767a4ff96
   Turf: aa2ede4298009639d10db36aba1a7ebaad072a5e
   url_launcher_ios: 6116280ddcfe98ab8820085d8d76ae7449447586
 
-PODFILE CHECKSUM: 79f4732356dd3c15f0a21767dd2cb7137073b802
+PODFILE CHECKSUM: 1ae23bb421fc6fd74962884c59fdad0161ef2947
 
 COCOAPODS: 1.15.2

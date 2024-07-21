@@ -17,6 +17,7 @@ import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/main.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
+import 'package:tact_tik/services/textToSpeech/text_To_Speech_config.dart';
 
 import '../../../common/sizes.dart';
 import '../../../fonts/inter_regular.dart';
@@ -92,10 +93,11 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
   DateTime? EndDate;
   Map<String, String> clientMap = {};
   Map<String, String> locationMap = {};
-
+  TextToSpeechConfig textToSpeechConfig = TextToSpeechConfig();
   @override
   void initState() {
     // TODO: implement initState
+    textToSpeechConfig.checkMic();
     getAllTitles();
     getAllReports();
     getAllClientNames();

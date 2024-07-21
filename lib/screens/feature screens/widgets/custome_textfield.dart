@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:tact_tik/main.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 
 import '../../../common/sizes.dart';
 import '../../../utils/colors.dart';
 
-class CustomeTextField extends StatelessWidget {
+class CustomeTextField extends StatefulWidget {
   const CustomeTextField({
     super.key,
     required this.hint,
@@ -24,12 +25,59 @@ class CustomeTextField extends StatelessWidget {
   final bool showIcon;
   final bool isEnabled;
   final TextInputType? textInputType;
-
   final TextEditingController? controller;
 
   @override
-  Widget build(BuildContext context) {
+  _CustomeTextFieldState createState() => _CustomeTextFieldState();
+}
 
+class _CustomeTextFieldState extends State<CustomeTextField> {
+  late SpeechToText _speechToText;
+  bool _isListening = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _speechToText = SpeechToText();
+    _initializeSpeechRecognizer();
+  }
+
+  Future<void> _initializeSpeechRecognizer() async {
+    bool available = await _speechToText.initialize(
+      onStatus: (status) => print('onStatus: $status'),
+      onError: (error) => print('onError: $error'),
+    );
+    if (available) {
+      print("Speech recognizer available");
+    } else {
+      print("Speech recognizer not available");
+    }
+  }
+
+  void _startListening() async {
+    if (!_isListening) {
+      setState(() => _isListening = true);
+      await _speechToText.listen(onResult: _onSpeechResult);
+    }
+  }
+
+  void _stopListening() async {
+    if (_isListening) {
+      setState(() => _isListening = false);
+      await _speechToText.stop();
+    }
+  }
+
+  void _onSpeechResult(SpeechRecognitionResult result) {
+    if (result.finalResult) {
+      setState(() {
+        widget.controller?.text += result.recognizedWords;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(
         left: 20.w,
@@ -47,8 +95,12 @@ class CustomeTextField extends StatelessWidget {
         ],
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(10.r),
+        border: Border.all(
+          color: _isListening ? Colors.red : Colors.transparent,
+          width: 2.0,
+        ),
       ),
-      constraints: isExpanded
+      constraints: widget.isExpanded
           ? BoxConstraints()
           : BoxConstraints(
               minHeight: 60.h,
@@ -62,17 +114,13 @@ class CustomeTextField extends StatelessWidget {
                 print('onTapOutside');
                 FocusManager.instance.primaryFocus?.unfocus();
               },
-              maxLength: maxlength,
-              controller: controller,
-              maxLines: isExpanded ? null : 1,
-              // keyboardType: Key,
+              maxLength: widget.maxlength,
+              controller: widget.controller,
+              maxLines: widget.isExpanded ? null : 1,
               style: GoogleFonts.poppins(
                 fontWeight: FontWeight.w300,
                 fontSize: 18.sp,
-                color: Theme.of(context)
-                    .textTheme
-                    .bodyMedium!
-                    .color, // Change text color to white
+                color: Theme.of(context).textTheme.bodyMedium!.color,
               ),
               decoration: InputDecoration(
                 border: OutlineInputBorder(
@@ -85,26 +133,28 @@ class CustomeTextField extends StatelessWidget {
                 hintStyle: GoogleFonts.poppins(
                   fontWeight: FontWeight.w300,
                   fontSize: 18.sp,
-                  color: Theme.of(context)
-                      .textTheme
-                      .bodyLarge!
-                      .color, // Change text color to white
+                  color: Theme.of(context).textTheme.bodyLarge!.color,
                 ),
-                hintText: hint,
+                hintText: widget.hint,
                 contentPadding: EdgeInsets.zero,
-                // Remove padding
                 counterText: '',
               ),
-              keyboardType: textInputType,
+              keyboardType: widget.textInputType,
               cursorColor: DarkColor.Primarycolor,
-              enabled: isEnabled,
+              enabled: widget.isEnabled,
             ),
           ),
-          if (showIcon)
+          if (widget.showIcon)
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                if (_isListening) {
+                  _stopListening();
+                } else {
+                  _startListening();
+                }
+              },
               icon: Icon(
-                Icons.mic,
+                _isListening ? Icons.mic_off : Icons.mic,
                 color: DarkColor.color33,
                 size: 24.sp,
               ),
