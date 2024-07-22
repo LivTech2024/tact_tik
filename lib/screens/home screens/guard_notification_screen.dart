@@ -46,33 +46,26 @@ class _GuardNotificationScreenState extends State<GuardNotificationScreen> {
         print("No notifications found.");
       }
 
-      List<NotificationModel> fetchedNotifications = snapshot.docs
-          .where((doc) => doc['NotificationStatus'] != 'completed')
-          .map((doc) => NotificationModel.fromFirestore(doc))
-          .toList();
-
+      List<NotificationModel> fetchedNotifications = [];
       List<NotificationModel> shiftOfferNotifications = [];
-      List<NotificationModel> otherNotifications = [];
 
-      for (var notification in fetchedNotifications) {
+      for (var doc in snapshot.docs) {
+        var notification = NotificationModel.fromFirestore(doc);
+
         if (notification.type == 'SHIFTOFFER') {
-          // Fetch additional data for SHIFTOFFER notifications
-          QuerySnapshot shiftOfferSnapshot = await FirebaseFirestore.instance
-              .collection('Notification')
-              .where('NotificationCompanyId', isEqualTo: widget.companyId)
-              .orderBy('NotificationCreatedAt', descending: true)
-              .get();
-
-          shiftOfferNotifications.addAll(shiftOfferSnapshot.docs
-              .map((doc) => NotificationModel.fromFirestore(doc))
-              .toList());
-        } else {
-          otherNotifications.add(notification);
+          print("Processing SHIFTOFFER notification: ${doc.id}");
+          // Directly add the SHIFTOFFER notification if it contains necessary data
+          shiftOfferNotifications.add(notification);
+        } else if (notification.notificationStatus != 'completed') {
+          fetchedNotifications.add(notification);
         }
       }
 
+      print("Shift Offer Notifications: ${shiftOfferNotifications.length}");
+      print("Other Notifications: ${fetchedNotifications.length}");
+
       setState(() {
-        notifications = otherNotifications + shiftOfferNotifications;
+        notifications = fetchedNotifications + shiftOfferNotifications;
       });
 
       print("Notifications:");
@@ -227,29 +220,32 @@ class ShiftOfferData {
   final String offerShiftRequestedId;
   final String offerShiftRequestedName;
   final String offerShiftName;
-  final String offerShiftID;
+  // final String offerShiftID;
+  final String offerAcceptedId;
 
   ShiftOfferData({
     required this.offerShiftId,
-    required this.offerShiftID,
+    // required this.offerShiftID,
     required this.offerShiftTime,
     required this.offerShiftDate,
     required this.offerShiftLocation,
     required this.offerShiftRequestedId,
     required this.offerShiftRequestedName,
     required this.offerShiftName,
+    required this.offerAcceptedId,
   });
 
   factory ShiftOfferData.fromMap(Map<String, dynamic> map) {
     return ShiftOfferData(
-      offerShiftId: map['OfferShiftId'] ?? '',
-      offerShiftTime: map['OfferShiftTime'] ?? '',
-      offerShiftDate: map['OfferShiftDate'] ?? Timestamp.now(),
-      offerShiftLocation: map['OfferShiftLocation'] ?? '',
-      offerShiftRequestedId: map['OfferShiftRequestedId'] ?? '',
-      offerShiftRequestedName: map['OfferShiftRequestedName'] ?? '',
-      offerShiftName: map['OfferShiftName'] ?? '',
-      offerShiftID: '',
+      offerShiftId: map['ShiftOfferId'] ?? '',
+      offerShiftTime: map['ShiftOfferTime'] ?? '',
+      offerShiftDate: map['ShiftOfferDate'] ?? Timestamp.now(),
+      offerShiftLocation: map['ShiftOfferLocation'] ?? '',
+      offerShiftRequestedId: map['ShiftOfferId'] ?? '',
+      offerShiftRequestedName: map['ShiftOfferShiftName'] ?? '',
+      offerShiftName: map['ShiftOfferShiftName'] ?? '',
+      // offerShiftID: '',
+      offerAcceptedId: map["ShiftOfferAcceptedId"] ?? "",
     );
   }
 }

@@ -1115,6 +1115,10 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                       _isLoading =
                                                                           true;
                                                                     });
+                                                                    List<String>
+                                                                        prevImage =
+                                                                        [];
+
                                                                     // Logic to submit the report
                                                                     if (uploads
                                                                             .isNotEmpty ||
@@ -1135,7 +1139,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                               .id,
                                                                           widget
                                                                               .p
-                                                                              .PatrolId);
+                                                                              .PatrolId,
+                                                                          prevImage);
                                                                       toastification
                                                                           .show(
                                                                         context:

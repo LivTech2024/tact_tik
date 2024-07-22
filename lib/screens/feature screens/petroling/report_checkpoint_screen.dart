@@ -81,6 +81,7 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
     setState(() {
       uploads.removeAt(index);
     });
+    fetchImages();
   }
 
   Future<void> _addImage() async {
@@ -171,6 +172,35 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
     }
 
     return File(result.path);
+  }
+
+  void _removeImage(int index) {
+    setState(() {
+      imageUrls.removeAt(index);
+    });
+  }
+
+  void _showFullscreenImage(BuildContext context, dynamic image) {
+    if (image is String) {
+      // Handle image URL
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => FullscreenImage(imageUrl: image),
+        ),
+      );
+    } else if (image is File) {
+      // Handle File object
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => FullscreenImage(imageFile: image),
+        ),
+      );
+    } else {
+      // Handle other data types (optional: show error or handle differently)
+      print('Unsupported image data type: ${image.runtimeType}');
+    }
   }
 
   @override
@@ -341,33 +371,40 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                           );
                         } else {
                           final upload = uploads[index];
-                          return Container(
-                            height: height / height66,
-                            width: width / width66,
-                            decoration: BoxDecoration(
-                              color: Colors.grey.withOpacity(0.5),
-                              borderRadius:
-                                  BorderRadius.circular(width / width10),
-                            ),
-                            // margin: EdgeInsets.all(width / width8),
-                            child: Stack(
-                              children: [
-                                Positioned.fill(
-                                  child: Image.file(
-                                    upload['file'],
-                                    fit: BoxFit.cover,
+                          return GestureDetector(
+                            onTap: () => _showFullscreenImage(context, upload),
+                            child: Container(
+                              height: height / height66,
+                              width: width / width66,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.withOpacity(0.5),
+                                borderRadius:
+                                    BorderRadius.circular(width / width10),
+                              ),
+                              // margin: EdgeInsets.all(width / width8),
+                              child: Stack(
+                                children: [
+                                  Positioned.fill(
+                                    child: Image.file(
+                                      upload['file'],
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
-                                ),
-                                Align(
-                                  alignment: Alignment.topRight,
-                                  child: IconButton(
-                                    onPressed: () {
-                                      _deleteItem(index - 1);
-                                    },
-                                    icon: Icon(Icons.cancel),
-                                  ),
-                                )
-                              ],
+                                  Align(
+                                    alignment: Alignment.topRight,
+                                    child: IconButton(
+                                      onPressed: () {
+                                        _deleteItem(index - 1);
+                                      },
+                                      icon: Icon(
+                                        Icons.cancel,
+                                        color: Colors.black,
+                                        size: width / width50,
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
                           );
                         }
@@ -386,41 +423,45 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                             ),
                             itemCount: imageUrls.length,
                             itemBuilder: (context, index) {
-                              return Stack(
-                                children: [
-                                  /* Image.network(
-                                imageUrls[index],
-                                fit: BoxFit.cover,
-                              ),*/
-                                  Container(
-                                    decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                      image: NetworkImage(imageUrls[index]),
-                                      fit: BoxFit.cover,
-                                    )),
-                                  ),
-                                  Positioned(
-                                    top: -5.h,
-                                    right: -5.w,
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        // IconButton(
-                                        //   onPressed: () {
-                                        //     _removeImage(index);
-                                        //   },
-                                        //   icon: Icon(
-                                        //     Icons.delete,
-                                        //     color: Theme.of(context)
-                                        //         .textTheme
-                                        //         .bodyMedium!
-                                        //         .color,
-                                        //   ),
-                                        // ),
-                                      ],
+                              return GestureDetector(
+                                onTap: () => _showFullscreenImage(
+                                    context, imageUrls[index]),
+                                child: Stack(
+                                  children: [
+                                    /* Image.network(
+                                  imageUrls[index],
+                                  fit: BoxFit.cover,
+                                ),*/
+                                    Container(
+                                      decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                        image: NetworkImage(imageUrls[index]),
+                                        fit: BoxFit.cover,
+                                      )),
                                     ),
-                                  ),
-                                ],
+                                    Positioned(
+                                      top: -5.h,
+                                      right: -5.w,
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          IconButton(
+                                            onPressed: () {
+                                              _removeImage(index);
+                                            },
+                                            icon: Icon(
+                                              Icons.delete,
+                                              color: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium!
+                                                  .color,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               );
                             },
                           )
@@ -453,6 +494,17 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                         setState(() {
                           _isLoading = true;
                         });
+                        final combinedMaps = <Map<String, dynamic>>[];
+
+                        // Extract URLs from uploads
+                        combinedMaps.addAll(uploads
+                            .map((upload) => {'imageUrl': upload['imageUrl']})
+                            .toList());
+
+                        // Add new URL map
+                        combinedMaps.add({'imageUrl': Controller.text.trim()});
+
+                        // List<String> imageUrls = []; This stores the previously uploaded images
                         if (uploads.isNotEmpty || Controller.text.isNotEmpty) {
                           await fireStoreService.addImagesToPatrol(
                               uploads,
@@ -460,7 +512,8 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                               widget.PatrolID,
                               widget.empId,
                               widget.CheckpointID,
-                              widget.ShiftId);
+                              widget.ShiftId,
+                              imageUrls);
                           toastification.show(
                             context: context,
                             type: ToastificationType.success,
@@ -493,6 +546,38 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
               ),
             )
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class FullscreenImage extends StatelessWidget {
+  final File? imageFile;
+  final String? imageUrl;
+
+  const FullscreenImage({Key? key, this.imageFile, this.imageUrl})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: GestureDetector(
+        onTap: () => Navigator.pop(context),
+        child: Center(
+          child: imageFile != null
+              ? InteractiveViewer(
+                  child: Image.file(imageFile!, fit: BoxFit.contain),
+                )
+              : (imageUrl != null)
+                  ? Image.network(
+                      imageUrl!,
+                      fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) =>
+                          Center(child: Text('Error loading image')),
+                    )
+                  : Container(), // Handle cases where both imageFile and imageUrl are null (optional)
         ),
       ),
     );

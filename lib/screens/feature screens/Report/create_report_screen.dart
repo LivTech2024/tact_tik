@@ -13,6 +13,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
+import 'package:tact_tik/common/widgets/video_grid.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/main.dart';
@@ -61,7 +62,10 @@ class CreateReportScreen extends StatefulWidget {
 class _CreateReportScreenState extends State<CreateReportScreen> {
   bool shouldShowButton = false;
   List<String> imageUrls = [];
+  List<String> videoUrls = [];
+
   List<Map<String, dynamic>> DisplayIMage = [];
+  List<Map<String, dynamic>> DisplayVideo = [];
 
   FireStoreService fireStoreService = FireStoreService();
 
@@ -94,6 +98,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
   Map<String, String> clientMap = {};
   Map<String, String> locationMap = {};
   TextToSpeechConfig textToSpeechConfig = TextToSpeechConfig();
+
   @override
   void initState() {
     // TODO: implement initState
@@ -196,6 +201,17 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
             });
           }
         }
+        if (reportData['ReportVideo'] != null) {
+          // Add existing report images URLs to uploads list
+          for (var imageUrl in reportData['ReportVideo']) {
+            print("ReportVideo1 ${imageUrl}");
+            setState(() {
+              DisplayVideo.add({'type': 'video', 'url': imageUrl});
+            });
+          }
+        } else {
+          print("ReportVideo is null");
+        }
         print(reportData['ReportIsFollowUpRequired']);
       }
     } else {
@@ -242,6 +258,17 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
               });
             }
           }
+          if (reportData['ReportVideo'] != null) {
+            // Add existing report images URLs to uploads list
+            for (var imageUrl in reportData['ReportVideo']) {
+              print("ReportVideo1 ${imageUrl}");
+              setState(() {
+                DisplayVideo.add({'type': 'video', 'url': imageUrl});
+              });
+            }
+          } else {
+            print("ReportVideo is null");
+          }
           print(reportData['ReportIsFollowUpRequired']);
         } else {
           setState(() {
@@ -254,6 +281,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
   }
 
   List<Map<String, dynamic>> uploads = [];
+  List<Map<String, dynamic>> videouploads = [];
 
   Future<void> _addImage() async {
     List<XFile>? pickedFiles =
@@ -298,6 +326,48 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
       }
     } else {
       print('No images selected');
+    }
+  }
+
+  Future<void> _addVideoFromCamera() async {
+    XFile? pickedFile =
+        await ImagePicker().pickVideo(source: ImageSource.camera);
+    if (pickedFile != null) {
+      try {
+        File file = File(pickedFile.path);
+        if (file.existsSync()) {
+          setState(() {
+            videouploads.add({'type': 'video', 'file': file});
+          });
+        } else {
+          print('File does not exist: ${file.path}');
+        }
+      } catch (e) {
+        print('Error adding video: $e');
+      }
+    } else {
+      print('No video selected');
+    }
+  }
+
+  Future<void> _addVideoFromGallery() async {
+    XFile? pickedFile =
+        await ImagePicker().pickVideo(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      try {
+        File file = File(pickedFile.path);
+        if (file.existsSync()) {
+          setState(() {
+            videouploads.add({'type': 'video', 'file': file});
+          });
+        } else {
+          print('File does not exist: ${file.path}');
+        }
+      } catch (e) {
+        print('Error adding video: $e');
+      }
+    } else {
+      print('No video selected');
     }
   }
 
@@ -892,6 +962,34 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                                         _addImage();
                                       },
                                     ),
+                                    ListTile(
+                                      leading: Icon(
+                                        Icons.videocam,
+                                        size: 20.sp,
+                                      ),
+                                      title: InterRegular(
+                                        text: 'Add Video from Camera',
+                                        fontsize: 14.sp,
+                                      ),
+                                      onTap: () {
+                                        Navigator.pop(context);
+                                        _addVideoFromCamera();
+                                      },
+                                    ),
+                                    ListTile(
+                                      leading: Icon(
+                                        Icons.video_library,
+                                        size: 20.sp,
+                                      ),
+                                      title: InterRegular(
+                                        text: 'Add Video from Gallery',
+                                        fontsize: 14.sp,
+                                      ),
+                                      onTap: () {
+                                        Navigator.pop(context);
+                                        _addVideoFromGallery();
+                                      },
+                                    ),
                                   ],
                                 ),
                               );
@@ -919,6 +1017,8 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                       ),
                     ),
                     SizedBox(height: 10.h),
+                    if (videouploads.isNotEmpty)
+                      VideoGrid(displayVideo: videouploads),
                     if (DisplayIMage.isNotEmpty)
                       GridView.builder(
                         shrinkWrap: true,
@@ -940,12 +1040,37 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                           );
                         },
                       ),
+                    if (DisplayVideo.isNotEmpty)
+                      VideoGrid(displayVideo: DisplayVideo),
+                    // VideoGrid.builder(
+                    //   shrinkWrap: true,
+                    //   physics: const NeverScrollableScrollPhysics(),
+                    //   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    //     crossAxisCount: 3,
+                    //     mainAxisSpacing: 8.0,
+                    //     crossAxisSpacing: 8.0,
+                    //   ),
+                    //   itemCount: DisplayVideo.length,
+                    //   itemBuilder: (context, index) {
+                    //     return Container(
+                    //       decoration: BoxDecoration(
+                    //         image: DecorationImage(
+                    //           image: NetworkImage(DisplayVideo[index]['url']),
+                    //           fit: BoxFit.cover,
+                    //         ),
+                    //       ),
+                    //     );
+                    //   },
+                    // ),
                     SizedBox(height: 60.h),
                     Visibility(
                       visible: shouldShowButton,
                       child: Button1(
                         height: 50.h,
-                        text: 'Submit',
+                        text: reportData.isNotEmpty &&
+                                reportData['ReportIsFollowUpRequired'] == true
+                            ? 'Submit Followup'
+                            : 'Submit',
                         color: Colors.white,
                         onPressed: () async {
                           setState(() {
@@ -960,18 +1085,40 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                             var id = await fireStoreService.getReportCategoryId(
                                 dropdownValue, widget.companyID);
                             List<Map<String, dynamic>> imageList =
-                                await Future.wait(uploads.map((upload) async {
-                              if (upload['type'] == 'image') {
-                                // Upload the image and get its download URL
-                                List<Map<String, dynamic>> urls =
-                                    await fireStoreService
-                                        .addImageToReportStorage(
-                                            upload['file']);
-                                // Add the download URL to the list of image URLs
-                                imageUrls.add(urls[0]['downloadURL']);
-                              }
-                              return {'type': upload['type']};
-                            }));
+                                await Future.wait(
+                              uploads.map(
+                                (upload) async {
+                                  if (upload['type'] == 'image') {
+                                    // Upload the image and get its download URL
+                                    List<Map<String, dynamic>> urls =
+                                        await fireStoreService
+                                            .addImageToReportStorage(
+                                                upload['file']);
+                                    // Add the download URL to the list of image URLs
+                                    imageUrls.add(urls[0]['downloadURL']);
+                                  }
+                                  return {'type': upload['type']};
+                                },
+                              ),
+                            );
+                            List<Map<String, dynamic>> videoList =
+                                await Future.wait(
+                              videouploads.map(
+                                (upload) async {
+                                  if (upload['type'] == 'video') {
+                                    // Upload the image and get its download URL
+                                    List<Map<String, dynamic>> urls =
+                                        await fireStoreService
+                                            .addVideoToReportStorage(
+                                                upload['file']);
+                                    // Add the download URL to the list of image URLs
+                                    videoUrls.add(urls[0]['downloadURL']);
+                                  }
+                                  return {'type': upload['type']};
+                                },
+                              ),
+                            );
+                            print("Video URls ${videoUrls}");
                             await fireStoreService.createReport(
                                 locationId: !widget.isRoleGuard
                                     ? selectedLocationId ?? ""
@@ -995,6 +1142,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                                     : widget.ClientId,
                                 followedUpId: widget.reportId,
                                 image: imageUrls,
+                                video: videoUrls,
                                 createdAt: SelectedDate,
                                 shiftId: widget.ShiftId,
                                 companyBranchId: widget.BranchId);
@@ -1027,6 +1175,24 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                               }
                               return {'type': upload['type']};
                             }));
+                            List<Map<String, dynamic>> videoList =
+                                await Future.wait(
+                              videouploads.map(
+                                (upload) async {
+                                  if (upload['type'] == 'video') {
+                                    // Upload the image and get its download URL
+                                    List<Map<String, dynamic>> urls =
+                                        await fireStoreService
+                                            .addVideoToReportStorage(
+                                                upload['file']);
+                                    // Add the download URL to the list of image URLs
+                                    videoUrls.add(urls[0]['downloadURL']);
+                                  }
+                                  return {'type': upload['type']};
+                                },
+                              ),
+                            );
+                            print("Video URls ${videoUrls}");
                             await fireStoreService.createReport(
                                 locationId: !widget.isRoleGuard
                                     ? selectedLocationId ?? ""
@@ -1047,6 +1213,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                                     ? selectedClientId ?? ""
                                     : widget.ClientId,
                                 image: imageUrls,
+                                video: videoUrls,
                                 createdAt: SelectedDate,
                                 shiftId: widget.ShiftId,
                                 companyBranchId: widget.BranchId ?? "");
@@ -1101,6 +1268,24 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                               }
                               return {'type': upload['type']};
                             }));
+                            List<Map<String, dynamic>> videoList =
+                                await Future.wait(
+                              videouploads.map(
+                                (upload) async {
+                                  if (upload['type'] == 'video') {
+                                    // Upload the image and get its download URL
+                                    List<Map<String, dynamic>> urls =
+                                        await fireStoreService
+                                            .addVideoToReportStorage(
+                                                upload['file']);
+                                    // Add the download URL to the list of image URLs
+                                    videoUrls.add(urls[0]['downloadURL']);
+                                  }
+                                  return {'type': upload['type']};
+                                },
+                              ),
+                            );
+                            print("Video URls ${videoUrls}");
                             await fireStoreService.createReport(
                                 locationId: !widget.isRoleGuard
                                     ? selectedLocationId ?? ""
@@ -1121,6 +1306,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                                     ? selectedClientId ?? ""
                                     : widget.ClientId,
                                 image: imageUrls,
+                                video: videoUrls,
                                 createdAt: SelectedDate,
                                 shiftId: widget.ShiftId,
                                 companyBranchId: widget.BranchId);

@@ -821,6 +821,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                           setState(() {
                             uploadingLoading = true;
                           });
+                          List<String> prevImage = [];
                           print("CheckpointId ${chkid}");
                           if (uploads.isNotEmpty ||
                               Controller.text.isNotEmpty) {
@@ -830,7 +831,9 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                 widget.p.PatrolId,
                                 widget.p.EmpId,
                                 chkid,
-                                widget.p.ShiftId);
+                                widget.p.ShiftId,
+                                prevImage);
+
                             toastification.show(
                               context: context,
                               type: ToastificationType.success,
@@ -1000,48 +1003,90 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                               SharedPreferences prefs =
                                   await SharedPreferences.getInstance();
                               print(_expandCategoryMap[widget.p.PatrolId]);
+
                               if (buttonEnabled &&
                                   widget.p.CurrentStatus != "started" &&
                                   widget.p.CompletedCount <
                                       widget.p.PatrolRequiredCount) {
-                                setState(() {
-                                  buttonEnabled = false; // Disable the button
-                                });
-                                print(widget.p.patrolClientId);
-                                var clientName = await fireStoreService
-                                    .getClientName(widget.p.patrolClientId);
+                                // Show dialog box
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text("Start Patrol"),
+                                      content: Text(
+                                          "Are you sure you want to start this patrol?"),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          child: Text("No"),
+                                          onPressed: () {
+                                            Navigator.of(context)
+                                                .pop(); // Dismiss the dialog
+                                          },
+                                        ),
+                                        TextButton(
+                                          child: Text("Yes"),
+                                          onPressed: () async {
+                                            Navigator.of(context)
+                                                .pop(); // Dismiss the dialog
 
-                                await fireStoreService.addToLog(
-                                    "patrol_start",
-                                    "",
-                                    clientName ?? "",
-                                    widget.p.EmpId,
-                                    widget.p.EmployeeName,
-                                    widget.p.PatrolCompanyID,
-                                    "",
-                                    widget.p.PatrolClientID,
-                                    widget.p.LocationId,
-                                    widget.p.ShiftName);
-                                await fireStoreService
-                                    .updatePatrolCurrentStatusToUnchecked(
-                                        widget.p.PatrolId,
-                                        "started",
-                                        widget.p.EmpId,
-                                        widget.p.EmployeeName,
-                                        widget.p.ShiftId);
-                                DateTime now = DateTime.now();
-                                String formattedTime =
-                                    DateFormat('HH:mm:ss').format(now);
-                                setState(() {
-                                  StartTime = formattedTime;
-                                  _expand = true;
-                                  prefs.setBool("expand", _expand);
-                                  prefs.setString(
-                                      "StartTime", StartTime.toString());
-                                });
-                                _updateExpandStatus(widget.p.PatrolId, true);
-                                _refresh();
-                                showSuccessToast(context, "Patrol Started");
+                                            setState(() {
+                                              buttonEnabled =
+                                                  false; // Disable the button
+                                            });
+
+                                            print(widget.p.patrolClientId);
+                                            var clientName =
+                                                await fireStoreService
+                                                    .getClientName(widget
+                                                        .p.patrolClientId);
+
+                                            await fireStoreService.addToLog(
+                                              "patrol_start",
+                                              "",
+                                              clientName ?? "",
+                                              widget.p.EmpId,
+                                              widget.p.EmployeeName,
+                                              widget.p.PatrolCompanyID,
+                                              "",
+                                              widget.p.PatrolClientID,
+                                              widget.p.LocationId,
+                                              widget.p.ShiftName,
+                                            );
+
+                                            await fireStoreService
+                                                .updatePatrolCurrentStatusToUnchecked(
+                                              widget.p.PatrolId,
+                                              "started",
+                                              widget.p.EmpId,
+                                              widget.p.EmployeeName,
+                                              widget.p.ShiftId,
+                                            );
+
+                                            DateTime now = DateTime.now();
+                                            String formattedTime =
+                                                DateFormat('HH:mm:ss')
+                                                    .format(now);
+
+                                            setState(() {
+                                              StartTime = formattedTime;
+                                              _expand = true;
+                                              prefs.setBool("expand", _expand);
+                                              prefs.setString("StartTime",
+                                                  StartTime.toString());
+                                            });
+
+                                            _updateExpandStatus(
+                                                widget.p.PatrolId, true);
+                                            _refresh();
+                                            showSuccessToast(
+                                                context, "Patrol Started");
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
                               } else if (widget.p.CompletedCount ==
                                   widget.p.PatrolRequiredCount) {
                                 setState(() {
@@ -1054,7 +1099,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                             }
                           : () {
                               showErrorToast(
-                                  context, "Patrol it already completed");
+                                  context, "Patrol is already completed");
                             },
                     ),
                     Visibility(
@@ -1067,7 +1112,6 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                 _expandCategoryMap.containsKey(category.title)
                                     ? _expandCategoryMap[category.title]!
                                     : false;
-
                             return Column(
                               children: [
                                 GestureDetector(

@@ -352,14 +352,14 @@ enum GuardAlertEnum { newOffer, newExchange, ShiftStatusNotification, other }
 extension GuardAlertEnumExtension on String {
   GuardAlertEnum toEnum() {
     switch (this) {
-      case 'newOffer':
-        return GuardAlertEnum.newOffer;
-      case 'newExchange':
-        return GuardAlertEnum.newExchange;
-      case 'ShiftStatusNotification':
+      case 'Notification':
         return GuardAlertEnum.ShiftStatusNotification;
+      case 'SHIFTEXCHANGE':
+        return GuardAlertEnum.newExchange;
+      case 'SHIFTOFFER':
+        return GuardAlertEnum.newOffer;
       default:
-        return GuardAlertEnum.other;
+        return GuardAlertEnum.ShiftStatusNotification;
     }
   }
 }
