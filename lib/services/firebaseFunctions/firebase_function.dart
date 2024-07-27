@@ -4767,14 +4767,6 @@ class FireStoreService {
         FirebaseFirestore.instance.collection(collection).doc();
 
     await newDocRef.set(data);
-
-    // Create another new document with a different ID in the same location
-    // final DocumentReference anotherNewDocRef =
-    //     FirebaseFirestore.instance.collection(collection).doc();
-
-    // await anotherNewDocRef.set({
-    //   'exampleField': 'exampleValue',
-    // });
   }
 
   //Create log
@@ -5736,6 +5728,23 @@ class FireStoreService {
       // Update the document with the provided docId
       await exchangeCollection.doc(docId).update({
         "ShiftExchReqStatus": Status, // Update status to "started"
+      });
+
+      print("Shift exchange status updated successfully!");
+    } catch (e) {
+      print("Error updating shift exchange status: $e");
+    }
+  }
+
+  Future<void> UpdateOfferStatus(String docId, String Status) async {
+    try {
+      // Get a reference to the ShiftExchange collection
+      CollectionReference exchangeCollection =
+          FirebaseFirestore.instance.collection('ShiftOffer');
+
+      // Update the document with the provided docId
+      await exchangeCollection.doc(docId).update({
+        "ShiftOfferStatus": Status, // Update status to "started"
       });
 
       print("Shift exchange status updated successfully!");

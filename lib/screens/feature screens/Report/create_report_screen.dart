@@ -954,7 +954,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                                         size: 20.sp,
                                       ),
                                       title: InterRegular(
-                                        text: 'Add Image',
+                                        text: 'Add Image from Gallery',
                                         fontsize: 14.sp,
                                       ),
                                       onTap: () {

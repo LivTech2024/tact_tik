@@ -100,14 +100,10 @@ var darkTheme = ThemeData(
     shape: CircleBorder(),
   ),
   iconTheme: IconThemeData(color: DarkColor.color11),
-  
   appBarTheme: AppBarTheme(
     backgroundColor: DarkColor.AppBarcolor,
     elevation: 0,
-    iconTheme: IconThemeData(
-      color: DarkColor.color5,
-      size: 24.sp
-    ),
+    iconTheme: IconThemeData(color: DarkColor.color5, size: 24.sp),
     titleTextStyle: TextStyle(
       color: DarkColor.color5,
       fontSize: 18.sp,
@@ -115,9 +111,8 @@ var darkTheme = ThemeData(
       letterSpacing: -.3,
     ),
   ),
-
   shadowColor: Colors.transparent,
-  focusColor: DarkColor.color4,
+  focusColor: DarkColor.color1,
   textTheme: const TextTheme(
     titleLarge: TextStyle(
       color: DarkColor.color16,

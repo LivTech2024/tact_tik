@@ -925,13 +925,17 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                 ),
                               ),
                               CircularPercentIndicator(
-                                radius: 10.r,
+                                radius: 23.r,
                                 lineWidth: 3,
                                 percent: completionPercentage.clamp(0.0, 1.0),
-                                progressColor: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall!
-                                    .color,
+                                center: Text(
+                                  "${(completionPercentage.clamp(0, 1.0) * 100).toInt()}%",
+                                  style: TextStyle(fontSize: 10.h),
+                                ),
+                                progressColor:
+                                    ThemeMode.dark == themeManager.themeMode
+                                        ? DarkColor.Primarycolor
+                                        : LightColor.Primarycolor,
                               ),
                             ],
                           ),

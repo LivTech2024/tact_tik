@@ -27,8 +27,7 @@ class TaskFeatureScreen extends StatelessWidget {
                   builder: (context) => TaskFeatureCreateScreen(),
                 ));
           },
-          backgroundColor:
-             Theme.of(context).primaryColor,
+          backgroundColor: Theme.of(context).primaryColor,
           shape: CircleBorder(),
           child: Icon(
             color: Colors.white,

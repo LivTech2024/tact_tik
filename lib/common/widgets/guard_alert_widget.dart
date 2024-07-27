@@ -215,6 +215,11 @@ class _GuardAlertWidgetState extends State<GuardAlertWidget> {
                                     .exchangeShiftRequestedId,
                                 "pending");
                           }
+                          if (widget.shiftOfferData != null) {
+                            print("Working on ShiftOffer");
+                            // await fireStoreService.UpdateOfferStatus(
+                            //     widget.shiftOfferData!.offerShiftId, "pending");
+                          }
                           print("Id ${widget.notiId}");
                           showSuccessToast(context, "${widget.notiId}");
                           showSuccessToast(context,

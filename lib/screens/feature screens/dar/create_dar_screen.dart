@@ -425,7 +425,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                         size: 20.sp,
                                       ),
                                       title: InterRegular(
-                                        text: 'Add Image',
+                                        text: 'Add Image from Camera',
                                         fontsize: 14.sp,
                                       ),
                                       onTap: () {
@@ -439,7 +439,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                         size: 20.sp,
                                       ),
                                       title: InterRegular(
-                                        text: 'Add from Gallery',
+                                        text: 'Add Image from Gallery',
                                         fontsize: 14.sp,
                                       ),
                                       onTap: () {

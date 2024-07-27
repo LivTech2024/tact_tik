@@ -321,7 +321,7 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                                   children: [
                                     ListTile(
                                       leading: Icon(Icons.camera),
-                                      title: Text('Add Image'),
+                                      title: Text('Add Image from Camera'),
                                       onTap: () {
                                         _addImage();
                                         Navigator.pop(context);
@@ -329,7 +329,7 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                                     ),
                                     ListTile(
                                       leading: Icon(Icons.image),
-                                      title: Text('Add from Gallery'),
+                                      title: Text('Add Image from Gallery'),
                                       onTap: () {
                                         _addGallery();
                                         Navigator.pop(context);
@@ -353,7 +353,7 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                                 children: [
                                   Icon(
                                     Icons.add,
-                                    size: width / width40,
+                                    size: width / width30,
                                     color: Theme.of(context)
                                         .textTheme
                                         .bodyMedium!
@@ -399,7 +399,7 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                                       icon: Icon(
                                         Icons.cancel,
                                         color: Colors.black,
-                                        size: width / width50,
+                                        size: width / width30,
                                       ),
                                     ),
                                   )

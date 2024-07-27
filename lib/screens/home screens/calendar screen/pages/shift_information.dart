@@ -421,6 +421,7 @@ class _ShiftInformationState extends State<ShiftInformation> {
         'ShiftOfferSenderId': senderId,
         'ShiftOfferShiftId': shiftId,
         'ShiftOfferStatus': 'pending',
+        'ShiftOfferAcceptedId': null
       });
 
       await newShiftExchangeDoc.update({

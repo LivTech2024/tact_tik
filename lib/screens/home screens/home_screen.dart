@@ -866,8 +866,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         //   "formattedEndTime",
                         // );
                         // customEmail();
-                        await fireStoreService.copyAndCreateDocument(
-                            "PatrolLogs", "MOkVZ8Fx7Hpc4TmZrDFd");
+                        // await fireStoreService.copyAndCreateDocument(
+                        //     "PatrolLogs", "Yg5CAS1PAHc8sPm3ows5");
                         // await darFunctions.fetchShiftDetailsAndSubmitDAR(
                         //     _shiftId,
                         //     _empEmail,
@@ -961,12 +961,12 @@ class _HomeScreenState extends State<HomeScreen> {
                               icon: Icons.add_task,
                               color: ScreenIndex == 0
                                   ? ThemeMode.dark == themeManager.themeMode
-                                      ? DarkColor.color1
+                                      ? DarkColor.Primarycolor
                                       : LightColor.Primarycolor
                                   : Theme.of(context).focusColor,
                               textcolor: ScreenIndex == 0
                                   ? ThemeMode.dark == themeManager.themeMode
-                                      ? DarkColor.color1
+                                      ? DarkColor.Primarycolor
                                       : LightColor.Primarycolor
                                   : Theme.of(context).focusColor,
                             ),
@@ -978,12 +978,12 @@ class _HomeScreenState extends State<HomeScreen> {
                               icon: Icons.grid_view_rounded,
                               color: ScreenIndex == 1
                                   ? ThemeMode.dark == themeManager.themeMode
-                                      ? DarkColor.color1
+                                      ? DarkColor.Primarycolor
                                       : LightColor.Primarycolor
                                   : Theme.of(context).focusColor,
                               textcolor: ScreenIndex == 1
                                   ? ThemeMode.dark == themeManager.themeMode
-                                      ? DarkColor.color1
+                                      ? DarkColor.Primarycolor
                                       : LightColor.Primarycolor
                                   : Theme.of(context).focusColor,
                             ),
@@ -995,12 +995,12 @@ class _HomeScreenState extends State<HomeScreen> {
                               icon: Icons.calendar_today,
                               color: ScreenIndex == 2
                                   ? ThemeMode.dark == themeManager.themeMode
-                                      ? DarkColor.color1
+                                      ? DarkColor.Primarycolor
                                       : LightColor.Primarycolor
                                   : Theme.of(context).focusColor,
                               textcolor: ScreenIndex == 2
                                   ? ThemeMode.dark == themeManager.themeMode
-                                      ? DarkColor.color1
+                                      ? DarkColor.Primarycolor
                                       : LightColor.Primarycolor
                                   : Theme.of(context).focusColor,
                             ),
@@ -1020,12 +1020,12 @@ class _HomeScreenState extends State<HomeScreen> {
                               icon: Icons.chat_bubble_outline,
                               color: ScreenIndex == 3
                                   ? ThemeMode.dark == themeManager.themeMode
-                                      ? DarkColor.color1
+                                      ? DarkColor.Primarycolor
                                       : LightColor.Primarycolor
                                   : Theme.of(context).focusColor,
                               textcolor: ScreenIndex == 3
                                   ? ThemeMode.dark == themeManager.themeMode
-                                      ? DarkColor.color1
+                                      ? DarkColor.Primarycolor
                                       : LightColor.Primarycolor
                                   : Theme.of(context).focusColor,
                             ),
