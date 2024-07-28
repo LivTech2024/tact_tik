@@ -823,7 +823,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => PayStubScreen()));
+                                builder: (context) => PayStubScreen(empId: _employeeId,)));
                       },
                     ),
                     buildListTile(
