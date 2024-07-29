@@ -34,6 +34,8 @@ class EndCheckpointScreen extends StatefulWidget {
   final String PatrolClientID;
   final String LocationId;
   final String ShiftName;
+  final String PatrolName;
+
   final String description;
   final String ShiftDate;
   final Timestamp? PatrolStatusTime;
@@ -59,6 +61,7 @@ class EndCheckpointScreen extends StatefulWidget {
     required this.PatrolClientID,
     required this.LocationId,
     required this.ShiftName,
+    required this.PatrolName,
     required this.description,
     required this.ShiftDate,
     required this.PatrolStatusTime,
@@ -491,29 +494,32 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                               "",
                               widget.PatrolClientID,
                               widget.LocationId,
-                              widget.ShiftName);
+                              widget.ShiftName,
+                              widget.PatrolName,
+                              null);
                           num newCount = widget.CompletedCount;
-                          sendapiEmail(
-                              emails,
-                              selectedOption == "Emergency"
-                                  ? "Urgent Update for ${widget.description} Date:- ${formattedStartDate} "
-                                  : "Patrol update for ${widget.description} Date:- ${formattedStartDate}",
-                              widget.EmpName,
-                              "",
-                              'Shift ',
-                              formattedStartDate,
-                              formattedImageUrls,
-                              widget.EmpName,
-                              InTime,
-                              formattedEndTime,
-                              widget.CompletedCount + 1,
-                              widget.PatrolRequiredCount.toString(),
-                              widget.description,
-                              "Completed",
-                              InTime,
-                              formattedPatrolOutTime,
-                              Controller.text,
-                              selectedOption);
+                          //to-do uncomment this before testing
+                          // sendapiEmail(
+                          //     emails,
+                          //     selectedOption == "Emergency"
+                          //         ? "Urgent Update for ${widget.description} Date:- ${formattedStartDate} "
+                          //         : "Patrol update for ${widget.description} Date:- ${formattedStartDate}",
+                          //     widget.EmpName,
+                          //     "",
+                          //     'Shift ',
+                          //     formattedStartDate,
+                          //     formattedImageUrls,
+                          //     widget.EmpName,
+                          //     InTime,
+                          //     formattedEndTime,
+                          //     widget.CompletedCount + 1,
+                          //     widget.PatrolRequiredCount.toString(),
+                          //     widget.description,
+                          //     "Completed",
+                          //     InTime,
+                          //     formattedPatrolOutTime,
+                          //     Controller.text,
+                          //     selectedOption);
                           await fireStoreService.EndPatrolupdatePatrolsStatus(
                               widget.PatrolID,
                               widget.EmpId,

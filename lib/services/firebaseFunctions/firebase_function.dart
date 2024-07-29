@@ -4857,20 +4857,21 @@ class FireStoreService {
   }
 
   Future<void> addToLog(
-    String logType,
-    String locationName,
-    String clientName,
-    String logBookEmployeeId,
-    String logbookEmployeeName,
-    String logBookCompanyID,
-    String logBookBranchID,
-    String logBookClientID,
-    String logBookLocationID,
-    String ShiftName,
-  ) async {
+      String logType,
+      String locationName,
+      String clientName,
+      String logBookEmployeeId,
+      String logbookEmployeeName,
+      String logBookCompanyID,
+      String logBookBranchID,
+      String logBookClientID,
+      String logBookLocationID,
+      String ShiftName,
+      String? PatrolName,
+      String? CheckPointName) async {
     try {
       final today = DateTime.now();
-      bool isDocumentpresent = false;
+      bool isDocumentPresent = false;
       final userRef = FirebaseFirestore.instance.collection('LogBook');
       final query = userRef.where('LogBookEmpId', isEqualTo: logBookEmployeeId);
       String documentID = '';
@@ -4883,23 +4884,31 @@ class FireStoreService {
         if (today.day == time[0] &&
             today.month == time[1] &&
             today.year == time[2]) {
-          isDocumentpresent = true;
+          isDocumentPresent = true;
           documentID = log.id;
           break;
         }
       }
 
-      if (isDocumentpresent) {
+      final logEntry = {
+        'LogContent': '$logType at $locationName for $clientName',
+        'LogType': logType,
+        'LogReportedAt': Timestamp.fromDate(today),
+      };
+
+      // Add optional fields if they are not null
+      if (PatrolName != null) {
+        logEntry['LogPatrolName'] = PatrolName;
+      }
+      if (CheckPointName != null) {
+        logEntry['LogCheckPointName'] = CheckPointName;
+      }
+
+      if (isDocumentPresent) {
         // A document exists, update the LogBookData array
         final docRef = userRef.doc(documentID);
         await docRef.update({
-          'LogBookData': FieldValue.arrayUnion([
-            {
-              'LogContent': '$logType at $locationName for $clientName',
-              'LogType': logType,
-              'LogReportedAt': Timestamp.fromDate(today),
-            }
-          ]),
+          'LogBookData': FieldValue.arrayUnion([logEntry]),
         });
       } else {
         // Set the timestamp separately
@@ -4912,16 +4921,10 @@ class FireStoreService {
           'LogBookEmpId': logBookEmployeeId,
           'LogBookEmpName': logbookEmployeeName,
           'LogBookClientId': logBookClientID,
-          'LogBookCleintName': clientName,
+          'LogBookClientName': clientName,
           'LogBookLocationId': logBookLocationID,
           'LogBookLocationName': locationName,
-          'LogBookData': [
-            {
-              'LogContent': '$logType at $locationName for $clientName',
-              'LogType': logType,
-              'LogReportedAt': timestamp,
-            }
-          ],
+          'LogBookData': [logEntry],
           'LogBookCreatedAt': timestamp,
           'LogBookShiftName': ShiftName,
         });

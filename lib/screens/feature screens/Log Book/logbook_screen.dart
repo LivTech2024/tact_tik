@@ -26,32 +26,9 @@ class LogBookScreen extends StatefulWidget {
 class _LogBookScreenState extends State<LogBookScreen> {
   late Stream<QuerySnapshot> _logBookStream;
 
-  // Future<String> getempID() async {
-  //   var userInfo = await fireStoreService.getUserInfoByCurrentUserEmail();
-  //   if (userInfo != null) {
-  //     String employeeId = userInfo['EmployeeId'];
-  //     return employeeId;
-  //   } else {
-  //     print('User info not found');
-  //     return "";
-  //   }
-  // }
-
   @override
   void initState() {
     super.initState();
-
-    // _logBookStream = FirebaseFirestore.instance
-    //     .collection('LogBook')
-    //     .orderBy('LogBookDate', descending: true)
-    //     .where('LogBookEmpId', isEqualTo: widget.EmpId)
-    //     .snapshots();
-    // getempID().then((empID) {
-    //   _logBookStream = FirebaseFirestore.instance
-    //       .collection('LogBook')
-    //       .where('LogBookEmpId', isEqualTo: empID)
-    //       .snapshots();
-    // });
     fetchlog();
   }
 
@@ -161,7 +138,7 @@ class _LogBookScreenState extends State<LogBookScreen> {
           'Shift_$i'; // Use 'Shift_$i' as a unique identifier if ShiftName is absent
       final logData = data['LogBookData'] as List<dynamic>;
       final logTimestamp = data['LogBookDate'] as Timestamp;
-      final clientName = data['LogCleintName'] ?? '';
+      final clientName = data['LogBookClientName'] ?? '';
       final logLocation = data['LogBookLocationName'] ?? '';
       final logsByDate = <String, List<Map<String, dynamic>>>{};
 
@@ -178,6 +155,9 @@ class _LogBookScreenState extends State<LogBookScreen> {
             'LOCATION': logLocation,
             'LOGTYPE': logType,
             'LOGREPORTTIME': logReportTime,
+            'LogBookShiftName': data['LogBookShiftName'] ?? '',
+            'LogPatrolName': logMapData['LogPatrolName'] ?? '',
+            'LogCheckPointName': logMapData['LogCheckPointName'] ?? '',
           });
         } else {
           logsByDate[date] = [
@@ -186,6 +166,9 @@ class _LogBookScreenState extends State<LogBookScreen> {
               'LOCATION': logLocation,
               'LOGTYPE': logType,
               'LOGREPORTTIME': logReportTime,
+              'LogBookShiftName': data['LogBookShiftName'] ?? '',
+              'LogPatrolName': logMapData['LogPatrolName'] ?? '',
+              'LogCheckPointName': logMapData['LogCheckPointName'] ?? '',
             }
           ];
         }
@@ -274,14 +257,12 @@ class _LogBookWidgetState extends State<LogBookWidget> {
           if (expand)
             Padding(
               padding: EdgeInsets.symmetric(vertical: 10.h),
-              // child: Flexible(
               child: InterBold(
                 text: widget.shiftName,
                 fontsize: 18.sp,
                 color: Theme.of(context).textTheme.bodySmall!.color,
               ),
             ),
-          // ),
           Visibility(
             visible: expand,
             child: Column(
@@ -293,10 +274,13 @@ class _LogBookWidgetState extends State<LogBookWidget> {
                     DateFormat('hh:mm a').format(dateTime);
                 return LogTypeWidget(
                   type: LogBookEnum.values.byName(log['LOGTYPE']),
-                  clientname: log['CLIENTNAME'],
+                  clientname: log['CLIENTNAME'] ?? "",
                   logtype: log['LOGTYPE'],
-                  location: log['LOCATION'],
+                  location: log['LOCATION'] ?? "",
                   time: formattedDateTime,
+                  shiftName: log['LogBookShiftName'] ?? "",
+                  patrolName: log['LogPatrolName'] ?? "",
+                  checkPointName: log['LogCheckPointName'] ?? "",
                 );
               }).toList(),
             ),

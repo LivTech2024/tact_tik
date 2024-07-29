@@ -149,7 +149,9 @@ class _EndShiftScreenState extends State<EndShiftScreen> {
                           widget.ShiftBranchId,
                           widget.ShiftClientID,
                           widget.ShiftLocationId,
-                          widget.ShiftName);
+                          widget.ShiftName,
+                          null,
+                          null);
                       await fireStoreService.EndShiftLogComment(
                           widget.EmployeId,
                           widget.formattedStopwatchTime,

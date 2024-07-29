@@ -27,13 +27,13 @@ class PayStubScreen extends StatefulWidget {
 
 class _PayStubScreenState extends State<PayStubScreen> {
   Future<String> generatePaystubPDF(
-      String PayStubStartDate,
-      String PayStubEndDate,
-      String EmpName,
-      List<Map<String, dynamic>> PayStubEarnings,
-      List<Map<String, dynamic>> PayStubDeductions,
-      Map<String, dynamic> PayStubNetPay,
-      ) async {
+    String PayStubStartDate,
+    String PayStubEndDate,
+    String EmpName,
+    List<Map<String, dynamic>> PayStubEarnings,
+    List<Map<String, dynamic>> PayStubDeductions,
+    Map<String, dynamic> PayStubNetPay,
+  ) async {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -255,6 +255,34 @@ class _PayStubScreenState extends State<PayStubScreen> {
         if (snapshot.hasError) {
           return SafeArea(
               child: Scaffold(
+            appBar: AppBar(
+              leading: IconButton(
+                icon: Icon(
+                  Icons.arrow_back_ios,
+                ),
+                padding: EdgeInsets.only(left: width / width20),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              title: InterMedium(
+                text: 'Paystub',
+              ),
+              centerTitle: true,
+            ),
+            body: Text('Something went wrong'),
+          ));
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+
+        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          return SafeArea(
+              child: Scaffold(
                   appBar: AppBar(
                     leading: IconButton(
                       icon: Icon(
@@ -270,40 +298,9 @@ class _PayStubScreenState extends State<PayStubScreen> {
                     ),
                     centerTitle: true,
                   ),
-                  body: Text('Something went wrong'),
-              )
-          );
-        }
-
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-
-        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return SafeArea(
-            child: Scaffold(
-              appBar: AppBar(
-                leading: IconButton(
-                  icon: Icon(
-                    Icons.arrow_back_ios,
-                  ),
-                  padding: EdgeInsets.only(left: width / width20),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-                title: InterMedium(
-                  text: 'Paystub',
-                ),
-                centerTitle: true,
-              ),
-              body: Center(
-            child: Text('No Data Available'),
-              )
-            )
-          );
+                  body: Center(
+                    child: Text('No Data Available'),
+                  )));
         }
 
         return SafeArea(
@@ -328,29 +325,32 @@ class _PayStubScreenState extends State<PayStubScreen> {
               itemBuilder: (context, index) {
                 final document = snapshot.data!.docs[index];
                 final name = document['PayStubEmpName'];
-                final startDateTime = (document['PayStubPayPeriodStartDate'] as Timestamp).toDate();
-                final endDateTime = (document['PayStubPayPeriodEndDate'] as Timestamp).toDate();
+                final startDateTime =
+                    (document['PayStubPayPeriodStartDate'] as Timestamp)
+                        .toDate();
+                final endDateTime =
+                    (document['PayStubPayPeriodEndDate'] as Timestamp).toDate();
                 final dateFormatter = DateFormat('MM/dd/yyyy');
                 final startDate = dateFormatter.format(startDateTime);
                 final endDate = dateFormatter.format(endDateTime);
-                final netPay = Map<String, dynamic>.from(document['PayStubNetPay']);
+                final netPay =
+                    Map<String, dynamic>.from(document['PayStubNetPay']);
                 final earnings = List<Map<String, dynamic>>.from(
-                    document['PayStubEarnings'].map((item) => Map<String, dynamic>.from(item))
-                );
+                    document['PayStubEarnings']
+                        .map((item) => Map<String, dynamic>.from(item)));
                 final deductions = List<Map<String, dynamic>>.from(
-                    document['PayStubDeductions'].map((item) => Map<String, dynamic>.from(item))
-                );
+                    document['PayStubDeductions']
+                        .map((item) => Map<String, dynamic>.from(item)));
 
                 return GestureDetector(
-                  onTap: (){
+                  onTap: () {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>
-                                PayDiscrepancyDisplay()));
+                            builder: (context) => PayDiscrepancyDisplay()));
                   },
                   child: Padding(
-                    padding: EdgeInsets.fromLTRB(0, 16.h ,0, 0),
+                    padding: EdgeInsets.fromLTRB(0, 16.h, 0, 0),
                     child: Container(
                       height: 260.h,
                       width: double.maxFinite,
@@ -376,16 +376,18 @@ class _PayStubScreenState extends State<PayStubScreen> {
                           ),
                           Button1(
                             text: 'Open',
-                            color:
-                                Theme.of(context).textTheme.headlineMedium!.color,
+                            color: Theme.of(context)
+                                .textTheme
+                                .headlineMedium!
+                                .color,
                             onPressed: () {
                               generatePaystubPDF(
-                                  startDate,
-                                  endDate,
-                                  name,
-                                  earnings,
-                                  deductions,
-                                  netPay,
+                                startDate,
+                                endDate,
+                                name,
+                                earnings,
+                                deductions,
+                                netPay,
                               );
                             },
                             backgroundcolor: Theme.of(context).primaryColor,

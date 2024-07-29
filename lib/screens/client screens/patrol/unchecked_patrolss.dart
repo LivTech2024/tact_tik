@@ -37,22 +37,25 @@ class UncheckedPatrolScreen extends StatefulWidget {
   final String ShiftDate;
   final Timestamp? PatrolStartedTIme;
   final String ShiftName;
+  final String PatrolName;
 
-  UncheckedPatrolScreen(
-      {super.key,
-      required this.ShiftId,
-      required this.EmployeeID,
-      required this.PatrolID,
-      required this.EmployeeName,
-      required this.CompletedCount,
-      required this.PatrolRequiredCount,
-      required this.PatrolCompanyID,
-      required this.PatrolClientID,
-      required this.LocationId,
-      required this.description,
-      required this.ShiftDate,
-      required this.PatrolStartedTIme,
-      required this.ShiftName});
+  UncheckedPatrolScreen({
+    super.key,
+    required this.ShiftId,
+    required this.EmployeeID,
+    required this.PatrolID,
+    required this.EmployeeName,
+    required this.CompletedCount,
+    required this.PatrolRequiredCount,
+    required this.PatrolCompanyID,
+    required this.PatrolClientID,
+    required this.LocationId,
+    required this.description,
+    required this.ShiftDate,
+    required this.PatrolStartedTIme,
+    required this.ShiftName,
+    required this.PatrolName,
+  });
 
   @override
   State<UncheckedPatrolScreen> createState() => _UncheckedPatrolScreenState();
@@ -543,6 +546,7 @@ class _UncheckedPatrolScreenState extends State<UncheckedPatrolScreen> {
                                           ShiftDate: widget.ShiftDate,
                                           PatrolStatusTime:
                                               widget.PatrolStartedTIme,
+                                          PatrolName: widget.PatrolName,
                                         )),
                               );
                             }).catchError((error) {

@@ -253,7 +253,7 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
                           children: [
                             ListTile(
                               leading: Icon(Icons.photo),
-                              title: Text('Add Image'),
+                              title: Text('Add Image from Camera'),
                               onTap: () {
                                 Navigator.pop(context);
                                 _addImage();
@@ -261,17 +261,17 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
                             ),
                             ListTile(
                               leading: Icon(Icons.video_collection),
-                              title: Text('Add Video'),
+                              title: Text('Add Image from Gallery'),
                               onTap: () {
                                 Navigator.pop(context);
-                                _addVideo();
+                                _uploadImages();
                               },
                             ),
                           ],
                         ),
                       );
                     },
-                    child: Container(
+                    child: Container( 
                       height: height / height66,
                       width: width / width66,
                       decoration: BoxDecoration(

@@ -1009,7 +1009,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                       widget.ShiftBranchId,
                                       widget.ShiftClientID,
                                       widget.ShiftLocationId,
-                                      widget.ShiftName);
+                                      widget.ShiftName,
+                                      null,
+                                      null);
                                   fireStoreService.startShiftLog(
                                       widget.EmployeId,
                                       widget.ShiftId,
@@ -1333,7 +1335,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                               widget.ShiftBranchId,
                               widget.ShiftClientID ?? "",
                               widget.ShiftLocationId,
-                              widget.ShiftName);
+                              widget.ShiftName,
+                              null,
+                              null);
                           await fireStoreService.EndShiftLog2(
                               widget.EmployeId,
                               formattedStopwatchTime,
@@ -1457,7 +1461,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         widget.ShiftBranchId ?? "",
                         widget.ShiftClientID ?? "",
                         widget.ShiftLocationId ?? "",
-                        widget.ShiftName ?? "");
+                        widget.ShiftName ?? "",
+                        null,
+                        null);
                     widget.onRefresh();
                     // stopStopwatch();
                     // setState(() {
@@ -1485,7 +1491,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         widget.ShiftBranchId,
                         widget.ShiftClientID,
                         widget.ShiftLocationId,
-                        widget.ShiftName);
+                        widget.ShiftName,
+                        null,
+                        null);
                     // prefs.setBool('onBreak', onBreak);
                     // startStopwatch();s
                     await fireStoreService.endBreak(

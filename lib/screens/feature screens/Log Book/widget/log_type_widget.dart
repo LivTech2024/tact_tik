@@ -1,35 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:tact_tik/main.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intl/intl.dart';
-
 import '../../../../common/enums/log_type_enums.dart';
-import '../../../../common/sizes.dart';
 import '../../../../fonts/inter_bold.dart';
 import '../../../../fonts/inter_medium.dart';
-import '../../../../utils/colors.dart';
 
 class LogTypeWidget extends StatelessWidget {
-  const LogTypeWidget(
-      {super.key,
-      required this.type,
-      required this.clientname,
-      required this.logtype,
-      required this.location,
-      required this.time});
+  const LogTypeWidget({
+    super.key,
+    required this.type,
+    required this.clientname,
+    required this.logtype,
+    required this.location,
+    required this.time,
+    required this.shiftName,
+    required this.patrolName,
+    required this.checkPointName,
+  });
 
   final LogBookEnum type;
   final String clientname;
   final String logtype;
   final String location;
   final String time;
+  final String shiftName;
+  final String patrolName;
+  final String checkPointName;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(top: 10.h),
       padding: EdgeInsets.symmetric(horizontal: 20.w),
-      height: 90.h,
+      height: 150.h, // Increased height to accommodate additional fields
       width: double.maxFinite,
       decoration: BoxDecoration(
         boxShadow: [
@@ -88,49 +90,119 @@ class LogTypeWidget extends StatelessWidget {
                     color: type == LogBookEnum.shift_start
                         ? Colors.white
                         : type == LogBookEnum.patrol_start
-                        ? Colors.white
-                        : type == LogBookEnum.shift_end
-                        ? Colors.white
-                        : type == LogBookEnum.patrol_end
-                        ? Colors.white
-                        : Theme.of(context).textTheme.bodyMedium!.color,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 4.h),
-                    child: SizedBox(
-                      width: 200.w,
-                      child: InterMedium(
-                        text: '$location',
-                        fontsize: 14.sp,
-                        maxLines: 1,
-                        color: type == LogBookEnum.shift_start
-                            ? Colors.white
-                            : type == LogBookEnum.patrol_start
                             ? Colors.white
                             : type == LogBookEnum.shift_end
-                            ? Colors.white
-                            : type == LogBookEnum.patrol_end
-                            ? Colors.white
-                            : Theme.of(context).textTheme.bodyMedium!.color,
-                      ),
+                                ? Colors.white
+                                : type == LogBookEnum.patrol_end
+                                    ? Colors.white
+                                    : Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .color,
+                  ),
+                  location.isEmpty
+                      ? Padding(
+                          padding: EdgeInsets.symmetric(vertical: 2.h),
+                          child: SizedBox(
+                            width: 200.w,
+                            child: InterMedium(
+                              text: '$location',
+                              fontsize: 14.sp,
+                              maxLines: 1,
+                              color: type == LogBookEnum.shift_start
+                                  ? Colors.white
+                                  : type == LogBookEnum.patrol_start
+                                      ? Colors.white
+                                      : type == LogBookEnum.shift_end
+                                          ? Colors.white
+                                          : type == LogBookEnum.patrol_end
+                                              ? Colors.white
+                                              : Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium!
+                                                  .color,
+                            ),
+                          ),
+                        )
+                      : SizedBox(),
+                  SizedBox(
+                    width: 200.w,
+                    child: InterBold(
+                      text: 'Client: $clientname',
+                      fontsize: 14.sp,
+                      color: type == LogBookEnum.shift_start
+                          ? Colors.white
+                          : type == LogBookEnum.patrol_start
+                              ? Colors.white
+                              : type == LogBookEnum.shift_end
+                                  ? Colors.white
+                                  : type == LogBookEnum.patrol_end
+                                      ? Colors.white
+                                      : Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .color,
                     ),
                   ),
                   SizedBox(
                     width: 200.w,
                     child: InterBold(
-                      text: 'Shift: $clientname',
+                      text: 'Shift: $shiftName',
                       fontsize: 14.sp,
                       color: type == LogBookEnum.shift_start
                           ? Colors.white
                           : type == LogBookEnum.patrol_start
-                          ? Colors.white
-                          : type == LogBookEnum.shift_end
-                          ? Colors.white
-                          : type == LogBookEnum.patrol_end
-                          ? Colors.white
-                          : Theme.of(context).textTheme.bodyMedium!.color,
+                              ? Colors.white
+                              : type == LogBookEnum.shift_end
+                                  ? Colors.white
+                                  : type == LogBookEnum.patrol_end
+                                      ? Colors.white
+                                      : Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .color,
                     ),
                   ),
+                  if (patrolName.isNotEmpty)
+                    SizedBox(
+                      width: 200.w,
+                      child: InterBold(
+                        text: 'Patrol: $patrolName',
+                        fontsize: 14.sp,
+                        color: type == LogBookEnum.shift_start
+                            ? Colors.white
+                            : type == LogBookEnum.patrol_start
+                                ? Colors.white
+                                : type == LogBookEnum.shift_end
+                                    ? Colors.white
+                                    : type == LogBookEnum.patrol_end
+                                        ? Colors.white
+                                        : Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .color,
+                      ),
+                    ),
+                  if (checkPointName.isNotEmpty)
+                    SizedBox(
+                      width: 200.w,
+                      child: InterBold(
+                        text: 'Checkpoint: $checkPointName',
+                        fontsize: 14.sp,
+                        color: type == LogBookEnum.shift_start
+                            ? Colors.white
+                            : type == LogBookEnum.patrol_start
+                                ? Colors.white
+                                : type == LogBookEnum.shift_end
+                                    ? Colors.white
+                                    : type == LogBookEnum.patrol_end
+                                        ? Colors.white
+                                        : Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .color,
+                      ),
+                    ),
                 ],
               ),
             ],
@@ -140,12 +212,12 @@ class LogTypeWidget extends StatelessWidget {
             color: type == LogBookEnum.shift_start
                 ? Colors.white
                 : type == LogBookEnum.patrol_start
-                ? Colors.white
-                : type == LogBookEnum.shift_end
-                ? Colors.white
-                : type == LogBookEnum.patrol_end
-                ? Colors.white
-                : Theme.of(context).textTheme.bodyMedium!.color,
+                    ? Colors.white
+                    : type == LogBookEnum.shift_end
+                        ? Colors.white
+                        : type == LogBookEnum.patrol_end
+                            ? Colors.white
+                            : Theme.of(context).textTheme.bodyMedium!.color,
             fontsize: 14.sp,
           ),
         ],

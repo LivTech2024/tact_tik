@@ -823,7 +823,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => PayStubScreen(empId: _employeeId,)));
+                                builder: (context) => PayStubScreen(
+                                      empId: _employeeId,
+                                    )));
                       },
                     ),
                     buildListTile(
@@ -867,9 +869,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         // );
                         // customEmail();
                         // await fireStoreService.copyAndCreateDocument(
-                        //     "PatrolLogs", "rfia93r2UvLVZwi0Q8ab");
+                        //     "PatrolLogs", "X615U0PX68kufn4u85ZU");
                         // await darFunctions.fetchShiftDetailsAndSubmitDAR(
-                        //     _shiftId,
+                        //     _shiftId,p
                         //     _empEmail,
                         //     _ShiftStartTime,
                         //     _ShiftEndTime,

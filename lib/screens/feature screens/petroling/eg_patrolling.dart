@@ -617,7 +617,9 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
             "",
             widget.p.PatrolClientID,
             widget.p.LocationId,
-            widget.p.ShiftName);
+            widget.p.ShiftName,
+            widget.p.title,
+            null);
         await fireStoreService.updatePatrolCurrentStatusToUnchecked(
             widget.p.PatrolId,
             "started",
@@ -913,7 +915,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               SizedBox(
-                                width: 120.w,
+                                width: 260.w,
                                 child: InterBold(
                                   text: 'Patrol   ${widget.p.title}',
                                   color: Theme.of(context)
@@ -921,7 +923,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                       .bodySmall!
                                       .color,
                                   fontsize: 14.sp,
-                                  maxLine: 1,
+                                  maxLine: 2,
                                 ),
                               ),
                               CircularPercentIndicator(
@@ -1046,17 +1048,18 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                         .p.patrolClientId);
 
                                             await fireStoreService.addToLog(
-                                              "patrol_start",
-                                              "",
-                                              clientName ?? "",
-                                              widget.p.EmpId,
-                                              widget.p.EmployeeName,
-                                              widget.p.PatrolCompanyID,
-                                              "",
-                                              widget.p.PatrolClientID,
-                                              widget.p.LocationId,
-                                              widget.p.ShiftName,
-                                            );
+                                                "patrol_start",
+                                                "",
+                                                clientName ?? "",
+                                                widget.p.EmpId,
+                                                widget.p.EmployeeName,
+                                                widget.p.PatrolCompanyID,
+                                                "",
+                                                widget.p.PatrolClientID,
+                                                widget.p.LocationId,
+                                                widget.p.ShiftName,
+                                                widget.p.title,
+                                                null);
 
                                             await fireStoreService
                                                 .updatePatrolCurrentStatusToUnchecked(
@@ -1260,7 +1263,9 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                   "",
                                                   widget.p.PatrolClientID,
                                                   widget.p.LocationId,
-                                                  widget.p.ShiftName);
+                                                  widget.p.ShiftName,
+                                                  widget.p.title,
+                                                  category.title);
                                               showSuccessToast(context,
                                                   "${checkpoint.description} scanned ");
                                               _refresh();
@@ -1643,6 +1648,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                               PatrolStartedTIme:
                                                   widget.p.PatrolStartedTIme,
                                               ShiftName: widget.p.ShiftName,
+                                              PatrolName: widget.p.title,
                                             )));
 
                                 return;
@@ -1673,6 +1679,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                             ShiftDate: widget.p.ShiftDate,
                                             PatrolStatusTime:
                                                 widget.p.PatrolStartedTIme,
+                                            PatrolName: widget.p.title,
                                           )));
                             },
                           )

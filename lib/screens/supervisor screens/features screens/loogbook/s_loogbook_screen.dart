@@ -150,7 +150,7 @@ class _LogBookScreenState extends State<SLogBookScreen> {
           'Shift_$i'; // Use 'Shift_$i' as a unique identifier if ShiftName is absent
       final logData = data['LogBookData'] as List<dynamic>;
       final logTimestamp = data['LogBookDate'] as Timestamp;
-      final clientName = data['LogCleintName'] ?? '';
+      final clientName = data['LogBookClientName'] ?? '';
       final logLocation = data['LogBookLocationName'] ?? '';
       final logsByDate = <String, List<Map<String, dynamic>>>{};
 
@@ -209,6 +209,11 @@ class LogBookWidget extends StatefulWidget {
 
 class _LogBookWidgetState extends State<LogBookWidget> {
   bool expand = false;
+  @override
+  void initState() {
+    print("Logdata ${widget.logs}");
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -285,10 +290,13 @@ class _LogBookWidgetState extends State<LogBookWidget> {
                     DateFormat('hh:mm a').format(dateTime);
                 return LogTypeWidget(
                   type: LogBookEnum.values.byName(log['LOGTYPE']),
-                  clientname: log['CLIENTNAME'],
+                  clientname: log['CLIENTNAME'] ?? "",
                   logtype: log['LOGTYPE'],
-                  location: log['LOCATION'],
+                  location: log['LOCATION'] ?? "",
                   time: formattedDateTime,
+                  shiftName: log['LogShiftName'] ?? "",
+                  patrolName: log['LogPatrolName'] ?? "",
+                  checkPointName: '',
                 );
               }).toList(),
             ),
