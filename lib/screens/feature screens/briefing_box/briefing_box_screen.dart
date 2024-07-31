@@ -26,8 +26,8 @@ class _BriefingBoxScreenState extends State<BriefingBoxScreen> {
   Future<QuerySnapshot> getBriefings() {
     return FirebaseFirestore.instance
         .collection('BriefingBox')
-        .where('BriefingLocationId', isEqualTo: widget.locationId)
-        .where('BriefingCreatedBy', isNotEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .where('BriefingLocationId', isEqualTo: "")
+        .where('BriefingCreatedBy', isNotEqualTo: "")
         .orderBy('BriefingCreatedBy')
         .orderBy('BriefingCreatedAt', descending: true)
         .get();
@@ -39,6 +39,26 @@ class _BriefingBoxScreenState extends State<BriefingBoxScreen> {
         .doc(employeeId)
         .get();
     return employeeDoc['EmployeeName'] ?? 'Unknown';
+  }
+
+  Future<List<String>> getEmployeeImages(List<String> employeeIds) async {
+    List<String> images = [];
+    for (String id in employeeIds) {
+      DocumentSnapshot employeeDoc = await FirebaseFirestore.instance
+          .collection('Employees')
+          .doc(id)
+          .get();
+      String? img = employeeDoc['EmployeeImg'] as String?;
+      if (img != null) images.add(img);
+    }
+    return images;
+  }
+
+  Future<void> markAsRead(String docId) async {
+    String currentUserId = FirebaseAuth.instance.currentUser!.uid;
+    await FirebaseFirestore.instance.collection('BriefingBox').doc(docId).update({
+      'BriefingViewedBy': FieldValue.arrayUnion([currentUserId])
+    });
   }
 
   @override
@@ -58,9 +78,7 @@ class _BriefingBoxScreenState extends State<BriefingBoxScreen> {
               ),
             );
             if (result == true) {
-              setState(() {
-                // This will force the FutureBuilder to rebuild
-              });
+              setState(() {});
             }
           },
           backgroundColor: Theme.of(context).primaryColor,
@@ -150,6 +168,7 @@ class _BriefingBoxScreenState extends State<BriefingBoxScreen> {
                                     child: CircularProgressIndicator(),
                                   );
                                 }
+                                List<String> viewedBy = List<String>.from(doc['BriefingViewedBy'] ?? []);
                                 return Padding(
                                   padding: EdgeInsets.only(
                                     left: 30.w,
@@ -180,10 +199,29 @@ class _BriefingBoxScreenState extends State<BriefingBoxScreen> {
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        InterSemibold(
-                                          text: employeeSnapshot.data ?? 'Unknown',
-                                          fontsize: 20.sp,
-                                          color: Theme.of(context).textTheme.bodySmall!.color,
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            InterSemibold(
+                                              text: employeeSnapshot.data ?? 'Unknown',
+                                              fontsize: 20.sp,
+                                              color: Theme.of(context).textTheme.bodySmall!.color,
+                                            ),
+                                            ElevatedButton(
+                                              onPressed: () async {
+                                                await markAsRead(doc.id);
+                                                setState(() {});
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: Theme.of(context).primaryColor,
+                                              ),
+                                              child: InterMedium(
+                                                text: 'Mark as read',
+                                                fontsize: 14.sp,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                         SizedBox(height: 10.h),
                                         InterSemibold(
@@ -198,6 +236,46 @@ class _BriefingBoxScreenState extends State<BriefingBoxScreen> {
                                           fontsize: 14.sp,
                                           color: Theme.of(context).textTheme.headlineSmall!.color,
                                           maxLines: 4,
+                                        ),
+                                        SizedBox(height: 10.h),
+                                        InterMedium(
+                                            text: "Viewed By:"
+                                        ),
+                                        SizedBox(height: 10.h),
+                                        FutureBuilder<List<String>>(
+                                          future: getEmployeeImages(viewedBy),
+                                          builder: (context, imageSnapshot) {
+                                            if (imageSnapshot.connectionState == ConnectionState.waiting) {
+                                              return CircularProgressIndicator();
+                                            }
+                                            List<String> employeeImages = imageSnapshot.data ?? [];
+                                            if (employeeImages.isEmpty) {
+                                              return InterMedium(
+                                                text: 'Not viewed by anyone',
+                                                fontsize: 14.sp,
+                                                color: Theme.of(context).textTheme.headlineSmall!.color,
+                                              );
+                                            }
+                                            return Wrap(
+                                              spacing: -5.0,
+                                              children: [
+                                                for (int i = 0; i < (employeeImages.length > 3 ? 3 : employeeImages.length); i++)
+                                                  CircleAvatar(
+                                                    radius: 10.r,
+                                                    backgroundImage: NetworkImage(employeeImages[i]),
+                                                  ),
+                                                if (employeeImages.length > 3)
+                                                  CircleAvatar(
+                                                    radius: 10.r,
+                                                    backgroundColor: Theme.of(context).textTheme.bodyMedium!.color,
+                                                    child: InterMedium(
+                                                      text: '+${employeeImages.length - 3}',
+                                                      fontsize: 12.sp,
+                                                    ),
+                                                  ),
+                                              ],
+                                            );
+                                          },
                                         ),
                                       ],
                                     ),
