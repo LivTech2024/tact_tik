@@ -10,14 +10,16 @@ import 'package:intl/intl.dart';
 class BriefingBoxScreen extends StatefulWidget {
   final String locationId;
   final String shiftName;
-  const BriefingBoxScreen({super.key, required this.locationId, required this.shiftName});
+  const BriefingBoxScreen(
+      {super.key, required this.locationId, required this.shiftName});
 
   @override
   State<BriefingBoxScreen> createState() => _BriefingBoxScreenState();
 }
 
 class _BriefingBoxScreenState extends State<BriefingBoxScreen> {
-  final GlobalKey<RefreshIndicatorState> _refreshKey = GlobalKey<RefreshIndicatorState>();
+  final GlobalKey<RefreshIndicatorState> _refreshKey =
+      GlobalKey<RefreshIndicatorState>();
   @override
   void initState() {
     super.initState();
@@ -27,7 +29,8 @@ class _BriefingBoxScreenState extends State<BriefingBoxScreen> {
     return FirebaseFirestore.instance
         .collection('BriefingBox')
         .where('BriefingLocationId', isEqualTo: widget.locationId)
-        .where('BriefingCreatedBy', isNotEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        // .where('BriefingCreatedBy',
+        //     isNotEqualTo: FirebaseAuth.instance.currentUser!.uid)
         .orderBy('BriefingCreatedBy')
         .orderBy('BriefingCreatedAt', descending: true)
         .get();
@@ -92,14 +95,18 @@ class _BriefingBoxScreenState extends State<BriefingBoxScreen> {
                 future: getBriefings(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return SliverToBoxAdapter(child: Center(child: CircularProgressIndicator()));
+                    return SliverToBoxAdapter(
+                        child: Center(child: CircularProgressIndicator()));
                   }
 
                   if (snapshot.hasError) {
-                    return SliverToBoxAdapter(child: Center(child: Text('Error: ${snapshot.error}')));
+                    return SliverToBoxAdapter(
+                        child: Center(child: Text('Error: ${snapshot.error}')));
                   }
 
-                  if (!snapshot.hasData || snapshot.data == null || snapshot.data!.docs.isEmpty) {
+                  if (!snapshot.hasData ||
+                      snapshot.data == null ||
+                      snapshot.data!.docs.isEmpty) {
                     return SliverToBoxAdapter(
                       child: Center(
                         child: Padding(
@@ -107,7 +114,8 @@ class _BriefingBoxScreenState extends State<BriefingBoxScreen> {
                           child: InterMedium(
                             text: 'No briefings available',
                             fontsize: 18.sp,
-                            color: Theme.of(context).textTheme.bodyMedium!.color,
+                            color:
+                                Theme.of(context).textTheme.bodyMedium!.color,
                           ),
                         ),
                       ),
@@ -116,7 +124,8 @@ class _BriefingBoxScreenState extends State<BriefingBoxScreen> {
 
                   Map<String, List<DocumentSnapshot>> groupedBriefings = {};
                   snapshot.data!.docs.forEach((doc) {
-                    DateTime createdAt = (doc['BriefingCreatedAt'] as Timestamp).toDate();
+                    DateTime createdAt =
+                        (doc['BriefingCreatedAt'] as Timestamp).toDate();
                     String dateKey = DateFormat('yyyy-MM-dd').format(createdAt);
                     if (!groupedBriefings.containsKey(dateKey)) {
                       groupedBriefings[dateKey] = [];
@@ -126,85 +135,113 @@ class _BriefingBoxScreenState extends State<BriefingBoxScreen> {
 
                   return SliverList(
                     delegate: SliverChildBuilderDelegate(
-                          (context, index) {
+                      (context, index) {
                         String dateKey = groupedBriefings.keys.elementAt(index);
-                        List<DocumentSnapshot> briefings = groupedBriefings[dateKey]!;
+                        List<DocumentSnapshot> briefings =
+                            groupedBriefings[dateKey]!;
 
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 10.h),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 30.w, vertical: 10.h),
                               child: InterSemibold(
-                                text: DateFormat('MMMM d, yyyy').format(DateTime.parse(dateKey)),
+                                text: DateFormat('MMMM d, yyyy')
+                                    .format(DateTime.parse(dateKey)),
                                 fontsize: 18.sp,
-                                color: Theme.of(context).textTheme.bodyLarge!.color,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge!
+                                    .color,
                               ),
                             ),
-                            ...briefings.map((doc) => FutureBuilder<String>(
-                              future: getEmployeeName(doc['BriefingCreatedBy']),
-                              builder: (context, employeeSnapshot) {
-                                if (employeeSnapshot.connectionState == ConnectionState.waiting) {
-                                  return Padding(
-                                    padding: EdgeInsets.only(left: 30.w, right: 30.w, bottom: 40.h),
-                                    child: CircularProgressIndicator(),
-                                  );
-                                }
-                                return Padding(
-                                  padding: EdgeInsets.only(
-                                    left: 30.w,
-                                    right: 30.w,
-                                    bottom: 40.h,
-                                  ),
-                                  child: Container(
-                                    width: double.maxFinite,
-                                    constraints: BoxConstraints(
-                                      minHeight: 140.h,
-                                    ),
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 14.w,
-                                      vertical: 10.h,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Theme.of(context).shadowColor,
-                                          blurRadius: 5,
-                                          spreadRadius: 2,
-                                          offset: Offset(0, 3),
-                                        )
-                                      ],
-                                      color: Theme.of(context).cardColor,
-                                      borderRadius: BorderRadius.circular(10.h),
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        InterSemibold(
-                                          text: employeeSnapshot.data ?? 'Unknown',
-                                          fontsize: 20.sp,
-                                          color: Theme.of(context).textTheme.bodySmall!.color,
-                                        ),
-                                        SizedBox(height: 10.h),
-                                        InterSemibold(
-                                          text: doc['BriefingTitle'],
-                                          fontsize: 20.sp,
-                                          color: Theme.of(context).textTheme.bodyMedium!.color,
-                                          maxLines: 5,
-                                        ),
-                                        SizedBox(height: 5.h),
-                                        InterMedium(
-                                          text: doc['BriefingDescription'],
-                                          fontsize: 14.sp,
-                                          color: Theme.of(context).textTheme.headlineSmall!.color,
-                                          maxLines: 4,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            )).toList(),
+                            ...briefings
+                                .map((doc) => FutureBuilder<String>(
+                                      future: getEmployeeName(
+                                          doc['BriefingCreatedBy']),
+                                      builder: (context, employeeSnapshot) {
+                                        if (employeeSnapshot.connectionState ==
+                                            ConnectionState.waiting) {
+                                          return Padding(
+                                            padding: EdgeInsets.only(
+                                                left: 30.w,
+                                                right: 30.w,
+                                                bottom: 40.h),
+                                            child: CircularProgressIndicator(),
+                                          );
+                                        }
+                                        return Padding(
+                                          padding: EdgeInsets.only(
+                                            left: 30.w,
+                                            right: 30.w,
+                                            bottom: 40.h,
+                                          ),
+                                          child: Container(
+                                            width: double.maxFinite,
+                                            constraints: BoxConstraints(
+                                              minHeight: 140.h,
+                                            ),
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 14.w,
+                                              vertical: 10.h,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Theme.of(context)
+                                                      .shadowColor,
+                                                  blurRadius: 5,
+                                                  spreadRadius: 2,
+                                                  offset: Offset(0, 3),
+                                                )
+                                              ],
+                                              color:
+                                                  Theme.of(context).cardColor,
+                                              borderRadius:
+                                                  BorderRadius.circular(10.h),
+                                            ),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                InterSemibold(
+                                                  text: employeeSnapshot.data ??
+                                                      'Unknown',
+                                                  fontsize: 20.sp,
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .bodySmall!
+                                                      .color,
+                                                ),
+                                                SizedBox(height: 10.h),
+                                                InterSemibold(
+                                                  text: doc['BriefingTitle'],
+                                                  fontsize: 20.sp,
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyMedium!
+                                                      .color,
+                                                  maxLines: 5,
+                                                ),
+                                                SizedBox(height: 5.h),
+                                                InterMedium(
+                                                  text: doc[
+                                                      'BriefingDescription'],
+                                                  fontsize: 14.sp,
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .headlineSmall!
+                                                      .color,
+                                                  maxLines: 4,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ))
+                                .toList(),
                           ],
                         );
                       },

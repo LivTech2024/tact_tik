@@ -28,6 +28,7 @@ import 'package:tact_tik/main.dart';
 import 'package:tact_tik/login_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/Log%20Book/logbook_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/Report/report_screen.dart';
+import 'package:tact_tik/screens/feature%20screens/briefing_box/briefing_box_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/dar/dar_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/keys/view_keys_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/site_tours/site_tour_screen.dart';
@@ -635,7 +636,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ['assets/images/dar.png', 'DAR'],
       ['assets/images/reports.png', 'Reports'],
       ['assets/images/post_order.png', 'Post Orders'],
-      ['assets/images/task.png', 'Task'],
+      ['assets/images/task.png', 'Breifing Box'],
       ['assets/images/log_book.png', 'Log Book'],
       ['assets/images/visitors.png', 'Visitors'],
       ['assets/images/assets.png', 'Assets'],
@@ -845,18 +846,18 @@ class _HomeScreenState extends State<HomeScreen> {
                       'History',
                       4,
                       () async {
-                        // List<String> emails = [];
+                        List<String> emails = [];
 
-                        // emails.add("sutarvaibhav37@gmail.com");
-                        // // emails.add("pankaj.kumar1312@yahoo.com");
-                        // // emails.add("alerts.tactik@gmail.com");
+                        emails.add("sutarvaibhav37@gmail.com");
+                        emails.add("pankaj.kumar1312@yahoo.com");
+                        emails.add("jasperhieghts@unitiipm.com");
                         // // emails.add("security@lestonholdings.com");
-                        // // emails.add("dan@tpssolution.com");
+                        emails.add("dan@tpssolution.com");
                         // await sendDARTemplateEmail(
                         //   "Leston holdings",
                         //   emails,
-                        //   'Tacttik DAR',
-                        //   "Tacttik DAR",
+                        //   'Callout ',
+                        //   "Tacttik",
                         //   "Shift",
                         //   "2 JUN",
                         //   "livjeet kaur",
@@ -869,13 +870,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         // );
                         // customEmail();
                         // await fireStoreService.copyAndCreateDocument(
-                        //     "PatrolLogs", "lUOMMmnZ7BMJmNzb0E8P");
-                        // await darFunctions.fetchShiftDetailsAndSubmitDAR(
-                        //     _shiftId,p
-                        //     _empEmail,
-                        //     _ShiftStartTime,
-                        //     _ShiftEndTime,
-                        //     _employeeId);
+                        //     "PatrolLogs", "L4bIOKLE2h32i2dzQGV6");
+                        // await darFunctions
+                        //     .fetchShiftDetailstemplateAndSubmitDAR(
+                        //         "18:00",
+                        //         "06:00",
+                        //         "o7d8b8RC3lIpLVRveO57",
+                        //         "z90tp2TSH38JFpDIEelS");
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -1229,7 +1230,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  TaskFeatureScreen()));
+                                                  // TaskFeatureScreen()
+                                                  BriefingBoxScreen(
+                                                      locationId:
+                                                          _shiftLocationId,
+                                                      shiftName: _ShiftName)));
                                       break;
                                     case 6:
                                       Navigator.push(

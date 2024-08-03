@@ -1285,7 +1285,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                           // }
                                         },
                                         child: Container(
-                                          height: 70.h,
+                                          height: 100.h,
                                           padding: EdgeInsets.symmetric(
                                             horizontal: 20.w,
                                             vertical: 11.h,
@@ -1383,6 +1383,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                               .displayMedium!
                                                               .color as Color,
                                                           fontsize: 18.sp,
+                                                          maxLines: 2,
                                                         ),
                                                         SizedBox(
                                                             height: checkpoint
