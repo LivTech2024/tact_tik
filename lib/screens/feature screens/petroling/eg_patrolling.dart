@@ -420,7 +420,7 @@ class PatrollingWidget extends StatefulWidget {
 
 class _PatrollingWidgetState extends State<PatrollingWidget> {
   bool _expand = false;
-
+  late AudioPlayer player = AudioPlayer();
   // bool _expand2 = false;
   late Map<String, bool> _expandCategoryMap;
   Set<String> _expandedPatrols = {};
@@ -435,6 +435,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
   void initState() {
     super.initState();
     _loadShiftStartedState();
+    player = AudioPlayer();
     _expandCategoryMap = {};
     // Initialize expand state for each category
     _expandCategoryMap = Map.fromIterable(widget.p.categories,
@@ -1215,6 +1216,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                         category.checkpoints.map((checkpoint) {
                                       return GestureDetector(
                                         onTap: () async {
+                                          // await player.play(
+                                          //     AssetSource('SuccessSound.mp3'));
                                           if (widget.p.CurrentStatus !=
                                               "started") {
                                             showErrorToast(context,
@@ -1247,6 +1250,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                             //     "../../../../assets/SuccessSound.mpeg"));
                                             print(res);
                                             if (res == checkpoint.id) {
+                                              await player.play(AssetSource(
+                                                  'SuccessSound.mp3'));
                                               await fireStoreService
                                                   .updatePatrolsStatus(
                                                       checkpoint.patrolId,
@@ -1266,11 +1271,16 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                   widget.p.ShiftName,
                                                   widget.p.title,
                                                   category.title);
+                                              // final player = AudioPlayer();
+                                              // await player.play(AssetSource(
+                                              //     'SuccessSound.mp3'));
                                               showSuccessToast(context,
                                                   "${checkpoint.description} scanned ");
                                               _refresh();
                                             } else {
                                               _refresh();
+                                              await player.play(AssetSource(
+                                                  'ErrorSound.mp3'));
                                               // player.play(AssetSource(
                                               //     "../../../../assets/ErrorSound.mp3"));
                                               showErrorToast(context,
