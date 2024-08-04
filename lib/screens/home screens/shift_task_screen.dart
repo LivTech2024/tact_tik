@@ -30,13 +30,25 @@ class ShiftTaskScreen extends StatefulWidget {
 
 class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
   FireStoreService fireStoreService = FireStoreService();
-  void initState() {
-    fetchData();
-  }
-
   int completedTaskCount = 0;
   int totalTaskCount = 0;
   List<Map<String, dynamic>>? fetchedTasks = [];
+  List<TextEditingController> commentControllers = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchData();
+  }
+
+  @override
+  void dispose() {
+    // Dispose all controllers
+    for (var controller in commentControllers) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
 
   void fetchData() async {
     List<Map<String, dynamic>>? fetchedData =
@@ -48,6 +60,10 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
       });
       int completedTaskCount = 0;
       int totalTaskCount = 0;
+
+      // Initialize controllers for each task
+      commentControllers =
+          List.generate(fetchedData.length, (index) => TextEditingController());
 
       for (int i = 0; i < fetchedData.length; i++) {
         final task = fetchedData[i];
@@ -80,10 +96,6 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
   }
 
   Future<void> _refreshData() async {
-    // Fetch patrol data from Firestore (assuming your logic exists)
-    // var userInfo = await fireStoreService.getUserInfoByCurrentUserEmail();
-    // ... (existing data fetching logic based on user ID)
-
     fetchData();
   }
 
@@ -115,7 +127,6 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
           child: Padding(
             padding: EdgeInsets.symmetric(
               horizontal: width / width30,
-              // vertical: height / height30,
             ),
             child: CustomScrollView(
               slivers: [
@@ -172,11 +183,8 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
                           ShiftTaskReturnStatus =
                               filteredStatus.first['ShiftTaskReturnStatus'] ??
                                   false;
-                          // print("Task Completion Status : - ${taskStatus}");
                         }
                         print("Task Completion Status : - ${taskStatu}");
-
-                        // print("Task Completion Status : - ${taskStatu}");
                       }
                       print(fetchedTasks?[index]?['ShiftTaskStatus']);
                       List<String> taskPhotos = [];
@@ -193,20 +201,19 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
                       }
 
                       return ShiftTaskTypeWidget(
-                          type: taskType ?? ShiftTaskEnum.upload,
-                          taskName: fetchedTasks?[index]['ShiftTask'] ?? "",
-                          taskId: fetchedTasks?[index]['ShiftTaskId'] ?? "",
-                          ShiftId: widget.shiftId ?? "",
-                          taskStatus: taskStatu ?? "",
-                          EmpID: widget.EmpId,
-                          shiftReturnTask: false,
-                          refreshDataCallback: _refreshData,
-                          EmpName: widget.EmpName,
-                          ShiftTaskReturnStatus: ShiftTaskReturnStatus,
-                          taskPhotos: taskPhotos
-
-                          // Default to upload if taskType is null
-                          );
+                        type: taskType ?? ShiftTaskEnum.upload,
+                        taskName: fetchedTasks?[index]['ShiftTask'] ?? "",
+                        taskId: fetchedTasks?[index]['ShiftTaskId'] ?? "",
+                        ShiftId: widget.shiftId,
+                        taskStatus: taskStatu ?? "",
+                        EmpID: widget.EmpId,
+                        shiftReturnTask: false,
+                        refreshDataCallback: _refreshData,
+                        EmpName: widget.EmpName,
+                        ShiftTaskReturnStatus: ShiftTaskReturnStatus,
+                        taskPhotos: taskPhotos,
+                        commentController: commentControllers[index],
+                      );
                     },
                     childCount: fetchedTasks?.length ?? 0,
                   ),

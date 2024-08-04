@@ -271,7 +271,7 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
                         ),
                       );
                     },
-                    child: Container( 
+                    child: Container(
                       height: height / height66,
                       width: width / width66,
                       decoration: BoxDecoration(

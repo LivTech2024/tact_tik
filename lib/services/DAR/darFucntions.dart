@@ -364,4 +364,64 @@ class DarFunctions {
       print('Error fetching shift details and submitting DAR: $e');
     }
   }
+
+  Future<void> fetchShiftDetailstemplateAndSubmitDAR(
+      String StartTime, String EndTime, String ShiftId, String empid) async {
+    try {
+      // await _userService.getShiftInfo();
+      // String? shiftStartTime = _userService.shiftStartTime;
+      // print("shiftStartTime :$shiftStartTime");
+      // String? shiftEndTime = _userService.shiftEndTime;
+      // print("shiftEndTime :$shiftEndTime");
+      if (StartTime != null && ShiftId != null) {
+        final List<Map<String, dynamic>> shiftDetails = [
+          {
+            'startTime': StartTime,
+            'endTime': EndTime,
+          },
+        ];
+        print("_fetchShiftDetails startTime&endTime ${shiftDetails}");
+        _processShiftDetails(shiftDetails);
+
+        // Submit DAR
+        final date = DateTime.now();
+        final CollectionReference employeesDARCollection =
+            FirebaseFirestore.instance.collection('EmployeesDAR');
+
+        final QuerySnapshot querySnapshot = await employeesDARCollection
+            .where('EmpDarEmpId', isEqualTo: empid)
+            .where('EmpDarShiftId', isEqualTo: ShiftId)
+            .get();
+
+        if (querySnapshot.docs.isNotEmpty) {
+          print('Document with EmpDarShiftId ${ShiftId} already exists.');
+          DocumentReference? docRef;
+          for (var dar in querySnapshot.docs) {
+            final data = dar.data() as Map<String, dynamic>;
+            if (data['EmpDarShiftId'] == ShiftId &&
+                data['EmpDarDate'] != date) {
+              print('Updating existing DAR with tiles.');
+              docRef = dar.reference;
+              break;
+            }
+          }
+          if (docRef != null) {
+            await _createBlankDARCards(empid, docRef.id);
+          } else {
+            await _createBlankDARCards(empid, ShiftId);
+          }
+        } else {
+          print('Creating new DAR and adding tiles.');
+          var id = await _submitDAR();
+          if (id != null) {
+            await _createBlankDARCards(empid, id.id);
+          }
+        }
+      } else {
+        print('Shift start time or end time is null.');
+      }
+    } catch (e) {
+      print('Error fetching shift details and submitting DAR: $e');
+    }
+  }
 }

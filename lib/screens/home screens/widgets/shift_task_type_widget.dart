@@ -35,6 +35,7 @@ class ShiftTaskTypeWidget extends StatefulWidget {
     required this.EmpName,
     required this.ShiftTaskReturnStatus,
     required this.taskPhotos,
+    required this.commentController,
   }) : super(key: key);
 
   final ShiftTaskEnum type;
@@ -47,7 +48,7 @@ class ShiftTaskTypeWidget extends StatefulWidget {
   final String EmpName;
   final bool shiftReturnTask;
   final List<String> taskPhotos;
-
+  final TextEditingController commentController;
   @override
   State<ShiftTaskTypeWidget> createState() => _ShiftTaskTypeWidgetState();
 }
@@ -369,40 +370,33 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                   GestureDetector(
                     onTap: () async {
                       var res = await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                const SimpleBarcodeScannerPage(
-                              isShowFlashIcon: true,
-                            ),
-                          ));
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SimpleBarcodeScannerPage(
+                            isShowFlashIcon: true,
+                          ),
+                        ),
+                      );
                       setState(() {
                         Result = res;
                       });
-                      // showSuccessToast(context, "Scanned Id ${res}");
-                      // showSuccessToast(context, "Task Id ${widget.taskId}");
 
                       if (Result == widget.taskId) {
                         await fireStoreService.updateShiftTaskStatus(
-                            widget.taskId,
-                            widget.EmpID,
-                            widget.ShiftId,
-                            widget.EmpName);
+                          widget.taskId,
+                          widget.EmpID,
+                          widget.ShiftId,
+                          widget.EmpName,
+                        );
 
-                        //Update in firebase and change the color of icon
-                        // showCustomDialog(context, "Task Scan",
-                        //     "Task Scan SuccessFull for ${widget.taskName}");
                         showSuccessToast(context,
                             "Task Scan SuccessFull for ${widget.taskId}");
                         print("${Result} ${widget.taskId}");
                         widget.refreshDataCallback();
-                        // showSuccessToast(context, "${widget.}")
                       } else {
-                        // showCustomDialog(context, "Task Scan",
-                        //     "Shift Task Scan UnsuccessFull for ${widget.taskName}");
                         showErrorToast(context,
-                            "Task Scan Unsuccessfull for ${widget.taskId}");
-                        print("UNcessfull Scan");
+                            "Task Scan Unsuccessful for ${widget.taskId}");
+                        print("Unsuccessful Scan");
                         widget.refreshDataCallback();
                       }
                     },
@@ -542,13 +536,6 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                                           ),
                                           TextButton(
                                             onPressed: () {
-                                              // fireStoreService.updatePatrolsReport(
-                                              //     movie
-                                              //         .PatrolAssignedGuardId,
-                                              //     movie
-                                              //         .patrolId,
-                                              //     checkpoint[
-                                              //         'CheckPointId']);
                                               Navigator.of(context).pop();
                                             },
                                             child: Text('Submit',
@@ -579,7 +566,15 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 10.h),
+                  // SizedBox(height: 10.h),
+                  SizedBox(height: 20.h),
+                  TextField(
+                    controller: widget.commentController,
+                    decoration: InputDecoration(
+                      labelText: 'Add Comment',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
@@ -625,7 +620,6 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            // _addImage();
                             showModalBottomSheet(
                               context: context,
                               builder: (context) => Column(
@@ -676,7 +670,6 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                             ),
                           ),
                         ),
-
                         FloatingActionButton(
                           onPressed: _uploadImages,
                           backgroundColor: Theme.of(context).primaryColor,
@@ -711,12 +704,32 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                         }).toList(),
                       ),
                     ),
-                  if (_isLoading)
-                    Container(
-                      alignment: Alignment.center,
-                      margin: EdgeInsets.only(top: 10.h),
-                      child: CircularProgressIndicator(),
-                    ),
+
+                  // SizedBox(height: 20.h),
+                  // _isLoading
+                  //     ? Center(child: CircularProgressIndicator())
+                  //     : Center(
+                  //         child: ElevatedButton(
+                  //           onPressed: () async {
+                  //             setState(() {
+                  //               _isLoading = true;
+                  //             });
+
+                  //             try {
+                  //               // Your existing logic for handling the button press
+                  //             } catch (e) {
+                  //               // Handle any exceptions that occur
+                  //               print('Error: $e');
+                  //             } finally {
+                  //               setState(() {
+                  //                 _isLoading = false;
+                  //               });
+                  //             }
+                  //           },
+                  //           child: Text('Complete Task'),
+                  //         ),
+                  //       ),
+                  SizedBox(height: 20.h),
                 ],
               )
             : SizedBox();
