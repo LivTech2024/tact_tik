@@ -413,97 +413,94 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
                               otherFileName = snapshot.data!['name'];
                               otherFileSize = snapshot.data!['size'];
                             }
-                            return GestureDetector(
-                              onTap: () {
-                                _downloadAndOpenPdf(context, url);
-                              },
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 6.w,
-                                ),
-                                margin: EdgeInsets.only(bottom: 10.h),
-                                width: 200.w,
-                                height: 70.h,
-                                decoration: BoxDecoration(
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Theme.of(context)
-                                          .shadowColor,
-                                      blurRadius: 5,
-                                      spreadRadius: 2,
-                                      offset: Offset(0, 3),
-                                    )
-                                  ],
-                                  borderRadius:
-                                  BorderRadius.circular(10.r),
-                                  color: isDark ? Color(0xFF1F1E1E)  : LightColor.Secondarycolor,
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Container(
-                                          height: 48.h,
-                                          width: 48.w,
-                                          margin: EdgeInsets.symmetric(
-                                            horizontal: 6.w,
-                                          ),
-                                          padding: EdgeInsets.all(14.sp),
-                                          decoration: BoxDecoration(
-                                            color: isDark ? Color(0xFF393939) : Color(0xFFAE7CFE),
-                                            borderRadius:
-                                            BorderRadius.circular(
-                                                10.r),
-                                          ),
-                                          child: SvgPicture.asset(
-                                            'assets/images/pdf_new.svg',
-                                            width: 20.w,
-                                            color: isDark ? Theme.of(context)
-                                                .primaryColor : Colors.white,
-                                          ),
+                            return Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 6.w,
+                              ),
+                              margin: EdgeInsets.only(bottom: 10.h),
+                              width: 200.w,
+                              height: 70.h,
+                              decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Theme.of(context)
+                                        .shadowColor,
+                                    blurRadius: 5,
+                                    spreadRadius: 2,
+                                    offset: Offset(0, 3),
+                                  )
+                                ],
+                                borderRadius:
+                                BorderRadius.circular(10.r),
+                                color: isDark ? Color(0xFF1F1E1E)  : LightColor.Secondarycolor,
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Container(
+                                        height: 48.h,
+                                        width: 48.w,
+                                        margin: EdgeInsets.symmetric(
+                                          horizontal: 6.w,
                                         ),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            SizedBox(
-                                              width:240.w,
-                                              child: PoppinsMedium(
-                                                text: otherFileName,
-                                                color: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyLarge!
-                                                    .color,
-                                                fontsize: 12.sp,
-                                              ),
-                                            ),
-                                            PoppinsRegular(
-                                              text: otherFileSize,
+                                        padding: EdgeInsets.all(14.sp),
+                                        decoration: BoxDecoration(
+                                          color: isDark ? Color(0xFF393939) : Color(0xFFAE7CFE),
+                                          borderRadius:
+                                          BorderRadius.circular(
+                                              10.r),
+                                        ),
+                                        child: SvgPicture.asset(
+                                          'assets/images/pdf_new.svg',
+                                          width: 20.w,
+                                          color: isDark ? Theme.of(context)
+                                              .primaryColor : Colors.white,
+                                        ),
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          SizedBox(
+                                            width:240.w,
+                                            child: PoppinsMedium(
+                                              text: otherFileName,
                                               color: Theme.of(context)
                                                   .textTheme
-                                                  .headlineSmall!
+                                                  .bodyLarge!
                                                   .color,
                                               fontsize: 12.sp,
-                                            )
-                                          ],
-                                        ),
-                                        IconButton(
-                                          onPressed: () {},
-                                          icon: Icon(
-                                            Icons.download,
-                                            color: Theme.of(context)
-                                                .primaryColor,
-                                            size: 24.sp,
+                                            ),
                                           ),
-                                        )
-                                      ],
-                                    ),
-                                  ],
-                                ),
+                                          PoppinsRegular(
+                                            text: otherFileSize,
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .headlineSmall!
+                                                .color,
+                                            fontsize: 12.sp,
+                                          )
+                                        ],
+                                      ),
+                                      IconButton(
+                                        onPressed: () {
+                                          _downloadAndOpenPdf(context, url);
+                                        },
+                                        icon: Icon(
+                                          Icons.download,
+                                          color: Theme.of(context)
+                                              .primaryColor,
+                                          size: 24.sp,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ],
                               ),
                             );
                           },

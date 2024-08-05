@@ -1,12 +1,18 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:path_provider/path_provider.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_semibold.dart';
+import 'package:tact_tik/fonts/poppins_bold.dart';
 import 'package:tact_tik/fonts/poppins_medium.dart';
 import 'package:tact_tik/fonts/poppins_regular.dart';
 import 'package:tact_tik/main.dart';
@@ -31,11 +37,13 @@ class PostOrder extends StatefulWidget {
 
 class _PostOrderState extends State<PostOrder> {
   late Future<Map<String, List<Map<String, dynamic>>>> _locationDataFuture;
+  late Future<String> _locationAddressFuture;
 
   @override
   void initState() {
     super.initState();
     _locationDataFuture = _fetchLocationData();
+    _locationAddressFuture = _fetchLocationAddress();
   }
 
   Future<Map<String, List<Map<String, dynamic>>>> _fetchLocationData() async {
@@ -63,6 +71,15 @@ class _PostOrderState extends State<PostOrder> {
     return organizedData;
   }
 
+  Future<String> _fetchLocationAddress() async {
+    final locationDoc = await FirebaseFirestore.instance
+        .collection('Locations')
+        .doc(widget.locationId)
+        .get();
+
+    return locationDoc['LocationAddress'] ?? 'Address not found';
+  }
+
   Future<Map<String, dynamic>> _fetchFileMetadata(String url) async {
     try {
       final ref = FirebaseStorage.instance.refFromURL(url);
@@ -81,27 +98,49 @@ class _PostOrderState extends State<PostOrder> {
     }
   }
 
+  Future<void> _downloadAndOpenPdf(BuildContext context, String url) async {
+    final String pdfFileName = url.split('/').last;
+
+    try {
+      final firebase_storage.Reference ref =
+      firebase_storage.FirebaseStorage.instance.refFromURL(url);
+
+      final Directory tempDir = await getTemporaryDirectory();
+      final File file = File('${tempDir.path}/$pdfFileName');
+
+      await ref.writeToFile(file);
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Scaffold(
+            appBar: AppBar(title: Text('PDF Viewer')),
+            body: PDFView(
+              filePath: file.path,
+            ),
+          ),
+        ),
+      );
+    } catch (e) {
+      print('Error downloading PDF: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
-    // final double height = MediaQuery.of(context).size.height;
-    // final double width = MediaQuery.of(context).size.width;
 
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-            ),
+            icon: Icon(Icons.arrow_back_ios),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
               Navigator.of(context).pop();
             },
           ),
-          title: InterMedium(
-            text: 'Post Orders',
-          ),
+          title: InterMedium(text: 'Post Orders'),
           centerTitle: true,
         ),
         body: FutureBuilder<Map<String, List<Map<String, dynamic>>>>(
@@ -134,315 +173,281 @@ class _PostOrderState extends State<PostOrder> {
               );
             }
 
-            Map<String, List<Map<String, dynamic>>> locationData =
-                snapshot.data!;
+            Map<String, List<Map<String, dynamic>>> locationData = snapshot.data!;
+            List<String> sortedDates = locationData.keys.toList()..sort((a, b) => b.compareTo(a));
 
-            List<String> sortedDates = locationData.keys.toList()
-              ..sort((a, b) => b.compareTo(a));
+            return ListView.builder(
+              itemCount: sortedDates.length,
+              itemBuilder: (context, index) {
+                String date = sortedDates[index];
+                List<Map<String, dynamic>> posts = locationData[date]!;
 
-            return CustomScrollView(
-              slivers: [
-                // SliverAppBar(
-                //   backgroundColor: AppBarcolor,
-                //   elevation: 0,
-                //   leading: IconButton(
-                //     icon: Icon(
-                //       Icons.arrow_back_ios,
-                //       color: Colors.white,
-                //       size: width / width24,
-                //     ),
-                //     padding: EdgeInsets.only(left: width / width20),
-                //     onPressed: () {
-                //       Navigator.pop(context);
-                //       print("Navigator debug: ${Navigator.of(context).toString()}");
-                //     },
-                //   ),
-                //   title: InterRegular(
-                //     text: 'Post Order',
-                //     fontsize: width / width18,
-                //     color: Colors.white,
-                //     letterSpacing: -.3,
-                //   ),
-                //   centerTitle: true,
-                //   floating: true,
-                // ),
-                SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      String date = sortedDates[index];
-                      List<Map<String, dynamic>> posts = locationData[date]!;
-
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 30.w, vertical: 40.h),
-                            child: InterSemibold(
-                              text: date,
-                              fontsize: 20.sp,
-                              color:
-                                  Theme.of(context).textTheme.bodySmall!.color,
-                            ),
-                          ),
-                          ...posts.map((postOrder) {
-                            String postOrderTitle = postOrder['PostOrderTitle'];
-                            String postOrderPdf = postOrder['PostOrderPdf'];
-                            List<dynamic> postOrderOtherData =
-                                postOrder['PostOrderOtherData'] ?? [];
-
-                            return FutureBuilder<Map<String, dynamic>>(
-                              future: _fetchFileMetadata(postOrderPdf),
-                              builder: (context, snapshot) {
-                                String fileName = 'Loading...';
-                                String fileSize = 'Loading...';
-
-                                if (snapshot.connectionState ==
-                                        ConnectionState.done &&
-                                    snapshot.hasData) {
-                                  fileName = snapshot.data!['name'];
-                                  fileSize = snapshot.data!['size'];
-                                }
-
-                                return GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => CreatePostOrder(
-                                          isDisplay: true,
-                                          locationId: widget.locationId,
-                                          title: postOrderTitle,
-                                          date: date,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  child: Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 30.w),
-                                    child: Container(
-                                      constraints: BoxConstraints(
-                                        minHeight: 250.h,
-                                      ),
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 20.w,
-                                        vertical: 10.h,
-                                      ),
-                                      width: double.maxFinite,
-                                      margin: EdgeInsets.only(bottom: 10.h),
-                                      decoration: BoxDecoration(
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color:
-                                                Theme.of(context).shadowColor,
-                                            blurRadius: 5,
-                                            spreadRadius: 2,
-                                            offset: Offset(0, 3),
-                                          )
-                                        ],
-                                        borderRadius:
-                                            BorderRadius.circular(10.r),
-                                        color: Theme.of(context).cardColor,
-                                      ),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          InterBold(
-                                            text: postOrderTitle,
-                                            color: Theme.of(context)
-                                                .textTheme
-                                                .bodyLarge!
-                                                .color,
-                                            fontsize: 14.sp,
-                                          ),
-                                          SizedBox(
-                                            height: 16.h,
-                                          ),
-                                          Container(
-                                            constraints:
-                                                BoxConstraints(minWidth: 200.w),
-                                            height: 70.h,
-                                            padding: EdgeInsets.symmetric(horizontal: 6.w),
-                                            decoration: BoxDecoration(
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Theme.of(context)
-                                                      .shadowColor,
-                                                  blurRadius: 5,
-                                                  spreadRadius: 2,
-                                                  offset: Offset(0, 3),
-                                                )
-                                              ],
-                                              borderRadius:
-                                                  BorderRadius.circular(10.r),
-                                              color: isDark ? Color(0xFF1F1E1E)  : LightColor.Secondarycolor,
-                                            ),
-                                            child: Row(
-                                              children: [
-                                                Container(
-                                                  height: 48.h,
-                                                  width: 48.w,
-                                                  margin: EdgeInsets.symmetric(
-                                                    horizontal: 6.w,
-                                                  ),
-                                                  padding: EdgeInsets.all(14.sp),
-                                                  decoration: BoxDecoration(
-                                                    color: isDark ? Color(0xFF393939) : Color(0xFFAE7CFE),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10.r),
-                                                  ),
-                                                  child: SvgPicture.asset(
-                                                    'assets/images/pdf_new.svg',
-                                                    width: 20.w,
-                                                    color: isDark ? Theme.of(context)
-                                                        .primaryColor : Colors.white,
-                                                  ),
-                                                ),
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    SizedBox(
-                                                      width: 200.w,
-                                                      child: PoppinsMedium(
-                                                        text: fileName,
-                                                        color: Theme.of(context)
-                                                            .textTheme
-                                                            .bodyLarge!
-                                                            .color,
-                                                        fontsize: 12.sp,
-                                                      ),
-                                                    ),
-                                                    PoppinsRegular(
-                                                      text: fileSize,
-                                                      color: Theme.of(context)
-                                                          .textTheme
-                                                          .headlineSmall!
-                                                          .color,
-                                                      fontsize: 12.sp,
-                                                    )
-                                                  ],
-                                                ),
-                                                IconButton(
-                                                  onPressed: () {},
-                                                  icon: Icon(
-                                                    Icons.download,
-                                                    color: Theme.of(context)
-                                                        .primaryColor,
-                                                    size: 24.sp,
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 20.h,
-                                          ),
-                                          GridView.builder(
-                                            shrinkWrap: true,
-                                            physics:
-                                                NeverScrollableScrollPhysics(),
-                                            gridDelegate:
-                                                SliverGridDelegateWithFixedCrossAxisCount(
-                                              crossAxisCount: 3,
-                                              crossAxisSpacing: 10.0,
-                                              mainAxisSpacing: 10.0,
-                                            ),
-                                            itemCount:
-                                                postOrderOtherData.length > 3
-                                                    ? 3
-                                                    : postOrderOtherData.length,
-                                            itemBuilder: (context, index) {
-                                              String url =
-                                                  postOrderOtherData[index];
-                                              if (url.contains('.pdf')) {
-                                                return FutureBuilder<
-                                                    Map<String, dynamic>>(
-                                                  future:
-                                                      _fetchFileMetadata(url),
-                                                  builder: (context, snapshot) {
-                                                    String otherFileName =
-                                                        'Loading...';
-                                                    String otherFileSize =
-                                                        'Loading...';
-
-                                                    if (snapshot.connectionState ==
-                                                            ConnectionState
-                                                                .done &&
-                                                        snapshot.hasData) {
-                                                      otherFileName = snapshot
-                                                          .data!['name'];
-                                                      otherFileSize = snapshot
-                                                          .data!['size'];
-                                                    }
-
-                                                    return Container(
-                                                      width: 200.w,
-                                                      height: 46.h,
-                                                      decoration: BoxDecoration(
-                                                        boxShadow: [
-                                                          BoxShadow(
-                                                            color: Theme.of(
-                                                                    context)
-                                                                .shadowColor,
-                                                            blurRadius: 5,
-                                                            spreadRadius: 2,
-                                                            offset:
-                                                                Offset(0, 3),
-                                                          )
-                                                        ],
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10.r),
-                                                        color: Theme.of(context)
-                                                            .cardColor,
-                                                      ),
-                                                      child: Padding(
-                                                        padding: EdgeInsets
-                                                            .symmetric(
-                                                                horizontal:
-                                                                    6.w),
-                                                        child: SvgPicture.asset(
-                                                          'assets/images/pdf.svg',
-                                                          width: 32.sp,
-                                                        ),
-                                                      ),
-                                                    );
-                                                  },
-                                                );
-                                              } else {
-                                                return SizedBox(
-                                                  height: 20.h,
-                                                  width: 20.w,
-                                                  child: Image.network(url),
-                                                );
-                                              }
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                            );
-                          }).toList(),
-                        ],
-                      );
-                    },
-                    childCount: sortedDates.length,
-                  ),
-                ),
-              ],
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 40.h),
+                      child: InterSemibold(
+                        text: date,
+                        fontsize: 20.sp,
+                        color: Theme.of(context).textTheme.bodySmall!.color,
+                      ),
+                    ),
+                    ...posts.map((postOrder) => _buildPostOrderCard(context, postOrder, date)),
+                  ],
+                );
+              },
             );
           },
         ),
       ),
+    );
+  }
+
+  Widget _buildPostOrderCard(BuildContext context, Map<String, dynamic> postOrder, String date) {
+    String postOrderTitle = postOrder['PostOrderTitle'];
+    String postOrderPdf = postOrder['PostOrderPdf'];
+    List<dynamic> postOrderOtherData = postOrder['PostOrderOtherData'] ?? [];
+    List imageUrls = postOrderOtherData.where((url) => !url.contains('.pdf')).toList();
+    List<String> pdfUrls = [postOrderPdf, ...postOrderOtherData.where((url) => url.contains('.pdf'))];
+
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CreatePostOrder(
+              isDisplay: true,
+              locationId: widget.locationId,
+              title: postOrderTitle,
+              date: date,
+            ),
+          ),
+        );
+      },
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 30.w),
+        child: Container(
+          constraints: BoxConstraints(minHeight: 250.h),
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+          width: double.maxFinite,
+          margin: EdgeInsets.only(bottom: 10.h),
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Theme.of(context).shadowColor,
+                blurRadius: 5,
+                spreadRadius: 2,
+                offset: Offset(0, 3),
+              )
+            ],
+            borderRadius: BorderRadius.circular(10.r),
+            color: Theme.of(context).cardColor,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              InterBold(
+                text: postOrderTitle,
+                color: Theme.of(context).textTheme.bodyLarge!.color,
+                fontsize: 20.sp,
+              ),
+              _buildImageGrid(imageUrls),
+              SizedBox(height: 16.h),
+              _buildLocationWidget(),
+              SizedBox(height: 16.h),
+              _buildPdfList(pdfUrls),
+              SizedBox(height: 20.h),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPdfList(List<String> pdfUrls) {
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      itemCount: pdfUrls.length,
+      itemBuilder: (context, index) {
+        return _buildPdfWidget(pdfUrls[index]);
+      },
+    );
+  }
+
+  Widget _buildPdfWidget(String pdfUrl) {
+    return FutureBuilder<Map<String, dynamic>>(
+      future: _fetchFileMetadata(pdfUrl),
+      builder: (context, snapshot) {
+        String fileName = 'Loading...';
+        String fileSize = 'Loading...';
+
+        if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
+          fileName = snapshot.data!['name'];
+          fileSize = snapshot.data!['size'];
+        }
+
+        return Container(
+          constraints: BoxConstraints(minWidth: 200.w),
+          height: 70.h,
+          padding: EdgeInsets.symmetric(horizontal: 6.w),
+          margin: EdgeInsets.only(bottom: 10.h),
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Theme.of(context).shadowColor,
+                blurRadius: 5,
+                spreadRadius: 2,
+                offset: Offset(0, 3),
+              )
+            ],
+            borderRadius: BorderRadius.circular(10.r),
+            color: Theme.of(context).brightness == Brightness.dark ? Color(0xFF1F1E1E) : LightColor.Secondarycolor,
+          ),
+          child: Row(
+            children: [
+              Container(
+                height: 48.h,
+                width: 48.w,
+                margin: EdgeInsets.symmetric(horizontal: 6.w),
+                padding: EdgeInsets.all(14.sp),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).brightness == Brightness.dark ? Color(0xFF393939) : Color(0xFFAE7CFE),
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+                child: SvgPicture.asset(
+                  'assets/images/pdf_new.svg',
+                  width: 20.w,
+                  color: Theme.of(context).brightness == Brightness.dark ? Theme.of(context).primaryColor : Colors.white,
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    PoppinsMedium(
+                      text: fileName,
+                      color: Theme.of(context).textTheme.bodyLarge!.color,
+                      fontsize: 12.sp,
+                    ),
+                    PoppinsRegular(
+                      text: fileSize,
+                      color: Theme.of(context).textTheme.headlineSmall!.color,
+                      fontsize: 12.sp,
+                    )
+                  ],
+                ),
+              ),
+              IconButton(
+                onPressed: () {
+                  _downloadAndOpenPdf(context, pdfUrl);
+                },
+                icon: Icon(
+                  Icons.download,
+                  color: Theme.of(context).primaryColor,
+                  size: 24.sp,
+                ),
+              )
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildLocationWidget() {
+    return FutureBuilder<String>(
+      future: _locationAddressFuture,
+      builder: (context, snapshot) {
+        String address = 'Loading...';
+
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasError) {
+            address = 'Error fetching address';
+          } else {
+            address = snapshot.data ?? 'Address not found';
+          }
+        }
+
+        return Container(
+          constraints: BoxConstraints(minWidth: 200.w),
+          padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 10.h),
+          margin: EdgeInsets.only(bottom: 10.h),
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Theme.of(context).shadowColor,
+                blurRadius: 5,
+                spreadRadius: 2,
+                offset: Offset(0, 3),
+              )
+            ],
+            borderRadius: BorderRadius.circular(10.r),
+            color: Theme.of(context).brightness == Brightness.dark ? Color(0xFF1F1E1E) : LightColor.Secondarycolor,
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                height: 48.h,
+                width: 48.w,
+                margin: EdgeInsets.only(right: 12.w),
+                padding: EdgeInsets.all(14.sp),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).brightness == Brightness.dark ? Color(0xFF393939) : Color(0xFFAE7CFE),
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+                child: SvgPicture.asset(
+                  'assets/images/location_icon.svg',
+                  width: 20.w,
+                  color: Theme.of(context).brightness == Brightness.dark ? Theme.of(context).primaryColor : Colors.white,
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    PoppinsBold(
+                      text: "Location",
+                      color: Theme.of(context).textTheme.bodyLarge!.color,
+                      fontsize: 14.sp,
+                    ),
+                    SizedBox(height: 4.h),
+                    PoppinsRegular(
+                      text: address,
+                      color: Theme.of(context).textTheme.headlineSmall!.color,
+                      fontsize: 12.sp,
+                      maxline: null,
+                      overflow: TextOverflow.visible,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildImageGrid(List imageUrls) {
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        crossAxisSpacing: 10.0,
+        mainAxisSpacing: 10.0,
+      ),
+      itemCount: imageUrls.length,
+      itemBuilder: (context, index) {
+        return Image.network(
+          imageUrls[index],
+          fit: BoxFit.cover,
+        );
+      },
     );
   }
 }
