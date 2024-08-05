@@ -1023,8 +1023,9 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => ClientProfileScreen(
+                            builder: (context) => ProfileScreen(
                               empId: _employeeId,
+                              isClient: true,
                             ),
                           ),
                         );

@@ -144,7 +144,7 @@ class _ProfileScreenState extends State<ClientProfileScreen> {
             },
           ),
           title: InterMedium(
-            text: 'Your Profile',
+            text: isEdit ? 'Edit Profile' : 'Your Profile',
             color: DarkColor.color5,
           ),
           backgroundColor: Colors.transparent,
