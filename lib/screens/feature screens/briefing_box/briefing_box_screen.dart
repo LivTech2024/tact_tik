@@ -29,7 +29,7 @@ class _BriefingBoxScreenState extends State<BriefingBoxScreen> {
     return FirebaseFirestore.instance
         .collection('BriefingBox')
         .where('BriefingLocationId', isEqualTo: widget.locationId)
-        .where('BriefingCreatedBy', isNotEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        // .where('BriefingCreatedBy', isNotEqualTo: FirebaseAuth.instance.currentUser!.uid)
         .orderBy('BriefingCreatedBy')
         .orderBy('BriefingCreatedAt', descending: true)
         .get();
