@@ -32,14 +32,25 @@ class ShiftReturnTaskScreen extends StatefulWidget {
 class _ShiftTaskReturnScreenState extends State<ShiftReturnTaskScreen> {
   FireStoreService fireStoreService = FireStoreService();
 
+  @override
   void initState() {
+    super.initState();
     fetchData();
+  }
+
+  @override
+  void dispose() {
+    // Dispose all controllers
+    for (var controller in commentControllers) {
+      controller.dispose();
+    }
+    super.dispose();
   }
 
   int completedTaskCount = 0;
   int totalTaskCount = 0;
   List<Map<String, dynamic>>? fetchedTasks = [];
-
+  List<TextEditingController> commentControllers = [];
   void fetchData() async {
     List<Map<String, dynamic>>? fetchedData =
         await fireStoreService.fetchreturnShiftTasks(widget.shiftId);
@@ -50,7 +61,18 @@ class _ShiftTaskReturnScreenState extends State<ShiftReturnTaskScreen> {
       });
       int completedTaskCount = 0;
       int totalTaskCount = 0;
-
+      commentControllers = List.generate(fetchedData.length, (index) {
+        final task = fetchedData[index];
+        final taskStatusList = task['ShiftReturnTaskStatus'] ?? [];
+        final filteredStatus = taskStatusList
+            .where((status) => status['TaskCompletedById'] == widget.Empid)
+            .toList();
+        String commentText = "";
+        if (filteredStatus.isNotEmpty) {
+          commentText = filteredStatus.first['TaskComment'] ?? "";
+        }
+        return TextEditingController(text: commentText);
+      });
       for (int i = 0; i < fetchedData.length; i++) {
         final task = fetchedData[i];
         if (task.containsKey('ShiftReturnTaskStatus') &&
@@ -170,6 +192,7 @@ class _ShiftTaskReturnScreenState extends State<ShiftReturnTaskScreen> {
                       }
                     }
                     List<String> taskPhotos = [];
+                    String commentText = "";
                     if (fetchedTasks?[index]?['ShiftReturnTaskStatus'] !=
                         null) {
                       List taskStatusList =
@@ -179,6 +202,9 @@ class _ShiftTaskReturnScreenState extends State<ShiftReturnTaskScreen> {
                         if (taskStatusMap.containsKey('TaskPhotos')) {
                           taskPhotos =
                               List<String>.from(taskStatusMap['TaskPhotos']);
+                        }
+                        if (taskStatusMap.containsKey("TaskComment")) {
+                          commentText = taskStatusMap['TaskComment'];
                         }
                       }
                     }
@@ -194,8 +220,9 @@ class _ShiftTaskReturnScreenState extends State<ShiftReturnTaskScreen> {
                       refreshDataCallback: _refreshData,
                       EmpName: widget.EmpName,
                       ShiftTaskReturnStatus: ShiftTaskReturnStatus ?? false,
-                      taskPhotos:
-                          taskPhotos, // Default to upload if taskType is null
+                      taskPhotos: taskPhotos,
+                      commentController: commentControllers[
+                          index], // Default to upload if taskType is null
                     );
                   },
                   childCount: fetchedTasks?.length ?? 0,

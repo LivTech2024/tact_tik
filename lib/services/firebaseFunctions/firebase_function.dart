@@ -3632,7 +3632,8 @@ class FireStoreService {
       String ShiftId,
       String EmpId,
       String EmpName,
-      bool shiftTaskReturnStatus) async {
+      bool shiftTaskReturnStatus,
+      String comment) async {
     try {
       if (ShiftId.isEmpty) {
         print("Shift ID is empty");
@@ -3677,6 +3678,7 @@ class FireStoreService {
             "TaskCompletedByName": EmpName,
             "TaskCompletionTime": DateTime.now(),
             "TaskPhotos": imgUrls,
+            "TaskComment": comment
           };
 
           if (shiftTaskReturnStatus) {

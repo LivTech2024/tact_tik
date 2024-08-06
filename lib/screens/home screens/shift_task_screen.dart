@@ -61,9 +61,19 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
       int completedTaskCount = 0;
       int totalTaskCount = 0;
 
-      // Initialize controllers for each task
-      commentControllers =
-          List.generate(fetchedData.length, (index) => TextEditingController());
+      // Initialize controllers for each task with existing comments if available
+      commentControllers = List.generate(fetchedData.length, (index) {
+        final task = fetchedData[index];
+        final taskStatusList = task['ShiftTaskStatus'] ?? [];
+        final filteredStatus = taskStatusList
+            .where((status) => status['TaskCompletedById'] == widget.EmpId)
+            .toList();
+        String commentText = "";
+        if (filteredStatus.isNotEmpty) {
+          commentText = filteredStatus.first['TaskComment'] ?? "";
+        }
+        return TextEditingController(text: commentText);
+      });
 
       for (int i = 0; i < fetchedData.length; i++) {
         final task = fetchedData[i];
@@ -82,7 +92,6 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
         this.totalTaskCount = totalTaskCount;
       });
       if (completedTaskCount == totalTaskCount) {
-        // Navigator.pop(context); // Pop the screen if all tasks are completed
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => HomeScreen()),
@@ -153,7 +162,6 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
                 SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {
-                      // Assuming your data structure is correct, extract the ShiftTaskEnum for each task
                       ShiftTaskEnum? taskType;
                       String? taskStatu;
                       bool ShiftTaskReturnStatus = false;
@@ -168,7 +176,6 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
                         }
 
                         print("Shift Task Status Filtering  : ${task}");
-                        // Filter ShiftTaskStatus by TaskCompletedById
                         final shiftTaskStatus = task['ShiftTaskStatus'] ?? [];
                         final filteredStatus = shiftTaskStatus
                             .where((status) =>
@@ -177,7 +184,6 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
                         print(
                             "Task FilteredStatus Status : - ${filteredStatus}");
 
-                        // Extract TaskStatus if document is present
                         if (filteredStatus.isNotEmpty) {
                           taskStatu = filteredStatus.first['TaskStatus'];
                           ShiftTaskReturnStatus =
@@ -188,6 +194,7 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
                       }
                       print(fetchedTasks?[index]?['ShiftTaskStatus']);
                       List<String> taskPhotos = [];
+                      String commentText = "";
                       if (fetchedTasks?[index]?['ShiftTaskStatus'] != null) {
                         List taskStatusList =
                             fetchedTasks?[index]?['ShiftTaskStatus'];
@@ -196,6 +203,9 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
                           if (taskStatusMap.containsKey('TaskPhotos')) {
                             taskPhotos =
                                 List<String>.from(taskStatusMap['TaskPhotos']);
+                          }
+                          if (taskStatusMap.containsKey("TaskComment")) {
+                            commentText = taskStatusMap['TaskComment'];
                           }
                         }
                       }

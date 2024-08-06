@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
@@ -137,48 +138,53 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
   final Lock _uploadLock = Lock();
 
   void _uploadImages() async {
-    if (uploads.isEmpty ||
-        widget.ShiftId.isEmpty ||
-        widget.taskId.isEmpty ||
-        widget.EmpID.isEmpty) {
+    // if (uploads.isEmpty ||
+    //     widget.ShiftId.isEmpty ||
+    //     widget.taskId.isEmpty ||
+    //     widget.EmpID.isEmpty) {
+    //   showErrorToast(context, "No Images found or missing data");
+    //   print('No images to upload or missing data.');
+    //   return;
+    // }
+    if (uploads.isNotEmpty || widget.commentController.text.isNotEmpty) {
+      // Create a copy of the uploads list to avoid modifications during async process
+      final List<Map<String, dynamic>> uploadsCopy = List.from(uploads);
+
+      // Use a lock to prevent concurrent uploads
+      await _uploadLock.synchronized(
+        () async {
+          setState(() {
+            _isLoading = true;
+          });
+
+          print("Uploads Images  $uploadsCopy");
+          try {
+            print("Task Id : ${widget.taskId}");
+            await fireStoreService.addImagesToShiftTasks(
+                uploadsCopy,
+                widget.taskId,
+                widget.ShiftId,
+                widget.EmpID,
+                widget.EmpName,
+                widget.shiftReturnTask,
+                widget.commentController.text);
+            // Clear only the original uploads list after successful upload
+            uploads.clear();
+            showSuccessToast(context, "Uploaded Successfully");
+            widget.refreshDataCallback();
+          } catch (e) {
+            showErrorToast(context, "$e");
+            print('Error uploading images: $e');
+          } finally {
+            setState(() {
+              _isLoading = false;
+            });
+          }
+        },
+      );
+    } else {
       showErrorToast(context, "No Images found or missing data");
-      print('No images to upload or missing data.');
-      return;
     }
-
-    // Create a copy of the uploads list to avoid modifications during async process
-    final List<Map<String, dynamic>> uploadsCopy = List.from(uploads);
-
-    // Use a lock to prevent concurrent uploads
-    await _uploadLock.synchronized(() async {
-      setState(() {
-        _isLoading = true;
-      });
-
-      print("Uploads Images  $uploadsCopy");
-      try {
-        print("Task Id : ${widget.taskId}");
-        await fireStoreService.addImagesToShiftTasks(
-          uploadsCopy,
-          widget.taskId,
-          widget.ShiftId,
-          widget.EmpID,
-          widget.EmpName,
-          widget.shiftReturnTask,
-        );
-        // Clear only the original uploads list after successful upload
-        uploads.clear();
-        showSuccessToast(context, "Uploaded Successfully");
-        widget.refreshDataCallback();
-      } catch (e) {
-        showErrorToast(context, "$e");
-        print('Error uploading images: $e');
-      } finally {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    });
   }
 
   void _uploadfromGallery() async {
@@ -193,13 +199,13 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
       try {
         print("Task Id : ${widget.taskId}");
         await fireStoreService.addImagesToShiftTasks(
-          uploads,
-          widget.taskId ?? "",
-          widget.ShiftId ?? "",
-          widget.EmpID ?? "",
-          widget.EmpName,
-          widget.shiftReturnTask,
-        );
+            uploads,
+            widget.taskId ?? "",
+            widget.ShiftId ?? "",
+            widget.EmpID ?? "",
+            widget.EmpName,
+            widget.shiftReturnTask,
+            widget.commentController.text);
         uploads.clear();
         showSuccessToast(context, "Uploaded Successfully");
         widget.refreshDataCallback();
@@ -363,8 +369,8 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
               ],
             ),
           )
-        : widget.type ==
-                ShiftTaskEnum.upload //this will be used for both Scan and qr
+        : widget.type == ShiftTaskEnum.upload &&
+                !_isLoading //this will be used for both Scan and qr
             ? Column(
                 children: [
                   GestureDetector(
@@ -568,13 +574,55 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                   ),
                   // SizedBox(height: 10.h),
                   SizedBox(height: 20.h),
+                  // TextField(
+                  //   // controller: widget.commentController,
+                  //   decoration: InputDecoration(
+                  //     labelText: 'Add Comment',
+                  //     border: OutlineInputBorder(),
+                  //   ),
+                  // ),
                   TextField(
+                    style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 20.sp,
+                      color: Theme.of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .color, // Change text color to white
+                    ),
                     controller: widget.commentController,
                     decoration: InputDecoration(
+                      focusColor: Theme.of(context).primaryColor,
                       labelText: 'Add Comment',
-                      border: OutlineInputBorder(),
+                      hintStyle: GoogleFonts.poppins(
+                        // fontWeight: FontWeight.w700,
+                        fontSize: 20.sp,
+                        color: Theme.of(context)
+                            .textTheme
+                            .bodyMedium!
+                            .color, // Change text color to white
+                      ),
+                      labelStyle: GoogleFonts.poppins(
+                        // fontWeight: FontWeight.w700,
+                        fontSize: 20.sp,
+                        color: Theme.of(context)
+                            .textTheme
+                            .bodyMedium!
+                            .color, // Change text color to white
+                      ),
+                      hintText: 'Add Comment',
+                      /*enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.red),
+                        ),*/
+                      focusedBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: Theme.of(context).primaryColor),
+                      ),
                     ),
+                    cursorColor: Theme.of(context).primaryColor,
+                    keyboardType: TextInputType.emailAddress,
                   ),
+                  SizedBox(height: 20.h),
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
@@ -732,6 +780,10 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                   SizedBox(height: 20.h),
                 ],
               )
-            : SizedBox();
+            : Container(
+                alignment: Alignment.center,
+                margin: EdgeInsets.only(top: height / height10),
+                child: CircularProgressIndicator(),
+              );
   }
 }

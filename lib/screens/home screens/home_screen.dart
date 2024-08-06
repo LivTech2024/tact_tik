@@ -846,13 +846,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       'History',
                       4,
                       () async {
-                        List<String> emails = [];
-
-                        emails.add("sutarvaibhav37@gmail.com");
-                        emails.add("pankaj.kumar1312@yahoo.com");
-                        emails.add("jasperhieghts@unitiipm.com");
+                        // List<String> emails = [];
+                        // emails.add("sutarvaibhav37@gmail.com");
+                        // emails.add("pankaj.kumar1312@yahoo.com");
+                        // emails.add("jasperhieghts@unitiipm.com");
                         // // emails.add("security@lestonholdings.com");
-                        emails.add("dan@tpssolution.com");
+                        // emails.add("dan@tpssolution.com");
                         // await sendDARTemplateEmail(
                         //   "Leston holdings",
                         //   emails,
@@ -870,7 +869,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         // );
                         // customEmail();
                         // await fireStoreService.copyAndCreateDocument(
-                        //     "PatrolLogs", "0VennAJIxMzysKVQIPLL");
+                        //     "PatrolLogs", "HQNmeFAAGM3CzHk90k01");
                         // await darFunctions
                         //     .fetchShiftDetailstemplateAndSubmitDAR(
                         //         "18:00",

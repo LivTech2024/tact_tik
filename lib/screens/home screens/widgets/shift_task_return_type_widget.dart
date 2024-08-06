@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
@@ -33,6 +34,7 @@ class ShiftTaskReturnTypeWidget extends StatefulWidget {
     required this.EmpName,
     required this.ShiftTaskReturnStatus,
     required this.taskPhotos,
+    required this.commentController,
   }) : super(key: key);
 
   final ShiftTaskEnum type;
@@ -45,6 +47,7 @@ class ShiftTaskReturnTypeWidget extends StatefulWidget {
   final String EmpName;
   final bool shiftReturnTask;
   final List<String> taskPhotos;
+  final TextEditingController commentController;
 
   @override
   State<ShiftTaskReturnTypeWidget> createState() =>
@@ -111,38 +114,42 @@ class _ShiftTaskReturnTypeWidgetState extends State<ShiftTaskReturnTypeWidget> {
   }
 
   void _uploadImages() async {
-    if (uploads.isEmpty ||
-        widget.ShiftId.isEmpty ||
-        widget.taskId.isEmpty ||
-        widget.EmpID.isEmpty) {
+    // if (uploads.isEmpty ||
+    //     widget.ShiftId.isEmpty ||
+    //     widget.taskId.isEmpty ||
+    //     widget.EmpID.isEmpty) {
+    //   showErrorToast(context, "No Images found or missing data");
+    //   print('No images to upload or missing data.');
+    //   return;
+    // }
+    if (uploads.isNotEmpty || widget.commentController.text.isNotEmpty) {
+      setState(() {
+        _isLoading = true;
+      });
+      print("Uploads Images  $uploads");
+      try {
+        print("Task Id : ${widget.taskId}");
+        await fireStoreService.addImagesToShiftReturnTasks(
+          uploads,
+          widget.taskId,
+          widget.ShiftId,
+          widget.EmpID,
+          widget.EmpName,
+          widget.shiftReturnTask,
+        );
+        uploads.clear();
+        showSuccessToast(context, "Uploaded Successfully");
+        widget.refreshDataCallback();
+      } catch (e) {
+        showErrorToast(context, "$e");
+        print('Error uploading images: $e');
+      }
+      setState(() {
+        _isLoading = false;
+      });
+    } else {
       showErrorToast(context, "No Images found or missing data");
-      print('No images to upload or missing data.');
-      return;
     }
-    setState(() {
-      _isLoading = true;
-    });
-    print("Uploads Images  $uploads");
-    try {
-      print("Task Id : ${widget.taskId}");
-      await fireStoreService.addImagesToShiftReturnTasks(
-        uploads,
-        widget.taskId,
-        widget.ShiftId,
-        widget.EmpID,
-        widget.EmpName,
-        widget.shiftReturnTask,
-      );
-      uploads.clear();
-      showSuccessToast(context, "Uploaded Successfully");
-      widget.refreshDataCallback();
-    } catch (e) {
-      showErrorToast(context, "$e");
-      print('Error uploading images: $e');
-    }
-    setState(() {
-      _isLoading = false;
-    });
   }
 
   void _uploadfromGallery() async {
@@ -505,6 +512,48 @@ class _ShiftTaskReturnTypeWidgetState extends State<ShiftTaskReturnTypeWidget> {
                     ),
                   ),
                   SizedBox(height: height / height10),
+                  TextField(
+                    style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 20.sp,
+                      color: Theme.of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .color, // Change text color to white
+                    ),
+                    controller: widget.commentController,
+                    decoration: InputDecoration(
+                      focusColor: Theme.of(context).primaryColor,
+                      labelText: 'Add Comment',
+                      hintStyle: GoogleFonts.poppins(
+                        // fontWeight: FontWeight.w700,
+                        fontSize: 20.sp,
+                        color: Theme.of(context)
+                            .textTheme
+                            .bodyMedium!
+                            .color, // Change text color to white
+                      ),
+                      labelStyle: GoogleFonts.poppins(
+                        // fontWeight: FontWeight.w700,
+                        fontSize: 20.sp,
+                        color: Theme.of(context)
+                            .textTheme
+                            .bodyMedium!
+                            .color, // Change text color to white
+                      ),
+                      hintText: 'Add Comment',
+                      /*enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.red),
+                        ),*/
+                      focusedBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: Theme.of(context).primaryColor),
+                      ),
+                    ),
+                    cursorColor: Theme.of(context).primaryColor,
+                    keyboardType: TextInputType.emailAddress,
+                  ),
+                  SizedBox(height: height / height10),
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
@@ -594,7 +643,6 @@ class _ShiftTaskReturnTypeWidgetState extends State<ShiftTaskReturnTypeWidget> {
                             ),
                           ),
                         ),
-
                         FloatingActionButton(
                           onPressed: _uploadImages,
                           backgroundColor: Theme.of(context).primaryColor,
