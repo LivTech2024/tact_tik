@@ -130,13 +130,13 @@ class _ShiftTaskReturnTypeWidgetState extends State<ShiftTaskReturnTypeWidget> {
       try {
         print("Task Id : ${widget.taskId}");
         await fireStoreService.addImagesToShiftReturnTasks(
-          uploads,
-          widget.taskId,
-          widget.ShiftId,
-          widget.EmpID,
-          widget.EmpName,
-          widget.shiftReturnTask,
-        );
+            uploads,
+            widget.taskId,
+            widget.ShiftId,
+            widget.EmpID,
+            widget.EmpName,
+            widget.shiftReturnTask,
+            widget.commentController.text);
         uploads.clear();
         showSuccessToast(context, "Uploaded Successfully");
         widget.refreshDataCallback();
@@ -164,13 +164,13 @@ class _ShiftTaskReturnTypeWidgetState extends State<ShiftTaskReturnTypeWidget> {
       try {
         print("Task Id : ${widget.taskId}");
         await fireStoreService.addImagesToShiftReturnTasks(
-          uploads,
-          widget.taskId ?? "",
-          widget.ShiftId ?? "",
-          widget.EmpID ?? "",
-          widget.EmpName,
-          widget.shiftReturnTask,
-        );
+            uploads,
+            widget.taskId ?? "",
+            widget.ShiftId ?? "",
+            widget.EmpID ?? "",
+            widget.EmpName,
+            widget.shiftReturnTask,
+            widget.commentController.text);
         uploads.clear();
         showSuccessToast(context, "Uploaded Successfully");
         widget.refreshDataCallback();
