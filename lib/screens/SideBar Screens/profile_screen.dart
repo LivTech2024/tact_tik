@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:tact_tik/common/widgets/button1.dart';
+import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/poppins_medium.dart';
 import 'package:tact_tik/fonts/poppins_regular.dart';
@@ -21,6 +23,7 @@ import '../../utils/colors.dart';
 
 import '../../common/widgets/setTextfieldWidget.dart';
 import '../home screens/widgets/profile_edit_widget.dart';
+import 'edit_profile_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   bool isClient;
@@ -39,22 +42,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String? _employeeRole;
   String? _employeePhone;
   String? _employeeImageUrl;
-  String? _currentUserUid;
-  XFile? _selectedImageFile;
-  bool isEdit = false;
-
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _phoneNoController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    print("CLIENT KA EMPLOYEE ID: ${widget.empId}");
     _fetchEmployeeData();
   }
 
   Future<void> _fetchEmployeeData() async {
-    // print("CLIENT KA EMPLOYEE ID: ${widget.empId}");
     if (widget.isClient) {
       final clientSnapshot = await FirebaseFirestore.instance
           .collection('Clients')
@@ -68,8 +63,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _employeeRole = "Client";
           _employeePhone = clientData['ClientPhone'];
           _employeeImageUrl = clientData['ClientHomePageBgImg'];
-          _nameController.text = _employeeName ?? '';
-          _phoneNoController.text = _employeePhone ?? '';
         });
       }
     } else {
@@ -85,135 +78,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _employeeRole = employeeData['EmployeeRole'];
           _employeePhone = employeeData['EmployeePhone'];
           _employeeImageUrl = employeeData['EmployeeImg'];
-          _nameController.text = _employeeName ?? '';
-          _phoneNoController.text = _employeePhone ?? '';
         });
       }
-    }
-  }
-
-  Future<void> updateProfile() async {
-    if (_nameController.text.isEmpty || _phoneNoController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please fill in both Name and Contact No')),
-      );
-      return;
-    }
-    try {
-      if (widget.isClient) {
-        await FirebaseFirestore.instance
-            .collection('Clients')
-            .doc(widget.empId)
-            .update({
-          'ClientName': _nameController.text,
-          'ClientPhone': _phoneNoController.text,
-        });
-        if (_selectedImageFile != null) {
-          final storageRef = FirebaseStorage.instance
-              .ref()
-              .child('clients/images/${_selectedImageFile!.name}');
-          await storageRef.putFile(File(_selectedImageFile!.path));
-          final downloadUrl = await storageRef.getDownloadURL();
-          await FirebaseFirestore.instance
-              .collection('Clients')
-              .doc(widget.empId)
-              .update({'ClientHomePageBgImg': downloadUrl});
-        }
-      } else {
-        await FirebaseFirestore.instance
-            .collection('Employees')
-            .doc(widget.empId)
-            .update({
-          'EmployeeName': _nameController.text,
-          'EmployeePhone': _phoneNoController.text,
-        });
-        if (_selectedImageFile != null) {
-          final storageRef = FirebaseStorage.instance
-              .ref()
-              .child('employees/images/${_selectedImageFile!.name}');
-          await storageRef.putFile(File(_selectedImageFile!.path));
-          final downloadUrl = await storageRef.getDownloadURL();
-          await FirebaseFirestore.instance
-              .collection('Employees')
-              .doc(widget.empId)
-              .update({'EmployeeImg': downloadUrl});
-        }
-      }
-      _fetchEmployeeData();
-      setState(() {
-        isEdit = false;
-        _selectedImageFile = null;
-      });
-    } catch (e) {
-      print('Error updating profile: $e');
-    }
-  }
-
-  Future<void> _selectImageFromGallery() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
-      setState(() {
-        _selectedImageFile = pickedFile;
-      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
     return SafeArea(
       child: Scaffold(
-        extendBodyBehindAppBar: true,
         appBar: AppBar(
           elevation: 0,
-          shadowColor: Colors.transparent,
           leading: IconButton(
-            icon: Icon(
-              isEdit ? Icons.close : Icons.arrow_back_ios,
-              color: DarkColor.color5,
-            ),
+            icon: Icon(Icons.arrow_back_ios, color: Colors.white),
             padding: EdgeInsets.only(left: 20.w),
-            onPressed: () {
-              if (isEdit) {
-                setState(() {
-                  isEdit = !isEdit;
-                });
-              } else {
-                Navigator.pop(context);
-              }
-            },
+            onPressed: () => Navigator.pop(context),
           ),
-          title: InterMedium(
+          title: InterBold(
             text: 'Your Profile',
-            color: DarkColor.color5,
+            color: Colors.white,
           ),
-          backgroundColor: Colors.transparent,
-          actions: [
-            IconButton(
-              onPressed: () {
-                if (isEdit) {
-                  if (_nameController.text.isEmpty ||
-                      _phoneNoController.text.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                          content:
-                              Text('Please fill in both Name and Contact No')),
-                    );
-                    return;
-                  }
-                  updateProfile();
-                }
-                setState(() {
-                  isEdit = !isEdit;
-                });
-              },
-              icon: Icon(
-                isEdit ? Icons.check : Icons.border_color,
-                color: DarkColor.color5,
-              ),
-            ),
-          ],
+          backgroundColor: Theme.of(context).primaryColor,
           centerTitle: true,
         ),
         body: SingleChildScrollView(
@@ -221,196 +107,102 @@ class _ProfileScreenState extends State<ProfileScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                height: 340.h,
+                height: 240.h,
                 width: double.maxFinite,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Colors.black,
-                      Theme.of(context).brightness == Brightness.dark
-                          ? const Color(0xFF9C6400)
-                          : LightColor.Primarycolor,
-                    ],
-                    begin: Alignment(0, -1.5),
-                    end: Alignment.bottomCenter,
-                  ),
-                ),
+                color: Colors.transparent,
                 child: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Container(
-                        padding: EdgeInsets.all(4.w),
-                        decoration: BoxDecoration(
-                          color: _employeeImageUrl != null
-                              ? Theme.of(context).primaryColor
-                              : Theme.of(context).primaryColor,
-                          shape: BoxShape.circle,
+                      CircleAvatar(
+                        radius: 54.r,
+                        backgroundColor: Theme.of(context).primaryColor,
+                        child: CircleAvatar(
+                          radius: 50.r,
+                          backgroundImage: _employeeImageUrl != null
+                              ? NetworkImage(_employeeImageUrl!)
+                              : AssetImage('assets/images/default.png') as ImageProvider,
                         ),
-                        child: isEdit
-                            ? Stack(
-                                clipBehavior: Clip.none,
-                                children: [
-                                  ClipOval(
-                                    child: SizedBox.fromSize(
-                                      size: Size.fromRadius(50.r),
-                                      child: _selectedImageFile != null
-                                          ? Image.file(
-                                              File(_selectedImageFile!.path),
-                                              fit: BoxFit.cover,
-                                            )
-                                          : _employeeImageUrl != null
-                                              ? Image.network(
-                                                  _employeeImageUrl!,
-                                                  fit: BoxFit.cover,
-                                                )
-                                              : Image.asset(
-                                                  'assets/images/default.png'),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    right: -10.w,
-                                    bottom: -4.h,
-                                    child: IconButton(
-                                      padding: EdgeInsets.zero,
-                                      onPressed: () =>
-                                          _selectImageFromGallery(),
-                                      icon: Icon(
-                                        Icons.add_a_photo,
-                                        size: 24.sp,
-                                        color: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium!
-                                            .color,
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              )
-                            : ClipOval(
-                                child: SizedBox.fromSize(
-                                  size: Size.fromRadius(50.r),
-                                  child: _employeeImageUrl != null
-                                      ? Image.network(
-                                          _employeeImageUrl!,
-                                          fit: BoxFit.cover,
-                                        )
-                                      : Image.asset(
-                                          'assets/images/default.png'),
-                                ),
-                              ),
                       ),
                       SizedBox(height: 20.h),
-                      PoppinsMedium(
-                        text: _employeeName ?? '',
-                        fontsize: 18.sp,
-                        color: DarkColor.color1,
-                      )
+                      OutlinedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EditProfileScreen(
+                                empId: widget.empId,
+                                isClient: widget.isClient,
+                                initialData: {
+                                  'name': _employeeName,
+                                  'phone': _employeePhone,
+                                  'imageUrl': _employeeImageUrl,
+                                },
+                              ),
+                            ),
+                          ).then((updated) {
+                            if (updated == true) {
+                              _fetchEmployeeData(); // Refresh the profile data
+                            }
+                          });
+                        },
+                        child: PoppinsMedium(
+                          text: 'Edit Profile',
+                          fontsize: 18.sp,
+                          color: isDark ? Colors.white : Colors.black,
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          side: BorderSide(color: isDark ? Colors.white : Colors.black),
+                        ),
+                      ),
                     ],
                   ),
                 ),
               ),
+              SizedBox(height: 20.h),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 30.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 40.h),
-                      child: isEdit
-                          ? Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                InterSemibold(
-                                  text: 'Name',
-                                  fontsize: 20.sp,
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium!
-                                      .color,
-                                ),
-                                SizedBox(height: 5.h),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: SetTextfieldWidget(
-                                        hintText: '',
-                                        controller: _nameController,
-                                        enabled: true,
-                                        isEditMode: false,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            )
-                          : ProfileEditWidget(
-                              tittle: 'Name',
-                              content: _employeeName ?? '',
-                              onTap: () {},
-                            ),
-                    ),
-                    isEdit
-                        ? Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              InterSemibold(
-                                text: 'Contact No',
-                                fontsize: 20.sp,
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium!
-                                    .color,
-                              ),
-                              SizedBox(height: 5.h),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: ContactWidget(
-                                      controller: _phoneNoController,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          )
-                        : ProfileEditWidget(
-                            tittle: 'Contact No',
-                            content: _employeePhone ?? '',
-                            onTap: () {},
-                          ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 40.h),
-                      child: ProfileEditWidget(
-                        tittle: 'Email',
-                        content: _employeeEmail ?? '',
-                        onTap: () {},
-                      ),
-                    ),
-                    ProfileEditWidget(
-                      tittle: 'Designation',
-                      content: _employeeRole ?? '',
-                      onTap: () {},
-                    ),
-                  ],
+                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                child: Card(
+                  shadowColor: isDark ? Colors.white : Colors.black,
+                  elevation: 3,
+                  color: isDark ? Colors.grey[900] : Colors.white,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildProfileItem('Name', _employeeName ?? ''),
+                      Divider(height: 1),
+                      _buildProfileItem('Contact No', _employeePhone ?? ''),
+                      Divider(height: 1),
+                      _buildProfileItem('Email', _employeeEmail ?? ''),
+                    ],
+                  ),
                 ),
               ),
-              SizedBox(height: 60.h),
-              if (_employeeImageUrl == null ||
-                  _employeeRole == null ||
-                  _employeeEmail == null ||
-                  _employeePhone == null ||
-                  _employeeName == null)
-                Center(
-                  child: PoppinsRegular(
-                    text: 'Complete your profile!',
-                    fontsize: 20.sp,
-                    color: Theme.of(context).textTheme.headlineSmall!.color,
-                  ),
-                )
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildProfileItem(String title, String content) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 16.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          InterSemibold(
+            text: title,
+            fontsize: 16.sp,
+            color: Theme.of(context).textTheme.bodyMedium!.color,
+          ),
+          SizedBox(height: 4.h),
+          InterRegular(
+            text: content,
+            fontsize: 18.sp,
+            color: Theme.of(context).textTheme.bodyMedium!.color,
+          ),
+        ],
       ),
     );
   }
