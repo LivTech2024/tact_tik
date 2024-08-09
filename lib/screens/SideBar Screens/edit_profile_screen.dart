@@ -58,7 +58,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         if (_selectedImageFile != null) {
           final storageRef = FirebaseStorage.instance
               .ref()
-              .child('clients/images/${_selectedImageFile!.name}');
+              .child('clients/images/${widget.empId}_profile.jpg');
           await storageRef.putFile(File(_selectedImageFile!.path));
           final downloadUrl = await storageRef.getDownloadURL();
           await FirebaseFirestore.instance
@@ -77,7 +77,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         if (_selectedImageFile != null) {
           final storageRef = FirebaseStorage.instance
               .ref()
-              .child('employees/images/${_selectedImageFile!.name}');
+              .child('employees/images/${widget.empId}_profile.jpg');
           await storageRef.putFile(File(_selectedImageFile!.path));
           final downloadUrl = await storageRef.getDownloadURL();
           await FirebaseFirestore.instance
