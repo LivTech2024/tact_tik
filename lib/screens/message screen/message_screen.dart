@@ -110,6 +110,7 @@ class _MobileChatScreenState extends State<MobileChatScreen> {
                             'MessageData': message,
                             'MessageReceiversId': [widget.receiverId],
                             'MessageType': "message"
+                            //To-do MessageCreatorType
                           });
                           await docRef.update({
                             'MessageId': docRef.id,

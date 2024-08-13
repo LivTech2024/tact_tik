@@ -12,7 +12,9 @@ import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/feature%20screens/widgets/custome_textfield.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:toastification/toastification.dart';
+import 'package:image/image.dart' as img;
 
+import 'package:intl/intl.dart';
 import '../../../common/sizes.dart';
 import '../../../common/widgets/button1.dart';
 import '../../../fonts/inter_medium.dart';
@@ -87,16 +89,26 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
   Future<void> _addImage() async {
     XFile? pickedFile = await ImagePicker().pickImage(
         source: ImageSource.camera, imageQuality: Platform.isIOS ? 30 : 50);
+
     if (pickedFile != null) {
       try {
-        File file = File(pickedFile.path);
-        if (file.existsSync()) {
-          File compressedFile = await _compressImage(file);
+        final originalFile = File(pickedFile.path);
+        if (originalFile.existsSync()) {
+          // Add timestamp logic here:
+          final timestampedFile = await _addTimestampToImage(originalFile);
+
+          // Option 1: Directly add the timestamped file to uploads
           setState(() {
-            uploads.add({'type': 'image', 'file': file});
+            uploads.add({'type': 'image', 'file': timestampedFile});
           });
+
+          // Option 2: Compress and then add the timestamped file (optional)
+          // final compressedFile = await _compressImage(timestampedFile);
+          // setState(() {
+          //   uploads.add({'type': 'image', 'file': compressedFile});
+          // });
         } else {
-          print('File does not exist: ${file.path}');
+          print('File does not exist: ${originalFile.path}');
         }
       } catch (e) {
         print('Error adding image: $e');
@@ -104,7 +116,43 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
     } else {
       print('No images selected');
     }
+
     print("Status ${uploads}");
+  }
+
+  Future<File> _addTimestampToImage(File originalFile) async {
+    final originalImage = img.decodeImage(originalFile.readAsBytesSync());
+    if (originalImage == null) return originalFile; // Handle decoding errors
+
+    final now = DateTime.now();
+    final formatter =
+        DateFormat('yyyy-MM-dd HH:mm:ss'); // Customize format as needed
+    final timestamp = formatter.format(now);
+
+    final watermarkedImage = img.copyResize(originalImage,
+        width: originalImage.width, height: originalImage.height);
+
+    // Create a color object directly
+    final textColor = img.ColorFloat16; // White color
+
+    final fontSize = 20;
+    final timestampPosition = Offset(10, 10); // Customize placement
+
+    // Use named arguments for drawString
+    img.drawString(
+      watermarkedImage,
+      timestamp,
+      x: timestampPosition.dx.toInt(),
+      y: timestampPosition.dy.toInt(),
+      font: img.arial48,
+    );
+
+    // Save the watermarked image with timestamp
+    final timestampedImagePath = '${originalFile.path}_with_timestamp.jpg';
+    final timestampedFile = File(timestampedImagePath);
+    timestampedFile.writeAsBytesSync(img.encodeJpg(watermarkedImage));
+
+    return timestampedFile;
   }
 
   Future<void> _addGallery() async {
