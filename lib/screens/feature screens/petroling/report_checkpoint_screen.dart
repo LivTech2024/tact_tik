@@ -136,7 +136,9 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
     final textColor = img.ColorFloat16; // White color
 
     final fontSize = 20;
-    final timestampPosition = Offset(10, 10); // Customize placement
+    final imageHeight = originalImage.height;
+    final timestampPosition =
+        Offset(45, imageHeight - fontSize - 45); // Customize placement
 
     // Use named arguments for drawString
     img.drawString(
@@ -155,6 +157,29 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
     return timestampedFile;
   }
 
+  // Future<void> _addGallery() async {
+  //   List<XFile>? pickedFiles = await ImagePicker()
+  //       .pickMultiImage(imageQuality: Platform.isIOS ? 30 : 50);
+  //   if (pickedFiles != null) {
+  //     for (var pickedFile in pickedFiles) {
+  //       try {
+  //         File file = File(pickedFile.path);
+  //         if (file.existsSync()) {
+  //           File compressedFile = await _compressImage(file);
+  //           setState(() {
+  //             uploads.add({'type': 'image', 'file': file});
+  //           });
+  //         } else {
+  //           print('File does not exist: ${file.path}');
+  //         }
+  //       } catch (e) {
+  //         print('Error adding image: $e');
+  //       }
+  //     }
+  //   } else {
+  //     print('No images selected');
+  //   }
+  // }
   Future<void> _addGallery() async {
     List<XFile>? pickedFiles = await ImagePicker()
         .pickMultiImage(imageQuality: Platform.isIOS ? 30 : 50);
@@ -163,9 +188,12 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
         try {
           File file = File(pickedFile.path);
           if (file.existsSync()) {
-            File compressedFile = await _compressImage(file);
+            // Add timestamp logic
+            final timestampedFile = await _addTimestampToImage(file);
+
+            // Add the timestamped file to uploads
             setState(() {
-              uploads.add({'type': 'image', 'file': file});
+              uploads.add({'type': 'image', 'file': timestampedFile});
             });
           } else {
             print('File does not exist: ${file.path}');

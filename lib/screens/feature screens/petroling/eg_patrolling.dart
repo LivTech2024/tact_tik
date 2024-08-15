@@ -1529,7 +1529,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                     .color5
                                                                 : LightColor
                                                                     .Primarycolor,
-                                                            size: 35.sp,
+                                                            size: 40.sp,
                                                           ),
                                                           padding:
                                                               EdgeInsets.zero,
@@ -1586,7 +1586,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                             color: Theme.of(
                                                                     context)
                                                                 .primaryColor,
-                                                            size: 35.sp,
+                                                            size: 40.sp,
                                                           ),
                                                           padding:
                                                               EdgeInsets.zero,
