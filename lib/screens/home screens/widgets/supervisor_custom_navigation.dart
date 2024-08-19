@@ -8,8 +8,8 @@ import 'package:tact_tik/main.dart';
 import '../../../common/sizes.dart';
 import '../../../utils/colors.dart';
 
-class HomeScreenCustomNavigation extends StatefulWidget {
-  const HomeScreenCustomNavigation(
+class SupervisorCustomNavigation extends StatefulWidget {
+  const SupervisorCustomNavigation(
       {super.key,
       required this.icon,
       required this.color,
@@ -26,23 +26,23 @@ class HomeScreenCustomNavigation extends StatefulWidget {
   final String text;
 
   @override
-  State<HomeScreenCustomNavigation> createState() =>
+  State<SupervisorCustomNavigation> createState() =>
       _HomeScreenCustomNavigationState();
 }
 
 class _HomeScreenCustomNavigationState
-    extends State<HomeScreenCustomNavigation> {
+    extends State<SupervisorCustomNavigation> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 74.h,
-      width: 74.w,
+      height: 68.h,
+      width: 68.w,
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
             color: Theme.of(context).shadowColor,
             blurRadius: 5,
-            spreadRadius: 2,
+            spreadRadius: 1,
             offset: Offset(0, 3),
           )
         ],
@@ -56,12 +56,12 @@ class _HomeScreenCustomNavigationState
               ? SvgPicture.asset(
                   widget.SVG!,
                   color: widget.color,
-                  height: 24.h,
-                  width: 24.w,
+                  height: 22.h,
+                  width: 22.w,
                 )
               : Icon(
                   widget.icon,
-                  size: 24.sp,
+                  size: 22.sp,
                   color: widget.color,
                 ),
           SizedBox(height: 10.h),

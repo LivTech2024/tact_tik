@@ -6,20 +6,27 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tact_tik/common/widgets/customErrorToast.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
+import 'package:tact_tik/fonts/inter_semibold.dart';
 import 'package:tact_tik/login_screen.dart';
 import 'package:tact_tik/main.dart';
+import 'package:tact_tik/screens/home%20screens/home_screen.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/icon_text_widget.dart';
+import 'package:tact_tik/screens/home%20screens/widgets/start_task_screen.dart';
+import 'package:tact_tik/screens/home%20screens/widgets/supervisor_custom_navigation.dart';
 import 'package:tact_tik/screens/supervisor%20screens/TrackingScreen/s_tracking_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/history/s_history_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/loogbook/s_loogbook_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/home%20screens/Scheduling/create_schedule_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/home%20screens/widgets/rounded_button.dart';
 import 'package:tact_tik/screens/supervisor%20screens/patrol_logs.dart';
+import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
 import '../../../common/sizes.dart';
 import '../../../fonts/inter_bold.dart';
@@ -75,14 +82,31 @@ class _SHomeScreenState extends State<SHomeScreen> {
   double _shiftLatitude = 0;
   double _shiftLongitude = 0;
   String _employeeId = "";
+  String employeeImg = "";
+  String _employeeCompanyID = "";
+  String _employeeCompanyBranchID = "";
   String _empEmail = "";
+  String _ShiftStatus = "";
+  String _branchId = "";
   String _empRole = "";
-
+  bool isRoleGuard = false;
+  String _ShiftLocationName = "";
+  bool ShiftExist = false;
+  bool ShiftStarted = false;
+  bool issShift = false;
+  String _shiftId = "";
+  bool _shiftKeepGuardInRadiusOfLocation = true;
+  String _ShiftBranchId = "";
   String _CompanyId = "";
+  int _shiftRestrictedRadius = 0;
   String _BranchId = "";
-
+  int _photouploadInterval = 0;
+  late DateTime ShiftStartedTime;
+  String? _ShiftCompanyId = "";
+  String _shiftCLientId = "";
   bool NewMessage = false;
-
+  String _shiftLocationId = "";
+  List<DocumentSnapshot> schedules_list = [];
   void NavigateScreen(Widget screen) {
     Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
   }
@@ -93,48 +117,324 @@ class _SHomeScreenState extends State<SHomeScreen> {
 
     ScreenIndex = 0;
     _getUserInfo();
+    getAndPrintAllSchedules();
     // checkLocation();
     super.initState();
   }
 
+  FireStoreService fireStoreService = FireStoreService();
+  void getAndPrintAllSchedules() async {
+    List<DocumentSnapshot> schedules =
+        await fireStoreService.getAllSchedules(_employeeId);
+    print("All Schedules:");
+    schedules.forEach((schedule) {
+      if (!schedules_list.any((element) => element.id == schedule.id)) {
+        setState(() {
+          schedules_list.add(schedule);
+        });
+      }
+      print(
+          "Schedule docs ${schedule.data()}"); // Print the data of each document
+    });
+  }
+
+// void _getUserInfo() async {
+//     var userInfo = await fireStoreService.getUserInfoByCurrentUserEmail();
+//     if (mounted) {
+//       if (userInfo != null) {
+//         String userName = userInfo['EmployeeName'];
+//         String EmployeeId = userInfo['EmployeeId'];
+//         String CompanyId = userInfo['EmployeeCompanyId'];
+//         String BranchId = userInfo['EmployeeCompanyBranchId'];
+//         String EmpRole = userInfo['EmployeeRole'];
+//         String Imgurl = userInfo['EmployeeImg'];
+//         String EmpEmail = userInfo['EmployeeEmail'];
+//         // bool isemployeeAvailable = userInfo['EmployeeIsAvailable'];
+//         var guardsInfo =
+//             await fireStoreService.getGuardForSupervisor(EmployeeId);
+//         print("Guards INfor ${guardsInfo}");
+//         var patrolInfo = await fireStoreService
+//             .getPatrolsByEmployeeIdFromUserInfo(EmployeeId);
+//         setState(() {
+//           _userName = userName;
+//           _userImg = Imgurl;
+//           _guardsInfo = guardsInfo;
+//           _CompanyId = CompanyId;
+//           _employeeId = EmployeeId;
+//           _empEmail = EmpEmail;
+//           _BranchId = BranchId;
+//           _empRole = EmpRole;
+//         });
+//         print('User Info: ${userInfo.data()}');
+//       } else {
+//         print('Shift info not found');
+//       }
+//     } else {
+//       print('User info not found');
+//     }
+//   }
   void _getUserInfo() async {
     var userInfo = await fireStoreService.getUserInfoByCurrentUserEmail();
     if (mounted) {
       if (userInfo != null) {
         String userName = userInfo['EmployeeName'];
         String EmployeeId = userInfo['EmployeeId'];
-        String CompanyId = userInfo['EmployeeCompanyId'];
-        String BranchId = userInfo['EmployeeCompanyBranchId'];
-        String EmpRole = userInfo['EmployeeRole'];
-        String Imgurl = userInfo['EmployeeImg'];
-        String EmpEmail = userInfo['EmployeeEmail'];
-        // bool isemployeeAvailable = userInfo['EmployeeIsAvailable'];
+        String empEmail = userInfo['EmployeeEmail'];
+        String empImage = userInfo['EmployeeImg'] ?? "";
+        String empCompanyId = userInfo['EmployeeCompanyId'] ?? "";
+        String empBranchId = userInfo['EmployeeCompanyBranchId'] ?? "";
+        String empRole = userInfo['EmployeeRole'] ?? "";
         var guardsInfo =
             await fireStoreService.getGuardForSupervisor(EmployeeId);
-        print("Guards INfor ${guardsInfo}");
+        // print("GuardsInfo: ${guardsInfo}");
+        // if (guardsInfos != null || guardsInfos.isNotEmpty) {
+        //   setState(() {
+        //     guardsInfos = guardsInfos;
+        //   });
+        // }
+        if (empRole.isNotEmpty) {
+          if (empRole == "GUARD") {
+            isRoleGuard = true;
+          } else {
+            isRoleGuard = false;
+          }
+        }
+        var shiftInfo =
+            await fireStoreService.getShiftByEmployeeIdFromUserInfo(EmployeeId);
         var patrolInfo = await fireStoreService
             .getPatrolsByEmployeeIdFromUserInfo(EmployeeId);
         setState(() {
           _userName = userName;
-          _userImg = Imgurl;
           _guardsInfo = guardsInfo;
-          _CompanyId = CompanyId;
           _employeeId = EmployeeId;
-          _empEmail = EmpEmail;
-          _BranchId = BranchId;
-          _empRole = EmpRole;
+          print('Employee Id ===> $_employeeId');
+          _empEmail = empEmail;
+          employeeImg = empImage;
+          _employeeCompanyID = empCompanyId;
+          _employeeCompanyBranchID = empBranchId;
+          _empRole = empRole;
         });
         print('User Info: ${userInfo.data()}');
+        if (patrolInfo != null) {
+          String PatrolArea = patrolInfo['PatrolArea'];
+          String PatrolCompanyId = patrolInfo['PatrolCompanyId'];
+          bool PatrolKeepGuardInRadiusOfLocation =
+              patrolInfo['PatrolKeepGuardInRadiusOfLocation'];
+          String PatrolLocationName = patrolInfo['PatrolLocationName'];
+          String PatrolName = patrolInfo['PatrolName'];
+          int PatrolRestrictedRadius = patrolInfo['PatrolRestrictedRadius'];
+          Timestamp PatrolTime = patrolInfo['PatrolTime'];
+          DateTime patrolDateTime = PatrolTime.toDate();
+
+          // Format DateTime as String
+          // String patrolTimeString =
+          //     DateFormat('hh:mm a').format(patrolDateTime);
+          String patrolDateString =
+              DateFormat('yyyy-MM-dd').format(patrolDateTime);
+          print('Patrol Info: ${patrolInfo.data()}');
+
+          // setState(() {
+          //   _patrolArea = PatrolArea;
+          //   _patrolCompanyId = PatrolCompanyId;
+          //   _patrolKeepGuardInRadiusOfLocation =
+          //       PatrolKeepGuardInRadiusOfLocation;
+          //   _patrolLocationName = PatrolLocationName;
+          //   _patrolRestrictedRadius = PatrolRestrictedRadius;
+          //   // _patrolTime = patrolTimeString;
+          //   _patrolDate = patrolDateString;
+
+          //   // issShift = false;
+          // });
+        }
+
+        if (shiftInfo != null) {
+          String shiftDateStr =
+              DateFormat.yMMMMd().format(shiftInfo['ShiftDate'].toDate());
+          String shiftEndTimeStr = shiftInfo['ShiftEndTime'] ?? " ";
+          String shiftStartTimeStr = shiftInfo['ShiftStartTime'] ?? " ";
+          String shiftLocation = shiftInfo['ShiftLocationAddress'] ?? " ";
+          String shiftLocationId = shiftInfo['ShiftLocationId'] ?? " ";
+          String shiftLocationName = shiftInfo['ShiftLocationName'] ?? " ";
+          String shiftName = shiftInfo['ShiftName'] ?? " ";
+          String shiftId = shiftInfo['ShiftId'] ?? " ";
+          GeoPoint shiftGeolocation =
+              shiftInfo['ShiftLocation'] as GeoPoint? ?? GeoPoint(0.0, 0.0);
+          double shiftLocationLatitude = shiftGeolocation.latitude;
+          double shiftLocationLongitude = shiftGeolocation.longitude;
+          String companyBranchId = shiftInfo["ShiftCompanyBranchId"] ?? " ";
+          String shiftCompanyId = shiftInfo["ShiftCompanyId"] ?? " ";
+          String shiftClientId = shiftInfo["ShiftClientId"] ?? " ";
+          int photoInterval =
+              shiftInfo['ShiftPhotoUploadIntervalInMinutes'] ?? 0;
+          List<Map<String, dynamic>> shiftCurrentStatus =
+              List<Map<String, dynamic>>.from(shiftInfo['ShiftCurrentStatus']);
+          print("Shift Location Name: ${shiftLocationName}");
+          List<Map<String, dynamic>> filteredStatus = shiftCurrentStatus
+              .where((status) => status['StatusReportedById'] == _employeeId)
+              .toList();
+
+          String statusString = filteredStatus
+                  .map((status) => status['Status'] as String)
+                  .join(', ') ??
+              "";
+          String statusOnBreakString = filteredStatus
+              .map((status) => (status['StatusIsBreak'] as bool).toString())
+              .join(', ');
+
+          // Print the result
+          print("statusOnBreakString ${statusOnBreakString}");
+          DateTime statusStartedTime;
+          if (filteredStatus.isNotEmpty &&
+              filteredStatus.first.containsKey('StatusStartedTime')) {
+            statusStartedTime =
+                (filteredStatus.first['StatusStartedTime'] as Timestamp)
+                    .toDate();
+            setState(() {
+              ShiftStartedTime = statusStartedTime;
+            });
+          } else {
+            setState(() {
+              ShiftStartedTime = Timestamp.now().toDate();
+            });
+            // statusStartedTime = DateTime.now(); // or handle this case as needed
+          }
+          print("Shift CUrrent Status ${statusString}");
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          // print("statusStartedTimeStringDateTIme ${statusStartedTime}");
+          if (statusOnBreakString == "true") {
+            prefs.setBool('onBreak', true);
+            print("Break State Changed true ");
+          } else {
+            print("Break State Changed false ");
+            prefs.setBool('onBreak', false);
+          }
+          if (statusString == "started") {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            prefs.setBool('ShiftStarted', true);
+            // prefs.setBool('onBreak', true);
+
+            setState(() {
+              ShiftStarted = true;
+            });
+            prefs.setBool('clickedIn', true);
+          } else {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            prefs.setBool('ShiftStarted', false);
+            prefs.setBool('clickedIn', false);
+            // prefs.setBool('onBreak', false);
+
+            setState(() {
+              ShiftStarted = false;
+            });
+          }
+          int ShiftRestrictedRadius = shiftInfo["ShiftRestrictedRadius"] ?? 0;
+          bool shiftKeepUserInRadius = shiftInfo["ShiftEnableRestrictedRadius"];
+          // String ShiftClientId = shiftInfo['ShiftClientId'];
+          // EmpEmail: _empEmail,
+          //                     Branchid: _branchId,
+          //                     cmpId: _cmpId,
+          // String employeeImg = shiftInfo['EmployeeImg'];
+          print("Shift Id at the HomeScreen ${shiftId}");
+          setState(() {
+            _ShiftDate = shiftDateStr;
+            _ShiftEndTime = shiftEndTimeStr;
+            _ShiftStartTime = shiftStartTimeStr;
+            _ShiftLocation = shiftLocation;
+            _ShiftLocationName = shiftLocationName;
+            _ShiftName = shiftName;
+            _shiftLatitude = shiftLocationLatitude;
+            _shiftLongitude = shiftLocationLongitude;
+            _shiftId = shiftId;
+            _shiftRestrictedRadius = ShiftRestrictedRadius;
+            _ShiftCompanyId = shiftCompanyId;
+            _ShiftBranchId = companyBranchId;
+            _shiftKeepGuardInRadiusOfLocation = shiftKeepUserInRadius;
+            _shiftLocationId = shiftLocationId;
+            _shiftCLientId = shiftClientId;
+            _ShiftStatus = statusString;
+            ShiftExist = true;
+            _branchId = _ShiftBranchId;
+            _photouploadInterval = photoInterval;
+            // _shiftCLientId = ShiftClientId;
+            // print("Date time parse: ${DateTime.parse(shiftDateStr)}");
+            DateTime shiftDateTime = DateFormat.yMMMMd().parse(shiftDateStr);
+            // if (!selectedDates
+            //     .contains(DateFormat.yMMMMd().parse(shiftDateStr))) {
+            //   setState(() {
+            //     selectedDates.add(DateFormat.yMMMMd().parse(shiftDateStr));
+            //   });
+            // }
+            // if (!selectedDates.any((date) =>
+            //     date!.year == shiftDateTime.year &&
+            //     date.month == shiftDateTime.month &&
+            //     date.day == shiftDateTime.day)) {
+            //   setState(() {
+            //     selectedDates.add(shiftDateTime);
+            //   });
+            // }
+            // print("SelectedDates ${selectedDates}");
+            storage.setItem("shiftId", shiftId);
+            storage.setItem("EmpId", EmployeeId);
+
+            // _employeeImg = employeeImg;
+          });
+          // print("SelectedDates ${selectedDates}");
+
+          print('Shift Info: ${shiftInfo.data()}');
+
+          Future<void> printAllSchedules(String empId) async {
+            var getAllSchedules = await fireStoreService.getAllSchedules(empId);
+            if (getAllSchedules.isNotEmpty) {
+              getAllSchedules.forEach((doc) {
+                var data = doc.data() as Map<String, dynamic>?;
+                if (data != null && data['ShiftDate'] != null) {
+                  var shiftDate = data['ShiftDate'] as Timestamp;
+                  var date = DateTime.fromMillisecondsSinceEpoch(
+                      shiftDate.seconds * 1000);
+                  var formattedDate = DateFormat('yyyy-MM-dd').format(date);
+                  // if (!selectedDates.contains(DateTime.parse(formattedDate))) {
+                  //   setState(() {
+                  //     selectedDates.add(DateTime.parse(formattedDate));
+                  //   });
+                  // }
+                  // Format the date
+                  print("ShiftDate: $formattedDate");
+                }
+
+                print(
+                    "All Schedule date : ${doc.data()}"); // Print data of each document
+              });
+            } else {
+              print("No schedules found.");
+            }
+          }
+
+          printAllSchedules(EmployeeId);
+        } else {
+          setState(() {
+            issShift = true; //To validate that shift exists for the user.
+          });
+          print('Shift info not found');
+        }
+        getAndPrintAllSchedules();
       } else {
-        print('Shift info not found');
+        print('User info not found');
       }
-    } else {
-      print('User info not found');
     }
+  }
+
+  void refreshHomeScreen() {
+    _getUserInfo();
+    getAndPrintAllSchedules();
+    // fetchMessages();
+
+    // Implement the refresh logic here
+    // For example, you can call setState() to update the UI
   }
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
     // final double height = MediaQuery
     //     .of(context)
     //     .size
@@ -180,12 +480,18 @@ class _SHomeScreenState extends State<SHomeScreen> {
             IconColors[3] = Theme.of(context).focusColor;
             break;
           case 1:
+            IconColors[0] = Theme.of(context).primaryColor;
+            IconColors[2] = Theme.of(context).focusColor;
+            IconColors[3] = Theme.of(context).focusColor;
+            IconColors[1] = Theme.of(context).focusColor;
+            break;
+          case 2:
             IconColors[0] = Theme.of(context).focusColor;
             IconColors[1] = Theme.of(context).primaryColor;
             IconColors[2] = Theme.of(context).focusColor;
             IconColors[3] = Theme.of(context).focusColor;
             break;
-          case 2:
+          case 3:
             IconColors[0] = Theme.of(context).focusColor;
             IconColors[1] = Theme.of(context).focusColor;
             IconColors[2] = Theme.of(context).primaryColor;
@@ -196,7 +502,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
               CompanyId: _CompanyId,
             ));
             break;
-          case 3:
+          case 4:
             IconColors[0] = Theme.of(context).focusColor;
             IconColors[1] = Theme.of(context).focusColor;
             IconColors[2] = Theme.of(context).focusColor;
@@ -296,10 +602,10 @@ class _SHomeScreenState extends State<SHomeScreen> {
               ),
 
               /*CircleAvatar(
-                                            backgroundImage: NetworkImage('url'), // Replace with actual image URL if available
-                                            radius: width / width20,
-                                            backgroundColor: Primarycolor,
-                                          )*/
+              backgroundImage: NetworkImage('url'), // Replace with actual image URL if available
+              radius: width / width20,
+              backgroundColor: Primarycolor,
+              )*/
               Expanded(
                 child: Column(
                   children: [
@@ -418,8 +724,8 @@ class _SHomeScreenState extends State<SHomeScreen> {
                       children: [
                         Bounce(
                           onTap: () => ChangeScreenIndex(0),
-                          child: HomeScreenCustomNavigation(
-                            text: 'Guards',
+                          child: SupervisorCustomNavigation(
+                            text: 'Shift',
                             icon: Icons.add_task,
                             color: ScreenIndex == 0
                                 ? ThemeMode.dark == themeManager.themeMode
@@ -435,9 +741,9 @@ class _SHomeScreenState extends State<SHomeScreen> {
                         ),
                         Bounce(
                           onTap: () => ChangeScreenIndex(1),
-                          child: HomeScreenCustomNavigation(
-                            text: 'Explore',
-                            icon: Icons.grid_view_rounded,
+                          child: SupervisorCustomNavigation(
+                            text: 'Guards',
+                            icon: Icons.add_task,
                             color: ScreenIndex == 1
                                 ? ThemeMode.dark == themeManager.themeMode
                                     ? DarkColor.color1
@@ -452,12 +758,9 @@ class _SHomeScreenState extends State<SHomeScreen> {
                         ),
                         Bounce(
                           onTap: () => ChangeScreenIndex(2),
-                          // onTap: () => ChangeScreenIndex(2),
-                          child: HomeScreenCustomNavigation(
-                            useSVG: true,
-                            SVG: 'assets/images/calendar_clock.svg',
-                            text: 'Calendar',
-                            icon: Icons.calendar_today,
+                          child: SupervisorCustomNavigation(
+                            text: 'Explore',
+                            icon: Icons.grid_view_rounded,
                             color: ScreenIndex == 2
                                 ? ThemeMode.dark == themeManager.themeMode
                                     ? DarkColor.color1
@@ -472,23 +775,43 @@ class _SHomeScreenState extends State<SHomeScreen> {
                         ),
                         Bounce(
                           onTap: () => ChangeScreenIndex(3),
-                          child: HomeScreenCustomNavigation(
+                          // onTap: () => ChangeScreenIndex(2),
+                          child: SupervisorCustomNavigation(
                             useSVG: true,
-                            SVG: NewMessage
-                                ? ScreenIndex == 3
-                                    ? 'assets/images/message_dot.svg'
-                                    : 'assets/images/no_message_dot.svg'
-                                : ScreenIndex == 3
-                                    ? 'assets/images/message.svg'
-                                    : 'assets/images/no_message.svg',
-                            text: 'Message',
-                            icon: Icons.chat_bubble_outline,
+                            SVG: 'assets/images/calendar_clock.svg',
+                            text: 'Calendar',
+                            icon: Icons.calendar_today,
                             color: ScreenIndex == 3
                                 ? ThemeMode.dark == themeManager.themeMode
                                     ? DarkColor.color1
                                     : LightColor.Primarycolor
                                 : Theme.of(context).focusColor,
                             textcolor: ScreenIndex == 3
+                                ? ThemeMode.dark == themeManager.themeMode
+                                    ? DarkColor.color1
+                                    : LightColor.Primarycolor
+                                : Theme.of(context).focusColor,
+                          ),
+                        ),
+                        Bounce(
+                          onTap: () => ChangeScreenIndex(4),
+                          child: SupervisorCustomNavigation(
+                            useSVG: true,
+                            SVG: NewMessage
+                                ? ScreenIndex == 4
+                                    ? 'assets/images/message_dot.svg'
+                                    : 'assets/images/no_message_dot.svg'
+                                : ScreenIndex == 4
+                                    ? 'assets/images/message.svg'
+                                    : 'assets/images/no_message.svg',
+                            text: 'Message',
+                            icon: Icons.chat_bubble_outline,
+                            color: ScreenIndex == 4
+                                ? ThemeMode.dark == themeManager.themeMode
+                                    ? DarkColor.color1
+                                    : LightColor.Primarycolor
+                                : Theme.of(context).focusColor,
+                            textcolor: ScreenIndex == 4
                                 ? ThemeMode.dark == themeManager.themeMode
                                     ? DarkColor.color1
                                     : LightColor.Primarycolor
@@ -504,189 +827,283 @@ class _SHomeScreenState extends State<SHomeScreen> {
             ),
             ScreenIndex == 0
                 ? SliverToBoxAdapter(
-                    child: Container(
+                    child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 30.w),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              InterBold(
-                                text: 'All Guards',
-                                fontsize: 14.sp,
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium!
-                                    .color,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => NewGuardScreen(
-                                                companyId: _CompanyId,
-                                              )));
-                                },
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.add,
-                                      size: 20.sp,
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium!
-                                          .color,
+                      child: ShiftExist
+                          ? FutureBuilder(
+                              future: Future.delayed(Duration(seconds: 1)),
+                              builder: (c, s) => s.connectionState ==
+                                      ConnectionState.done
+                                  ? StartTaskScreen(
+                                      ShiftDate: _ShiftDate,
+                                      ShiftClientID: _shiftCLientId,
+                                      ShiftEndTime: _ShiftEndTime,
+                                      ShiftStartTime: _ShiftStartTime,
+                                      EmployeId: _employeeId,
+                                      ShiftId: _shiftId,
+                                      ShiftAddressName: _ShiftLocationName,
+                                      ShiftCompanyId: _ShiftCompanyId ?? "",
+                                      ShiftBranchId: _ShiftBranchId,
+                                      EmployeeName: _userName ?? "",
+                                      ShiftLocationId: _shiftLocationId,
+                                      resetShiftStarted: () {},
+                                      ShiftIN: true,
+                                      onRefresh: refreshHomeScreen,
+                                      ShiftName: _ShiftName,
+                                      ShiftStatus: _ShiftStatus,
+                                      shiftStartedTime: ShiftStartedTime,
+                                      photoUploadInterval: _photouploadInterval,
+                                    )
+                                  : Center(
+                                      child: InterMedium(
+                                        text: 'Loading...',
+                                        color: Theme.of(context).primaryColor,
+                                        fontsize: 14.sp,
+                                      ),
                                     ),
-                                    SizedBox(width: 10.w),
-                                    InterBold(
-                                      text: 'Add',
-                                      fontsize: 14.sp,
+                            )
+                          : SizedBox(
+                              height: 400.h,
+                              width: double.maxFinite,
+                              // color: Colors.redAccent,
+                              child: Center(
+                                child: Column(
+                                  children: [
+                                    SizedBox(
+                                      height: 150.h,
+                                      width: 200.w,
+                                      child: SvgPicture.asset(
+                                        isDark
+                                            ? 'assets/images/no_shift.svg'
+                                            : 'assets/images/no_shift_light.svg',
+                                      ),
+                                    ),
+                                    SizedBox(height: 30.h),
+                                    InterSemibold(
+                                      text: 'No shift Assigned yet',
                                       color: Theme.of(context)
                                           .textTheme
-                                          .bodyMedium!
+                                          .displaySmall!
                                           .color,
+                                      fontsize: 16.sp,
+                                    ),
+                                    SizedBox(height: 20.h),
+                                    InterRegular(
+                                      text: 'Go to calendar to check shift',
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .labelSmall!
+                                          .color,
+                                      fontsize: 14.sp,
+                                    ),
+                                    InterBold(
+                                      text: 'or',
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .displaySmall!
+                                          .color,
+                                      fontsize: 20.sp,
+                                    ),
+                                    InterRegular(
+                                      text: 'Refresh page',
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .labelSmall!
+                                          .color,
+                                      fontsize: 14.sp,
                                     ),
                                   ],
                                 ),
                               ),
-                            ],
-                          ),
-                          SizedBox(height: 20.h)
-                        ],
-                      ),
+                            ),
                     ),
                   )
                 : ScreenIndex == 1
-                    ? SliverGrid(
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3, // Number of columns
-                          // mainAxisSpacing: 10.0, // Spacing between rows
-                          // crossAxisSpacing: 14.0,
-                          // childAspectRatio: 1.0, // Aspect ratio of each grid item (width / height)
-                        ),
-                        delegate: SliverChildBuilderDelegate(
-                          (BuildContext context, int index) {
-                            return Bounce(
-                              onTap: () {
-                                switch (index) {
-                                  case 0:
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => SPanicScreen(
-                                                  empId: _employeeId,
-                                                )));
-                                  case 1:
-                                    Get.to(() => SupervisorTrackingScreen(
-                                          companyId: _CompanyId,
-                                          guardsInfo: _guardsInfo,
-                                        ));
-                                    break;
-                                  case 2:
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            SelectDARGuardsScreen(
-                                          EmployeeId: _employeeId,
+                    ? SliverToBoxAdapter(
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 30.w),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  InterBold(
+                                    text: 'All Guards',
+                                    fontsize: 14.sp,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .color,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  NewGuardScreen(
+                                                    companyId: _CompanyId,
+                                                  )));
+                                    },
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.add,
+                                          size: 20.sp,
+                                          color: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .color,
                                         ),
-                                      ),
-                                    );
-                                    break;
-                                  case 3:
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            SelectReportsGuardsScreen(
-                                          EmpId: _employeeId,
+                                        SizedBox(width: 10.w),
+                                        InterBold(
+                                          text: 'Add',
+                                          fontsize: 14.sp,
+                                          color: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .color,
                                         ),
-                                      ),
-                                    );
-                                    break;
-                                  case 4:
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => SPostOrder(
-                                          companyId: _CompanyId,
-                                        ),
-                                      ),
-                                    );
-                                    break;
-                                  case 5:
-                                    // TODO Task Screen
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            PatrollLogsScreen(),
-                                      ),
-                                    );
-                                    break;
-                                  case 6:
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            SelectLoogBookGuardsScreen(
-                                          companyId: _CompanyId,
-                                        ),
-                                      ),
-                                    );
-                                    break;
-                                  case 7:
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            SelectVisitorsGuardsScreen(
-                                          companyId: _CompanyId,
-                                        ),
-                                      ),
-                                    );
-                                    break;
-                                  case 8:
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => SAssetsViewScreen(
-                                          companyId: _CompanyId,
-                                          empId: _employeeId,
-                                          EmpName: _employeeId,
-                                        ),
-                                      ),
-                                    );
-                                    break;
-                                  case 9:
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            SKeyManagementViewScreen(
-                                          companyId: _CompanyId,
-                                          branchId: _BranchId,
-                                        ),
-                                      ),
-                                    );
-                                    break;
-                                  default:
-                                }
-                              },
-                              child: gridWidget(
-                                img: data[index][0],
-                                tittle: data[index][1],
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
-                            );
-                          },
-                          childCount: data.length,
+                              SizedBox(height: 20.h)
+                            ],
+                          ),
                         ),
                       )
-                    : SliverToBoxAdapter(),
-            ScreenIndex == 0
+                    : ScreenIndex == 2
+                        ? SliverGrid(
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3, // Number of columns
+                            ),
+                            delegate: SliverChildBuilderDelegate(
+                              (BuildContext context, int index) {
+                                return Bounce(
+                                  onTap: () {
+                                    switch (index) {
+                                      case 0:
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    SPanicScreen(
+                                                      empId: _employeeId,
+                                                    )));
+                                      case 1:
+                                        Get.to(() => SupervisorTrackingScreen(
+                                              companyId: _CompanyId,
+                                              guardsInfo: _guardsInfo,
+                                            ));
+                                        break;
+                                      case 2:
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                SelectDARGuardsScreen(
+                                              EmployeeId: _employeeId,
+                                            ),
+                                          ),
+                                        );
+                                        break;
+                                      case 3:
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                SelectReportsGuardsScreen(
+                                              EmpId: _employeeId,
+                                            ),
+                                          ),
+                                        );
+                                        break;
+                                      case 4:
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => SPostOrder(
+                                              companyId: _CompanyId,
+                                            ),
+                                          ),
+                                        );
+                                        break;
+                                      case 5:
+                                        // TODO Task Screen
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                PatrollLogsScreen(),
+                                          ),
+                                        );
+                                        break;
+                                      case 6:
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                SelectLoogBookGuardsScreen(
+                                              companyId: _CompanyId,
+                                            ),
+                                          ),
+                                        );
+                                        break;
+                                      case 7:
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                SelectVisitorsGuardsScreen(
+                                              companyId: _CompanyId,
+                                            ),
+                                          ),
+                                        );
+                                        break;
+                                      case 8:
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                SAssetsViewScreen(
+                                              companyId: _CompanyId,
+                                              empId: _employeeId,
+                                              EmpName: _employeeId,
+                                            ),
+                                          ),
+                                        );
+                                        break;
+                                      case 9:
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                SKeyManagementViewScreen(
+                                              companyId: _CompanyId,
+                                              branchId: _BranchId,
+                                            ),
+                                          ),
+                                        );
+                                        break;
+                                      default:
+                                    }
+                                  },
+                                  child: gridWidget(
+                                    img: data[index][0],
+                                    tittle: data[index][1],
+                                  ),
+                                );
+                              },
+                              childCount: data.length,
+                            ),
+                          )
+                        : SliverToBoxAdapter(),
+            ScreenIndex == 1
                 ? SliverList(
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
@@ -747,6 +1164,7 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
     _checkShiftStatus();
   }
 
+  FireStoreService fireStoreService = FireStoreService();
   Future<void> _checkShiftStatus() async {
     String empId = widget.guardsInfo['EmployeeId'];
     bool result =
