@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:bounce/bounce.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -143,7 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool NewMessage = false;
   bool isRoleGuard = false;
   List<Map<String, dynamic>> messages = [];
-
+  String _authStatus = 'Unknown';
   @override
   void refreshHomeScreen() {
     _getUserInfo();
@@ -182,9 +183,46 @@ class _HomeScreenState extends State<HomeScreen> {
     // Timer.periodic(Duration(seconds: 1), (Timer timer) {
     //   // checkLocation();
     // });
+    initPlugin();
     super.initState();
   }
 
+  Future<void> initPlugin() async {
+    // if (Platform.isIOS) {
+    final TrackingStatus status =
+        await AppTrackingTransparency.trackingAuthorizationStatus;
+    setState(() => _authStatus = '$status');
+    print("AuthState $status");
+    if (status == TrackingStatus.notDetermined) {
+      // await showCustomTrackingDialog(context);
+      await Future.delayed(const Duration(milliseconds: 200));
+      final TrackingStatus newStatus =
+          await AppTrackingTransparency.requestTrackingAuthorization();
+      setState(() => _authStatus = '$newStatus');
+    }
+    final uuid = await AppTrackingTransparency.getAdvertisingIdentifier();
+    print("UUID: $uuid");
+    // }
+  }
+
+  Future<void> showCustomTrackingDialog(BuildContext context) async =>
+      await showDialog<void>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Dear User'),
+          content: const Text(
+            'We care about your privacy and data security. We keep this app free by showing ads. '
+            'Can we continue to use your data to tailor ads for you?\n\nYou can change your choice anytime in the app settings. '
+            'Our partners will collect data and use a unique identifier on your device to show you ads.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Continue'),
+            ),
+          ],
+        ),
+      );
   Future<void> fetchMessages() async {
     try {
       QuerySnapshot messageSnapshot = await FirebaseFirestore.instance
@@ -869,7 +907,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         // );
                         // customEmail();
                         // await fireStoreService.copyAndCreateDocument(
-                        //     "PatrolLogs", "gOj7o2q6en5BuM8CDOf1");
+                        //     "PatrolLogs", "ih8HPiH87gvrdgrb9J3S");
                         // await darFunctions
                         //     .fetchShiftDetailstemplateAndSubmitDAR(
                         //         "18:00",

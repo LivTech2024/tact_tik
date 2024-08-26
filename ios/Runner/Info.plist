@@ -35,23 +35,25 @@
 	<key>MGLMapboxAccessToken</key>
 	<string>pk.eyJ1IjoidGFjdHRpazMyMSIsImEiOiJjbHcxMDZlajkwMG93MmlvMGRreWhyN3FiIn0._iByDFnmPCMQy3Lxgj1kxQ</string>
 	<key>NSCameraUsageDescription</key>
-	<string>This app needs camera access to scan QR codes</string>
+	<string>This app needs camera access to scan QR codes for patrolling. Upload photos when some incident occurs.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>This app requires location access when in use</string>
+	<string>The app requires the location for starting the shift on the shift location only.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>This app requires location access when in use</string>
+	<string>The app requires the location for starting the shift on the shift location only.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>We need access to your location data to provide you with accurate navigation. while using our app.</string>
+	<string>We need access to your location data to provide you with accurate navigation to their shfit site while using our app.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>This app does not require access to the microphone.</string>
+	<string>The app requires microphone to use for the in app speech to text feature for writing </string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>This app needs access to the photo library to save screenshots.</string>
+	<string>This app needs access to the photo library to add photos for patrolling and reporting.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This app requires access to the photo library.</string>
+	<string>This app needs access to the photo library to add photos for patrolling and reporting</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>This app needs access to the microphone to recognize your speech.</string>
+	<string>The app requires microphone to use for the in app speech to text feature for writing</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>This app needs access to speech recognition to convert your speech to text.</string>
+	<string>The app requires microphone to use for the in app speech to text feature for writing</string>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>This is required to track the data while being on shift.Neccessary for payroll</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>

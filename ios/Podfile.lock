@@ -1,4 +1,6 @@
 PODS:
+  - app_tracking_transparency (0.0.1):
+    - Flutter
   - AppCheckCore (10.19.1):
     - GoogleUtilities/Environment (~> 7.13)
     - GoogleUtilities/UserDefaults (~> 7.13)
@@ -299,6 +301,7 @@ PODS:
     - FlutterMacOS
 
 DEPENDENCIES:
+  - app_tracking_transparency (from `.symlinks/plugins/app_tracking_transparency/ios`)
   - audioplayers_darwin (from `.symlinks/plugins/audioplayers_darwin/ios`)
   - background_locator_2 (from `.symlinks/plugins/background_locator_2/ios`)
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
@@ -386,6 +389,8 @@ SPEC REPOS:
     - Turf
 
 EXTERNAL SOURCES:
+  app_tracking_transparency:
+    :path: ".symlinks/plugins/app_tracking_transparency/ios"
   audioplayers_darwin:
     :path: ".symlinks/plugins/audioplayers_darwin/ios"
   background_locator_2:
@@ -468,6 +473,7 @@ CHECKOUT OPTIONS:
     :tag: 10.25.0
 
 SPEC CHECKSUMS:
+  app_tracking_transparency: e169b653478da7bb15a6c61209015378ca73e375
   AppCheckCore: db04d539b37794558391bc56bc65e2440b01a195
   audioplayers_darwin: 877d9a4d06331c5c374595e46e16453ac7eafa40
   background_locator_2: bc8a422343ab656d5bd98e08694c6f89fef20418

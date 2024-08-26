@@ -16,6 +16,15 @@ import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_semibold.dart';
 import 'package:tact_tik/login_screen.dart';
 import 'package:tact_tik/main.dart';
+import 'package:tact_tik/screens/feature%20screens/Log%20Book/logbook_screen.dart';
+import 'package:tact_tik/screens/feature%20screens/Report/report_screen.dart';
+import 'package:tact_tik/screens/feature%20screens/assets/assets_screen.dart';
+import 'package:tact_tik/screens/feature%20screens/briefing_box/briefing_box_screen.dart';
+import 'package:tact_tik/screens/feature%20screens/dar/dar_screen.dart';
+import 'package:tact_tik/screens/feature%20screens/keys/view_keys_screen.dart';
+import 'package:tact_tik/screens/feature%20screens/post_order.dart/post_order_screen.dart';
+import 'package:tact_tik/screens/feature%20screens/site_tours/site_tour_screen.dart';
+import 'package:tact_tik/screens/feature%20screens/visitors/visitors.dart';
 import 'package:tact_tik/screens/home%20screens/home_screen.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/icon_text_widget.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/start_task_screen.dart';
@@ -184,6 +193,8 @@ class _SHomeScreenState extends State<SHomeScreen> {
         String empCompanyId = userInfo['EmployeeCompanyId'] ?? "";
         String empBranchId = userInfo['EmployeeCompanyBranchId'] ?? "";
         String empRole = userInfo['EmployeeRole'] ?? "";
+        String CompanyId = userInfo['EmployeeCompanyId'];
+        String BranchId = userInfo['EmployeeCompanyBranchId'];
         var guardsInfo =
             await fireStoreService.getGuardForSupervisor(EmployeeId);
         // print("GuardsInfo: ${guardsInfo}");
@@ -210,6 +221,8 @@ class _SHomeScreenState extends State<SHomeScreen> {
           print('Employee Id ===> $_employeeId');
           _empEmail = empEmail;
           employeeImg = empImage;
+          _BranchId = BranchId;
+          _CompanyId = CompanyId;
           _employeeCompanyID = empCompanyId;
           _employeeCompanyBranchID = empBranchId;
           _empRole = empRole;
@@ -450,14 +463,24 @@ class _SHomeScreenState extends State<SHomeScreen> {
       Theme.of(context).focusColor,
     ];
     final List<List<String>> data = [
+      ['assets/images/panic_mode.png', 'S_Panic Mode'],
+      ['assets/images/site_tour.png', 'S_Track Guard'],
+      ['assets/images/dar.png', 'S_DAR'],
+      ['assets/images/reports.png', 'S_Reports'],
+      ['assets/images/post_order.png', 'S_Post Orders'],
+      ['assets/images/task.png', 'S_Task'], // TODO
+      ['assets/images/log_book.png', 'S_Log Book'],
+      ['assets/images/visitors.png', 'S_Visitors'], // TODO
+      ['assets/images/assets.png', 'S_Assets'],
+      ['assets/images/keys.png', 'S_Key'],
       ['assets/images/panic_mode.png', 'Panic Mode'],
-      ['assets/images/site_tour.png', 'Track Guard'],
+      ['assets/images/site_tour.png', 'Site Tours'],
       ['assets/images/dar.png', 'DAR'],
       ['assets/images/reports.png', 'Reports'],
       ['assets/images/post_order.png', 'Post Orders'],
-      ['assets/images/task.png', 'Task'], // TODO
+      ['assets/images/task.png', 'Breifing Box'],
       ['assets/images/log_book.png', 'Log Book'],
-      ['assets/images/visitors.png', 'Visitors'], // TODO
+      ['assets/images/visitors.png', 'Visitors'],
       ['assets/images/assets.png', 'Assets'],
       ['assets/images/keys.png', 'Key'],
     ];
@@ -729,12 +752,12 @@ class _SHomeScreenState extends State<SHomeScreen> {
                             icon: Icons.add_task,
                             color: ScreenIndex == 0
                                 ? ThemeMode.dark == themeManager.themeMode
-                                    ? DarkColor.color1
+                                    ? DarkColor.Primarycolor
                                     : LightColor.Primarycolor
                                 : Theme.of(context).focusColor,
                             textcolor: ScreenIndex == 0
                                 ? ThemeMode.dark == themeManager.themeMode
-                                    ? DarkColor.color1
+                                    ? DarkColor.Primarycolor
                                     : LightColor.Primarycolor
                                 : Theme.of(context).focusColor,
                           ),
@@ -746,12 +769,12 @@ class _SHomeScreenState extends State<SHomeScreen> {
                             icon: Icons.add_task,
                             color: ScreenIndex == 1
                                 ? ThemeMode.dark == themeManager.themeMode
-                                    ? DarkColor.color1
+                                    ? DarkColor.Primarycolor
                                     : LightColor.Primarycolor
                                 : Theme.of(context).focusColor,
                             textcolor: ScreenIndex == 1
                                 ? ThemeMode.dark == themeManager.themeMode
-                                    ? DarkColor.color1
+                                    ? DarkColor.Primarycolor
                                     : LightColor.Primarycolor
                                 : Theme.of(context).focusColor,
                           ),
@@ -763,12 +786,12 @@ class _SHomeScreenState extends State<SHomeScreen> {
                             icon: Icons.grid_view_rounded,
                             color: ScreenIndex == 2
                                 ? ThemeMode.dark == themeManager.themeMode
-                                    ? DarkColor.color1
+                                    ? DarkColor.Primarycolor
                                     : LightColor.Primarycolor
                                 : Theme.of(context).focusColor,
                             textcolor: ScreenIndex == 2
                                 ? ThemeMode.dark == themeManager.themeMode
-                                    ? DarkColor.color1
+                                    ? DarkColor.Primarycolor
                                     : LightColor.Primarycolor
                                 : Theme.of(context).focusColor,
                           ),
@@ -783,12 +806,12 @@ class _SHomeScreenState extends State<SHomeScreen> {
                             icon: Icons.calendar_today,
                             color: ScreenIndex == 3
                                 ? ThemeMode.dark == themeManager.themeMode
-                                    ? DarkColor.color1
+                                    ? DarkColor.Primarycolor
                                     : LightColor.Primarycolor
                                 : Theme.of(context).focusColor,
                             textcolor: ScreenIndex == 3
                                 ? ThemeMode.dark == themeManager.themeMode
-                                    ? DarkColor.color1
+                                    ? DarkColor.Primarycolor
                                     : LightColor.Primarycolor
                                 : Theme.of(context).focusColor,
                           ),
@@ -1089,6 +1112,144 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                             ),
                                           ),
                                         );
+                                        break;
+                                      case 10:
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return PanicAlertDialog(
+                                              EmpId: _employeeId,
+                                              CompanyId: _employeeCompanyID,
+                                              Username: _userName,
+                                            );
+                                          },
+                                        );
+                                        break;
+                                      case 11:
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return SiteTourScreen(
+                                              schedulesList: schedules_list,
+                                            );
+                                          },
+                                        );
+                                        break;
+                                      case 12:
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+
+                                                    // CreateDarScreen(
+                                                    //   EmpEmail: _empEmail,
+                                                    //   Username: _userName,
+                                                    //   EmpId: _employeeId,
+                                                    // )
+                                                    DarDisplayScreen(
+                                                      EmpEmail: _empEmail,
+                                                      EmpID: _employeeId,
+                                                      EmpDarCompanyId:
+                                                          _ShiftCompanyId ?? "",
+                                                      EmpDarCompanyBranchId:
+                                                          _branchId,
+                                                      EmpDarShiftID: _shiftId,
+                                                      EmpDarClientID:
+                                                          _shiftCLientId,
+                                                      Username: _userName,
+                                                    )));
+                                        break;
+                                      case 13:
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ReportScreen(
+                                                      locationId:
+                                                          _shiftLocationId,
+                                                      locationName:
+                                                          _ShiftLocationName,
+                                                      companyId:
+                                                          _ShiftCompanyId ?? "",
+                                                      empId: _employeeId,
+                                                      empName: _userName,
+                                                      clientId: _shiftCLientId,
+                                                      ShiftId: _shiftId,
+                                                      isguard: isRoleGuard,
+                                                      BranchID: _branchId,
+                                                    )));
+                                        break;
+                                      case 14:
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => PostOrder(
+                                                      locationId:
+                                                          _shiftLocationId,
+                                                    )));
+                                        break;
+                                      case 15:
+                                        /*TaskScreen*/
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    // TaskFeatureScreen()
+                                                    BriefingBoxScreen(
+                                                        locationId:
+                                                            _shiftLocationId,
+                                                        shiftName:
+                                                            _ShiftName)));
+                                        break;
+                                      case 16:
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    LogBookScreen(
+                                                      EmpId: _employeeId,
+                                                    )));
+                                        break;
+                                      case 17:
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    VisiTorsScreen(
+                                                      locationId:
+                                                          _shiftLocationId,
+                                                    )));
+                                        break;
+                                      case 18:
+                                        // AssetsScreen
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    // KeysScreen(
+                                                    //     keyId: _employeeId)
+                                                    AssetsScreen(
+                                                        assetEmpId:
+                                                            _employeeId)));
+                                        break;
+                                      case 19:
+                                        // AssetsScreen
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ViewKeysScreen(
+                                                      locationid:
+                                                          _shiftLocationId,
+                                                      branchId: _branchId,
+                                                      companyid: _ShiftCompanyId
+                                                          as String,
+                                                    )
+                                                // AssetsScreen(
+                                                //     assetEmpId:
+                                                //         _employeeId)
+
+                                                ));
                                         break;
                                       default:
                                     }

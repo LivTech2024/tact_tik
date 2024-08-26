@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'dart:ui' as ui;
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -53,9 +55,11 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  String _authStatus = 'Unknown';
   @override
   void initState() {
     themeManager.addListener(ThemeListerner);
+    // initPlugin();
     super.initState();
   }
 
@@ -71,6 +75,43 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  Future<void> initPlugin() async {
+    // if (Platform.isIOS) {
+    final TrackingStatus status =
+        await AppTrackingTransparency.trackingAuthorizationStatus;
+    setState(() => _authStatus = '$status');
+    print("AuthState $status");
+    if (status == TrackingStatus.notDetermined) {
+      await showCustomTrackingDialog(context);
+      await Future.delayed(const Duration(milliseconds: 200));
+      final TrackingStatus newStatus =
+          await AppTrackingTransparency.requestTrackingAuthorization();
+      setState(() => _authStatus = '$newStatus');
+    }
+
+    final uuid = await AppTrackingTransparency.getAdvertisingIdentifier();
+    print("UUID: $uuid");
+    // }
+  }
+
+  Future<void> showCustomTrackingDialog(BuildContext context) async =>
+      await showDialog<void>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Dear User'),
+          content: const Text(
+            'We care about your privacy and data security. We keep this app free by showing ads. '
+            'Can we continue to use your data to tailor ads for you?\n\nYou can change your choice anytime in the app settings. '
+            'Our partners will collect data and use a unique identifier on your device to show you ads.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Continue'),
+            ),
+          ],
+        ),
+      );
   @override
   Widget build(BuildContext context) {
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
@@ -127,98 +168,5 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
-
-/*
-    return ScreenUtilInit(
-      designSize: const ui.Size(430, 932),
-      builder: (context, child) {
-        return ProviderScope(
-          child: GetMaterialApp(
-            title: 'Tact Tik',
-            debugShowCheckedModeBanner: false,
-            theme: ThemeData(
-              useMaterial3: true,
-              brightness: Brightness.dark,
-              textTheme: GoogleFonts.poppinsTextTheme(
-              Theme.of(context).textTheme,
-              ),
-            ),
-            home: child,
-            // OfflineBuilder(
-            //   connectivityBuilder: (
-            //     BuildContext context,
-            //     ConnectivityResult connectivity,
-            //     Widget child,
-            //   ) {
-            //     final bool isConnected = connectivity != ConnectivityResult.none;
-            //     if (isConnected) {
-            //       return child;
-            //     } else {
-            //       return const Scaffold(
-            //         body: Center(
-            //           child: Text(
-            //             'No internet connection. Connect to Internet or Restart the app',
-            //             style: TextStyle(
-            //               fontSize: 20, // Adjust the font size as needed
-            //               fontWeight: FontWeight.bold, // Add bold font weight
-            //               color: Colors.white, // Change text color to red
-            //             ),
-            //           ),
-            //         ),
-            //       );
-            //       // return OfflineScreen();
-            //     }
-            //   },
-            //   child: AuthChecker(),
-            // ),
-          ),
-        );
-      },
-      child: AuthChecker(),
-    );
-  }
-}
-*/
-/*ProviderScope(
-        child: GetMaterialApp(
-          title: 'Tact Tik',
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            useMaterial3: true,
-            brightness: Brightness.dark,
-            textTheme: GoogleFonts.poppinsTextTheme(
-              Theme.of(context).textTheme,
-            ),
-          ),
-          home: child,
-          // OfflineBuilder(
-          //   connectivityBuilder: (
-          //     BuildContext context,
-          //     ConnectivityResult connectivity,
-          //     Widget child,
-          //   ) {
-          //     final bool isConnected = connectivity != ConnectivityResult.none;
-          //     if (isConnected) {
-          //       return child;
-          //     } else {
-          //       return const Scaffold(
-          //         body: Center(
-          //           child: Text(
-          //             'No internet connection. Connect to Internet or Restart the app',
-          //             style: TextStyle(
-          //               fontSize: 20, // Adjust the font size as needed
-          //               fontWeight: FontWeight.bold, // Add bold font weight
-          //               color: Colors.white, // Change text color to red
-          //             ),
-          //           ),
-          //         ),
-          //       );
-          //       // return OfflineScreen();
-          //     }
-          //   },
-          //   child: AuthChecker(),
-          // ),
-        ),
-      ),*/
 // "default": "livtech-dbcf2"
 // "default": "security-app-3b156" 

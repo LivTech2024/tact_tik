@@ -18,8 +18,7 @@ class gridWidget extends StatelessWidget {
     // final double width = MediaQuery.of(context).size.width;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment:
-          MainAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Container(
           height: 100.h,

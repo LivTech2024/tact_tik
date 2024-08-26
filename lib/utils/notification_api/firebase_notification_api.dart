@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -21,12 +22,23 @@ class FirebaseNotificationApi {
       description: 'local Noti', importance: Importance.defaultImportance);
   // FirebaseNotificationApi() : storage = LocalStorage('currentUserEmail');
   final _localnotification = FlutterLocalNotificationsPlugin();
+
   Future<void> initNotifications() async {
     //request permissions
     await _firebase_messaging.requestPermission();
     await Permission.location.request();
     await Permission.locationAlways.request();
     await Permission.locationWhenInUse.request();
+    // final status = await AppTrackingTransparency.requestTrackingAuthorization();
+    // if (await AppTrackingTransparency.trackingAuthorizationStatus ==
+    //     TrackingStatus.notDetermined) {
+    //   // Show a custom explainer dialog before the system dialog
+    //   // await showDialog(context); //TODO: Handle the context to display the dailog box
+    //   // Wait for dialog popping animation
+    //   await Future.delayed(const Duration(milliseconds: 200));
+    //   // Request system's tracking authorization dialog
+    //   await AppTrackingTransparency.requestTrackingAuthorization();
+    // }
     var userInfo = await fireStoreService.getUserInfoByCurrentUserEmail2();
     if (userInfo != null) {
       String employeeId = userInfo['EmployeeId'];

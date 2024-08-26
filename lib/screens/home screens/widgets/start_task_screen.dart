@@ -206,7 +206,10 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 
   void initPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    final homeScreenController = HomeScreenController.instance;
+    // final homeScreenController = HomeScreenController.instance;
+    final HomeScreenController homeScreenController =
+        Get.put(HomeScreenController());
+
     print("Shift Status at StartTask Screen ${widget.ShiftStatus}");
 
     print("Clicked Saved PRef ${clickedIn}");
@@ -454,136 +457,6 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
       }
     }
   }
-
-  // void updateLateTimeAndStartTimer() {
-  //   print('update late time and start timer function');
-  //   DateTime now = DateTime.now();
-
-  //   /// -- update late time
-  //   DateFormat dateFormat = DateFormat("HH:mm");
-
-  //   DateTime shiftStartTime = dateFormat.parse(widget.ShiftStartTime);
-  //   shiftStartTime = DateTime(now.year, now.month, now.day, shiftStartTime.hour,
-  //       shiftStartTime.minute);
-
-  //   DateTime shiftEndTime = dateFormat.parse(widget.ShiftEndTime);
-  //   shiftEndTime = DateTime(
-  //       now.year, now.month, now.day, shiftEndTime.hour, shiftEndTime.minute);
-
-  //   DateTime deadline = shiftStartTime.add(const Duration(minutes: 10));
-
-  //   Duration remainingTimeToStart = deadline.difference(now);
-
-  //   print("Shift start time: $shiftStartTime");
-  //   print("Current time: $now");
-  //   print("Deadline: $deadline");
-  //   print("Remaining time to start: ${remainingTimeToStart.inMinutes} minutes");
-
-  //   if (remainingTimeToStart.isNegative) {
-  //     print("The user is already late.");
-  //     Duration lateDuration = now.difference(deadline);
-  //     if (widget.ShiftStatus == false) {
-  //       setState(() {
-  //         isLate = true;
-  //         lateTime =
-  //             "${lateDuration.inHours}h : ${lateDuration.inMinutes % 60}m";
-  //         print("Late time: $lateTime");
-  //       });
-  //     }
-  //   } else {
-  //     print(
-  //         "Remaining time to start the shift: ${remainingTimeToStart.inMinutes} minutes.");
-  //   }
-
-  //   /// -- start timer
-  //   remainingTime = shiftEndTime.difference(now);
-  //   _startTimer();
-  // }
-
-  // void _startTimer() {
-  //   print('start timer');
-  //   if (_timer != null) {
-  //     _timer!.cancel();
-  //   }
-
-  //   _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-  //     setState(() {
-  //       if (remainingTime.inSeconds > 0) {
-  //         remainingTime = remainingTime - Duration(seconds: 1);
-  //         remainingTimeFormatted =
-  //             "${remainingTime.inHours}h : ${remainingTime.inMinutes % 60}m : ${remainingTime.inSeconds % 60}s";
-  //         print("Timer $remainingTimeFormatted");
-  //       } else {
-  //         _timer!.cancel();
-  //       }
-  //     });
-  //   });
-  // }
-
-  // void updateLateTimeAndStartTimer() {
-  //   print('update late time and start timer function');
-  //   DateTime now = DateTime.now();
-
-  //   /// -- update late time
-  //   DateFormat dateFormat = DateFormat("HH:mm");
-
-  //   DateTime shiftStartTime = dateFormat.parse(widget.ShiftStartTime);
-  //   shiftStartTime = DateTime(now.year, now.month, now.day, shiftStartTime.hour,
-  //       shiftStartTime.minute);
-
-  //   DateTime shiftEndTime = dateFormat.parse(widget.ShiftEndTime);
-  //   shiftEndTime = DateTime(
-  //       now.year, now.month, now.day, shiftEndTime.hour, shiftEndTime.minute);
-
-  //   DateTime deadline = shiftStartTime.add(const Duration(minutes: 10));
-
-  //   Duration remainingTimeToStart = deadline.difference(now);
-
-  //   if (remainingTimeToStart.isNegative) {
-  //     print("The user is already late.");
-  //     Duration lateDuration = now.difference(deadline);
-  //     if (!clickedIn) {
-  //       setState(() {
-  //         isLate = true;
-  //         lateTime =
-  //             "${lateDuration.inHours}h : ${lateDuration.inMinutes % 60}m";
-  //         print("Late time: $lateTime");
-  //         print(
-  //             "Late time 2:${lateDuration.inHours}h : ${lateDuration.inMinutes % 60}m");
-  //       });
-  //     }
-  //   } else {
-  //     print(
-  //         "Remaining time to start the shift: ${remainingTimeToStart.inMinutes} minutes.");
-  //   }
-
-  //   /// -- start timer
-  //   ///
-  //   setState(() {
-  //     remainingTime = shiftEndTime.difference(now);
-  //   });
-  //   _startTimer();
-  // }
-
-  // void _startTimer() {
-  //   print('start timer');
-  //   if (_timer != null) {
-  //     _timer!.cancel();
-  //   }
-
-  //   _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-  //     setState(() {
-  //       if (remainingTime.inSeconds > 0) {
-  //         remainingTime = remainingTime - Duration(seconds: 1);
-  //         remainingTimeFormatted =
-  //             "${remainingTime.inHours}h : ${remainingTime.inMinutes % 60}m : ${remainingTime.inSeconds % 60}s";
-  //         print("Timer $remainingTimeFormatted");
-  //       } else {
-  //         _timer!.cancel();
-  //       }
-  //     });
-  //   });
-  // }
 
   void updateLateTimeAndStartTimer() {
     print('update late time and start timer function');

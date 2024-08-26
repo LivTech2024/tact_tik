@@ -104,6 +104,7 @@ dependencies:
   hive_flutter: ^1.1.0
   video_player: ^2.2.19
   speech_to_text:
+  app_tracking_transparency: ^2.0.6
 dev_dependencies:
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
