@@ -473,6 +473,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
       ['assets/images/visitors.png', 'S_Visitors'], // TODO
       ['assets/images/assets.png', 'S_Assets'],
       ['assets/images/keys.png', 'S_Key'],
+      ['assets/images/callout_icon.png', 'S_Callout'],
       ['assets/images/panic_mode.png', 'Panic Mode'],
       ['assets/images/site_tour.png', 'Site Tours'],
       ['assets/images/dar.png', 'DAR'],
@@ -483,6 +484,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
       ['assets/images/visitors.png', 'Visitors'],
       ['assets/images/assets.png', 'Assets'],
       ['assets/images/keys.png', 'Key'],
+      ['assets/images/callout_icon.png', 'Callout'],
     ];
 
     int _selectedIndex = 0; // Index of the selected screen
@@ -1250,6 +1252,24 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                                 //         _employeeId)
 
                                                 ));
+                                      // case 20:
+                                      //   // AssetsScreen
+                                      //   Navigator.push(
+                                      //       context,
+                                      //       MaterialPageRoute(
+                                      //           builder: (context) =>
+                                      //               ViewKeysScreen(
+                                      //                 locationid:
+                                      //                     _shiftLocationId,
+                                      //                 branchId: _branchId,
+                                      //                 companyid: _ShiftCompanyId
+                                      //                     as String,
+                                      //               )
+                                      //           // AssetsScreen(
+                                      //           //     assetEmpId:
+                                      //           //         _employeeId)
+
+                                      //           ));
                                         break;
                                       default:
                                     }
