@@ -57,6 +57,7 @@ import '../../new guard/new_guard_screen.dart';
 import '../features screens/Report/select_reports_guards.dart';
 import '../features screens/assets/s_assets_view_screen.dart';
 import '../features screens/assets/select_assets_guards.dart';
+import '../features screens/callout/s_add_callout.dart';
 import '../features screens/dar/select_dar_guards.dart';
 import '../features screens/history/select_history_guards.dart';
 import '../features screens/key management/s_key_managment_view_screen.dart';
@@ -1116,6 +1117,15 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                         );
                                         break;
                                       case 10:
+                                        // AssetsScreen
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    SAddCallout()
+                                                ));
+                                        break;
+                                      case 11:
                                         showDialog(
                                           context: context,
                                           builder: (BuildContext context) {
@@ -1127,7 +1137,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                           },
                                         );
                                         break;
-                                      case 11:
+                                      case 12:
                                         showDialog(
                                           context: context,
                                           builder: (BuildContext context) {
@@ -1137,7 +1147,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                           },
                                         );
                                         break;
-                                      case 12:
+                                      case 13:
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
@@ -1161,7 +1171,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                                       Username: _userName,
                                                     )));
                                         break;
-                                      case 13:
+                                      case 14:
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
@@ -1181,7 +1191,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                                       BranchID: _branchId,
                                                     )));
                                         break;
-                                      case 14:
+                                      case 15:
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
@@ -1190,7 +1200,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                                           _shiftLocationId,
                                                     )));
                                         break;
-                                      case 15:
+                                      case 16:
                                         /*TaskScreen*/
                                         Navigator.push(
                                             context,
@@ -1203,7 +1213,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                                         shiftName:
                                                             _ShiftName)));
                                         break;
-                                      case 16:
+                                      case 17:
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
@@ -1212,7 +1222,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                                       EmpId: _employeeId,
                                                     )));
                                         break;
-                                      case 17:
+                                      case 18:
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
@@ -1222,7 +1232,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                                           _shiftLocationId,
                                                     )));
                                         break;
-                                      case 18:
+                                      case 19:
                                         // AssetsScreen
                                         Navigator.push(
                                             context,
@@ -1234,7 +1244,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                                         assetEmpId:
                                                             _employeeId)));
                                         break;
-                                      case 19:
+                                      case 20:
                                         // AssetsScreen
                                         Navigator.push(
                                             context,
@@ -1252,24 +1262,6 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                                 //         _employeeId)
 
                                                 ));
-                                      // case 20:
-                                      //   // AssetsScreen
-                                      //   Navigator.push(
-                                      //       context,
-                                      //       MaterialPageRoute(
-                                      //           builder: (context) =>
-                                      //               ViewKeysScreen(
-                                      //                 locationid:
-                                      //                     _shiftLocationId,
-                                      //                 branchId: _branchId,
-                                      //                 companyid: _ShiftCompanyId
-                                      //                     as String,
-                                      //               )
-                                      //           // AssetsScreen(
-                                      //           //     assetEmpId:
-                                      //           //         _employeeId)
-
-                                      //           ));
                                         break;
                                       default:
                                     }
