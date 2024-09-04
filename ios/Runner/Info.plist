@@ -53,7 +53,7 @@
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>The app requires microphone to use for the in app speech to text feature for writing</string>
 	<key>NSUserTrackingUsageDescription</key>
-	<string>This is required to track the data while being on shift.Neccessary for payroll</string>
+	<string>This is required to track the data while being on shift.Neccessary for shift data calculation</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>

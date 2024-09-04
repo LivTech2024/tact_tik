@@ -68,34 +68,34 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
         : LightColor.color2,
   ];
 
-  Future<Map<String, List<Map<String, dynamic>>>> fetchReports() async {
-    final employeeId = _userService.employeeID;
-    print("testtfwdf:$employeeId");
+  // Future<Map<String, List<Map<String, dynamic>>>> fetchReports() async {
+  //   final employeeId = _userService.employeeID;
+  //   print("testtfwdf:$employeeId");
 
-    final reportsCollection =
-        FirebaseFirestore.instance.collection('PatrolLogs');
-    final querySnapshot = await reportsCollection
-        .where('PatrolShiftId', isEqualTo: _userService.ShiftId)
-        .get();
+  //   final reportsCollection =
+  //       FirebaseFirestore.instance.collection('PatrolLogs');
+  //   final querySnapshot = await reportsCollection
+  //       .where('PatrolShiftId', isEqualTo: _userService.ShiftId)
+  //       .get();
 
-    final reports = querySnapshot.docs.map((doc) => doc.data()).toList();
-    print("Report ${reports}");
-    Map<String, List<Map<String, dynamic>>> reportsByHour = {};
-    for (var report in reports) {
-      final timestampStr = report['PatrolLogStartedAt'] as Timestamp;
-      final creationTime = timestampStr.toDate();
-      final hour = creationTime.hour;
-      final hourKey = '${hour.toString().padLeft(2, '0')}:00';
+  //   final reports = querySnapshot.docs.map((doc) => doc.data()).toList();
+  //   print("Report ${reports}");
+  //   Map<String, List<Map<String, dynamic>>> reportsByHour = {};
+  //   for (var report in reports) {
+  //     final timestampStr = report['PatrolLogStartedAt'] as Timestamp;
+  //     final creationTime = timestampStr.toDate();
+  //     final hour = creationTime.hour;
+  //     final hourKey = '${hour.toString().padLeft(2, '0')}:00';
 
-      if (reportsByHour.containsKey(hourKey)) {
-        reportsByHour[hourKey]!.add(report);
-      } else {
-        reportsByHour[hourKey] = [report];
-      }
-    }
-    print("Report By HOur ${reportsByHour}");
-    return reportsByHour;
-  }
+  //     if (reportsByHour.containsKey(hourKey)) {
+  //       reportsByHour[hourKey]!.add(report);
+  //     } else {
+  //       reportsByHour[hourKey] = [report];
+  //     }
+  //   }
+  //   print("Report By HOur ${reportsByHour}");
+  //   return reportsByHour;
+  // }
 
   // patrol logs
 
@@ -438,7 +438,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
             date2[2] == date.year) {}
         docRef = dar.data() as Map<String, dynamic>;
       }
-      print('docRef = ${docRef}');
+      // print('docRef = ${docRef}');
       if (docRef != null) {
         darList = docRef['EmpDarTile'];
       }
@@ -767,109 +767,109 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                                       ),
                                                     ),
                                                   ),
-                                                  FutureBuilder<
-                                                      Map<
-                                                          String,
-                                                          List<
-                                                              Map<String,
-                                                                  dynamic>>>>(
-                                                    future: fetchReports(),
-                                                    builder: (context,
-                                                        reportsSnapshot) {
-                                                      if (reportsSnapshot
-                                                              .connectionState ==
-                                                          ConnectionState
-                                                              .waiting) {
-                                                        return const CircularProgressIndicator();
-                                                      }
+                                                  // FutureBuilder<
+                                                  //     Map<
+                                                  //         String,
+                                                  //         List<
+                                                  //             Map<String,
+                                                  //                 dynamic>>>>(
+                                                  //   future: fetchReports(),
+                                                  //   builder: (context,
+                                                  //       reportsSnapshot) {
+                                                  //     if (reportsSnapshot
+                                                  //             .connectionState ==
+                                                  //         ConnectionState
+                                                  //             .waiting) {
+                                                  //       return const CircularProgressIndicator();
+                                                  //     }
 
-                                                      final reportsByHour =
-                                                          reportsSnapshot
-                                                                  .data ??
-                                                              {};
-                                                      final hourKey = data[
-                                                                      index][
-                                                                  'startTime'] !=
-                                                              null
-                                                          ? '${data[index]['startTime']!.substring(0, 2)}:00'
-                                                          : '';
-                                                      final reportsForHour =
-                                                          reportsByHour[
-                                                                  hourKey] ??
-                                                              [];
+                                                  //     final reportsByHour =
+                                                  //         reportsSnapshot
+                                                  //                 .data ??
+                                                  //             {};
+                                                  //     final hourKey = data[
+                                                  //                     index][
+                                                  //                 'startTime'] !=
+                                                  //             null
+                                                  //         ? '${data[index]['startTime']!.substring(0, 2)}:00'
+                                                  //         : '';
+                                                  //     final reportsForHour =
+                                                  //         reportsByHour[
+                                                  //                 hourKey] ??
+                                                  //             [];
 
-                                                      return Column(
-                                                        children: reportsForHour
-                                                            .map((report) {
-                                                          final patrolLogCheckPoints =
-                                                              report['PatrolLogCheckPoints']
-                                                                      as List<
-                                                                          dynamic>? ??
-                                                                  [];
-                                                          final timestamp =
-                                                              report['PatrolLogStartedAt']
-                                                                  as Timestamp;
-                                                          final formattedTime =
-                                                              timestamp != null
-                                                                  ? DateFormat
-                                                                          .jm()
-                                                                      .format(timestamp
-                                                                          .toDate())
-                                                                  : '';
-                                                          return Column(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              Text(
-                                                                formattedTime,
-                                                                style:
-                                                                    const TextStyle(
-                                                                  color: Color
-                                                                      .fromARGB(
-                                                                          255,
-                                                                          195,
-                                                                          21,
-                                                                          21),
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                ),
-                                                              ),
-                                                              ...patrolLogCheckPoints
-                                                                  .expand(
-                                                                      (checkPoint) {
-                                                                final checkPointImages =
-                                                                    checkPoint['CheckPointImage']
-                                                                            as List<dynamic>? ??
-                                                                        [];
+                                                  //     return Column(
+                                                  //       children: reportsForHour
+                                                  //           .map((report) {
+                                                  //         final patrolLogCheckPoints =
+                                                  //             report['PatrolLogCheckPoints']
+                                                  //                     as List<
+                                                  //                         dynamic>? ??
+                                                  //                 [];
+                                                  //         final timestamp =
+                                                  //             report['PatrolLogStartedAt']
+                                                  //                 as Timestamp;
+                                                  //         final formattedTime =
+                                                  //             timestamp != null
+                                                  //                 ? DateFormat
+                                                  //                         .jm()
+                                                  //                     .format(timestamp
+                                                  //                         .toDate())
+                                                  //                 : '';
+                                                  //         return Column(
+                                                  //           crossAxisAlignment:
+                                                  //               CrossAxisAlignment
+                                                  //                   .start,
+                                                  //           children: [
+                                                  //             Text(
+                                                  //               formattedTime,
+                                                  //               style:
+                                                  //                   const TextStyle(
+                                                  //                 color: Color
+                                                  //                     .fromARGB(
+                                                  //                         255,
+                                                  //                         195,
+                                                  //                         21,
+                                                  //                         21),
+                                                  //                 fontWeight:
+                                                  //                     FontWeight
+                                                  //                         .bold,
+                                                  //               ),
+                                                  //             ),
+                                                  //             ...patrolLogCheckPoints
+                                                  //                 .expand(
+                                                  //                     (checkPoint) {
+                                                  //               final checkPointImages =
+                                                  //                   checkPoint['CheckPointImage']
+                                                  //                           as List<dynamic>? ??
+                                                  //                       [];
 
-                                                                if (checkPointImages
-                                                                    .isNotEmpty) {
-                                                                  return [
-                                                                    Image
-                                                                        .network(
-                                                                      checkPointImages
-                                                                          .first
-                                                                          .toString(),
-                                                                      width:
-                                                                          100.w,
-                                                                      height:
-                                                                          100.h,
-                                                                      fit: BoxFit
-                                                                          .cover,
-                                                                    )
-                                                                  ];
-                                                                } else {
-                                                                  return [];
-                                                                }
-                                                              }).toList(),
-                                                            ],
-                                                          );
-                                                        }).toList(),
-                                                      );
-                                                    },
-                                                  ),
+                                                  //               if (checkPointImages
+                                                  //                   .isNotEmpty) {
+                                                  //                 return [
+                                                  //                   Image
+                                                  //                       .network(
+                                                  //                     checkPointImages
+                                                  //                         .first
+                                                  //                         .toString(),
+                                                  //                     width:
+                                                  //                         100.w,
+                                                  //                     height:
+                                                  //                         100.h,
+                                                  //                     fit: BoxFit
+                                                  //                         .cover,
+                                                  //                   )
+                                                  //                 ];
+                                                  //               } else {
+                                                  //                 return [];
+                                                  //               }
+                                                  //             }).toList(),
+                                                  //           ],
+                                                  //         );
+                                                  //       }).toList(),
+                                                  //     );
+                                                  //   },
+                                                  // ),
                                                 ]),
                                           ),
                                         ),
@@ -880,6 +880,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                         ],
                       ),
                     )
+                  // : SizedBox()
                   : Padding(
                       padding: EdgeInsets.symmetric(horizontal: 30.w),
                       child: Column(

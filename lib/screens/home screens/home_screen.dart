@@ -907,13 +907,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         // );
                         // customEmail();
                         // await fireStoreService.copyAndCreateDocument(
-                        //     "PatrolLogs", "ih8HPiH87gvrdgrb9J3S");
+                        //     "PatrolLogs", "ZiWqsng3UKlijg7HNFe8");
                         // await darFunctions
                         //     .fetchShiftDetailstemplateAndSubmitDAR(
-                        //         "18:00",
-                        //         "06:00",
-                        //         "o7d8b8RC3lIpLVRveO57",
-                        //         "z90tp2TSH38JFpDIEelS");
+                        //         "19:00",
+                        //         "00:00",
+                        //         "Qmb2z5L9zGI6glcHI999",
+                        //         "ZwgwkGkOuu7DEKskxVKS");
                         Navigator.push(
                           context,
                           MaterialPageRoute(
