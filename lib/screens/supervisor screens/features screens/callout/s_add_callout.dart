@@ -51,7 +51,8 @@ class _SAddCalloutState extends State<SAddCallout> {
             //Full Container
             Container(
                 padding: EdgeInsets.all(screenHeight * 0.035),
-                height: screenHeight * 0.80,
+                color: Colors.amber,
+                height: screenHeight - AppBar().preferredSize.height,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -125,9 +126,9 @@ class _SAddCalloutState extends State<SAddCallout> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Container(
-                              margin: EdgeInsets.all(10),
-                              width: 43.5,
-                              height: 43.5,
+                              margin: EdgeInsets.all(screenWidth * 0.03),
+                              width: screenWidth * 0.11,
+                              height: screenWidth * 0.11,
                               child: Icon(
                                 Icons.account_circle_outlined,
                                 color: isDark ? Colors.white : Colors.black,
@@ -160,9 +161,9 @@ class _SAddCalloutState extends State<SAddCallout> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Container(
-                              margin: EdgeInsets.all(10),
-                              width: 43.5,
-                              height: 43.5,
+                              margin: EdgeInsets.all(screenWidth * 0.03),
+                              width: screenWidth * 0.11,
+                              height: screenWidth * 0.11,
                               child: Icon(
                                 Icons.access_time,
                                 color: isDark ? Colors.white : Colors.black,
@@ -195,9 +196,9 @@ class _SAddCalloutState extends State<SAddCallout> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Container(
-                              margin: EdgeInsets.all(10),
-                              width: 43.5,
-                              height: 43.5,
+                              margin: EdgeInsets.all(screenWidth * 0.03),
+                              width: screenWidth * 0.11,
+                              height: screenWidth * 0.11,
                               child: Icon(
                                 Icons.access_time,
                                 color: isDark ? Colors.white : Colors.black,
@@ -224,15 +225,19 @@ class _SAddCalloutState extends State<SAddCallout> {
                     //     alignment: Alignment.bottomCenter,
                     //     child: ElevatedButton(
                     //         onPressed: () {}, child: Text("Done"))),
-                    Align(
-                      // alignment: Alignment.bottomCenter,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          ElevatedButton(onPressed: () {}, child: Text("Done"))
-                        ],
-                      ),
-                    )
+                    const Spacer(),
+                    SizedBox(
+                        width: screenWidth,
+                        child: ElevatedButton(
+                            onPressed: () {
+                              print("Pressed On Done Button");
+                            },
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            child: const Text("Done")))
                   ],
                 )),
           ],
