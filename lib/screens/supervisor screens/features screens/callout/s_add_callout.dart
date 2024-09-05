@@ -46,6 +46,7 @@ class _SAddCalloutState extends State<SAddCallout> {
               },
               icon: Icon(Icons.arrow_back_ios_new_sharp)),
         ),
+        // Parent Coloumn
         body: Column(
           children: [
             //Full Container
@@ -60,10 +61,12 @@ class _SAddCalloutState extends State<SAddCallout> {
                       fontsize: 16.sp,
                       color: isDark ? Colors.white : Colors.black,
                     ),
-                    SizedBox(width: (screenHeight * 0.035)),
+
+                    // Used for Vertical Padding
                     SizedBox(
                       height: 20.h,
                     ),
+
                     //Select Location Card
                     GestureDetector(
                       onTap: () {
@@ -98,6 +101,7 @@ class _SAddCalloutState extends State<SAddCallout> {
                                 fit: BoxFit.scaleDown,
                               ),
                             ),
+
                             // Select Location Text
                             const InterLight(
                               text: "Select Location",
@@ -107,14 +111,19 @@ class _SAddCalloutState extends State<SAddCallout> {
                         ),
                       ),
                     ),
+
+                    // Vertical Padding
                     SizedBox(
                       height: 30.h,
                     ),
+
                     //Select Employee
                     GestureDetector(
                       onTap: () {
                         print("Select employee clicked");
                       },
+
+                      // Container And Border
                       child: Container(
                         width: double.maxFinite,
                         height: 64.sp,
@@ -122,13 +131,14 @@ class _SAddCalloutState extends State<SAddCallout> {
                             border: Border(
                                 bottom: BorderSide(
                                     color: isDark
-                                        ? DarkColor.AppBarcolor
-                                        : LightColor.AppBarcolor))),
+                                        ? LightColor.AppBarcolor
+                                        : DarkColor.AppBarcolor))),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Container(
-                              margin: EdgeInsets.all(screenWidth * 0.03),
+                            SizedBox(
+                              // If Margin Required Replace Widget with Container
+                              // margin: EdgeInsets.all(screenWidth * 0.03),
                               width: screenWidth * 0.11,
                               height: screenWidth * 0.11,
                               child: Icon(
@@ -145,6 +155,7 @@ class _SAddCalloutState extends State<SAddCallout> {
                         ),
                       ),
                     ),
+
                     //Callout Time
                     GestureDetector(
                       onTap: () {
@@ -157,13 +168,13 @@ class _SAddCalloutState extends State<SAddCallout> {
                             border: Border(
                                 bottom: BorderSide(
                                     color: isDark
-                                        ? DarkColor.AppBarcolor
-                                        : LightColor.AppBarcolor))),
+                                        ? LightColor.AppBarcolor
+                                        : DarkColor.AppBarcolor))),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Container(
-                              margin: EdgeInsets.all(screenWidth * 0.03),
+                              // margin: EdgeInsets.all(screenWidth * 0.03),
                               width: screenWidth * 0.11,
                               height: screenWidth * 0.11,
                               child: Icon(
@@ -192,13 +203,13 @@ class _SAddCalloutState extends State<SAddCallout> {
                             border: Border(
                                 bottom: BorderSide(
                                     color: isDark
-                                        ? DarkColor.AppBarcolor
-                                        : LightColor.AppBarcolor))),
+                                        ? LightColor.AppBarcolor
+                                        : DarkColor.AppBarcolor))),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Container(
-                              margin: EdgeInsets.all(screenWidth * 0.03),
+                              // margin: EdgeInsets.all(screenWidth * 0.03),
                               width: screenWidth * 0.11,
                               height: screenWidth * 0.11,
                               child: Icon(
