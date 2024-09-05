@@ -51,7 +51,6 @@ class _SAddCalloutState extends State<SAddCallout> {
             //Full Container
             Container(
                 padding: EdgeInsets.all(screenHeight * 0.035),
-                color: Colors.amber,
                 height: screenHeight - AppBar().preferredSize.height,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -70,6 +69,7 @@ class _SAddCalloutState extends State<SAddCallout> {
                       onTap: () {
                         print("Select Location clicked");
                       },
+                      // Outer Container
                       child: Container(
                         width: double.maxFinite,
                         height: 64.sp,
@@ -82,10 +82,11 @@ class _SAddCalloutState extends State<SAddCallout> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
+                            // Location Icon Container
                             Container(
-                              margin: EdgeInsets.all(10),
-                              width: 43.5,
-                              height: 43.5,
+                              margin: EdgeInsets.all(screenWidth * 0.03),
+                              width: screenWidth * 0.11,
+                              height: screenWidth * 0.11,
                               decoration: BoxDecoration(
                                   color: isDark
                                       ? DarkColor.Primarycolor
@@ -97,6 +98,7 @@ class _SAddCalloutState extends State<SAddCallout> {
                                 fit: BoxFit.scaleDown,
                               ),
                             ),
+                            // Select Location Text
                             const InterLight(
                               text: "Select Location",
                               letterSpacing: 0.5,
@@ -221,23 +223,31 @@ class _SAddCalloutState extends State<SAddCallout> {
                       fontsize: 18.sp,
                       letterSpacing: 0.5,
                     ),
-                    // Align(
-                    //     alignment: Alignment.bottomCenter,
-                    //     child: ElevatedButton(
-                    //         onPressed: () {}, child: Text("Done"))),
+                    // Add Assigned Employee Card Here
                     const Spacer(),
                     SizedBox(
                         width: screenWidth,
+                        height: 60.sp,
                         child: ElevatedButton(
                             onPressed: () {
                               print("Pressed On Done Button");
                             },
                             style: ElevatedButton.styleFrom(
+                              backgroundColor: isDark
+                                  ? DarkColor.Primarycolor
+                                  : LightColor.Primarycolor,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(9),
                               ),
                             ),
-                            child: const Text("Done")))
+                            child: Text(
+                              "Done",
+                              style: TextStyle(
+                                color: isDark ? Colors.black : Colors.white,
+                                fontSize: 18.sp,
+                                letterSpacing: 0.5,
+                              ),
+                            )))
                   ],
                 )),
           ],
