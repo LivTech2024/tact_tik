@@ -52,7 +52,7 @@ class LightColor {
   static const Color Secondarycolor = Color(0xFFF9F9F9);
   static const Color WidgetColor = Color(0xFFFFFFFF);
   static const Color WidgetColorLigth = Color(0x408E8686);
-  static const Color AppBarcolor = Color(0xFFFFFFFF);
+  static const Color AppBarcolor = Color(0xFFFFFFFF); 
   static const Color color1 = Colors.white;
   static const Color color2 = Color(0x2D151515);
   static const Color color3 = Color(0xFF151515);
@@ -61,6 +61,7 @@ class LightColor {
   static const Color color6 = Color(0xFFC3C3C3);
   static const Color color7 = Color(0xCCFFFFFF);
   static const Color color8 = Color(0xCC393939);
+  static const Color color9 = Color(0xFFE2D7D7);
   static const Color colorRed = Color(0x2DEA4335);
 }
 
