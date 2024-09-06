@@ -187,31 +187,41 @@ class _SAddCalloutState extends State<SAddCallout> {
                           ),
 
                           // Location DropDown
-                          DropdownButton<String>(
-                            value: dropDownvalue,
-                            hint: Text("Select Location",
+                          Expanded(
+                            child: Padding(
+                              padding:
+                                  EdgeInsets.only(right: screenWidth * 0.03),
+                              child: DropdownButton<String>(
+                                value: dropDownvalue,
+                                hint: InterLight(
+                                  text: "Select Location",
+                                  color: isDark
+                                      ? LightColor.color9
+                                      : DarkColor.AppBarcolor,
+                                  fontsize: screenHeight * 0.022,
+                                ),
+                                icon: const Icon(Icons.menu),
                                 style: TextStyle(
-                                    color: isDark
-                                        ? LightColor.color9
-                                        : DarkColor.AppBarcolor)),
-                            icon: const Icon(Icons.menu),
-                            style: TextStyle(
-                              color: isDark
-                                  ? LightColor.color9
-                                  : DarkColor.AppBarcolor,
+                                  color: isDark
+                                      ? LightColor.color9
+                                      : DarkColor.AppBarcolor,
+                                  fontSize: screenHeight * 0.022,
+                                ),
+                                isExpanded: true,
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    dropDownvalue = newValue;
+                                    print(newValue);
+                                  });
+                                },
+                                items: locations.map((String location) {
+                                  return DropdownMenuItem<String>(
+                                    value: location,
+                                    child: Text(location),
+                                  );
+                                }).toList(),
+                              ),
                             ),
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                dropDownvalue = newValue;
-                                print(newValue);
-                              });
-                            },
-                            items: locations.map((String location) {
-                              return DropdownMenuItem<String>(
-                                value: location,
-                                child: Text(location),
-                              );
-                            }).toList(),
                           )
                         ],
                       ),
