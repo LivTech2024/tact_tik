@@ -95,21 +95,21 @@ class _SAddCalloutState extends State<SAddCallout> {
     }
   }
 
+  // Stores Drop Down Value
+  String? dropDownvalue;
+
   @override
   Widget build(BuildContext context) {
     // Width of the User's Device
     double screenWidth = MediaQuery.sizeOf(context).width;
 
-    // Stores Drop Down Value
-    String? dropDownvalue;
-
-    // Employee Names
-    List<String> employees = [
-      'Vishhal',
-      'Tahmeed',
-      'Varun',
-      'Vaibhav',
-      'Debayan'
+    // Location Names
+    List<String> locations = [
+      'Floor 1',
+      'Floor 2',
+      'Floor 3',
+      'Floor 4',
+      'Floor 5'
     ];
 
     // Calculating the Safe Area and Height of the User's Device
@@ -185,41 +185,34 @@ class _SAddCalloutState extends State<SAddCallout> {
                               fit: BoxFit.scaleDown,
                             ),
                           ),
-                          DropdownButton(
-                            hint: const Text("Select Location"),
+
+                          // Location DropDown
+                          DropdownButton<String>(
+                            value: dropDownvalue,
+                            hint: Text("Select Location",
+                                style: TextStyle(
+                                    color: isDark
+                                        ? LightColor.color9
+                                        : DarkColor.AppBarcolor)),
                             icon: const Icon(Icons.menu),
-                            style: const TextStyle(color: Colors.white),
+                            style: TextStyle(
+                              color: isDark
+                                  ? LightColor.color9
+                                  : DarkColor.AppBarcolor,
+                            ),
                             onChanged: (String? newValue) {
                               setState(() {
-                                dropDownvalue = newValue!;
+                                dropDownvalue = newValue;
+                                print(newValue);
                               });
                             },
-                            items: const [
-                              DropdownMenuItem<String>(
-                                value: "Select Location",
-                                child: Text("Select Location"),
-                              ),
-                              DropdownMenuItem<String>(
-                                value: "One",
-                                child: Text("One"),
-                              ),
-                              DropdownMenuItem<String>(
-                                value: "Two",
-                                child: Text("Two"),
-                              ),
-                              DropdownMenuItem<String>(
-                                value: "Three",
-                                child: Text("Three"),
-                              ),
-                            ],
-                          ),
-
-                          // Select Location Text
-
-                          // const InterLight(
-                          //   text: "Select Location",
-                          //   letterSpacing: 0.5,
-                          // )
+                            items: locations.map((String location) {
+                              return DropdownMenuItem<String>(
+                                value: location,
+                                child: Text(location),
+                              );
+                            }).toList(),
+                          )
                         ],
                       ),
                     ),
