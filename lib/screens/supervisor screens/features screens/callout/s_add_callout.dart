@@ -21,42 +21,64 @@ class SAddCallout extends StatefulWidget {
 }
 
 //Assigned Employee Card
-_AssignedEmp(isDark) {
-  return Container(
-      height: 70,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-        color: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-      ),
-      child: Row(
-        children: [
-          const Row(
-            children: [
-              SizedBox(
-                width: 14,
-              ),
-              CircleAvatar(
-                backgroundImage: AssetImage('assets/images/default.png'),
-              ),
-              SizedBox(
-                width: 14,
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [InterBold(text: "Tahmeed")],
-              ),
-              SizedBox(
-                width: 20,
-              )
-            ],
-          ),
-          Spacer(),
-          Align(
-              alignment: Alignment.topRight,
-              child: Icon(Icons.close,
-                  color: isDark ? Colors.white : Colors.black)),
-        ],
-      ));
+_AssignedEmp(isDark, index, name) {
+  return Padding(
+    padding: EdgeInsets.only(bottom: 0.007.sh),
+    child: Container(
+        height: 70,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+          color: isDark ? DarkColor.AppBarcolor : LightColor.color9,
+        ),
+        child: Row(
+          children: [
+            Row(
+              children: [
+                SizedBox(
+                  width: 14,
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: isDark
+                          ? LightColor.color9
+                          : DarkColor.AppBarcolor, // Border color
+                      width: 1, // Border width
+                    ),
+                  ),
+                  child: const CircleAvatar(
+                    backgroundImage: AssetImage('assets/images/default.png'),
+                  ),
+                ),
+                const SizedBox(
+                  width: 14,
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    InterMedium(
+                      text: name,
+                      fontsize: 0.02.sh,
+                    )
+                  ],
+                ),
+                const SizedBox(
+                  width: 20,
+                )
+              ],
+            ),
+            const Spacer(),
+            Padding(
+              padding: const EdgeInsets.only(right: 8.0, top: 7),
+              child: Align(
+                  alignment: Alignment.topRight,
+                  child: Icon(Icons.close,
+                      color: isDark ? Colors.white : Colors.black)),
+            ),
+          ],
+        )),
+  );
 }
 
 class _SAddCalloutState extends State<SAddCallout> {
@@ -103,6 +125,11 @@ class _SAddCalloutState extends State<SAddCallout> {
     // Width of the User's Device
     double screenWidth = MediaQuery.sizeOf(context).width;
 
+    // Calculating the Safe Area and Height of the User's Device
+    var padding = MediaQuery.paddingOf(context);
+    double screenHeight =
+        MediaQuery.sizeOf(context).height - padding.top - padding.bottom;
+
     // Location Names
     List<String> locations = [
       'Floor 1',
@@ -111,11 +138,6 @@ class _SAddCalloutState extends State<SAddCallout> {
       'Floor 4',
       'Floor 5'
     ];
-
-    // Calculating the Safe Area and Height of the User's Device
-    var padding = MediaQuery.paddingOf(context);
-    double screenHeight =
-        MediaQuery.sizeOf(context).height - padding.top - padding.bottom;
 
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
 
@@ -211,7 +233,6 @@ class _SAddCalloutState extends State<SAddCallout> {
                                 onChanged: (String? newValue) {
                                   setState(() {
                                     dropDownvalue = newValue;
-                                    print(newValue);
                                   });
                                 },
                                 items: locations.map((String location) {
@@ -235,18 +256,19 @@ class _SAddCalloutState extends State<SAddCallout> {
                     //Select Employee
                     GestureDetector(
                       onTap: () {
+                        print(selectedEmployees);
                         _showMultiSelect();
                       },
                       // Container And Border
                       child: Container(
-                        width: double.maxFinite,
+                        width: screenWidth,
                         height: 64.sp,
                         decoration: BoxDecoration(
                             border: Border(
                                 bottom: BorderSide(
                                     color: isDark
-                                        ? DarkColor.AppBarcolor
-                                        : LightColor.AppBarcolor))),
+                                        ? LightColor.AppBarcolor
+                                        : DarkColor.AppBarcolor))),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
@@ -258,7 +280,6 @@ class _SAddCalloutState extends State<SAddCallout> {
                               child: Icon(
                                 Icons.account_circle_outlined,
                                 color: isDark ? Colors.white : Colors.black,
-                                // size: 30.h,
                               ),
                             ),
                             const InterMedium(
@@ -278,8 +299,8 @@ class _SAddCalloutState extends State<SAddCallout> {
                           border: Border(
                               bottom: BorderSide(
                                   color: isDark
-                                      ? DarkColor.AppBarcolor
-                                      : LightColor.AppBarcolor))),
+                                      ? LightColor.AppBarcolor
+                                      : DarkColor.AppBarcolor))),
                       child: Center(
                         child: TextField(
                           style: TextStyle(
@@ -342,8 +363,8 @@ class _SAddCalloutState extends State<SAddCallout> {
                           border: Border(
                               bottom: BorderSide(
                                   color: isDark
-                                      ? DarkColor.AppBarcolor
-                                      : LightColor.AppBarcolor))),
+                                      ? LightColor.AppBarcolor
+                                      : DarkColor.AppBarcolor))),
                       child: TextField(
                         style: TextStyle(
                           fontSize: 16,
@@ -414,16 +435,26 @@ class _SAddCalloutState extends State<SAddCallout> {
                     ),
 
                     // Employee Card
-                    _AssignedEmp(isDark),
-
-                    // Tahmeed ??
-                    Wrap(
-                      children: _selectedEmployees
-                          .map((e) => Chip(
-                                label: Text(e),
-                              ))
-                          .toList(),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: selectedEmployees.length,
+                        itemBuilder: (context, index) => _AssignedEmp(
+                            isDark, index, selectedEmployees[index]),
+                      ),
                     ),
+
+                    // _AssignedEmp(isDark),
+                    // Tahmeed ??
+                    // Wrap(
+                    //   children: _selectedEmployees
+                    //       .map((e) => Padding(
+                    //             padding: const EdgeInsets.only(right: 8.0),
+                    //             child: Chip(
+                    //               label: Text(e),
+                    //             ),
+                    //           ))
+                    //       .toList(),
+                    // ),
 
                     // To push the button and the end of Users Screen
                     const Spacer(),
