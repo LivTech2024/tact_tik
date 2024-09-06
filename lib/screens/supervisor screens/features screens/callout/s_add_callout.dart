@@ -51,7 +51,10 @@ _AssignedEmp(isDark) {
             ],
           ),
           Spacer(),
-          Align(alignment: Alignment.topRight, child: Icon(Icons.close, color: isDark? Colors.white: Colors.black)),
+          Align(
+              alignment: Alignment.topRight,
+              child: Icon(Icons.close,
+                  color: isDark ? Colors.white : Colors.black)),
         ],
       ));
 }
@@ -96,11 +99,17 @@ class _SAddCalloutState extends State<SAddCallout> {
   Widget build(BuildContext context) {
     // Width of the User's Device
     double screenWidth = MediaQuery.sizeOf(context).width;
-    String dropDownvalue = "Select Location";
-    final List<String> dropDownItems = [
-      "123, ABC Apartment",
-      "456, DEF Apartment",
-      "789, GHI Apartment",
+
+    // Stores Drop Down Value
+    String? dropDownvalue;
+
+    // Employee Names
+    List<String> employees = [
+      'Vishhal',
+      'Tahmeed',
+      'Varun',
+      'Vaibhav',
+      'Debayan'
     ];
 
     // Calculating the Safe Area and Height of the User's Device
@@ -129,21 +138,21 @@ class _SAddCalloutState extends State<SAddCallout> {
         // Parent Coloumn
         body: Column(
           children: [
-            //Full Container
+            // Safe Area Container
             Container(
                 padding: EdgeInsets.all(screenHeight * 0.035),
                 height: screenHeight - AppBar().preferredSize.height,
-                // decoration: BoxDecoration(
-                //     border: Border.all(color: Colors.blueAccent)),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Call Out Text
                     InterBold(
                       text: "Create callout",
                       fontsize: 16.sp,
                       color: isDark ? Colors.white : Colors.black,
                     ),
-                    SizedBox(width: (screenHeight * 0.035)),
+
+                    // Vertical Padding
                     SizedBox(
                       height: 20.h,
                     ),
@@ -177,14 +186,10 @@ class _SAddCalloutState extends State<SAddCallout> {
                             ),
                           ),
                           DropdownButton(
-                            value: dropDownvalue,
+                            hint: const Text("Select Location"),
                             icon: const Icon(Icons.menu),
                             style: const TextStyle(color: Colors.white),
-                            underline: Container(
-                              height: 0,
-                              color: Colors.transparent,
-                            ),
-                            onChanged: (String? newValue){
+                            onChanged: (String? newValue) {
                               setState(() {
                                 dropDownvalue = newValue!;
                               });
@@ -218,6 +223,7 @@ class _SAddCalloutState extends State<SAddCallout> {
                         ],
                       ),
                     ),
+
                     // Vertical Padding
                     SizedBox(
                       height: 30.h,
@@ -262,7 +268,6 @@ class _SAddCalloutState extends State<SAddCallout> {
                     ),
 
                     //Callout Time
-                    //TODO: Time not displaying after selection
                     Container(
                       width: double.maxFinite,
                       height: 64.sp,
@@ -387,19 +392,28 @@ class _SAddCalloutState extends State<SAddCallout> {
                         },
                       ),
                     ),
+
+                    // Vertical Padding
                     SizedBox(
                       height: 25.h,
                     ),
+
+                    // Assigned Emp Txt
                     InterBold(
                       text: "Assigned Employee",
                       fontsize: 18.sp,
                       letterSpacing: 0.5,
                     ),
+
+                    // Vertical Padding
                     SizedBox(
                       height: 20.h,
                     ),
+
+                    // Employee Card
                     _AssignedEmp(isDark),
 
+                    // Tahmeed ??
                     Wrap(
                       children: _selectedEmployees
                           .map((e) => Chip(
@@ -408,7 +422,10 @@ class _SAddCalloutState extends State<SAddCallout> {
                           .toList(),
                     ),
 
+                    // To push the button and the end of Users Screen
                     const Spacer(),
+
+                    // Done Button
                     SizedBox(
                         width: screenWidth,
                         height: 60.sp,
