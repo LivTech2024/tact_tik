@@ -21,17 +21,16 @@ class SAddCallout extends StatefulWidget {
 }
 
 //Assigned Employee Card
-_AssignedEmp(isDark, employeeName) {
+_AssignedEmp(isDark) {
   return Container(
       height: 70,
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.amber),
         borderRadius: BorderRadius.all(Radius.circular(10)),
         color: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
       ),
-      child: const Row(
+      child: Row(
         children: [
-          Row(
+          const Row(
             children: [
               SizedBox(
                 width: 14,
@@ -44,14 +43,15 @@ _AssignedEmp(isDark, employeeName) {
               ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [InterBold(text: "_sele")],
+                children: [InterBold(text: "Tahmeed")],
               ),
               SizedBox(
                 width: 20,
               )
             ],
           ),
-          Align(alignment: Alignment.topRight, child: Icon(Icons.close)),
+          Spacer(),
+          Align(alignment: Alignment.topRight, child: Icon(Icons.close, color: isDark? Colors.white: Colors.black)),
         ],
       ));
 }
@@ -92,12 +92,17 @@ class _SAddCalloutState extends State<SAddCallout> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     // Width of the User's Device
     double screenWidth = MediaQuery.sizeOf(context).width;
-   
+    String dropDownvalue = "Select Location";
+    final List<String> dropDownItems = [
+      "123, ABC Apartment",
+      "456, DEF Apartment",
+      "789, GHI Apartment",
+    ];
+
     // Calculating the Safe Area and Height of the User's Device
     var padding = MediaQuery.paddingOf(context);
     double screenHeight =
@@ -142,52 +147,82 @@ class _SAddCalloutState extends State<SAddCallout> {
                     SizedBox(
                       height: 20.h,
                     ),
+
                     //Select Location Card
-                    GestureDetector(
-                      onTap: () {
-                        print("Select Location clicked");
-                      },
-                      child: Container(
-                        width: double.maxFinite,
-                        height: 64.sp,
-                        decoration: BoxDecoration(
-                          color: isDark
-                              ? DarkColor.AppBarcolor
-                              : LightColor.color9,
-                          borderRadius: BorderRadius.all(Radius.circular(13)),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            // Location Icon Container
-                            Container(
-                              margin: EdgeInsets.all(screenWidth * 0.03),
-                              width: screenWidth * 0.11,
-                              height: screenWidth * 0.11,
-                              decoration: BoxDecoration(
-                                  color: isDark
-                                      ? DarkColor.Primarycolor
-                                      : LightColor.Primarycolor,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(9))),
-                              child: SvgPicture.asset(
-                                'assets/images/locationIcon.svg',
-                                fit: BoxFit.scaleDown,
-                              ),
+                    Container(
+                      width: double.maxFinite,
+                      height: 64.sp,
+                      decoration: BoxDecoration(
+                        color:
+                            isDark ? DarkColor.AppBarcolor : LightColor.color9,
+                        borderRadius: BorderRadius.all(Radius.circular(13)),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          // Location Icon Container
+                          Container(
+                            margin: EdgeInsets.all(screenWidth * 0.03),
+                            width: screenWidth * 0.11,
+                            height: screenWidth * 0.11,
+                            decoration: BoxDecoration(
+                                color: isDark
+                                    ? DarkColor.Primarycolor
+                                    : LightColor.Primarycolor,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(9))),
+                            child: SvgPicture.asset(
+                              'assets/images/locationIcon.svg',
+                              fit: BoxFit.scaleDown,
                             ),
-                            // Select Location Text
-                            const InterLight(
-                              text: "Select Location",
-                              letterSpacing: 0.5,
-                            )
-                          ],
-                        ),
+                          ),
+                          DropdownButton(
+                            value: dropDownvalue,
+                            icon: const Icon(Icons.menu),
+                            style: const TextStyle(color: Colors.white),
+                            underline: Container(
+                              height: 0,
+                              color: Colors.transparent,
+                            ),
+                            onChanged: (String? newValue){
+                              setState(() {
+                                dropDownvalue = newValue!;
+                              });
+                            },
+                            items: const [
+                              DropdownMenuItem<String>(
+                                value: "Select Location",
+                                child: Text("Select Location"),
+                              ),
+                              DropdownMenuItem<String>(
+                                value: "One",
+                                child: Text("One"),
+                              ),
+                              DropdownMenuItem<String>(
+                                value: "Two",
+                                child: Text("Two"),
+                              ),
+                              DropdownMenuItem<String>(
+                                value: "Three",
+                                child: Text("Three"),
+                              ),
+                            ],
+                          ),
+
+                          // Select Location Text
+
+                          // const InterLight(
+                          //   text: "Select Location",
+                          //   letterSpacing: 0.5,
+                          // )
+                        ],
                       ),
                     ),
                     // Vertical Padding
                     SizedBox(
                       height: 30.h,
                     ),
+
                     //Select Employee
                     GestureDetector(
                       onTap: () {
@@ -225,6 +260,7 @@ class _SAddCalloutState extends State<SAddCallout> {
                         ),
                       ),
                     ),
+
                     //Callout Time
                     //TODO: Time not displaying after selection
                     Container(
@@ -281,14 +317,15 @@ class _SAddCalloutState extends State<SAddCallout> {
                             } else {
                               print("Time is not selected");
                               setState(() {
-                              endTimeInput.text =
-                                  ""; //set the value of text field.
-                            });
+                                endTimeInput.text =
+                                    ""; //set the value of text field.
+                              });
                             }
                           },
                         ),
                       ),
                     ),
+
                     //End Time
                     Container(
                       width: double.maxFinite,
@@ -302,7 +339,7 @@ class _SAddCalloutState extends State<SAddCallout> {
                       child: TextField(
                         style: TextStyle(
                           fontSize: 16,
-                          color: isDark ? Colors.white : Colors.black ,
+                          color: isDark ? Colors.white : Colors.black,
                         ),
                         controller:
                             endTimeInput, //editing controller of this TextField
@@ -358,6 +395,11 @@ class _SAddCalloutState extends State<SAddCallout> {
                       fontsize: 18.sp,
                       letterSpacing: 0.5,
                     ),
+                    SizedBox(
+                      height: 20.h,
+                    ),
+                    _AssignedEmp(isDark),
+
                     Wrap(
                       children: _selectedEmployees
                           .map((e) => Chip(
@@ -373,7 +415,6 @@ class _SAddCalloutState extends State<SAddCallout> {
                         child: ElevatedButton(
                             onPressed: () {
                               print("Pressed On Done Button");
-                              
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: isDark
