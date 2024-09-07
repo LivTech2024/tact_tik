@@ -388,8 +388,11 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                       itemBuilder: (context, index) {
                         if (index == uploads.length) {
                           return GestureDetector(
-                            onTap: () {
+                            onTap: () async {
                               // _refresh();
+                              bool showGallery = await fireStoreService
+                                  .showGalleryOption(widget.empId);
+                              print("showGallery ${showGallery}");
                               showModalBottomSheet(
                                 context: context,
                                 builder: (context) => Column(
@@ -403,14 +406,15 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                                         Navigator.pop(context);
                                       },
                                     ),
-                                    ListTile(
-                                      leading: Icon(Icons.image),
-                                      title: Text('Add Image from Gallery'),
-                                      onTap: () {
-                                        _addGallery();
-                                        Navigator.pop(context);
-                                      },
-                                    ),
+                                    if (showGallery)
+                                      ListTile(
+                                        leading: Icon(Icons.image),
+                                        title: Text('Add Image from Gallery'),
+                                        onTap: () {
+                                          _addGallery();
+                                          Navigator.pop(context);
+                                        },
+                                      ),
                                   ],
                                 ),
                               );

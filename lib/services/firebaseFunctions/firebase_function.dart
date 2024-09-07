@@ -466,8 +466,8 @@ class FireStoreService {
     // Fetch the Patrols using the Patrol IDs
     final querySnapshot =
         await patrols.where("PatrolId", whereIn: patrolIds).get();
-
     print("Retrieved documents Patrols:");
+
     querySnapshot.docs.forEach((doc) {
       print("Patrols Fetched");
       print(doc.data());
@@ -5782,7 +5782,6 @@ class FireStoreService {
         'MessageType': 'panic'
       };
       DocumentReference newDocRef = await messagesCollection.add(messageData);
-
       String messageId = newDocRef.id;
 
       // Update the document with the MessageId
@@ -5794,6 +5793,58 @@ class FireStoreService {
       throw e;
     }
   }
-}
 
+//Handling the New gallery option and timestamp condition
+//Handling the gallery option
+  Future<bool> showGalleryOption(String empid) async {
+    try {
+      // Reference the document in the 'Employee' collection using empid
+      DocumentSnapshot docSnapshot = await FirebaseFirestore.instance
+          .collection('Employee')
+          .doc(empid)
+          .get();
+
+      // Check if the document exists and cast data to Map<String, dynamic>
+      if (docSnapshot.exists) {
+        Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
+
+        // Check if the field exists and return its value or false
+        return data.containsKey('EmployeeIsTimeStampForPatrolImagesEnabled')
+            ? data['EmployeeIsTimeStampForPatrolImagesEnabled'] as bool
+            : false;
+      } else {
+        return false; // Return false if the document doesn't exist
+      }
+    } catch (e) {
+      print("Error fetching employee data: $e");
+      return false; // Return false in case of any errors
+    }
+  }
+
+//use timestamp
+  Future<bool> useTimeStampOption(String empid) async {
+    try {
+      // Reference the document in the 'Employee' collection using empid
+      DocumentSnapshot docSnapshot = await FirebaseFirestore.instance
+          .collection('Employee')
+          .doc(empid)
+          .get();
+
+      // Check if the document exists and cast data to Map<String, dynamic>
+      if (docSnapshot.exists) {
+        Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
+
+        // Check if the field exists and return its value or false
+        return data.containsKey('EmployeeIsUploadFromGalleryEnabled')
+            ? data['EmployeeIsUploadFromGalleryEnabled'] as bool
+            : false;
+      } else {
+        return false; // Return false if the document doesn't exist
+      }
+    } catch (e) {
+      print("Error fetching employee data: $e");
+      return false; // Return false in case of any errors
+    }
+  }
 // Schedule and assign
+}

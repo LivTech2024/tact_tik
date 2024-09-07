@@ -33,6 +33,7 @@ final navigatorKey = GlobalKey<NavigatorState>();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
   // await Hive.initFlutter();
   // await Hive.openBox('notifications');
   await FirebaseAppCheck.instance.activate(
