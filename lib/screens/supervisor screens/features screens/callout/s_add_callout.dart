@@ -27,70 +27,70 @@ class _SAddCalloutState extends State<SAddCallout> {
 
   //Assigned Employee Card
   _AssignedEmp(isDark, index, name) {
-  return Padding(
-    padding: EdgeInsets.only(bottom: 0.007.sh),
-    child: Container(
-        height: 70,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-          color: isDark ? DarkColor.AppBarcolor : LightColor.color9,
-        ),
-        child: Row(
-          children: [
-            Row(
-              children: [
-                SizedBox(
-                  width: 14,
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: isDark
-                          ? LightColor.color9
-                          : DarkColor.AppBarcolor, // Border color
-                      width: 1, // Border width
+    return Padding(
+      padding: EdgeInsets.only(bottom: 0.007.sh),
+      child: Container(
+          height: 70,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+            color: isDark ? DarkColor.AppBarcolor : LightColor.color9,
+          ),
+          child: Row(
+            children: [
+              Row(
+                children: [
+                  SizedBox(
+                    width: 14,
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: isDark
+                            ? LightColor.color9
+                            : DarkColor.AppBarcolor, // Border color
+                        width: 1, // Border width
+                      ),
+                    ),
+                    child: const CircleAvatar(
+                      backgroundImage: AssetImage('assets/images/default.png'),
                     ),
                   ),
-                  child: const CircleAvatar(
-                    backgroundImage: AssetImage('assets/images/default.png'),
+                  const SizedBox(
+                    width: 14,
                   ),
-                ),
-                const SizedBox(
-                  width: 14,
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    InterMedium(
-                      text: name,
-                      fontsize: 0.02.sh,
-                    )
-                  ],
-                ),
-                const SizedBox(
-                  width: 20,
-                )
-              ],
-            ),
-            const Spacer(),
-            Padding(
-              padding: const EdgeInsets.only(right: 8.0, top: 7),
-              child: Align(
-                  alignment: Alignment.topRight,
-                  child: IconButton(
-                      icon: Icon(Icons.close),
-                      onPressed: () {
-                        setState(() {
-                          selectedEmployees.remove(name);
-                        });
-                      },
-                      color: isDark ? Colors.white : Colors.black)),
-            ),
-          ],
-        )),
-  );
-}
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      InterMedium(
+                        text: name,
+                        fontsize: 0.02.sh,
+                      )
+                    ],
+                  ),
+                  const SizedBox(
+                    width: 20,
+                  )
+                ],
+              ),
+              const Spacer(),
+              Padding(
+                padding: const EdgeInsets.only(right: 8.0, top: 7),
+                child: Align(
+                    alignment: Alignment.topRight,
+                    child: IconButton(
+                        icon: Icon(Icons.close),
+                        onPressed: () {
+                          setState(() {
+                            selectedEmployees.remove(name);
+                          });
+                        },
+                        color: isDark ? Colors.white : Colors.black)),
+              ),
+            ],
+          )),
+    );
+  }
 
   @override
   void initState() {
@@ -162,8 +162,8 @@ class _SAddCalloutState extends State<SAddCallout> {
           leading: IconButton(
               onPressed: () {
                 setState(() {
-                  if(selectedEmployees.isNotEmpty) {
-                    selectedEmployees=[];
+                  if (selectedEmployees.isNotEmpty) {
+                    selectedEmployees = [];
                   }
                 });
                 Navigator.pop(context);
@@ -187,19 +187,20 @@ class _SAddCalloutState extends State<SAddCallout> {
                         fontsize: 16.sp,
                         color: isDark ? Colors.white : Colors.black,
                       ),
-          
+
                       // Vertical Padding
                       SizedBox(
                         height: 20.h,
                       ),
-          
+
                       //Select Location Card
                       Container(
                         width: double.maxFinite,
                         height: 64.sp,
                         decoration: BoxDecoration(
-                          color:
-                              isDark ? DarkColor.AppBarcolor : LightColor.color9,
+                          color: isDark
+                              ? DarkColor.AppBarcolor
+                              : LightColor.color9,
                           borderRadius: BorderRadius.all(Radius.circular(13)),
                         ),
                         child: Row(
@@ -221,7 +222,7 @@ class _SAddCalloutState extends State<SAddCallout> {
                                 fit: BoxFit.scaleDown,
                               ),
                             ),
-          
+
                             // Location DropDown
                             Expanded(
                               child: Padding(
@@ -239,8 +240,8 @@ class _SAddCalloutState extends State<SAddCallout> {
                                     fontsize: screenHeight * 0.022,
                                   ),
                                   underline: Container(),
-                                  icon:
-                                      const Icon(Icons.arrow_drop_down_outlined),
+                                  icon: const Icon(
+                                      Icons.arrow_drop_down_outlined),
                                   style: TextStyle(
                                     color: isDark
                                         ? LightColor.color9
@@ -265,12 +266,12 @@ class _SAddCalloutState extends State<SAddCallout> {
                           ],
                         ),
                       ),
-          
+
                       // Vertical Padding
                       SizedBox(
                         height: 30.h,
                       ),
-          
+
                       //Select Employee
                       GestureDetector(
                         onTap: () {
@@ -309,7 +310,7 @@ class _SAddCalloutState extends State<SAddCallout> {
                           ),
                         ),
                       ),
-          
+
                       //Callout Time
                       Container(
                         width: double.maxFinite,
@@ -334,7 +335,7 @@ class _SAddCalloutState extends State<SAddCallout> {
                                   size: 24.sp,
                                   color: isDark ? Colors.white : Colors.black,
                                 ), //icon of text field
-          
+
                                 labelText: "Callout Time",
                                 labelStyle: TextStyle(
                                     color: isDark
@@ -353,7 +354,7 @@ class _SAddCalloutState extends State<SAddCallout> {
                                 initialTime: TimeOfDay.now(),
                                 context: context,
                               );
-          
+
                               if (pickedTime != null) {
                                 String formattedPickTime =
                                     pickedTime.format(context).toString();
@@ -373,7 +374,7 @@ class _SAddCalloutState extends State<SAddCallout> {
                           ),
                         ),
                       ),
-          
+
                       //End Time
                       Container(
                         width: double.maxFinite,
@@ -397,7 +398,7 @@ class _SAddCalloutState extends State<SAddCallout> {
                                 size: 24.sp,
                                 color: isDark ? Colors.white : Colors.black,
                               ), //icon of text field
-          
+
                               labelText: "End Time",
                               labelStyle: TextStyle(
                                   color: isDark
@@ -416,7 +417,7 @@ class _SAddCalloutState extends State<SAddCallout> {
                               initialTime: TimeOfDay.now(),
                               context: context,
                             );
-          
+
                             if (pickedTime != null) {
                               String formattedPickTime =
                                   pickedTime.format(context).toString();
@@ -435,25 +436,25 @@ class _SAddCalloutState extends State<SAddCallout> {
                           },
                         ),
                       ),
-          
+
                       // Vertical Padding
                       SizedBox(
                         height: 25.h,
                       ),
-          
+
                       // Assigned Emp Txt
                       InterBold(
                         text: "Assigned Employee",
                         fontsize: 18.sp,
-                        letterSpacing: 0.5,
+                        letterSpacing: screenWidth * 0.0005,
                       ),
-          
+
                       // Vertical Padding
                       SizedBox(
                         height: 20.h,
                       ),
-          
-                      // Employee Card
+
+                      // Employee Card Builder
                       Expanded(
                         child: ListView.builder(
                           itemCount: selectedEmployees.length,
@@ -461,27 +462,11 @@ class _SAddCalloutState extends State<SAddCallout> {
                               isDark, index, selectedEmployees[index]),
                         ),
                       ),
-          
-                      // _AssignedEmp(isDark),
-                      // Tahmeed ??
-                      // Wrap(
-                      //   children: _selectedEmployees
-                      //       .map((e) => Padding(
-                      //             padding: const EdgeInsets.only(right: 8.0),
-                      //             child: Chip(
-                      //               label: Text(e),
-                      //             ),
-                      //           ))
-                      //       .toList(),
-                      // ),
-          
-                      // To push the button and the end of Users Screen
-                      // const Spacer(),
-          
+
+                      // Vertical Padding
+                      SizedBox(height: screenHeight * 0.010),
+
                       // Done Button
-                      SizedBox(
-                        height: 10,
-                      ),
                       SizedBox(
                           width: screenWidth,
                           height: 60.sp,
