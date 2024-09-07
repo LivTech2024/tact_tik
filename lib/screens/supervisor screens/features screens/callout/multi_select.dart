@@ -1,4 +1,7 @@
 import "package:flutter/material.dart";
+import "package:tact_tik/fonts/inter_light.dart";
+import "package:tact_tik/fonts/inter_medium.dart";
+import "package:tact_tik/utils/colors.dart";
 
 class MultiSelect extends StatefulWidget {
   final List<String> employees;
@@ -9,7 +12,7 @@ class MultiSelect extends StatefulWidget {
   State<MultiSelect> createState() => _MultiSelectState();
 }
 
-final List<String> selectedEmployees = [];
+List<String> selectedEmployees = [];
 
 class _MultiSelectState extends State<MultiSelect> {
   
@@ -35,14 +38,19 @@ class _MultiSelectState extends State<MultiSelect> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
+
     return AlertDialog(
-      title: const Text("Select Employees"),
+      scrollable: true,
+      title:InterMedium(text: "Select Employees", color: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,),
       content: SingleChildScrollView(
+        
         child: ListBody(
           children: widget.employees
               .map((item) => CheckboxListTile(
+                    activeColor: isDark? DarkColor.Primarycolor : LightColor.Primarycolor ,
                     value: selectedEmployees.contains(item),
-                    title: Text(item),
+                    title: InterLight(text: item,),
                     controlAffinity: ListTileControlAffinity.leading,
                     onChanged: (isChecked) => _itemChange(item, isChecked!),
                   ))
@@ -52,11 +60,11 @@ class _MultiSelectState extends State<MultiSelect> {
       actions: [
         TextButton(
           onPressed: _cancel,
-          child: const Text('Cancel'),
+          child: InterMedium(text: 'Cancel', color: isDark? DarkColor.color2: LightColor.color4,),
         ),
         ElevatedButton(
           onPressed: _submit,
-          child: const Text("Submit"),
+          child: InterMedium(text: 'Submit',color: isDark? DarkColor.Primarycolor: LightColor.Primarycolor),
         )
       ],
     );
