@@ -324,7 +324,8 @@ class _SAddCalloutState extends State<SAddCallout> {
                           children: [
                             Icon(
                               Icons.account_circle_outlined,
-                              color: Colors.white,
+                              size: 24.sp,
+                              color: const Color.fromARGB(255, 233, 233, 233),
                             ),
                             SizedBox(
                               width: 16.sp,
@@ -525,7 +526,7 @@ class _SAddCalloutState extends State<SAddCallout> {
                       InterBold(
                         text: "Assigned Employee",
                         fontsize: 18.sp,
-                        letterSpacing: 0.5,
+                        letterSpacing: screenWidth * 0.0005,
                       ),
 
                       // Vertical Padding
@@ -543,9 +544,8 @@ class _SAddCalloutState extends State<SAddCallout> {
                       ),
 
                       // Done Button
-                      SizedBox(
-                        height: 10,
-                      ),
+                      // Vertical Padding
+                      SizedBox(height: screenHeight * 0.010),
                       SizedBox(
                           width: screenWidth,
                           height: 60.sp,
