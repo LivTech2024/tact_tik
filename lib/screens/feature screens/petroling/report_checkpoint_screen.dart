@@ -93,20 +93,26 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
     if (pickedFile != null) {
       try {
         final originalFile = File(pickedFile.path);
+
         if (originalFile.existsSync()) {
-          // Add timestamp logic here:
-          final timestampedFile = await _addTimestampToImage(originalFile);
+          // Check if the timestamp option is enabled
+          bool status = await fireStoreService.useTimeStampOption(widget.empId);
 
-          // Option 1: Directly add the timestamped file to uploads
+          File processedFile;
+          if (status) {
+            // Add timestamp to image if status is true
+            processedFile = await _addTimestampToImage(originalFile);
+          } else {
+            // Directly use the original file if no timestamp is needed
+            processedFile = originalFile;
+          }
+
+          // Compress the file (either timestamped or original)
+          final compressedFile = await _compressImage(processedFile);
+
           setState(() {
-            uploads.add({'type': 'image', 'file': timestampedFile});
+            uploads.add({'type': 'image', 'file': compressedFile});
           });
-
-          // Option 2: Compress and then add the timestamped file (optional)
-          // final compressedFile = await _compressImage(timestampedFile);
-          // setState(() {
-          //   uploads.add({'type': 'image', 'file': compressedFile});
-          // });
         } else {
           print('File does not exist: ${originalFile.path}');
         }
@@ -183,24 +189,39 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
   Future<void> _addGallery() async {
     List<XFile>? pickedFiles = await ImagePicker()
         .pickMultiImage(imageQuality: Platform.isIOS ? 30 : 50);
-    if (pickedFiles != null) {
-      for (var pickedFile in pickedFiles) {
-        try {
-          File file = File(pickedFile.path);
-          if (file.existsSync()) {
-            // Add timestamp logic
-            final timestampedFile = await _addTimestampToImage(file);
 
-            // Add the timestamped file to uploads
+    if (pickedFiles != null) {
+      try {
+        // Check if the timestamp option is enabled
+        bool status = await fireStoreService.useTimeStampOption(widget.empId);
+
+        for (var pickedFile in pickedFiles) {
+          File file = File(pickedFile.path);
+
+          if (file.existsSync()) {
+            File processedFile;
+
+            if (status) {
+              // Add timestamp if the status is true
+              processedFile = await _addTimestampToImage(file);
+            } else {
+              // Use original file without adding a timestamp
+              processedFile = file;
+            }
+
+            // Compress the processed file (either timestamped or original)
+            final compressedFile = await _compressImage(processedFile);
+
+            // Add the compressed file to the uploads list
             setState(() {
-              uploads.add({'type': 'image', 'file': timestampedFile});
+              uploads.add({'type': 'image', 'file': compressedFile});
             });
           } else {
             print('File does not exist: ${file.path}');
           }
-        } catch (e) {
-          print('Error adding image: $e');
         }
+      } catch (e) {
+        print('Error adding image: $e');
       }
     } else {
       print('No images selected');
@@ -388,8 +409,11 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                       itemBuilder: (context, index) {
                         if (index == uploads.length) {
                           return GestureDetector(
-                            onTap: () {
+                            onTap: () async {
                               // _refresh();
+                              bool showGallery = await fireStoreService
+                                  .showGalleryOption(widget.empId);
+                              print("showGallery ${showGallery}");
                               showModalBottomSheet(
                                 context: context,
                                 builder: (context) => Column(
@@ -403,14 +427,15 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                                         Navigator.pop(context);
                                       },
                                     ),
-                                    ListTile(
-                                      leading: Icon(Icons.image),
-                                      title: Text('Add Image from Gallery'),
-                                      onTap: () {
-                                        _addGallery();
-                                        Navigator.pop(context);
-                                      },
-                                    ),
+                                    if (showGallery)
+                                      ListTile(
+                                        leading: Icon(Icons.image),
+                                        title: Text('Add Image from Gallery'),
+                                        onTap: () {
+                                          _addGallery();
+                                          Navigator.pop(context);
+                                        },
+                                      ),
                                   ],
                                 ),
                               );

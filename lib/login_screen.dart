@@ -158,7 +158,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           borderSide: BorderSide(color: Colors.red),
                         ),*/
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Theme.of(context).primaryColor),
+                          borderSide:
+                              BorderSide(color: Theme.of(context).primaryColor),
                         ),
                       ),
                       cursorColor: Theme.of(context).primaryColor,
@@ -215,7 +216,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         labelText: 'Password',
                         hintText: 'Enter your password',
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Theme.of(context).primaryColor),
+                          borderSide:
+                              BorderSide(color: Theme.of(context).primaryColor),
                         ),
                       ),
                     ),

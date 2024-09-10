@@ -104,18 +104,18 @@ class _GuardNotificationScreenState extends State<GuardNotificationScreen> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 SizedBox(height: 20.h),
-                TextButton(
-                  onPressed: () {
-                    // Implement Clear Notification functionality here
-                    print("Notification length ${notifications.length}");
-                  },
-                  child: InterMedium(
-                    text: 'Clear Notification',
-                    color: Theme.of(context).textTheme.bodyLarge?.color,
-                    fontsize: 14.sp,
-                  ),
-                ),
-                SizedBox(height: 20.h),
+                // TextButton(
+                //   onPressed: () {
+                //     // Implement Clear Notification functionality here
+                //     print("Notification length ${notifications.length}");
+                //   },
+                //   child: InterMedium(
+                //     text: 'Clear Notification',
+                //     color: Theme.of(context).textTheme.bodyLarge?.color,
+                //     fontsize: 14.sp,
+                //   ),
+                // ),
+                // SizedBox(height: 20.h),
                 ListView.builder(
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
@@ -131,6 +131,7 @@ class _GuardNotificationScreenState extends State<GuardNotificationScreen> {
                     onRefresh: () {
                       fetchNotifications();
                     },
+                    currentEmpid: widget.employeeId,
                   ),
                 ),
               ],
