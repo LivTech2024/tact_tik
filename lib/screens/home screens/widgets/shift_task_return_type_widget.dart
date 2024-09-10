@@ -598,7 +598,11 @@ class _ShiftTaskReturnTypeWidgetState extends State<ShiftTaskReturnTypeWidget> {
                           }).toList(),
                         ),
                         GestureDetector(
-                          onTap: () {
+                          onTap: () async {
+                            bool showGallery = await fireStoreService
+                                .showGalleryOption(widget.EmpID);
+
+                            print("showGallery ${showGallery}");
                             // _addImage();
                             showModalBottomSheet(
                               context: context,
@@ -613,14 +617,15 @@ class _ShiftTaskReturnTypeWidgetState extends State<ShiftTaskReturnTypeWidget> {
                                       Navigator.pop(context);
                                     },
                                   ),
-                                  ListTile(
-                                    leading: Icon(Icons.image),
-                                    title: Text('Add from Gallery'),
-                                    onTap: () {
-                                      Navigator.pop(context);
-                                      _addGallery();
-                                    },
-                                  ),
+                                  if (showGallery)
+                                    ListTile(
+                                      leading: Icon(Icons.image),
+                                      title: Text('Add from Gallery'),
+                                      onTap: () {
+                                        Navigator.pop(context);
+                                        _addGallery();
+                                      },
+                                    ),
                                 ],
                               ),
                             );

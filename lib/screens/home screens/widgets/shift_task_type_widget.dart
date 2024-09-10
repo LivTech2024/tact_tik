@@ -22,7 +22,6 @@ final today = DateUtils.dateOnly(DateTime.now());
 
 class ShiftTaskTypeWidget extends StatefulWidget {
   final Function refreshDataCallback;
-
   ShiftTaskTypeWidget({
     Key? key,
     required this.type,

@@ -5800,7 +5800,7 @@ class FireStoreService {
     try {
       // Reference the document in the 'Employee' collection using empid
       DocumentSnapshot docSnapshot = await FirebaseFirestore.instance
-          .collection('Employee')
+          .collection('Employees')
           .doc(empid)
           .get();
 
@@ -5809,8 +5809,8 @@ class FireStoreService {
         Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
 
         // Check if the field exists and return its value or false
-        return data.containsKey('EmployeeIsTimeStampForPatrolImagesEnabled')
-            ? data['EmployeeIsTimeStampForPatrolImagesEnabled'] as bool
+        return data.containsKey('EmployeeIsUploadFromGalleryEnabled')
+            ? data['EmployeeIsUploadFromGalleryEnabled'] as bool
             : false;
       } else {
         return false; // Return false if the document doesn't exist
@@ -5826,7 +5826,7 @@ class FireStoreService {
     try {
       // Reference the document in the 'Employee' collection using empid
       DocumentSnapshot docSnapshot = await FirebaseFirestore.instance
-          .collection('Employee')
+          .collection('Employees')
           .doc(empid)
           .get();
 
@@ -5835,8 +5835,8 @@ class FireStoreService {
         Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
 
         // Check if the field exists and return its value or false
-        return data.containsKey('EmployeeIsUploadFromGalleryEnabled')
-            ? data['EmployeeIsUploadFromGalleryEnabled'] as bool
+        return data.containsKey('EmployeeIsTimeStampForPatrolImagesEnabled')
+            ? data['EmployeeIsTimeStampForPatrolImagesEnabled'] as bool
             : false;
       } else {
         return false; // Return false if the document doesn't exist

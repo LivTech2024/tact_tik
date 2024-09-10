@@ -78,6 +78,7 @@ class _GuardAlertWidgetState extends State<GuardAlertWidget> {
     String time = offerData?.offerShiftTime ??
         exchangeData?.exchangeShiftTime ??
         'Unknown Time';
+
     return Container(
       constraints: BoxConstraints(minHeight: 150.h),
       margin: EdgeInsets.only(bottom: 10.h),
@@ -95,140 +96,137 @@ class _GuardAlertWidgetState extends State<GuardAlertWidget> {
           )
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: ExpansionTile(
+        tilePadding: EdgeInsets.zero,
+        title: InterSemibold(
+          text: '${prefix}  •  ${action}  •  ${_formatDate(widget.createdAt)}',
+          fontsize: Platform.isIOS ? 10.sp : 12.sp,
+        ),
         children: [
-          InterSemibold(
-            text:
-                '${prefix}  •  ${action}  •  ${_formatDate(widget.createdAt)}',
-            fontsize: Platform.isIOS ? 10.sp : 12.sp,
-          ),
-          SizedBox(height: Platform.isIOS ? 13.h : 10.h),
-          Row(
+          Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              InterMedium(
-                text: '$action: ',
-                fontsize: Platform.isIOS ? 14.sp : 16.sp,
-              ),
-              Flexible(
-                child: InterMedium(
-                  text: message,
-                  fontsize: Platform.isIOS ? 14.sp : 16.sp,
-                  maxLines: 2,
-                  letterSpacing: -.3,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: Platform.isIOS ? 26.sp : 20.sp),
-          Row(
-            children: [
-              _buildProfileImage(),
-              SizedBox(width: Platform.isIOS ? 8.w : 8.w),
-              Column(
+              Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  InterBold(
-                    text: exchangeData?.exchangeShiftRequestedName ??
-                        offerData?.offerShiftRequestedName ??
-                        'Employee Name', // Replace with dynamic name if available
-                    fontsize: Platform.isIOS ? 18.sp : 20.sp,
+                  InterMedium(
+                    text: '$action: ',
+                    fontsize: Platform.isIOS ? 14.sp : 16.sp,
                   ),
-                  SizedBox(height: 5.h),
-                  SizedBox(
-                    height: Platform.isIOS ? 20.h : 22.h,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        if (offerData != null) ...[
-                          Container(
-                            constraints:
-                                BoxConstraints(minWidth: 80.w, maxWidth: 140.w),
-                            child: IconTextWidget(
-                              icon: Icons.location_on,
-                              text: offerData.offerShiftLocation ??
-                                  'Unknown Location',
-                              space: 3.w,
-                              iconSize: Platform.isIOS ? 20.w : 24.w,
-                              Iconcolor: Colors.white,
-                            ),
-                          ),
-                          SizedBox(width: 10.w),
-                          VerticalDivider(width: 1),
-                          SizedBox(width: 10.w),
-                          InterMedium(
-                            text:
-                                '${offerData.offerShiftTime ?? 'Unknown Time'}',
-                            fontsize: Platform.isIOS ? 14.sp : 16.sp,
-                          ),
-                        ] else if (exchangeData != null) ...[
-                          Container(
-                            constraints:
-                                BoxConstraints(minWidth: 80.w, maxWidth: 140.w),
-                            child: IconTextWidget(
-                              icon: Icons.location_on,
-                              text: exchangeData.exchangeShiftLocation ??
-                                  'Unknown Location',
-                              space: 3.w,
-                              iconSize: Platform.isIOS ? 20.w : 24.w,
-                              Iconcolor: Colors.white,
-                            ),
-                          ),
-                          SizedBox(width: 10.w),
-                          VerticalDivider(width: 1),
-                          SizedBox(width: 10.w),
-                          InterMedium(
-                            text:
-                                '${exchangeData.exchangeShiftTime ?? 'Unknown Time'}',
-                            fontsize: Platform.isIOS ? 14.sp : 16.sp,
-                          ),
-                        ],
-                      ],
+                  Flexible(
+                    child: InterMedium(
+                      text: message,
+                      fontsize: Platform.isIOS ? 14.sp : 16.sp,
+                      maxLines: 2,
+                      letterSpacing: -.3,
                     ),
                   ),
                 ],
               ),
-            ],
-          ),
-          Visibility(
-            visible: true, // TODO Add condition of visibility
-            child: Column(
-              children: [
-                SizedBox(height: 20.h),
-                Button1(
-                  height: 41.h,
-                  borderRadius: 5.r,
-                  backgroundcolor: Theme.of(context).primaryColor,
-                  text: 'Accept',
-                  onPressed: widget.status != "started"
-                      ? () {
-                          showErrorToast(context, "Already accepted");
-                        }
-                      : () async {
-                          // var id = ShiftExchangeData
-                          await fireStoreService.UpdateExchangeNotiStatus(
-                              widget.notiId, "pending");
-                          if (widget.shiftExchangeData != null) {
-                            await fireStoreService.UpdateExchangeStatus(
-                                widget.shiftExchangeData!
-                                    .exchangeShiftRequestedId,
-                                "pending");
-                          }
-                          if (widget.shiftOfferData != null) {
-                            print("Working on ShiftOffer");
-                            // await fireStoreService.UpdateOfferStatus(
-                            //     widget.shiftOfferData!.offerShiftId, "pending");
-                          }
-                          print("Id ${widget.notiId}");
-                          showSuccessToast(context, "${widget.notiId}");
-                          showSuccessToast(context,
-                              "${widget.shiftExchangeData?.exchangeShiftRequestedId}");
-                          widget.onRefresh();
-                        },
+              SizedBox(height: Platform.isIOS ? 26.sp : 20.sp),
+              Row(
+                children: [
+                  _buildProfileImage(),
+                  SizedBox(width: Platform.isIOS ? 8.w : 8.w),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      InterBold(
+                        text: exchangeData?.exchangeShiftRequestedName ??
+                            offerData?.offerShiftRequestedName ??
+                            'Employee Name', // Replace with dynamic name if available
+                        fontsize: Platform.isIOS ? 18.sp : 20.sp,
+                      ),
+                      SizedBox(height: 5.h),
+                      SizedBox(
+                        height: Platform.isIOS ? 20.h : 22.h,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            if (offerData != null) ...[
+                              Container(
+                                constraints: BoxConstraints(
+                                    minWidth: 80.w, maxWidth: 140.w),
+                                child: IconTextWidget(
+                                  icon: Icons.location_on,
+                                  text: offerData.offerShiftLocation ??
+                                      'Unknown Location',
+                                  space: 3.w,
+                                  iconSize: Platform.isIOS ? 20.w : 24.w,
+                                  Iconcolor: Colors.white,
+                                ),
+                              ),
+                              SizedBox(width: 10.w),
+                              VerticalDivider(width: 1),
+                              SizedBox(width: 10.w),
+                              InterMedium(
+                                text:
+                                    '${offerData.offerShiftTime ?? 'Unknown Time'}',
+                                fontsize: Platform.isIOS ? 14.sp : 16.sp,
+                              ),
+                            ] else if (exchangeData != null) ...[
+                              Container(
+                                constraints: BoxConstraints(
+                                    minWidth: 80.w, maxWidth: 140.w),
+                                child: IconTextWidget(
+                                  icon: Icons.location_on,
+                                  text: exchangeData.exchangeShiftLocation ??
+                                      'Unknown Location',
+                                  space: 3.w,
+                                  iconSize: Platform.isIOS ? 20.w : 24.w,
+                                  Iconcolor: Colors.white,
+                                ),
+                              ),
+                              SizedBox(width: 10.w),
+                              VerticalDivider(width: 1),
+                              SizedBox(width: 10.w),
+                              InterMedium(
+                                text:
+                                    '${exchangeData.exchangeShiftTime ?? 'Unknown Time'}',
+                                fontsize: Platform.isIOS ? 14.sp : 16.sp,
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              Visibility(
+                visible: true, // TODO: Add condition of visibility
+                child: Column(
+                  children: [
+                    SizedBox(height: 20.h),
+                    Button1(
+                      height: 41.h,
+                      borderRadius: 5.r,
+                      backgroundcolor: Theme.of(context).primaryColor,
+                      text: 'Accept',
+                      onPressed: widget.status != "started"
+                          ? () {
+                              showErrorToast(context, "Already accepted");
+                            }
+                          : () async {
+                              await fireStoreService.UpdateExchangeNotiStatus(
+                                  widget.notiId, "pending");
+                              if (widget.shiftExchangeData != null) {
+                                await fireStoreService.UpdateExchangeStatus(
+                                    widget.shiftExchangeData!
+                                        .exchangeShiftRequestedId,
+                                    "pending");
+                              }
+                              if (widget.shiftOfferData != null) {
+                                // Handle shift offer logic here
+                              }
+                              showSuccessToast(context, "${widget.notiId}");
+                              widget.onRefresh();
+                            },
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ],
       ),
@@ -293,53 +291,7 @@ class _GuardAlertWidgetState extends State<GuardAlertWidget> {
                     text: "Message: ${widget.message}",
                     fontsize: Platform.isIOS ? 14.sp : 16.sp,
                     color: Colors.white,
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
-      case GuardAlertEnum.other:
-        return Container(
-          height: 100.h,
-          width: double.maxFinite,
-          margin: EdgeInsets.only(bottom: 10.h),
-          padding:
-              EdgeInsets.only(left: 24.w, top: 10.h, bottom: 10.h, right: 10.w),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5.r),
-            color: Theme.of(context).cardColor,
-            boxShadow: [
-              BoxShadow(
-                color: Theme.of(context).shadowColor,
-                blurRadius: 5,
-                spreadRadius: 2,
-                offset: Offset(0, 3),
-              )
-            ],
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Icon(
-                Icons.info,
-                size: 24.sp,
-                color: Colors.white,
-              ),
-              SizedBox(width: 20.w),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  InterSemibold(
-                    text: "Info",
-                    fontsize: Platform.isIOS ? 10.sp : 12.sp,
-                    color: Colors.white,
-                  ),
-                  InterRegular(
-                    text: "Message: ${widget.message}",
-                    fontsize: Platform.isIOS ? 14.sp : 16.sp,
-                    color: Colors.white,
+                    maxLines: 2,
                   ),
                 ],
               ),
@@ -347,7 +299,7 @@ class _GuardAlertWidgetState extends State<GuardAlertWidget> {
           ),
         );
       default:
-        return SizedBox.shrink(); // Return an empty widget if no matching type
+        return Container();
     }
   }
 }
