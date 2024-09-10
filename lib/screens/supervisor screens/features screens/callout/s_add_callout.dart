@@ -1,15 +1,28 @@
+import "dart:developer";
+
+import "package:animated_custom_dropdown/custom_dropdown.dart";
+import "package:bounce/bounce.dart";
+import "package:cloud_firestore/cloud_firestore.dart";
+import "package:dropdown_search/dropdown_search.dart";
 import "package:flutter/material.dart";
 import "package:flutter/widgets.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
+import "package:flutter_searchable_dropdown/flutter_searchable_dropdown.dart";
 import "package:flutter_svg/svg.dart";
 import "package:flutter_tags_x/flutter_tags_x.dart";
+import "package:flutter_typeahead/flutter_typeahead.dart";
 import "package:get/get.dart";
 import "package:google_fonts/google_fonts.dart";
 import "package:hive/hive.dart";
 import "package:intl/intl.dart";
+import "package:multi_select_flutter/multi_select_flutter.dart";
+import "package:searchfield/searchfield.dart";
+import "package:tact_tik/common/widgets/button1.dart";
 import "package:tact_tik/fonts/inter_bold.dart";
 import "package:tact_tik/fonts/inter_medium.dart";
-import "package:tact_tik/screens/supervisor%20screens/features%20screens/callout/multi_select.dart";
+import "package:tact_tik/fonts/inter_regular.dart";
+import "package:tact_tik/screens/home%20screens/widgets/home_screen_part1.dart";
+import "package:tact_tik/test_screen.dart";
 
 import "../../../../fonts/inter_light.dart";
 import "../../../../utils/colors.dart";
@@ -24,130 +37,156 @@ class SAddCallout extends StatefulWidget {
 class _SAddCalloutState extends State<SAddCallout> {
   TextEditingController calloutTimeInput = TextEditingController();
   TextEditingController endTimeInput = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
+  final FocusNode _focusNode = FocusNode(); // Focus node for TextField
+  bool _showSuggestions = false;
+  List<String> _selectedEmployees = [];
+  List<String> results = [];
+  List<String> foundEmp = [];
+  String? LocDropDownvalue; // Stores Drop Down Value
+  List<String> locations = [
+    'Select Location',
+    'Floor 1',
+    'Floor 2',
+    'Floor 3',
+    'Floor 4',
+    'Floor 5'
+  ]; // Location Names
+
+  final List<String> employees = [
+    'Vaibhav Sutar',
+    'Debayan',
+    'Yash Singh',
+    'Tahmeed Zamindar',
+    'Vishhal Narkar',
+  ];
+
+  Future<void> searchEmp(String query) async {
+    if (query.isEmpty) {
+      setState(() {
+        foundEmp.clear();
+      });
+      return;
+    }
+
+    if (query.isEmpty) {
+      results = employees;
+    } else {
+      results = employees
+          .where((employee) =>
+              employee.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+    }
+
+    // Query<Map<String, dynamic>> queryRef = FirebaseFirestore.instance
+    //     .collection('Employees')
+    //     .where('EmployeeCompanyId', isEqualTo: widget.CompanyId)
+    //     .where('EmployeeNameSearchIndex', arrayContains: query);
+
+    // if (selectedPosition!.isNotEmpty) {
+    //   queryRef = queryRef.where('EmployeeRole', isEqualTo: selectedPosition);
+    // }
+
+    // final result = await queryRef.get();
+    print(results);
+    setState(() {
+      foundEmp = results;
+    });
+  }
 
   //Assigned Employee Card
   _AssignedEmp(isDark, index, name) {
-  return Padding(
-    padding: EdgeInsets.only(bottom: 0.007.sh),
-    child: Container(
-        height: 70,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-          color: isDark ? DarkColor.AppBarcolor : LightColor.color9,
-        ),
-        child: Row(
-          children: [
-            Row(
-              children: [
-                SizedBox(
-                  width: 14,
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: isDark
-                          ? LightColor.color9
-                          : DarkColor.AppBarcolor, // Border color
-                      width: 1, // Border width
+    return Padding(
+      padding: EdgeInsets.only(bottom: 0.007.sh),
+      child: Container(
+          height: 70,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+            color: isDark ? DarkColor.AppBarcolor : LightColor.color9,
+          ),
+          child: Row(
+            children: [
+              Row(
+                children: [
+                  SizedBox(
+                    width: 14,
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: isDark
+                            ? LightColor.color9
+                            : DarkColor.AppBarcolor, // Border color
+                        width: 1, // Border width
+                      ),
+                    ),
+                    child: const CircleAvatar(
+                      backgroundImage: AssetImage('assets/images/default.png'),
                     ),
                   ),
-                  child: const CircleAvatar(
-                    backgroundImage: AssetImage('assets/images/default.png'),
+                  const SizedBox(
+                    width: 14,
                   ),
-                ),
-                const SizedBox(
-                  width: 14,
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    InterMedium(
-                      text: name,
-                      fontsize: 0.02.sh,
-                    )
-                  ],
-                ),
-                const SizedBox(
-                  width: 20,
-                )
-              ],
-            ),
-            const Spacer(),
-            Padding(
-              padding: const EdgeInsets.only(right: 8.0, top: 7),
-              child: Align(
-                  alignment: Alignment.topRight,
-                  child: IconButton(
-                      icon: Icon(Icons.close),
-                      onPressed: () {
-                        setState(() {
-                          selectedEmployees.remove(name);
-                        });
-                      },
-                      color: isDark ? Colors.white : Colors.black)),
-            ),
-          ],
-        )),
-  );
-}
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      InterMedium(
+                        text: name,
+                        fontsize: 0.02.sh,
+                      )
+                    ],
+                  ),
+                  const SizedBox(
+                    width: 20,
+                  )
+                ],
+              ),
+              const Spacer(),
+              Padding(
+                padding: const EdgeInsets.only(right: 8.0, top: 7),
+                child: Align(
+                    alignment: Alignment.topRight,
+                    child: IconButton(
+                        icon: Icon(Icons.close),
+                        onPressed: () {
+                          setState(() {
+                            _selectedEmployees.remove(name);
+                          });
+                        },
+                        color: isDark ? Colors.white : Colors.black)),
+              ),
+            ],
+          )),
+    );
+  }
 
   @override
   void initState() {
     calloutTimeInput.text = ""; //set the initial value of text field
-    endTimeInput.text = ""; //set the initial value of text field
+    endTimeInput.text = "";
+    _selectedEmployees = []; //set the initial value of text field
+    _focusNode.addListener(() {
+      if (!_focusNode.hasFocus) {
+        setState(() {
+          _showSuggestions = false;
+        });
+      }
+    });
     super.initState();
   }
 
-  List<String> _selectedEmployees = [];
-
-  void _showMultiSelect() async {
-    final List<String> employees = [
-      'Vaibhav Sutar',
-      'Debayan',
-      'Yash Singh',
-      'Tahmeed Zamindar',
-      'Vishhal Narkar',
-    ];
-
-    final List<String>? results = await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return MultiSelect(employees: employees);
-      },
-    );
-
-    if (results != null) {
-      setState(() {
-        _selectedEmployees = results;
-      });
-    }
-  }
-
-  // Stores Drop Down Value
-  String? dropDownvalue;
 
   @override
   Widget build(BuildContext context) {
     // Width of the User's Device
     double screenWidth = MediaQuery.sizeOf(context).width;
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
 
     // Calculating the Safe Area and Height of the User's Device
     var padding = MediaQuery.paddingOf(context);
     double screenHeight =
         MediaQuery.sizeOf(context).height - padding.top - padding.bottom;
-
-    // Location Names
-    List<String> locations = [
-      'Select Location',
-      'Floor 1',
-      'Floor 2',
-      'Floor 3',
-      'Floor 4',
-      'Floor 5'
-    ];
-
-    final bool isDark = Theme.of(context).brightness == Brightness.dark;
 
     return SafeArea(
       child: Scaffold(
@@ -162,8 +201,8 @@ class _SAddCalloutState extends State<SAddCallout> {
           leading: IconButton(
               onPressed: () {
                 setState(() {
-                  if(selectedEmployees.isNotEmpty) {
-                    selectedEmployees=[];
+                  if (_selectedEmployees.isNotEmpty) {
+                    _selectedEmployees = [];
                   }
                 });
                 Navigator.pop(context);
@@ -187,19 +226,20 @@ class _SAddCalloutState extends State<SAddCallout> {
                         fontsize: 16.sp,
                         color: isDark ? Colors.white : Colors.black,
                       ),
-          
+
                       // Vertical Padding
                       SizedBox(
                         height: 20.h,
                       ),
-          
+
                       //Select Location Card
                       Container(
                         width: double.maxFinite,
                         height: 64.sp,
                         decoration: BoxDecoration(
-                          color:
-                              isDark ? DarkColor.AppBarcolor : LightColor.color9,
+                          color: isDark
+                              ? DarkColor.AppBarcolor
+                              : LightColor.color9,
                           borderRadius: BorderRadius.all(Radius.circular(13)),
                         ),
                         child: Row(
@@ -221,7 +261,7 @@ class _SAddCalloutState extends State<SAddCallout> {
                                 fit: BoxFit.scaleDown,
                               ),
                             ),
-          
+
                             // Location DropDown
                             Expanded(
                               child: Padding(
@@ -229,7 +269,7 @@ class _SAddCalloutState extends State<SAddCallout> {
                                     EdgeInsets.only(right: screenWidth * 0.03),
                                 child: DropdownButton<String>(
                                   elevation: 2,
-                                  value: dropDownvalue,
+                                  value: LocDropDownvalue,
                                   borderRadius: BorderRadius.circular(8),
                                   hint: InterLight(
                                     text: "Select Location",
@@ -239,8 +279,8 @@ class _SAddCalloutState extends State<SAddCallout> {
                                     fontsize: screenHeight * 0.022,
                                   ),
                                   underline: Container(),
-                                  icon:
-                                      const Icon(Icons.arrow_drop_down_outlined),
+                                  icon: const Icon(
+                                      Icons.arrow_drop_down_outlined),
                                   style: TextStyle(
                                     color: isDark
                                         ? LightColor.color9
@@ -250,7 +290,7 @@ class _SAddCalloutState extends State<SAddCallout> {
                                   isExpanded: true,
                                   onChanged: (String? newValue) {
                                     setState(() {
-                                      dropDownvalue = newValue;
+                                      LocDropDownvalue = newValue;
                                     });
                                   },
                                   items: locations.map((String location) {
@@ -265,51 +305,89 @@ class _SAddCalloutState extends State<SAddCallout> {
                           ],
                         ),
                       ),
-          
+
                       // Vertical Padding
                       SizedBox(
                         height: 30.h,
                       ),
-          
-                      //Select Employee
-                      GestureDetector(
-                        onTap: () {
-                          print(selectedEmployees);
-                          _showMultiSelect();
-                        },
-                        // Container And Border
-                        child: Container(
-                          width: screenWidth,
-                          height: 64.sp,
-                          decoration: BoxDecoration(
-                              border: Border(
-                                  bottom: BorderSide(
-                                      color: isDark
-                                          ? LightColor.AppBarcolor
-                                          : DarkColor.AppBarcolor))),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                // If Margin Required Replace Widget with Container
-                                // margin: EdgeInsets.all(screenWidth * 0.03),
-                                // width: screenWidth * 0.11,
-                                height: screenWidth * 0.11,
-                                child: Icon(
-                                  Icons.account_circle_outlined,
-                                  color: isDark ? Colors.white : Colors.black,
+                      Container(
+                        decoration: BoxDecoration(
+                            // border: Border.all(color: Colors.white)
+                            border: Border(
+                                bottom: BorderSide(
+                                  width: 1.2,
+                                    color: isDark
+                                        ? Colors.white
+                                        : Colors.black))),
+                        height: 64.h,
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.account_circle_outlined,
+                              color: Colors.white,
+                            ),
+                            SizedBox(
+                              width: 16.sp,
+                            ),
+                            Expanded(
+                              child: TextField(
+                                onTapOutside: (event) {
+                                  FocusScope.of(context)
+                                      .requestFocus(new FocusNode());
+                                },
+                                controller: _searchController,
+                                onChanged: (query) {
+                                  searchEmp(query);
+                                },
+                                style: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.w300,
+                                  fontSize: 18.sp,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .color,
                                 ),
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                    borderSide: BorderSide.none,
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(10.r),
+                                    ),
+                                  ),
+                                  focusedBorder: InputBorder.none,
+                                  hintStyle: GoogleFonts.inter(
+                                    fontWeight: FontWeight.w300,
+                                    fontSize: 18.sp,
+                                    color: isDark ? Colors.white : Colors.black,
+                                  ),
+                                  hintText: 'Select Employee',
+                                  contentPadding: EdgeInsets.zero,
+                                ),
+                                cursorColor: Theme.of(context).primaryColor,
                               ),
-                              Padding(padding: EdgeInsets.only(left: 16)),
-                              const InterMedium(
-                                text: "Select Employee",
-                                fontsize: 16,
-                              )
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
-          
+                      ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: foundEmp.length,
+                        itemBuilder: (context, index) {
+                          final guard = foundEmp[index];
+                          return ListTile(
+                            title: InterLight(text: guard),
+                            onTap: () {
+                              setState(() {
+                                // _searchController.text = guard;
+                                _selectedEmployees.add(guard);
+                                _searchController.clear();
+                                foundEmp.clear();
+                              });
+                            },
+                          );
+                        },
+                      ),
+
                       //Callout Time
                       Container(
                         width: double.maxFinite,
@@ -319,7 +397,9 @@ class _SAddCalloutState extends State<SAddCallout> {
                                 bottom: BorderSide(
                                     color: isDark
                                         ? LightColor.AppBarcolor
-                                        : DarkColor.AppBarcolor))),
+                                        : DarkColor.AppBarcolor))
+                            // border: Border.all(color: Colors.white)
+                            ),
                         child: Center(
                           child: TextField(
                             style: TextStyle(
@@ -334,7 +414,7 @@ class _SAddCalloutState extends State<SAddCallout> {
                                   size: 24.sp,
                                   color: isDark ? Colors.white : Colors.black,
                                 ), //icon of text field
-          
+
                                 labelText: "Callout Time",
                                 labelStyle: TextStyle(
                                     color: isDark
@@ -353,7 +433,7 @@ class _SAddCalloutState extends State<SAddCallout> {
                                 initialTime: TimeOfDay.now(),
                                 context: context,
                               );
-          
+
                               if (pickedTime != null) {
                                 String formattedPickTime =
                                     pickedTime.format(context).toString();
@@ -373,7 +453,7 @@ class _SAddCalloutState extends State<SAddCallout> {
                           ),
                         ),
                       ),
-          
+
                       //End Time
                       Container(
                         width: double.maxFinite,
@@ -397,7 +477,7 @@ class _SAddCalloutState extends State<SAddCallout> {
                                 size: 24.sp,
                                 color: isDark ? Colors.white : Colors.black,
                               ), //icon of text field
-          
+
                               labelText: "End Time",
                               labelStyle: TextStyle(
                                   color: isDark
@@ -416,7 +496,7 @@ class _SAddCalloutState extends State<SAddCallout> {
                               initialTime: TimeOfDay.now(),
                               context: context,
                             );
-          
+
                             if (pickedTime != null) {
                               String formattedPickTime =
                                   pickedTime.format(context).toString();
@@ -435,49 +515,33 @@ class _SAddCalloutState extends State<SAddCallout> {
                           },
                         ),
                       ),
-          
+
                       // Vertical Padding
                       SizedBox(
                         height: 25.h,
                       ),
-          
+
                       // Assigned Emp Txt
                       InterBold(
                         text: "Assigned Employee",
                         fontsize: 18.sp,
                         letterSpacing: 0.5,
                       ),
-          
+
                       // Vertical Padding
                       SizedBox(
                         height: 20.h,
                       ),
-          
+
                       // Employee Card
                       Expanded(
                         child: ListView.builder(
-                          itemCount: selectedEmployees.length,
+                          itemCount: _selectedEmployees.length,
                           itemBuilder: (context, index) => _AssignedEmp(
-                              isDark, index, selectedEmployees[index]),
+                              isDark, index, _selectedEmployees[index]),
                         ),
                       ),
-          
-                      // _AssignedEmp(isDark),
-                      // Tahmeed ??
-                      // Wrap(
-                      //   children: _selectedEmployees
-                      //       .map((e) => Padding(
-                      //             padding: const EdgeInsets.only(right: 8.0),
-                      //             child: Chip(
-                      //               label: Text(e),
-                      //             ),
-                      //           ))
-                      //       .toList(),
-                      // ),
-          
-                      // To push the button and the end of Users Screen
-                      // const Spacer(),
-          
+
                       // Done Button
                       SizedBox(
                         height: 10,
@@ -485,24 +549,26 @@ class _SAddCalloutState extends State<SAddCallout> {
                       SizedBox(
                           width: screenWidth,
                           height: 60.sp,
-                          child: ElevatedButton(
-                              onPressed: () {
-                                print("Pressed On Done Button");
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: isDark
-                                    ? DarkColor.Primarycolor
-                                    : LightColor.Primarycolor,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(9),
+                          child: Bounce(
+                            child: ElevatedButton(
+                                onPressed: () {
+                                  print("Pressed On Done Button");
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: isDark
+                                      ? DarkColor.Primarycolor
+                                      : LightColor.Primarycolor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(9),
+                                  ),
                                 ),
-                              ),
-                              child: InterMedium(
-                                text: "Done",
-                                color: isDark ? Colors.black : Colors.white,
-                                fontsize: 18.sp,
-                                letterSpacing: 0.5,
-                              ))),
+                                child: InterMedium(
+                                  text: "Done",
+                                  color: isDark ? Colors.black : Colors.white,
+                                  fontsize: 18.sp,
+                                  letterSpacing: 0.5,
+                                )),
+                          )),
                     ],
                   )),
             ],
