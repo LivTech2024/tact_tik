@@ -5,8 +5,10 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart'; // Add this import for date formatting
 import 'package:tact_tik/common/widgets/customErrorToast.dart';
 import 'package:tact_tik/common/widgets/customToast.dart';
+import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
 import 'package:tact_tik/screens/home%20screens/guard_notification_screen.dart';
 import 'package:tact_tik/screens/new%20guard/personel_details.dart';
+import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
 import '../../fonts/inter_regular.dart';
 import '../../fonts/inter_bold.dart';
@@ -29,6 +31,7 @@ class GuardAlertWidget extends StatefulWidget {
     required this.notiId,
     required this.status,
     required this.onRefresh,
+    required this.currentEmpid,
   });
 
   final String message;
@@ -41,14 +44,14 @@ class GuardAlertWidget extends StatefulWidget {
   final ShiftOfferData? shiftOfferData;
   final ShiftExchangeData? shiftExchangeData;
   final VoidCallback onRefresh;
-
+  final String currentEmpid;
   @override
   State<GuardAlertWidget> createState() => _GuardAlertWidgetState();
 }
 
 class _GuardAlertWidgetState extends State<GuardAlertWidget> {
   GuardAlertEnum get _alertType => widget.type.toEnum();
-
+  FireStoreService fireStoreService = FireStoreService();
   String _formatDate(DateTime date) {
     final DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm:ss');
     return formatter.format(date);
@@ -80,7 +83,7 @@ class _GuardAlertWidgetState extends State<GuardAlertWidget> {
         'Unknown Time';
 
     return Container(
-      constraints: BoxConstraints(minHeight: 150.h),
+      constraints: BoxConstraints(minHeight: 100.h),
       margin: EdgeInsets.only(bottom: 10.h),
       padding:
           EdgeInsets.only(left: 24.w, top: 10.h, bottom: 10.h, right: 10.w),
@@ -203,25 +206,27 @@ class _GuardAlertWidgetState extends State<GuardAlertWidget> {
                       borderRadius: 5.r,
                       backgroundcolor: Theme.of(context).primaryColor,
                       text: 'Accept',
-                      onPressed: widget.status != "started"
-                          ? () {
-                              showErrorToast(context, "Already accepted");
-                            }
-                          : () async {
-                              await fireStoreService.UpdateExchangeNotiStatus(
-                                  widget.notiId, "pending");
-                              if (widget.shiftExchangeData != null) {
-                                await fireStoreService.UpdateExchangeStatus(
-                                    widget.shiftExchangeData!
-                                        .exchangeShiftRequestedId,
-                                    "pending");
-                              }
-                              if (widget.shiftOfferData != null) {
-                                // Handle shift offer logic here
-                              }
-                              showSuccessToast(context, "${widget.notiId}");
-                              widget.onRefresh();
-                            },
+                      onPressed: () async {
+                        await fireStoreService.UpdateExchangeNotiStatus(
+                            widget.notiId, "pending");
+                        if (widget.shiftExchangeData != null) {
+                          //Shift Exchange logic
+
+                          await fireStoreService.UpdateExchangeStatus(
+                              widget
+                                  .shiftExchangeData!.exchangeShiftRequestedId,
+                              "pending");
+                        }
+                        if (widget.shiftOfferData != null) {
+                          //TODO The cloud fucntion is creating another doc for notification need to handle this docs
+                          await fireStoreService.checkAndUpdateOfferStatus(
+                              widget.shiftOfferData!.offerShiftId,
+                              widget.currentEmpid);
+                          // Handle shift offer logic here
+                        }
+                        // showSuccessToast(context, "${widget.notiId}");
+                        widget.onRefresh();
+                      },
                     ),
                   ],
                 ),
@@ -283,7 +288,7 @@ class _GuardAlertWidgetState extends State<GuardAlertWidget> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   InterSemibold(
-                    text: "Shift status",
+                    text: "${widget.createdAt}",
                     fontsize: Platform.isIOS ? 10.sp : 12.sp,
                     color: Colors.white,
                   ),

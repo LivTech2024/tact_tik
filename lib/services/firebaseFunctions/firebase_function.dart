@@ -5743,20 +5743,55 @@ class FireStoreService {
     }
   }
 
-  Future<void> UpdateOfferStatus(String docId, String Status) async {
+  Future<bool> checkAndUpdateOfferStatus(String docId, String empid) async {
     try {
-      // Get a reference to the ShiftExchange collection
-      CollectionReference exchangeCollection =
+      // Reference to the ShiftOffer collection
+      CollectionReference offerCollection =
+          FirebaseFirestore.instance.collection('ShiftOffer');
+
+      // Fetch the document by docId
+      DocumentSnapshot docSnapshot = await offerCollection.doc(docId).get();
+
+      if (docSnapshot.exists) {
+        // Extract ShiftOfferData
+        var offerData = docSnapshot.data() as Map<String, dynamic>;
+
+        // Check if ShiftOfferAcceptedId is empty
+        String currentAcceptedId = offerData['ShiftOfferAcceptedId'] ?? '';
+        if (currentAcceptedId.isEmpty) {
+          // Call the function to update offer status
+          await UpdateOfferStatus(docId, "started", empid);
+          return true; // Update successful
+        } else {
+          print("ShiftOfferAcceptedId is already set: $currentAcceptedId");
+          return false; // Offer is already accepted
+        }
+      } else {
+        print("Shift offer document does not exist.");
+        return false; // Document does not exist
+      }
+    } catch (e) {
+      print("Error checking and updating shift offer: $e");
+      return false; // Error occurred
+    }
+  }
+
+  Future<void> UpdateOfferStatus(
+      String docId, String status, String empid) async {
+    try {
+      // Reference to the ShiftOffer collection
+      CollectionReference offerCollection =
           FirebaseFirestore.instance.collection('ShiftOffer');
 
       // Update the document with the provided docId
-      await exchangeCollection.doc(docId).update({
-        "ShiftOfferStatus": Status, // Update status to "started"
+      await offerCollection.doc(docId).update({
+        "ShiftOfferStatus": status, // Update status to "started"
+        "ShiftOfferAcceptedId": empid // Add empid to ShiftOfferAcceptedId
       });
 
-      print("Shift exchange status updated successfully!");
+      print("Shift offer status and accepted ID updated successfully!");
     } catch (e) {
-      print("Error updating shift exchange status: $e");
+      print("Error updating shift offer status: $e");
     }
   }
 
