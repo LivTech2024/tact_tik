@@ -25,7 +25,6 @@ import "package:tact_tik/screens/home%20screens/calendar%20screen/utills/extensi
 import "package:tact_tik/screens/home%20screens/widgets/home_screen_part1.dart";
 import "package:tact_tik/screens/supervisor%20screens/home%20screens/widgets/set_details_widget.dart";
 import "package:tact_tik/test_screen.dart";
-
 import "../../../../fonts/inter_light.dart";
 import "../../../../utils/colors.dart";
 
@@ -192,17 +191,31 @@ class _SAddCalloutState extends State<SAddCallout> {
       ];
 
       // Attempt to add the callout data to Firestore
-      await FirebaseFirestore.instance.collection('Callouts').add({
-        'CalloutId': calloutRef.id,
+
+      // await FirebaseFirestore.instance.collection('Callouts').add({
+      //   'CalloutId': calloutRef.id,
+      //   'CalloutLocation': calloutLocation,
+      //   'CalloutLocationId': calloutLocationId,
+      //   'CalloutLocationName': calloutLocationName,
+      //   'CalloutLocationAddress': calloutLocationAddress,
+      //   'CalloutDateTime': calloutDateTimestamp,
+      //   'CalloutAssignedEmpsId':
+      //       assignedEmpsMap, // Store the employee IDs as a map
+      //   'CalloutStatus':
+      //       calloutStatusList, // Store the callout status as an array of maps
+      //   'CalloutCreatedAt': DateTime.now(),
+      //   'CalloutModifiedAt': DateTime.now(),
+      // });
+
+      await calloutRef.set({
+        'CalloutId': calloutId, // Store the same calloutId
         'CalloutLocation': calloutLocation,
         'CalloutLocationId': calloutLocationId,
         'CalloutLocationName': calloutLocationName,
         'CalloutLocationAddress': calloutLocationAddress,
         'CalloutDateTime': calloutDateTimestamp,
-        'CalloutAssignedEmpsId':
-            assignedEmpsMap, // Store the employee IDs as a map
-        'CalloutStatus':
-            calloutStatusList, // Store the callout status as an array of maps
+        'CalloutAssignedEmpsId': assignedEmpsMap,
+        'CalloutStatus': calloutStatusList,
         'CalloutCreatedAt': DateTime.now(),
         'CalloutModifiedAt': DateTime.now(),
       });
@@ -215,44 +228,75 @@ class _SAddCalloutState extends State<SAddCallout> {
   }
 
   showDatePicker() async {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
     dateTime = await showOmniDateTimePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(1600).subtract(const Duration(days: 3652)),
-      lastDate: DateTime.now().add(
-        const Duration(days: 3652),
-      ),
-      is24HourMode: false,
-      isShowSeconds: false,
-      minutesInterval: 1,
-      secondsInterval: 1,
-      borderRadius: const BorderRadius.all(Radius.circular(16)),
-      constraints: const BoxConstraints(
-        maxWidth: 350,
-        maxHeight: 650,
-      ),
-      transitionBuilder: (context, anim1, anim2, child) {
-        return FadeTransition(
-          opacity: anim1.drive(
-            Tween(
-              begin: 0,
-              end: 1,
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(1600).subtract(const Duration(days: 3652)),
+        lastDate: DateTime.now().add(
+          const Duration(days: 3652),
+        ),
+        is24HourMode: false,
+        isShowSeconds: false,
+        minutesInterval: 1,
+        secondsInterval: 1,
+        borderRadius: const BorderRadius.all(Radius.circular(16)),
+        constraints: const BoxConstraints(
+          maxWidth: 350,
+          maxHeight: 650,
+        ),
+        transitionBuilder: (context, anim1, anim2, child) {
+          return FadeTransition(
+            opacity: anim1.drive(
+              Tween(
+                begin: 0,
+                end: 1,
+              ),
             ),
-          ),
-          child: child,
-        );
-      },
-      transitionDuration: const Duration(milliseconds: 200),
-      barrierDismissible: true,
-      selectableDayPredicate: (dateTime) {
-        // Disable 25th Feb 2023
-        if (dateTime == DateTime(2023, 2, 25)) {
-          return false;
-        } else {
-          return true;
-        }
-      },
-    );
+            child: child,
+          );
+        },
+        transitionDuration: const Duration(milliseconds: 200),
+        barrierDismissible: true,
+        selectableDayPredicate: (dateTime) {
+          // Disable 25th Feb 2023
+          if (dateTime == DateTime(2023, 2, 25)) {
+            return false;
+          } else {
+            return true;
+          }
+        },
+        theme: ThemeData(
+            // canvasColor: Colors.black,
+            // // cardColor: Colors.amber,
+            // // dialogBackgroundColor: Colors.black, //Background Card Color
+            // primaryColorDark: DarkColor.Primarycolor,
+            // focusColor: DarkColor.Primarycolor,
+            // highlightColor: Colors.blue, //On hover or long press
+            // hintColor: DarkColor.Primarycolor,
+            // // hoverColor: Colors.blue,
+            // indicatorColor:DarkColor.Primarycolor,
+            // shadowColor: Colors.blueAccent
+
+            colorScheme: ColorScheme(
+          brightness: isDark ? Brightness.dark : Brightness.light,
+          primary: isDark
+              ? DarkColor.Primarycolor
+              : LightColor.Primarycolor, //Selection and Button
+          onPrimary: isDark
+              ? Colors.black
+              : Colors.white, //Text Color of Selected date
+          secondary: Color.fromARGB(0, 255, 255, 255),
+          onSecondary: Color.fromARGB(0, 255, 255, 255),
+          error: Colors.red,
+          onError: Colors.redAccent,
+          surface: isDark
+              ? DarkColor.AppBarcolor
+              : LightColor.AppBarcolor, //Card Background
+          onSurface:
+              isDark ? Colors.white : Colors.black, //Text color of all date
+        ) //Text colors
+            ));
   }
 
   //Assigned Employee Card
@@ -479,6 +523,7 @@ class _SAddCalloutState extends State<SAddCallout> {
                       SizedBox(
                         height: 30.h,
                       ),
+                      //Select Employee
                       Container(
                         decoration: BoxDecoration(
                             // border: Border.all(color: Colors.white)
@@ -493,7 +538,7 @@ class _SAddCalloutState extends State<SAddCallout> {
                             Icon(
                               Icons.account_circle_outlined,
                               size: 24.sp,
-                              color: const Color.fromARGB(255, 233, 233, 233),
+                              color: isDark ? Colors.white : Colors.black,
                             ),
                             SizedBox(
                               width: 16.sp,
@@ -525,7 +570,7 @@ class _SAddCalloutState extends State<SAddCallout> {
                                   ),
                                   focusedBorder: InputBorder.none,
                                   hintStyle: GoogleFonts.inter(
-                                    fontWeight: FontWeight.w300,
+                                    fontWeight: FontWeight.w400,
                                     fontSize: 18.sp,
                                     color: isDark ? Colors.white : Colors.black,
                                   ),
@@ -599,6 +644,8 @@ class _SAddCalloutState extends State<SAddCallout> {
 
                                 labelText: "Callout Time",
                                 labelStyle: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 18.sp,
                                     color: isDark
                                         ? Colors.white
                                         : Colors.black), //label text of field
