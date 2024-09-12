@@ -351,23 +351,37 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
   }
 
   Future<void> _addVideoFromGallery() async {
-    XFile? pickedFile =
-        await ImagePicker().pickVideo(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      try {
+    try {
+      // Pick a video from the gallery
+      XFile? pickedFile =
+          await ImagePicker().pickVideo(source: ImageSource.gallery);
+
+      // Check if a file was picked
+      if (pickedFile != null) {
+        print('Video picked: ${pickedFile.path}');
+
+        // Create a File object from the picked file
         File file = File(pickedFile.path);
+
+        // Check if the file exists
         if (file.existsSync()) {
+          print('File exists: ${file.path}');
+
+          // Add the video to the list and update the state
           setState(() {
             videouploads.add({'type': 'video', 'file': file});
+            print(
+                'Video added to videouploads list. Total videos: ${videouploads.length}');
           });
         } else {
           print('File does not exist: ${file.path}');
         }
-      } catch (e) {
-        print('Error adding video: $e');
+      } else {
+        print('No video selected');
       }
-    } else {
-      print('No video selected');
+    } catch (e) {
+      // Print any error that occurs
+      print('Error adding video: $e');
     }
   }
 
@@ -409,6 +423,12 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
   void _deleteItem(int index) {
     setState(() {
       uploads.removeAt(index);
+    });
+  }
+
+  void _handleDelete(int index) {
+    setState(() {
+      videouploads.removeAt(index); // Remove the video from the list
     });
   }
 
@@ -1018,7 +1038,18 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                     ),
                     SizedBox(height: 10.h),
                     if (videouploads.isNotEmpty)
-                      VideoGrid(displayVideo: videouploads),
+                      SizedBox(
+                        height: 120.h,
+                        // Set a suitable height for the grid
+                        child: VideoGrid(
+                          displayVideo: videouploads,
+                          onDelete: (int) {
+                            print("Delete CLicked");
+                            _handleDelete(int);
+                          },
+                        ),
+                      ),
+
                     if (DisplayIMage.isNotEmpty)
                       GridView.builder(
                         shrinkWrap: true,
@@ -1040,8 +1071,11 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                           );
                         },
                       ),
-                    if (DisplayVideo.isNotEmpty)
-                      VideoGrid(displayVideo: DisplayVideo),
+                    // if (DisplayVideo.isNotEmpty)
+                    //   VideoGrid(
+                    //     displayVideo: DisplayVideo,
+                    //     onDelete: (int) {},
+                    //   ),
                     // VideoGrid.builder(
                     //   shrinkWrap: true,
                     //   physics: const NeverScrollableScrollPhysics(),
