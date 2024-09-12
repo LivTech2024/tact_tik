@@ -485,7 +485,6 @@ class _SHomeScreenState extends State<SHomeScreen> {
       ['assets/images/visitors.png', 'Visitors'],
       ['assets/images/assets.png', 'Assets'],
       ['assets/images/keys.png', 'Key'],
-      ['assets/images/callout_icon.png', 'Callout'],
     ];
 
     int _selectedIndex = 0; // Index of the selected screen

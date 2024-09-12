@@ -590,7 +590,7 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
         .where('EmployeeCompanyId', isEqualTo: widget.CompanyId)
         .where('EmployeeNameSearchIndex', arrayContains: query);
 
-    if (selectedPosition!.isNotEmpty) {
+    if (selectedPosition != null && selectedPosition!.isNotEmpty) {
       queryRef = queryRef.where('EmployeeRole', isEqualTo: selectedPosition);
     }
 

@@ -1,5 +1,4 @@
 import "dart:developer";
-
 import "package:animated_custom_dropdown/custom_dropdown.dart";
 import "package:bounce/bounce.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
@@ -16,14 +15,16 @@ import "package:google_fonts/google_fonts.dart";
 import "package:hive/hive.dart";
 import "package:intl/intl.dart";
 import "package:multi_select_flutter/multi_select_flutter.dart";
+import "package:omni_datetime_picker/omni_datetime_picker.dart";
 import "package:searchfield/searchfield.dart";
 import "package:tact_tik/common/widgets/button1.dart";
 import "package:tact_tik/fonts/inter_bold.dart";
 import "package:tact_tik/fonts/inter_medium.dart";
 import "package:tact_tik/fonts/inter_regular.dart";
+import "package:tact_tik/screens/home%20screens/calendar%20screen/utills/extensions.dart";
 import "package:tact_tik/screens/home%20screens/widgets/home_screen_part1.dart";
+import "package:tact_tik/screens/supervisor%20screens/home%20screens/widgets/set_details_widget.dart";
 import "package:tact_tik/test_screen.dart";
-
 import "../../../../fonts/inter_light.dart";
 import "../../../../utils/colors.dart";
 
@@ -40,10 +41,27 @@ class _SAddCalloutState extends State<SAddCallout> {
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _focusNode = FocusNode(); // Focus node for TextField
   bool _showSuggestions = false;
-  List<String> _selectedEmployees = [];
+  List _selectedEmployees = [];
+  // List _selectedEmployeesDetails = [];
+  List selectedEmployeeIds = [];
   List<String> results = [];
-  List<String> foundEmp = [];
-  String? LocDropDownvalue; // Stores Drop Down Value
+  List<Map<String, dynamic>> foundEmp = [];
+  String? LocDropDownvalue;
+
+  List<String> dbLocation = [];
+  String selectedLocation = '';
+  String? selectedEmployeeID = '';
+  String? selectedEmployeeName = '';
+
+  late final Timestamp endTimeTimeStamp;
+  Timestamp? calloutDateTimestamp;
+  DateTime? dateTime;
+
+  late GeoPoint calloutLocation;
+  late String calloutLocationId;
+  late String calloutLocationName;
+  late String calloutLocationAddress;
+
   List<String> locations = [
     'Select Location',
     'Floor 1',
@@ -78,24 +96,211 @@ class _SAddCalloutState extends State<SAddCallout> {
           .toList();
     }
 
-    // Query<Map<String, dynamic>> queryRef = FirebaseFirestore.instance
-    //     .collection('Employees')
-    //     .where('EmployeeCompanyId', isEqualTo: widget.CompanyId)
-    //     .where('EmployeeNameSearchIndex', arrayContains: query);
+    Query<Map<String, dynamic>> queryRef = FirebaseFirestore.instance
+        .collection('Employees')
+        .where('EmployeeNameSearchIndex', arrayContains: query);
 
     // if (selectedPosition!.isNotEmpty) {
     //   queryRef = queryRef.where('EmployeeRole', isEqualTo: selectedPosition);
     // }
 
-    // final result = await queryRef.get();
-    print(results);
-    setState(() {
-      foundEmp = results;
-    });
+    try {
+      final result = await queryRef.get();
+      setState(() {
+        foundEmp = result.docs.map((doc) => doc.data()).toList();
+      });
+      print(foundEmp); // Check if results are fetched
+    } catch (e) {
+      print('Error searching employees: $e');
+    }
+  }
+
+  Future<List<String>> getAllLocation() async {
+    try {
+      final QuerySnapshot<Map<String, dynamic>> snapshot =
+          await FirebaseFirestore.instance.collection('Locations').get();
+
+      final List<String> location = snapshot.docs
+          .map((doc) => doc.data()['LocationName'] as String)
+          .toSet()
+          .toList();
+
+      setState(() {
+        dbLocation = location;
+      });
+      return dbLocation;
+    } catch (e) {
+      print("Error fetching report titles: $e");
+      return []; // Return empty list in case of error
+    }
+  }
+
+  Future<QuerySnapshot<Object?>> getLocationDetail() async {
+    try {
+      final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('Locations')
+          .where('LocationName', isEqualTo: LocDropDownvalue)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        // Loop through the documents and extract LocationName and LocationId
+        for (var doc in querySnapshot.docs) {
+          var data = doc.data() as Map<String, dynamic>;
+          calloutLocationName = data['LocationName'];
+          calloutLocationId = data['LocationId'];
+          calloutLocation = data['LocationCoordinates'];
+          calloutLocationAddress = data['LocationAddress'];
+
+          print(
+              "$calloutLocationName, $calloutLocationId, $calloutLocation, $calloutLocationAddress ");
+        }
+
+        return querySnapshot;
+      } else {
+        throw Exception('No document found with the specified location name.');
+      }
+    } catch (e) {
+      print('Error getting location: $e');
+      rethrow; // Rethrow the exception to handle it outside this function
+    }
+  }
+
+  Future<void> addCallout() async {
+    try {
+      // Generate a new document reference with a unique ID
+      DocumentReference calloutRef =
+          FirebaseFirestore.instance.collection('Callouts').doc();
+      String calloutId = calloutRef.id;
+
+      // Convert the selectedEmployeeIds list to a map {0: id0, 1: id1, ...}
+      Map<String, String> assignedEmpsMap = {
+        for (int i = 0; i < selectedEmployeeIds.length; i++)
+          '$i': selectedEmployeeIds[i]
+      };
+
+      // Create the CalloutStatus array of maps, repeating for each employee
+      List<Map<String, dynamic>> calloutStatusList = [
+        for (int i = 0; i < selectedEmployeeIds.length; i++)
+          {
+            'Status': '',
+            'StatusEmpId': '',
+            'StatusEmpName': '',
+            'StatusStartedTime': '',
+            'StatusEndedTime': '',
+          }
+      ];
+
+      // Attempt to add the callout data to Firestore
+
+      // await FirebaseFirestore.instance.collection('Callouts').add({
+      //   'CalloutId': calloutRef.id,
+      //   'CalloutLocation': calloutLocation,
+      //   'CalloutLocationId': calloutLocationId,
+      //   'CalloutLocationName': calloutLocationName,
+      //   'CalloutLocationAddress': calloutLocationAddress,
+      //   'CalloutDateTime': calloutDateTimestamp,
+      //   'CalloutAssignedEmpsId':
+      //       assignedEmpsMap, // Store the employee IDs as a map
+      //   'CalloutStatus':
+      //       calloutStatusList, // Store the callout status as an array of maps
+      //   'CalloutCreatedAt': DateTime.now(),
+      //   'CalloutModifiedAt': DateTime.now(),
+      // });
+
+      await calloutRef.set({
+        'CalloutId': calloutId, // Store the same calloutId
+        'CalloutLocation': calloutLocation,
+        'CalloutLocationId': calloutLocationId,
+        'CalloutLocationName': calloutLocationName,
+        'CalloutLocationAddress': calloutLocationAddress,
+        'CalloutDateTime': calloutDateTimestamp,
+        'CalloutAssignedEmpsId': assignedEmpsMap,
+        'CalloutStatus': calloutStatusList,
+        'CalloutCreatedAt': DateTime.now(),
+        'CalloutModifiedAt': DateTime.now(),
+      });
+
+      print('Callout added successfully with ID: $calloutId');
+    } catch (e) {
+      // Handle the error by printing it or taking other actions
+      print('Error adding callout: $e');
+    }
+  }
+
+  showDatePicker() async {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
+    dateTime = await showOmniDateTimePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(1600).subtract(const Duration(days: 3652)),
+        lastDate: DateTime.now().add(
+          const Duration(days: 3652),
+        ),
+        is24HourMode: false,
+        isShowSeconds: false,
+        minutesInterval: 1,
+        secondsInterval: 1,
+        borderRadius: const BorderRadius.all(Radius.circular(16)),
+        constraints: const BoxConstraints(
+          maxWidth: 350,
+          maxHeight: 650,
+        ),
+        transitionBuilder: (context, anim1, anim2, child) {
+          return FadeTransition(
+            opacity: anim1.drive(
+              Tween(
+                begin: 0,
+                end: 1,
+              ),
+            ),
+            child: child,
+          );
+        },
+        transitionDuration: const Duration(milliseconds: 200),
+        barrierDismissible: true,
+        selectableDayPredicate: (dateTime) {
+          // Disable 25th Feb 2023
+          if (dateTime == DateTime(2023, 2, 25)) {
+            return false;
+          } else {
+            return true;
+          }
+        },
+        theme: ThemeData(
+            // canvasColor: Colors.black,
+            // // cardColor: Colors.amber,
+            // // dialogBackgroundColor: Colors.black, //Background Card Color
+            // primaryColorDark: DarkColor.Primarycolor,
+            // focusColor: DarkColor.Primarycolor,
+            // highlightColor: Colors.blue, //On hover or long press
+            // hintColor: DarkColor.Primarycolor,
+            // // hoverColor: Colors.blue,
+            // indicatorColor:DarkColor.Primarycolor,
+            // shadowColor: Colors.blueAccent
+
+            colorScheme: ColorScheme(
+          brightness: isDark ? Brightness.dark : Brightness.light,
+          primary: isDark
+              ? DarkColor.Primarycolor
+              : LightColor.Primarycolor, //Selection and Button
+          onPrimary: isDark
+              ? Colors.black
+              : Colors.white, //Text Color of Selected date
+          secondary: Color.fromARGB(0, 255, 255, 255),
+          onSecondary: Color.fromARGB(0, 255, 255, 255),
+          error: Colors.red,
+          onError: Colors.redAccent,
+          surface: isDark
+              ? DarkColor.AppBarcolor
+              : LightColor.AppBarcolor, //Card Background
+          onSurface:
+              isDark ? Colors.white : Colors.black, //Text color of all date
+        ) //Text colors
+            ));
   }
 
   //Assigned Employee Card
-  _AssignedEmp(isDark, index, name) {
+  _AssignedEmp(isDark, index, name, employeeId) {
     return Padding(
       padding: EdgeInsets.only(bottom: 0.007.sh),
       child: Container(
@@ -132,7 +337,7 @@ class _SAddCalloutState extends State<SAddCallout> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       InterMedium(
-                        text: name,
+                        text: name.toString(),
                         fontsize: 0.02.sh,
                       )
                     ],
@@ -152,7 +357,12 @@ class _SAddCalloutState extends State<SAddCallout> {
                         onPressed: () {
                           setState(() {
                             _selectedEmployees.remove(name);
+                            selectedEmployeeIds.remove(employeeId);
+                            // _selectedEmployeesDetails.remove(name);
+                            // _selectedEmployeesDetails.remove(employeeId);
                           });
+                          print(selectedEmployeeIds);
+                          // print(_selectedEmployeesDetails);
                         },
                         color: isDark ? Colors.white : Colors.black)),
               ),
@@ -166,6 +376,9 @@ class _SAddCalloutState extends State<SAddCallout> {
     calloutTimeInput.text = ""; //set the initial value of text field
     endTimeInput.text = "";
     _selectedEmployees = []; //set the initial value of text field
+    // _selectedEmployeesDetails = [];
+    selectedEmployeeIds = [];
+    getAllLocation();
     _focusNode.addListener(() {
       if (!_focusNode.hasFocus) {
         setState(() {
@@ -175,7 +388,6 @@ class _SAddCalloutState extends State<SAddCallout> {
     });
     super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -262,7 +474,7 @@ class _SAddCalloutState extends State<SAddCallout> {
                               ),
                             ),
 
-                            // Location DropDown
+                            //Location DropDown
                             Expanded(
                               child: Padding(
                                 padding:
@@ -288,17 +500,18 @@ class _SAddCalloutState extends State<SAddCallout> {
                                     fontSize: screenHeight * 0.022,
                                   ),
                                   isExpanded: true,
+                                  items: dbLocation.map((selectedLocation) {
+                                    return DropdownMenuItem<String>(
+                                      value: selectedLocation,
+                                      child: Text(selectedLocation),
+                                    );
+                                  }).toList(),
                                   onChanged: (String? newValue) {
                                     setState(() {
                                       LocDropDownvalue = newValue;
+                                      getLocationDetail();
                                     });
                                   },
-                                  items: locations.map((String location) {
-                                    return DropdownMenuItem<String>(
-                                      value: location,
-                                      child: Text(location),
-                                    );
-                                  }).toList(),
                                 ),
                               ),
                             )
@@ -310,22 +523,22 @@ class _SAddCalloutState extends State<SAddCallout> {
                       SizedBox(
                         height: 30.h,
                       ),
+                      //Select Employee
                       Container(
                         decoration: BoxDecoration(
                             // border: Border.all(color: Colors.white)
                             border: Border(
                                 bottom: BorderSide(
-                                  width: 1.2,
-                                    color: isDark
-                                        ? Colors.white
-                                        : Colors.black))),
+                                    width: 1.2,
+                                    color:
+                                        isDark ? Colors.white : Colors.black))),
                         height: 64.h,
                         child: Row(
                           children: [
                             Icon(
                               Icons.account_circle_outlined,
                               size: 24.sp,
-                              color: const Color.fromARGB(255, 233, 233, 233),
+                              color: isDark ? Colors.white : Colors.black,
                             ),
                             SizedBox(
                               width: 16.sp,
@@ -357,7 +570,7 @@ class _SAddCalloutState extends State<SAddCallout> {
                                   ),
                                   focusedBorder: InputBorder.none,
                                   hintStyle: GoogleFonts.inter(
-                                    fontWeight: FontWeight.w300,
+                                    fontWeight: FontWeight.w400,
                                     fontSize: 18.sp,
                                     color: isDark ? Colors.white : Colors.black,
                                   ),
@@ -374,13 +587,26 @@ class _SAddCalloutState extends State<SAddCallout> {
                         shrinkWrap: true,
                         itemCount: foundEmp.length,
                         itemBuilder: (context, index) {
-                          final guard = foundEmp[index];
+                          final Emp = foundEmp[index];
                           return ListTile(
-                            title: InterLight(text: guard),
+                            title: InterLight(text: Emp['EmployeeName']),
                             onTap: () {
                               setState(() {
                                 // _searchController.text = guard;
-                                _selectedEmployees.add(guard);
+                                _selectedEmployees.add(Emp['EmployeeName']);
+                                selectedEmployeeID = Emp['EmployeeId'];
+                                selectedEmployeeName = Emp['EmployeeName'];
+                                print(_selectedEmployees);
+
+                                // _selectedEmployeesDetails.add({
+                                //   'CalloutAssignedEmpsId': selectedEmployeeID,
+                                //   'SelectedEmployeeName': selectedEmployeeName,
+                                // });
+                                selectedEmployeeIds.add(selectedEmployeeID);
+                                print("Selected Emp IDs: $selectedEmployeeIds");
+                                // print(
+                                //     "Selected Emp $_selectedEmployeesDetails");
+
                                 _searchController.clear();
                                 foundEmp.clear();
                               });
@@ -418,6 +644,8 @@ class _SAddCalloutState extends State<SAddCallout> {
 
                                 labelText: "Callout Time",
                                 labelStyle: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 18.sp,
                                     color: isDark
                                         ? Colors.white
                                         : Colors.black), //label text of field
@@ -429,91 +657,29 @@ class _SAddCalloutState extends State<SAddCallout> {
                                         BorderSide(color: Colors.transparent))),
                             readOnly:
                                 true, //set it true, so that user will not able to edit text
-                            onTap: () async {
-                              TimeOfDay? pickedTime = await showTimePicker(
-                                initialTime: TimeOfDay.now(),
-                                context: context,
-                              );
 
-                              if (pickedTime != null) {
-                                String formattedPickTime =
-                                    pickedTime.format(context).toString();
-                                print(formattedPickTime);
+                            onTap: () async {
+                              await showDatePicker();
+                              // print(dateTime);
+                              if (dateTime != null) {
+                                calloutDateTimestamp =
+                                    Timestamp.fromDate(dateTime!);
+                                // Convert DateTime to Timestamp (Firestore)
+                                String formattedDateTime =
+                                    "${dateTime!.year}-${dateTime!.month.toString().padLeft(2, '0')}-${dateTime!.day.toString().padLeft(2, '0')} - "
+                                    "${dateTime!.hour.toString().padLeft(2, '0')}:${dateTime!.minute.toString().padLeft(2, '0')}";
+
                                 setState(() {
-                                  calloutTimeInput.text =
-                                      formattedPickTime; //set the value of text field.
+                                  calloutTimeInput.text = formattedDateTime;
                                 });
-                              } else {
-                                print("Time is not selected");
-                                setState(() {
-                                  endTimeInput.text =
-                                      ""; //set the value of text field.
-                                });
+
+                                print("Picked DateTime: $formattedDateTime");
+
+                                // Print to see the result
+                                print("Picked Time: $dateTime");
                               }
                             },
                           ),
-                        ),
-                      ),
-
-                      //End Time
-                      Container(
-                        width: double.maxFinite,
-                        height: 64.sp,
-                        decoration: BoxDecoration(
-                            border: Border(
-                                bottom: BorderSide(
-                                    color: isDark
-                                        ? LightColor.AppBarcolor
-                                        : DarkColor.AppBarcolor))),
-                        child: TextField(
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: isDark ? Colors.white : Colors.black,
-                          ),
-                          controller:
-                              endTimeInput, //editing controller of this TextField
-                          decoration: InputDecoration(
-                              icon: Icon(
-                                Icons.access_time,
-                                size: 24.sp,
-                                color: isDark ? Colors.white : Colors.black,
-                              ), //icon of text field
-
-                              labelText: "End Time",
-                              labelStyle: TextStyle(
-                                  color: isDark
-                                      ? Colors.white
-                                      : Colors.black), //label text of field
-                              enabledBorder: const UnderlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Colors.transparent)),
-                              focusedBorder: const UnderlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Colors.transparent))),
-                          readOnly:
-                              true, //set it true, so that user will not able to edit text
-                          onTap: () async {
-                            TimeOfDay? pickedTime = await showTimePicker(
-                              initialTime: TimeOfDay.now(),
-                              context: context,
-                            );
-
-                            if (pickedTime != null) {
-                              String formattedPickTime =
-                                  pickedTime.format(context).toString();
-                              print(formattedPickTime);
-                              setState(() {
-                                endTimeInput.text =
-                                    formattedPickTime; //set the value of text field.
-                              });
-                            } else {
-                              print("Time is not selected");
-                              setState(() {
-                                endTimeInput.text =
-                                    ""; //set the value of text field.
-                              });
-                            }
-                          },
                         ),
                       ),
 
@@ -539,7 +705,10 @@ class _SAddCalloutState extends State<SAddCallout> {
                         child: ListView.builder(
                           itemCount: _selectedEmployees.length,
                           itemBuilder: (context, index) => _AssignedEmp(
-                              isDark, index, _selectedEmployees[index]),
+                              isDark,
+                              index,
+                              _selectedEmployees[index],
+                              selectedEmployeeID),
                         ),
                       ),
 
@@ -552,7 +721,7 @@ class _SAddCalloutState extends State<SAddCallout> {
                           child: Bounce(
                             child: ElevatedButton(
                                 onPressed: () {
-                                  print("Pressed On Done Button");
+                                  addCallout();
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: isDark
