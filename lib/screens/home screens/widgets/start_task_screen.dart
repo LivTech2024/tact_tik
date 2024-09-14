@@ -343,46 +343,48 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
       // Show the dialog if the interval has passed
       if (differenceInMinutes >= interval) {
         Timer.periodic(Duration(minutes: interval), (timer) {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text(
-                  'Wellness Report',
-                  style: TextStyle(
-                      color: Theme.of(context).textTheme.bodyMedium!.color),
-                ),
-                content: Text(
-                  'Please upload your wellness report.',
-                  style: TextStyle(
-                      color: Theme.of(context).textTheme.bodyMedium!.color),
-                ),
-                actions: <Widget>[
-                  TextButton(
-                    child: const Text('Open'),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => WellnessCheckScreen(
-                            EmpId: widget.EmployeId,
-                            EmpName: widget.EmployeeName,
-                          ),
-                        ),
-                      ).then((value) async {
-                        if (value == true) {
-                          // Save the current time as the last notification time
-                          await prefs.setInt('lastWellnessNotificationTime',
-                              now.millisecondsSinceEpoch);
-                          Navigator.pop(context);
-                        }
-                      });
-                    },
+          if (mounted) {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text(
+                    'Wellness Report',
+                    style: TextStyle(
+                        color: Theme.of(context).textTheme.bodyMedium!.color),
                   ),
-                ],
-              );
-            },
-          );
+                  content: Text(
+                    'Please upload your wellness report.',
+                    style: TextStyle(
+                        color: Theme.of(context).textTheme.bodyMedium!.color),
+                  ),
+                  actions: <Widget>[
+                    TextButton(
+                      child: const Text('Open'),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => WellnessCheckScreen(
+                              EmpId: widget.EmployeId,
+                              EmpName: widget.EmployeeName,
+                            ),
+                          ),
+                        ).then((value) async {
+                          if (value == true) {
+                            // Save the current time as the last notification time
+                            await prefs.setInt('lastWellnessNotificationTime',
+                                now.millisecondsSinceEpoch);
+                            Navigator.pop(context);
+                          }
+                        });
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+          }
         });
       }
     }
