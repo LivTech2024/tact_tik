@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:core';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -35,6 +36,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
   String shiftStartTime = '';
   String shiftEndTime = '';
   String shiftTotalTime = '';
+  String shiftActualDate = '';
+  String shiftActualId = '';
+  String shiftClientName = '';
+  String shiftClientId = '';
 
   @override
   void initState() {
@@ -75,6 +80,43 @@ class _HistoryScreenState extends State<HistoryScreen> {
     }
   }
 
+  Future<void> getData(var shiftData) async {
+    //Basic Details:
+    shiftActualDate = shiftData['ShiftDate'].toString();
+    shiftStartTime = shiftData['ShiftStartTime'];
+    shiftEndTime = shiftData['ShiftEndTime'];
+
+    //Shift Details:
+    shiftName = shiftData['ShiftName'];
+    shiftLocation = shiftData['ShiftLocationAddress'];
+
+    //For Client Name:
+    shiftClientId = shiftData['ShiftClientId'];
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore
+        .instance
+        .collection('Clients')
+        .where('ClientId', isEqualTo: shiftClientId)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      Map<String, dynamic> clientData = querySnapshot.docs.first.data();
+      setState(() {
+        shiftClientName = clientData['ClientName'];
+      });
+
+      print('Client Name: $shiftClientName');
+    } else {
+      print('No matching client found');
+    }
+
+    //TODO:
+    //Time: 
+    //Total Work Hours:
+    //Breaks Taken:
+    //Patrol Status:
+
+  }
+
   Future<String> generateShiftReportPdf() async {
     showDialog(
         context: context,
@@ -83,9 +125,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
         });
 
     final dateFormat = DateFormat('HH:mm'); // Define the format for time
-    String patrolInfoHTML = '';
-    String shiftinTime = '';
-    String shiftOutTime = '';
 
     final htmlcontent = """
     <!DOCTYPE html>
@@ -129,28 +168,21 @@ class _HistoryScreenState extends State<HistoryScreen> {
             flex-grow: 1; /* Allow the <h1> to grow and fill the space */
         }
 
+        h3 {
+          color: #7137CD
+        }
+
         section {
-            padding: 20px;
-            background-color: #fff;
-            margin-bottom: 20px;
-            border-radius: 5px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            padding-left:25px;
+        }
+        .location {
+            width: 50%;
+            max-width: 50%;
+            word-wrap: break-word;
         }
 
-        /* Other styles for tables, images, and footer */
-        table {
-            border-collapse: collapse;
-            width: 100%;
-        }
-
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
 
         img {
             max-width: 100%;
@@ -175,26 +207,29 @@ class _HistoryScreenState extends State<HistoryScreen> {
     </header>
 
     <section>
-        <h2>Dear ,</h2>
-        <p>I hope this email finds you well. I wanted to provide you with an update on the recent patrol activities carried out by our assigned security guard during their shift. Below is a detailed breakdown of the patrols conducted.</p>
     </section>
 
     <section>
-        <h3>Shift Information</h3>
-        <table>
-            <tr>
-                <th>Shift Name</th>
-                <th>Shift Location</th>
-                <th>Shift Start Time</th>
-                <th>Shift End Time</th>
-            </tr>
-            <tr>
-                <td>${shiftName}</td>
-                <td>${shiftLocation}</td>
-                <td>${shiftStartTime}</td>
-                <td>${shiftEndTime}</td>
-            </tr>
-        </table>
+        <h3>Basic Details</h3>
+        <p><b>Date:</b> ${shiftActualDate}</p>
+        <p><b>Time: </b>Time</p>
+        <p><b>Shift Start:</b> ${shiftStartTime}</p>
+        <p><b>Shift End:</b> ${shiftEndTime}</p>
+    </section>
+    <section>
+        <h3>Shift Details</h3>
+        <p><b>Shift Name:</b> ${shiftName}</p>
+        <p><b>Client:</b> $shiftClientName</p>
+        <p class="location"><b>Locaiton:</b> ${shiftLocation}</p>
+    </section>
+    <section>
+        <h3>Work Details</h3>
+        <p><b>Total Work Hours: </b>Work Hours</p>
+        <p><b>Breaks Taken: </b>break</p>
+    </section>
+    <section>
+        <h3>Status</h3>
+        <p><b>Patrol Status:</b> status</p>
     </section>
 
     <footer>
@@ -482,10 +517,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                   ],
                                 ),
                                 onPressed: () {
-                                  shiftName = shift['ShiftName'];
-                                  shiftLocation = shift['ShiftLocationAddress'];
-                                  shiftStartTime = shift['ShiftStartTime'];
-                                  shiftEndTime = shift['ShiftEndTime'];
+                                  getData(shift);
+
                                   // shiftTotalTime=;
                                   generateShiftReportPdf();
                                 },
