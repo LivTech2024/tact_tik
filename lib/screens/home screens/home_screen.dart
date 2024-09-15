@@ -35,6 +35,7 @@ import 'package:tact_tik/screens/feature%20screens/keys/view_keys_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/site_tours/site_tour_screen.dart';
 import 'package:tact_tik/screens/get%20started/getstarted_screen.dart';
 import 'package:tact_tik/screens/home%20screens/select_message_guards.dart';
+import 'package:tact_tik/screens/home%20screens/widgets/callout_screen.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/custom_calendar.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/grid_widget.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/home_screen_part1.dart';
@@ -126,6 +127,14 @@ class _HomeScreenState extends State<HomeScreen> {
   int _patrolRestrictedRadius = 0;
   int _photouploadInterval = 0;
 
+  bool callOutExists = false;
+  String callOutDate = '';
+  String callOutTime = '';
+  String callOutLocation = '';
+  String callOutId = '';
+  String callOutStatus = '';
+  String callOutCompanyId = '';
+
   String _patrolTime = "";
   String _patrolDate = "";
   bool isWithinRadius = true;
@@ -169,22 +178,78 @@ class _HomeScreenState extends State<HomeScreen> {
         : LightColor.color2,
   ];
 
-  void initState() {
-    // selectedEvent = events[selectedDay] ?? [];
-
+  void _refreshHomeScreen() {
     _getUserInfo();
     getAndPrintAllSchedules();
     _requestPermissions();
     widget.refreshCallback?.call();
     fetchMessages();
-    // _getCurrentUserUid();
-
-    // checkLocation();
-    // Timer.periodic(Duration(seconds: 1), (Timer timer) {
-    //   // checkLocation();
-    // });
     initPlugin();
+    setState(() {});
+  }
+
+  void _onRefreshCallback() {
+    setState(() {
+      _refreshHomeScreen();
+    });
+  }
+
+  void initState() {
     super.initState();
+    _refreshHomeScreen();
+  }
+
+  Future<void> checkCallOut(String _employeeId) async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    DateTime now = DateTime.now();
+    DateTime startOfDay = DateTime(now.year, now.month, now.day, 0, 0, 0);
+    DateTime endOfDay = DateTime(now.year, now.month, now.day, 23, 59, 59);
+
+    QuerySnapshot querySnapshot = await firestore
+        .collection('Callouts')
+        .where('CalloutAssignedEmpsId', arrayContains: _employeeId)
+        .where('CalloutDateTime',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
+        .where('CalloutDateTime',
+            isLessThanOrEqualTo: Timestamp.fromDate(endOfDay))
+        .get();
+
+    for (QueryDocumentSnapshot document in querySnapshot.docs) {
+      List<dynamic> calloutStatuses = document['CalloutStatus'];
+
+      for (var status in calloutStatuses) {
+        if (status['StatusEmpId'] == _employeeId &&
+            status['Status'] != 'completed') {
+          setState(() {
+            callOutExists = true;
+            callOutStatus = status['Status'];
+          });
+
+          DateTime callOutDateTime =
+              (document['CalloutDateTime'] as Timestamp).toDate();
+          String formattedDate =
+              DateFormat('MMMM d, y').format(callOutDateTime);
+
+          setState(() {
+            callOutDate = formattedDate;
+            callOutTime = '${callOutDateTime.hour}:${callOutDateTime.minute}';
+            callOutId = document['CalloutId'];
+            callOutLocation = document['CalloutLocationAddress'];
+            callOutCompanyId = document['CalloutCompanyId'];
+            print(
+                "CALLOUT DATA: $callOutTime, $callOutDate. $callOutId, $callOutLocation, $callOutCompanyId, $callOutStatus");
+          });
+          break;
+        } else {
+          callOutExists = false;
+        }
+      }
+
+      if (callOutExists) {
+        break;
+      }
+    }
   }
 
   Future<void> initPlugin() async {
@@ -420,6 +485,7 @@ class _HomeScreenState extends State<HomeScreen> {
             isRoleGuard = false;
           }
         }
+        checkCallOut(EmployeeId);
         var shiftInfo =
             await fireStoreService.getShiftByEmployeeIdFromUserInfo(EmployeeId);
         var patrolInfo = await fireStoreService
@@ -1115,60 +1181,88 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                       ),
                               )
-                            : SizedBox(
-                                height: 400.h,
-                                width: double.maxFinite,
-                                // color: Colors.redAccent,
-                                child: Center(
-                                  child: Column(
-                                    children: [
-                                      SizedBox(
-                                        height: 150.h,
-                                        width: 200.w,
-                                        child: SvgPicture.asset(
-                                          isDark
-                                              ? 'assets/images/no_shift.svg'
-                                              : 'assets/images/no_shift_light.svg',
-                                        ),
+                            : callOutExists
+                                ? FutureBuilder(
+                                    future:
+                                        Future.delayed(Duration(seconds: 1)),
+                                    builder: (c, s) => s.connectionState ==
+                                            ConnectionState.done
+                                        ? CallOutScreen(
+                                            onRefresh: _onRefreshCallback,
+                                            callOutAddressName: callOutLocation,
+                                            callOutDate: callOutDate,
+                                            callOutId: callOutId,
+                                            callOutTime: callOutTime,
+                                            EmployeeId: _employeeId,
+                                            callOutStatus: callOutStatus,
+                                            callOutCompanyId: callOutCompanyId,
+                                            EmployeeName: _userName,
+                                          )
+                                        : Center(
+                                            child: InterMedium(
+                                              text: 'Loading...',
+                                              color: Theme.of(context)
+                                                  .primaryColor,
+                                              fontsize: 14.sp,
+                                            ),
+                                          ),
+                                  )
+                                : SizedBox(
+                                    height: 400.h,
+                                    width: double.maxFinite,
+                                    // color: Colors.redAccent,
+                                    child: Center(
+                                      child: Column(
+                                        children: [
+                                          SizedBox(
+                                            height: 150.h,
+                                            width: 200.w,
+                                            child: SvgPicture.asset(
+                                              isDark
+                                                  ? 'assets/images/no_shift.svg'
+                                                  : 'assets/images/no_shift_light.svg',
+                                            ),
+                                          ),
+                                          SizedBox(height: 30.h),
+                                          InterSemibold(
+                                            text:
+                                                'No shift or Callout Assigned yet',
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .displaySmall!
+                                                .color,
+                                            fontsize: 16.sp,
+                                          ),
+                                          SizedBox(height: 20.h),
+                                          InterRegular(
+                                            text:
+                                                'Go to calendar to check shift',
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .labelSmall!
+                                                .color,
+                                            fontsize: 14.sp,
+                                          ),
+                                          InterBold(
+                                            text: 'or',
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .displaySmall!
+                                                .color,
+                                            fontsize: 20.sp,
+                                          ),
+                                          InterRegular(
+                                            text: 'Refresh page',
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .labelSmall!
+                                                .color,
+                                            fontsize: 14.sp,
+                                          ),
+                                        ],
                                       ),
-                                      SizedBox(height: 30.h),
-                                      InterSemibold(
-                                        text: 'No shift Assigned yet',
-                                        color: Theme.of(context)
-                                            .textTheme
-                                            .displaySmall!
-                                            .color,
-                                        fontsize: 16.sp,
-                                      ),
-                                      SizedBox(height: 20.h),
-                                      InterRegular(
-                                        text: 'Go to calendar to check shift',
-                                        color: Theme.of(context)
-                                            .textTheme
-                                            .labelSmall!
-                                            .color,
-                                        fontsize: 14.sp,
-                                      ),
-                                      InterBold(
-                                        text: 'or',
-                                        color: Theme.of(context)
-                                            .textTheme
-                                            .displaySmall!
-                                            .color,
-                                        fontsize: 20.sp,
-                                      ),
-                                      InterRegular(
-                                        text: 'Refresh page',
-                                        color: Theme.of(context)
-                                            .textTheme
-                                            .labelSmall!
-                                            .color,
-                                        fontsize: 14.sp,
-                                      ),
-                                    ],
+                                    ),
                                   ),
-                                ),
-                              ),
                       ),
                     )
                   : ScreenIndex == 1
