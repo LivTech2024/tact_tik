@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:core';
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -33,13 +35,20 @@ class HistoryScreen extends StatefulWidget {
 class _HistoryScreenState extends State<HistoryScreen> {
   String shiftName = '';
   String shiftLocation = '';
-  String shiftStartTime = '';
-  String shiftEndTime = '';
+  String shiftStartTimeStr = '';
+  String shiftEndTimeStr = '';
   String shiftTotalTime = '';
-  String shiftActualDate = '';
-  String shiftActualId = '';
+  late Timestamp shiftActualDate;
+  late String shiftActualId;
   String shiftClientName = '';
   String shiftClientId = '';
+  String logoImageUrl = '';
+  String shiftDateStr = '';
+  late Duration totalWorkHours;
+  late Duration breakDuration;
+  late Duration totalWorkHoursAfterBreak;
+  int hours = 0;
+  int minutes = 0;
 
   @override
   void initState() {
@@ -80,11 +89,123 @@ class _HistoryScreenState extends State<HistoryScreen> {
     }
   }
 
+  TimeOfDay _stringToTimeOfDay(String time) {
+    final format = time.split(":");
+    int hour = int.parse(format[0]);
+    int minute = int.parse(format[1]);
+    return TimeOfDay(hour: hour, minute: minute);
+  }
+
+  _getTimeDifference(TimeOfDay startTime, TimeOfDay endTime) {
+    final now = DateTime.now();
+    final startDateTime = DateTime(
+        now.year, now.month, now.day, startTime.hour, startTime.minute);
+    final endDateTime =
+        DateTime(now.year, now.month, now.day, endTime.hour, endTime.minute);
+
+    // Calculate difference
+    totalWorkHours = endDateTime.difference(startDateTime);
+
+    // If the end time is before the start time, assume it’s the next day
+    if (totalWorkHours.isNegative) {
+      final nextDayEndDateTime = endDateTime.add(Duration(days: 1));
+      totalWorkHours = nextDayEndDateTime.difference(startDateTime);
+    }
+  }
+
+  String formatDuration(Duration duration) {
+    final hours = duration.inHours;
+    final minutes = duration.inMinutes % 60;
+    print('Formatted Duration: ${hours}h ${minutes}m'); 
+    return '${hours}h ${minutes}m';
+  }
+
+  void fetchBreakTimes() async {
+    print('inside fetch');
+
+    try {
+      // Firestore instance
+      // FirebaseFirestore firestore = FirebaseFirestore.instance;
+      print('shiftID: $shiftActualId');
+
+      print("now fetch snapshot");
+      // Path to the document, change 'collectionName' and 'documentID' accordingly
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('Shifts')
+          .where('ShiftId',
+              isEqualTo: shiftActualId) // Adjust field name if needed
+          .get();
+
+      print("fetch snapshot done");
+      // Check if any documents were returned
+      if (querySnapshot.docs.isNotEmpty) {
+        // Loop through the results
+        for (var documentSnapshot in querySnapshot.docs) {
+          print('Document data: ${documentSnapshot.data()}');
+
+          // Assuming the array is directly within the document
+          List<dynamic> firstArray = documentSnapshot.get('ShiftCurrentStatus');
+
+          // Access the map inside the array, assuming it's the first element
+          Map<String, dynamic> map = firstArray[0];
+
+          // Access the second array inside the map
+          List<dynamic> secondArray = map['StatusBreak'];
+
+          // Access the final map inside the second array, assuming it's the first element
+          Map<String, dynamic> finalMap = secondArray[0];
+
+          // Retrieve BreakEndTime and BreakStartTime
+          Timestamp breakEndTimeTimestamp = finalMap['BreakEndTime'];
+          Timestamp breakStartTimeTimestamp = finalMap['BreakStartTime'];
+
+          // Convert Firebase Timestamp to DateTime
+          DateTime breakEndTime = (breakEndTimeTimestamp).toDate();
+          DateTime breakStartTime = (breakStartTimeTimestamp).toDate();
+
+          print('Break End Time: $breakEndTime');
+          print('Break Start Time: $breakStartTime');
+
+          // Calculate the difference
+          breakDuration = breakEndTime.difference(breakStartTime);
+
+          print('Break Duration: $breakDuration');
+
+          // Make sure totalWorkHours is initialized before subtraction
+          if (totalWorkHours != null && breakDuration != null) {
+            totalWorkHoursAfterBreak = totalWorkHours - breakDuration;
+            print('Total Work Hours After Break: $totalWorkHoursAfterBreak');
+          } else {
+            print('Total Work Hours or Break Duration is null');
+          }
+        }
+      } else {
+        print('No documents match the query!');
+      }
+    } catch (e) {
+      print('Error fetching document: $e');
+    }
+  }
+
   Future<void> getData(var shiftData) async {
     //Basic Details:
-    shiftActualDate = shiftData['ShiftDate'].toString();
-    shiftStartTime = shiftData['ShiftStartTime'];
-    shiftEndTime = shiftData['ShiftEndTime'];
+    shiftActualDate = shiftData['ShiftDate'];
+    DateTime shiftDateTime = shiftActualDate.toDate();
+    shiftDateStr = DateFormat('dd/MM/yyyy').format(shiftDateTime);
+
+    // shiftDateTime.format
+
+    shiftStartTimeStr = shiftData['ShiftStartTime'];
+    shiftEndTimeStr = shiftData['ShiftEndTime'];
+
+    TimeOfDay shiftStartTime = _stringToTimeOfDay(shiftStartTimeStr);
+    TimeOfDay shiftEndTime = _stringToTimeOfDay(shiftEndTimeStr);
+
+    shiftActualId = shiftData['ShiftId'];
+    print('shiftActualId');
+
+    _getTimeDifference(shiftStartTime, shiftEndTime);
+    fetchBreakTimes();
 
     //Shift Details:
     shiftName = shiftData['ShiftName'];
@@ -108,16 +229,17 @@ class _HistoryScreenState extends State<HistoryScreen> {
     } else {
       print('No matching client found');
     }
+    print("GetData done");
 
     //TODO:
-    //Time: 
     //Total Work Hours:
+
     //Breaks Taken:
     //Patrol Status:
-
   }
 
   Future<String> generateShiftReportPdf() async {
+    print('inside shiftReport');
     showDialog(
         context: context,
         builder: (context) {
@@ -126,6 +248,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
     final dateFormat = DateFormat('HH:mm'); // Define the format for time
 
+    final totalWorkHoursString = totalWorkHoursAfterBreak != null
+    ? formatDuration(totalWorkHoursAfterBreak)
+    : '0h 0m';
+    final breakDurationString = breakDuration != null
+    ? formatDuration(breakDuration)
+    : '0h 0m';
+
+    print("now html");
     final htmlcontent = """
     <!DOCTYPE html>
 <html lang="en">
@@ -207,34 +337,31 @@ class _HistoryScreenState extends State<HistoryScreen> {
     </header>
 
     <section>
+    <img src="tacticalProtection.jpeg" alt="Tactical Protection">
     </section>
 
     <section>
         <h3>Basic Details</h3>
-        <p><b>Date:</b> ${shiftActualDate}</p>
+        <p><b>Date:</b> ${shiftDateStr}</p>
         <p><b>Time: </b>Time</p>
-        <p><b>Shift Start:</b> ${shiftStartTime}</p>
-        <p><b>Shift End:</b> ${shiftEndTime}</p>
+        <p><b>Shift Start:</b> ${shiftStartTimeStr}</p>
+        <p><b>Shift End:</b> ${shiftEndTimeStr}</p>
     </section>
     <section>
         <h3>Shift Details</h3>
         <p><b>Shift Name:</b> ${shiftName}</p>
-        <p><b>Client:</b> $shiftClientName</p>
+        <p><b>Client:</b> ${shiftClientName}</p>
         <p class="location"><b>Locaiton:</b> ${shiftLocation}</p>
     </section>
-    <section>
-        <h3>Work Details</h3>
-        <p><b>Total Work Hours: </b>Work Hours</p>
-        <p><b>Breaks Taken: </b>break</p>
-    </section>
+   <section>
+    <h3>Work Details</h3>
+    <p><b>Total Work Hours: </b> ${totalWorkHoursString}</p>
+    <p><b>Breaks Taken: </b> ${breakDurationString}</p>
+</section>
     <section>
         <h3>Status</h3>
         <p><b>Patrol Status:</b> status</p>
     </section>
-
-    <footer>
-        <p>&copy; 2024 TEAM TACTTIK. All rights reserved.</p>
-    </footer>
 </body>
 </html>
   """;
@@ -517,10 +644,15 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                   ],
                                 ),
                                 onPressed: () {
-                                  getData(shift);
+                                  try {
+                                    print("Done button tapped");
+                                    getData(shift);
 
-                                  // shiftTotalTime=;
-                                  generateShiftReportPdf();
+                                    // shiftTotalTime=;
+                                    generateShiftReportPdf();
+                                  } catch (e) {
+                                    print(e);
+                                  }
                                 },
                                 backgroundcolor:
                                     Theme.of(context).primaryColorLight,
