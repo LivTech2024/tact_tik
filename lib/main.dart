@@ -23,16 +23,19 @@ import 'package:tact_tik/screens/home%20screens/guard_notification_screen.dart';
 import 'package:tact_tik/screens/home%20screens/notification_screen.dart';
 import 'package:tact_tik/screens/home%20screens/wellness_check_screen.dart';
 import 'package:tact_tik/services/localnotification/localNotificationConfig.dart';
+import 'package:tact_tik/screens/home%20screens/widgets/callout_screen.dart';
 import 'package:tact_tik/utils/constants.dart';
 import 'package:tact_tik/utils/notification_api/firebase_notification_api.dart';
 import 'package:tact_tik/utils/theme_manager.dart';
 import 'package:tact_tik/utils/themes.dart';
+import 'package:workmanager/workmanager.dart';
 
 ThemeManager themeManager = ThemeManager();
 
 final navigatorKey = GlobalKey<NavigatorState>();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Workmanager().initialize(callbackDispatcher);
   await Firebase.initializeApp();
 
   // await Hive.initFlutter();

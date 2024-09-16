@@ -172,6 +172,8 @@ PODS:
     - Flutter
   - flutter_native_screenshot (0.0.1):
     - Flutter
+  - flutter_native_timezone_updated_gradle (0.0.1):
+    - Flutter
   - flutter_pdfview (1.0.2):
     - Flutter
   - geolocator_apple (1.2.0):
@@ -299,6 +301,8 @@ PODS:
   - video_player_avfoundation (0.0.1):
     - Flutter
     - FlutterMacOS
+  - workmanager (0.0.1):
+    - Flutter
 
 DEPENDENCIES:
   - app_tracking_transparency (from `.symlinks/plugins/app_tracking_transparency/ios`)
@@ -323,6 +327,7 @@ DEPENDENCIES:
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_native_html_to_pdf (from `.symlinks/plugins/flutter_native_html_to_pdf/ios`)
   - flutter_native_screenshot (from `.symlinks/plugins/flutter_native_screenshot/ios`)
+  - flutter_native_timezone_updated_gradle (from `.symlinks/plugins/flutter_native_timezone_updated_gradle/ios`)
   - flutter_pdfview (from `.symlinks/plugins/flutter_pdfview/ios`)
   - geolocator_apple (from `.symlinks/plugins/geolocator_apple/ios`)
   - google_maps_flutter_ios (from `.symlinks/plugins/google_maps_flutter_ios/ios`)
@@ -341,6 +346,7 @@ DEPENDENCIES:
   - sqflite (from `.symlinks/plugins/sqflite/darwin`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
   - video_player_avfoundation (from `.symlinks/plugins/video_player_avfoundation/darwin`)
+  - workmanager (from `.symlinks/plugins/workmanager/ios`)
 
 SPEC REPOS:
   trunk:
@@ -432,6 +438,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_native_html_to_pdf/ios"
   flutter_native_screenshot:
     :path: ".symlinks/plugins/flutter_native_screenshot/ios"
+  flutter_native_timezone_updated_gradle:
+    :path: ".symlinks/plugins/flutter_native_timezone_updated_gradle/ios"
   flutter_pdfview:
     :path: ".symlinks/plugins/flutter_pdfview/ios"
   geolocator_apple:
@@ -466,6 +474,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
   video_player_avfoundation:
     :path: ".symlinks/plugins/video_player_avfoundation/darwin"
+  workmanager:
+    :path: ".symlinks/plugins/workmanager/ios"
 
 CHECKOUT OPTIONS:
   FirebaseFirestore:
@@ -515,6 +525,7 @@ SPEC CHECKSUMS:
   flutter_local_notifications: 4cde75091f6327eb8517fa068a0a5950212d2086
   flutter_native_html_to_pdf: 666ed6a6dd339890b0c436a20a8eb848d208701e
   flutter_native_screenshot: 9f85755d0bcc31a774aaa45c0bc3fada210f001a
+  flutter_native_timezone_updated_gradle: d144a6b4980d61d022c539d090ab39bb390aac90
   flutter_pdfview: 25f53dd6097661e6395b17de506e6060585946bd
   geolocator_apple: 6cbaf322953988e009e5ecb481f07efece75c450
   google_maps_flutter_ios: f135b968a67c05679e0a53538e900b5c174b0d99
@@ -554,6 +565,7 @@ SPEC CHECKSUMS:
   Turf: aa2ede4298009639d10db36aba1a7ebaad072a5e
   url_launcher_ios: 6116280ddcfe98ab8820085d8d76ae7449447586
   video_player_avfoundation: 7c6c11d8470e1675df7397027218274b6d2360b3
+  workmanager: 0afdcf5628bbde6924c21af7836fed07b42e30e6
 
 PODFILE CHECKSUM: 1ae23bb421fc6fd74962884c59fdad0161ef2947
 

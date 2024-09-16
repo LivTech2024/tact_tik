@@ -52,6 +52,7 @@ class _SAddCalloutState extends State<SAddCallout> {
   String selectedLocation = '';
   String? selectedEmployeeID = '';
   String? selectedEmployeeName = '';
+  List selectedEmployeeNames = [];
 
   late final Timestamp endTimeTimeStamp;
   Timestamp? calloutDateTimestamp;
@@ -166,6 +167,11 @@ class _SAddCalloutState extends State<SAddCallout> {
   }
 
   Future<void> addCallout() async {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Center(child: CircularProgressIndicator());
+        });
     try {
       // Generate a new document reference with a unique ID
       DocumentReference calloutRef =
@@ -182,30 +188,11 @@ class _SAddCalloutState extends State<SAddCallout> {
       List<Map<String, dynamic>> calloutStatusList = [
         for (int i = 0; i < selectedEmployeeIds.length; i++)
           {
-            'Status': '',
-            'StatusEmpId': '',
-            'StatusEmpName': '',
-            'StatusStartedTime': '',
-            'StatusEndedTime': '',
+            'Status': 'Pending',
+            'StatusEmpId': selectedEmployeeIds[i],
+            'StatusEmpName': selectedEmployeeNames[i],
           }
       ];
-
-      // Attempt to add the callout data to Firestore
-
-      // await FirebaseFirestore.instance.collection('Callouts').add({
-      //   'CalloutId': calloutRef.id,
-      //   'CalloutLocation': calloutLocation,
-      //   'CalloutLocationId': calloutLocationId,
-      //   'CalloutLocationName': calloutLocationName,
-      //   'CalloutLocationAddress': calloutLocationAddress,
-      //   'CalloutDateTime': calloutDateTimestamp,
-      //   'CalloutAssignedEmpsId':
-      //       assignedEmpsMap, // Store the employee IDs as a map
-      //   'CalloutStatus':
-      //       calloutStatusList, // Store the callout status as an array of maps
-      //   'CalloutCreatedAt': DateTime.now(),
-      //   'CalloutModifiedAt': DateTime.now(),
-      // });
 
       await calloutRef.set({
         'CalloutId': calloutId, // Store the same calloutId
@@ -221,6 +208,8 @@ class _SAddCalloutState extends State<SAddCallout> {
       });
 
       print('Callout added successfully with ID: $calloutId');
+      Navigator.of(context).pop();
+      Navigator.pop(context);
     } catch (e) {
       // Handle the error by printing it or taking other actions
       print('Error adding callout: $e');
@@ -602,6 +591,7 @@ class _SAddCalloutState extends State<SAddCallout> {
                                 //   'CalloutAssignedEmpsId': selectedEmployeeID,
                                 //   'SelectedEmployeeName': selectedEmployeeName,
                                 // });
+                                selectedEmployeeNames.add(selectedEmployeeName);
                                 selectedEmployeeIds.add(selectedEmployeeID);
                                 print("Selected Emp IDs: $selectedEmployeeIds");
                                 // print(
