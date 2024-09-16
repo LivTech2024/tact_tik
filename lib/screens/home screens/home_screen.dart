@@ -434,6 +434,8 @@ class _HomeScreenState extends State<HomeScreen> {
           _employeeCompanyBranchID = empBranchId;
           _empRole = empRole;
         });
+        await fireStoreService.fetchAndScheduleShift(EmployeeId);
+
         print('User Info: ${userInfo.data()}');
         if (patrolInfo != null) {
           String PatrolArea = patrolInfo['PatrolArea'];
@@ -906,8 +908,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         //   "formattedEndTime",
                         // );
                         // customEmail();
-                        await fireStoreService.copyAndCreateDocument(
-                            "PatrolLogs", "26a8C9Exr1sPqGAMsRU9");
+                        // await fireStoreService.copyAndCreateDocument(
+                        //     "PatrolLogs", "bclznKkeGbKMJUsGROAT");
                         // await darFunctions
                         //     .fetchShiftDetailstemplateAndSubmitDAR(
                         //         "19:00",

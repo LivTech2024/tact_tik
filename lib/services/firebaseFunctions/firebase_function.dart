@@ -22,6 +22,7 @@ import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
 import 'package:tact_tik/screens/supervisor%20screens/patrol_logs.dart';
 import 'package:tact_tik/services/EmailService/EmailJs_fucntion.dart';
 import 'package:tact_tik/services/auth/auth.dart';
+import 'package:tact_tik/services/localnotification/localNotificationConfig.dart';
 
 class FireStoreService {
   final Auth auth = Auth();
@@ -5943,5 +5944,42 @@ class FireStoreService {
       return false; // Return false in case of any errors
     }
   }
-// Schedule and assign
+
+  Future<void> fetchAndScheduleShift(String empId) async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    // Get the current date (with the time set to 00:00:00)
+    DateTime today = DateTime.now();
+    DateTime todayStart = DateTime(today.year, today.month, today.day);
+
+    print("EmpidNoti $empId");
+
+    // Query to find the shifts where ShiftAssignedUserId contains empId and ShiftDate is today or in the future
+    QuerySnapshot querySnapshot = await firestore
+        .collection('Shifts')
+        .where('ShiftAssignedUserId', arrayContains: empId)
+        .where('ShiftDate',
+            isGreaterThanOrEqualTo:
+                todayStart) // Fetch shifts from today onwards
+        .get();
+
+    print("ScheduleShiftNoti ${querySnapshot.size}");
+
+    // Iterate through the fetched shifts and schedule notifications
+    for (QueryDocumentSnapshot doc in querySnapshot.docs) {
+      Map<String, dynamic> shiftData = doc.data() as Map<String, dynamic>;
+
+      String shiftId = shiftData['ShiftId'];
+      String shiftStartTime = shiftData['ShiftStartTime'];
+      String shiftEndTime = shiftData['ShiftEndTime'];
+      String shiftName = shiftData['ShiftName'];
+      DateTime shiftDate = (shiftData['ShiftDate'] as Timestamp).toDate();
+
+      print("Shift IDs for local Notification $shiftId");
+      // await testNotification();
+      // Schedule notifications for this shift
+      await scheduleNotification(
+          shiftId, shiftName, shiftStartTime, shiftEndTime, shiftDate);
+    }
+  }
 }

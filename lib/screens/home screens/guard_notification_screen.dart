@@ -30,49 +30,65 @@ class _GuardNotificationScreenState extends State<GuardNotificationScreen> {
 
   Future<void> fetchNotifications() async {
     try {
-      print("EmployeeID: ${_userService.employeeID}");
-      QuerySnapshot snapshot = await FirebaseFirestore.instance
+      // Fetch Shift Offer notifications for the specific company
+      QuerySnapshot shiftOfferSnapshot = await FirebaseFirestore.instance
           .collection('Notification')
-          .where('NotificationIds', arrayContains: widget.employeeId)
+          .where('NotificationType', isEqualTo: 'SHIFTOFFER')
+          .where('NotificationCompanyId', isEqualTo: widget.companyId)
           .orderBy('NotificationCreatedAt', descending: true)
           .get();
 
-      print("Notification Snapshot:");
-      for (var doc in snapshot.docs) {
+      // Fetch other notifications related to the employee
+      QuerySnapshot otherNotificationsSnapshot =
+          await FirebaseFirestore.instance
+              .collection('Notification')
+              .where('NotificationIds', arrayContains: widget.employeeId)
+              // .where('NotificationType', isNotEqualTo: 'SHIFTOFFER')
+              .orderBy('NotificationCreatedAt', descending: true)
+              .get();
+
+      print("Shift Offer Notifications Snapshot:");
+      for (var doc in shiftOfferSnapshot.docs) {
         print("Document ID: ${doc.id}, Data: ${doc.data()}");
       }
 
-      if (snapshot.docs.isEmpty) {
-        print("No notifications found.");
+      print("Other Notifications Snapshot:");
+      for (var doc in otherNotificationsSnapshot.docs) {
+        print("Document ID: ${doc.id}, Data: ${doc.data()}");
       }
 
       List<NotificationModel> fetchedNotifications = [];
       List<NotificationModel> shiftOfferNotifications = [];
 
-      for (var doc in snapshot.docs) {
+      // Process Shift Offer notifications
+      for (var doc in shiftOfferSnapshot.docs) {
+        var notification = NotificationModel.fromFirestore(doc);
+        shiftOfferNotifications.add(notification);
+      }
+
+      // Process other notifications
+      for (var doc in otherNotificationsSnapshot.docs) {
         var notification = NotificationModel.fromFirestore(doc);
 
-        if (notification.type == 'SHIFTOFFER') {
-          print("Processing SHIFTOFFER notification: ${doc.id}");
-          // Directly add the SHIFTOFFER notification if it contains necessary data
-          shiftOfferNotifications.add(notification);
-        } else if (notification.notificationStatus != 'completed') {
+        if (notification.notificationStatus != 'completed') {
           fetchedNotifications.add(notification);
         }
       }
 
-      print("Shift Offer Notifications: ${shiftOfferNotifications.length}");
-      print("Other Notifications: ${fetchedNotifications.length}");
+      print(
+          "Shift Offer Notifications Count: ${shiftOfferNotifications.length}");
+      print("Other Notifications Count: ${fetchedNotifications.length}");
 
+      // Combine and update state
       setState(() {
         notifications = fetchedNotifications + shiftOfferNotifications;
       });
 
-      print("Notifications:");
+      print("Combined Notifications:");
       for (var notification in notifications) {
         print(
             "Message: ${notification.message}, Type: ${notification.type}, CreatedAt: ${notification.createdAt.toDate()}");
-        print("Notifications Display ${notification}");
+        print("Notification Display ${notification}");
       }
     } catch (e) {
       print("Error fetching notifications: $e");

@@ -22,6 +22,7 @@ import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:tact_tik/screens/home%20screens/guard_notification_screen.dart';
 import 'package:tact_tik/screens/home%20screens/notification_screen.dart';
 import 'package:tact_tik/screens/home%20screens/wellness_check_screen.dart';
+import 'package:tact_tik/services/localnotification/localNotificationConfig.dart';
 import 'package:tact_tik/utils/constants.dart';
 import 'package:tact_tik/utils/notification_api/firebase_notification_api.dart';
 import 'package:tact_tik/utils/theme_manager.dart';
@@ -43,7 +44,10 @@ Future<void> main() async {
   );
 
   //Fethcing FCM TOken
+  await initializeTimezone();
   await FirebaseNotificationApi().initNotifications();
+  await initializeNotifications();
+
   MapboxOptions.setAccessToken(appConstants.mapBoxPublicKey);
   runApp(MyApp());
 }
