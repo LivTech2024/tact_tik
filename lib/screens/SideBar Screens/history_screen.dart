@@ -17,6 +17,7 @@ import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_semibold.dart';
 import 'package:tact_tik/main.dart';
+import 'package:tact_tik/screens/home%20screens/home_screen.dart';
 import 'package:tact_tik/services/EmailService/EmailJs_fucntion.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:tact_tik/utils/colors.dart';
@@ -44,9 +45,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
   String shiftClientId = '';
   String logoImageUrl = '';
   String shiftDateStr = '';
-  late Duration totalWorkHours;
-  late Duration breakDuration;
-  late Duration totalWorkHoursAfterBreak;
+  String totalWorkHoursString = '';
+  String breakDurationString = '';
+  Duration? totalWorkHours;
+  Duration? breakDuration;
+  Duration? totalWorkHoursAfterBreak;
+  int totalPatrolStatus = 0;
+  int patrolStatusCompleted = 0;
   int hours = 0;
   int minutes = 0;
 
@@ -89,6 +94,19 @@ class _HistoryScreenState extends State<HistoryScreen> {
     }
   }
 
+  void clearShiftData() {
+    shiftName = '';
+    shiftLocation = '';
+    shiftStartTimeStr = '';
+    shiftEndTimeStr = '';
+    totalWorkHours = null;
+    breakDuration = null;
+    totalWorkHoursAfterBreak = null;
+    totalPatrolStatus = 0;
+    patrolStatusCompleted = 0;
+    // Any other relevant state variables
+  }
+
   TimeOfDay _stringToTimeOfDay(String time) {
     final format = time.split(":");
     int hour = int.parse(format[0]);
@@ -96,7 +114,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
     return TimeOfDay(hour: hour, minute: minute);
   }
 
-  _getTimeDifference(TimeOfDay startTime, TimeOfDay endTime) {
+  _getTimeDifference(TimeOfDay startTime, TimeOfDay endTime) async {
     final now = DateTime.now();
     final startDateTime = DateTime(
         now.year, now.month, now.day, startTime.hour, startTime.minute);
@@ -105,9 +123,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
     // Calculate difference
     totalWorkHours = endDateTime.difference(startDateTime);
+    print("Total Work hours before break $totalWorkHours");
 
     // If the end time is before the start time, assume it’s the next day
-    if (totalWorkHours.isNegative) {
+    if (totalWorkHours!.isNegative) {
       final nextDayEndDateTime = endDateTime.add(Duration(days: 1));
       totalWorkHours = nextDayEndDateTime.difference(startDateTime);
     }
@@ -116,82 +135,117 @@ class _HistoryScreenState extends State<HistoryScreen> {
   String formatDuration(Duration duration) {
     final hours = duration.inHours;
     final minutes = duration.inMinutes % 60;
-    print('Formatted Duration: ${hours}h ${minutes}m'); 
+    print('Formatted Duration: ${hours}h ${minutes}m');
     return '${hours}h ${minutes}m';
   }
 
-  void fetchBreakTimes() async {
+  fetchBreakTimes() async {
     print('inside fetch');
 
-    try {
-      // Firestore instance
-      // FirebaseFirestore firestore = FirebaseFirestore.instance;
-      print('shiftID: $shiftActualId');
+    // Firestore instance
+    // FirebaseFirestore firestore = FirebaseFirestore.instance;
+    print('shiftID: $shiftActualId');
 
-      print("now fetch snapshot");
-      // Path to the document, change 'collectionName' and 'documentID' accordingly
-      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-          .collection('Shifts')
-          .where('ShiftId',
-              isEqualTo: shiftActualId) // Adjust field name if needed
-          .get();
+    print("now fetch snapshot");
+    // Path to the document, change 'collectionName' and 'documentID' accordingly
+    DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+        .collection('Shifts')
+        .doc(shiftActualId)
+        .get();
 
-      print("fetch snapshot done");
-      // Check if any documents were returned
-      if (querySnapshot.docs.isNotEmpty) {
-        // Loop through the results
-        for (var documentSnapshot in querySnapshot.docs) {
-          print('Document data: ${documentSnapshot.data()}');
+    print("fetch snapshot done");
+    // Check if any documents were returned
+    if (documentSnapshot.exists) {
+      var documentData = documentSnapshot.data() as Map<String, dynamic>?;
 
-          // Assuming the array is directly within the document
-          List<dynamic> firstArray = documentSnapshot.get('ShiftCurrentStatus');
+      if (documentData != null &&
+          documentData.containsKey('ShiftCurrentStatus')) {
+        //Get PatrolStatusCount
+        List<dynamic> shiftLinkedPatrols = documentData['ShiftLinkedPatrols'];
+        if (shiftLinkedPatrols.isNotEmpty) {
+          Map<String, dynamic> firstMap = shiftLinkedPatrols[0];
+          totalPatrolStatus = firstMap['LinkedPatrolReqHitCount'];
+        } else {
+          print("Total Patrol is empty");
+        }
 
+        List<dynamic> firstArray = documentData['ShiftCurrentStatus'];
+        print('First Array: $firstArray');
+
+        if (firstArray.isNotEmpty) {
           // Access the map inside the array, assuming it's the first element
           Map<String, dynamic> map = firstArray[0];
+          print('First Map in First Array: $map');
 
-          // Access the second array inside the map
-          List<dynamic> secondArray = map['StatusBreak'];
+          // Check if the 'StatusBreak' array exists in the map
+          if (map.containsKey('StatusBreak')) {
+            List<dynamic> secondArray = map['StatusBreak'];
+            print('Second Array (StatusBreak): $secondArray');
 
-          // Access the final map inside the second array, assuming it's the first element
-          Map<String, dynamic> finalMap = secondArray[0];
+            if (secondArray.isNotEmpty) {
+              // Access the final map inside the second array, assuming it's the first element
+              Map<String, dynamic> finalMap = secondArray[0];
+              print('Final Map in StatusBreak: $finalMap');
 
-          // Retrieve BreakEndTime and BreakStartTime
-          Timestamp breakEndTimeTimestamp = finalMap['BreakEndTime'];
-          Timestamp breakStartTimeTimestamp = finalMap['BreakStartTime'];
+              // Check for BreakStartTime and BreakEndTime fields
+              if (finalMap.containsKey('BreakStartTime') &&
+                  finalMap.containsKey('BreakEndTime')) {
+                // Retrieve BreakEndTime and BreakStartTime
+                Timestamp breakEndTimeTimestamp = finalMap['BreakEndTime'];
+                Timestamp breakStartTimeTimestamp = finalMap['BreakStartTime'];
 
-          // Convert Firebase Timestamp to DateTime
-          DateTime breakEndTime = (breakEndTimeTimestamp).toDate();
-          DateTime breakStartTime = (breakStartTimeTimestamp).toDate();
+                // Convert Firebase Timestamp to DateTime
+                DateTime breakEndTime = breakEndTimeTimestamp.toDate();
+                DateTime breakStartTime = breakStartTimeTimestamp.toDate();
 
-          print('Break End Time: $breakEndTime');
-          print('Break Start Time: $breakStartTime');
+                print('Break End Time: $breakEndTime');
+                print('Break Start Time: $breakStartTime');
 
-          // Calculate the difference
-          breakDuration = breakEndTime.difference(breakStartTime);
+                // Calculate the difference
+                breakDuration = breakEndTime.difference(breakStartTime);
 
-          print('Break Duration: $breakDuration');
-
-          // Make sure totalWorkHours is initialized before subtraction
-          if (totalWorkHours != null && breakDuration != null) {
-            totalWorkHoursAfterBreak = totalWorkHours - breakDuration;
-            print('Total Work Hours After Break: $totalWorkHoursAfterBreak');
+                print('Break Duration: $breakDuration');
+              } else {
+                print('BreakStartTime or BreakEndTime field is missing');
+              }
+            } else {
+              print('Second array (StatusBreak) is empty');
+              breakDurationString = 'No Breaks';
+            }
           } else {
-            print('Total Work Hours or Break Duration is null');
+            print('StatusBreak field is missing in the map');
           }
+        } else {
+          print('First array (ShiftCurrentStatus) is empty');
         }
       } else {
-        print('No documents match the query!');
+        print('ShiftCurrentStatus field is missing in the document');
       }
-    } catch (e) {
-      print('Error fetching document: $e');
+    } else {
+      print('Document does not exist');
     }
+
+    // Make sure totalWorkHours is initialized before subtraction
+    if (breakDuration == null ||
+        breakDuration!.inSeconds == 0 ||
+        breakDuration!.inMinutes == 0) {
+      print('No break or zero duration break detected');
+      totalWorkHoursAfterBreak = totalWorkHours; // No break deduction
+      breakDurationString = 'No Breaks';
+    } else {
+      // Subtract the break duration from total work hours
+      totalWorkHoursAfterBreak = totalWorkHours! - breakDuration!;
+    }
+
+    print('Total Work Hours After Break: $totalWorkHoursAfterBreak');
   }
 
   Future<void> getData(var shiftData) async {
+    clearShiftData();
     //Basic Details:
     shiftActualDate = shiftData['ShiftDate'];
     DateTime shiftDateTime = shiftActualDate.toDate();
-    shiftDateStr = DateFormat('dd/MM/yyyy').format(shiftDateTime);
+    //Formats below few lines (inside SetState)
 
     // shiftDateTime.format
 
@@ -204,8 +258,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
     shiftActualId = shiftData['ShiftId'];
     print('shiftActualId');
 
-    _getTimeDifference(shiftStartTime, shiftEndTime);
-    fetchBreakTimes();
+    await _getTimeDifference(shiftStartTime, shiftEndTime);
+    await fetchBreakTimes();
 
     //Shift Details:
     shiftName = shiftData['ShiftName'];
@@ -213,6 +267,17 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
     //For Client Name:
     shiftClientId = shiftData['ShiftClientId'];
+
+    setState(() {
+      shiftDateStr = DateFormat('dd/MM/yyyy').format(shiftDateTime);
+
+      totalWorkHoursString = totalWorkHoursAfterBreak != null
+          ? formatDuration(totalWorkHoursAfterBreak!)
+          : '0h 0m';
+      breakDurationString =
+          breakDuration != null ? formatDuration(breakDuration!) : '0h 0m';
+    });
+
     QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore
         .instance
         .collection('Clients')
@@ -229,6 +294,18 @@ class _HistoryScreenState extends State<HistoryScreen> {
     } else {
       print('No matching client found');
     }
+    QuerySnapshot<Map<String, dynamic>> patrolLogQuery = await FirebaseFirestore
+        .instance
+        .collection('PatrolLogs')
+        .where('PatrolShiftId', isEqualTo: shiftActualId)
+        .get();
+
+    if (patrolLogQuery.docs.isNotEmpty) {
+      Map<String, dynamic> patrolLogData = patrolLogQuery.docs.first.data();
+      setState(() {
+        patrolStatusCompleted = patrolLogData['PatrolLogPatrolCount'];
+      });
+    }
     print("GetData done");
 
     //TODO:
@@ -240,6 +317,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   Future<String> generateShiftReportPdf() async {
     print('inside shiftReport');
+    print(
+        'Shift Data: $shiftDateStr, $totalWorkHoursString, $breakDurationString, $patrolStatusCompleted, $totalPatrolStatus');
     showDialog(
         context: context,
         builder: (context) {
@@ -248,12 +327,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
     final dateFormat = DateFormat('HH:mm'); // Define the format for time
 
-    final totalWorkHoursString = totalWorkHoursAfterBreak != null
-    ? formatDuration(totalWorkHoursAfterBreak)
-    : '0h 0m';
-    final breakDurationString = breakDuration != null
-    ? formatDuration(breakDuration)
-    : '0h 0m';
+    print('Formating Time');
 
     print("now html");
     final htmlcontent = """
@@ -262,7 +336,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Security Report</title>
+    <title>Shift Report</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -272,13 +346,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-        }
-
-        header {
-            background-color: #333;
-            color: white;
-            padding: 20px;
-            text-align: center;
         }
 
         .logo-container {
@@ -313,15 +380,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
             word-wrap: break-word;
         }
 
-
-        img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-            margin-bottom: 10px;
-            max-height: 200px; /* Define a max-height for the images */
-        }
-
         footer {
             background-color: #333;
             color: white;
@@ -333,11 +391,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
 </head>
 <body>
     <header>
-        <h1>Shift Report</h1>
     </header>
 
     <section>
-    <img src="tacticalProtection.jpeg" alt="Tactical Protection">
+      <img src="assets/images/Companylogo.jpg" alt="Tactical Protection">
     </section>
 
     <section>
@@ -355,12 +412,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
     </section>
    <section>
     <h3>Work Details</h3>
-    <p><b>Total Work Hours: </b> ${totalWorkHoursString}</p>
-    <p><b>Breaks Taken: </b> ${breakDurationString}</p>
+    <p><b>Total Work Hours: </b>${totalWorkHoursString}</p>
+    <p><b>Breaks Taken: </b>${breakDurationString}</p>
 </section>
     <section>
         <h3>Status</h3>
-        <p><b>Patrol Status:</b> status</p>
+        <p><b>Patrol Status:</b> ${patrolStatusCompleted} out of ${totalPatrolStatus}</p>
     </section>
 </body>
 </html>
@@ -643,13 +700,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                     )
                                   ],
                                 ),
-                                onPressed: () {
+                                onPressed: () async {
                                   try {
                                     print("Done button tapped");
-                                    getData(shift);
+                                    await getData(shift);
 
                                     // shiftTotalTime=;
-                                    generateShiftReportPdf();
+                                    await generateShiftReportPdf();
                                   } catch (e) {
                                     print(e);
                                   }
