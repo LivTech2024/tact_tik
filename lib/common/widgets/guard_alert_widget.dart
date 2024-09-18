@@ -219,9 +219,19 @@ class _GuardAlertWidgetState extends State<GuardAlertWidget> {
                         }
                         if (widget.shiftOfferData != null) {
                           //TODO The cloud fucntion is creating another doc for notification need to handle this docs
-                          await fireStoreService.checkAndUpdateOfferStatus(
-                              widget.shiftOfferData!.offerShiftId,
-                              widget.currentEmpid);
+                          bool status = await fireStoreService
+                              .checkOfferAcceptedId(offerData!.offerShiftId);
+                          if (status) {
+                            await fireStoreService.checkAndUpdateOfferStatus(
+                                widget.shiftOfferData!.offerShiftId,
+                                widget.currentEmpid);
+                            showSuccessToast(context, "Shift Offer applied");
+                          } else {
+                            showSuccessToast(context,
+                                "Shift Offer has been Already Accepted");
+                          }
+                          showSuccessToast(
+                              context, "${offerData!.offerShiftId}");
                           // Handle shift offer logic here
                         }
                         // showSuccessToast(context, "${widget.notiId}");

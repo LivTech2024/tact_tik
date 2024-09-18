@@ -30,6 +30,7 @@ class _GuardNotificationScreenState extends State<GuardNotificationScreen> {
 
   Future<void> fetchNotifications() async {
     try {
+      print("OfferCompanyiD ${widget.companyId}");
       // Fetch Shift Offer notifications for the specific company
       QuerySnapshot shiftOfferSnapshot = await FirebaseFirestore.instance
           .collection('Notification')
@@ -132,6 +133,7 @@ class _GuardNotificationScreenState extends State<GuardNotificationScreen> {
                 //   ),
                 // ),
                 // SizedBox(height: 20.h),
+
                 ListView.builder(
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,

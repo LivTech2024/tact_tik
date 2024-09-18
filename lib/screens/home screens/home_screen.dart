@@ -975,7 +975,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         // );
                         // customEmail();
                         // await fireStoreService.copyAndCreateDocument(
-                        //     "PatrolLogs", "bclznKkeGbKMJUsGROAT");
+                        //     "PatrolLogs", "1OiVbeZ8w6tFUSPCoMk2");
                         // await darFunctions
                         //     .fetchShiftDetailstemplateAndSubmitDAR(
                         //         "19:00",
@@ -1041,7 +1041,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   shiftLocationName: '',
                   shiftLocationId: _shiftLocationId,
                   shiftId: _shiftId,
-                  shiftCompanyId: '',
+                  shiftCompanyId: _employeeCompanyID,
                   shiftClientId: _shiftCLientId,
                   empEmail: _employeeEmail,
                   branchId: _branchId,

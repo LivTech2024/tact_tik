@@ -5982,4 +5982,23 @@ class FireStoreService {
           shiftId, shiftName, shiftStartTime, shiftEndTime, shiftDate);
     }
   }
+
+  //Check for the shift Offer
+  Future<bool> checkOfferAcceptedId(String shiftOfferID) async {
+    if (shiftOfferID.isEmpty) {
+      return false;
+    }
+
+    DocumentSnapshot docSnapshot = await FirebaseFirestore.instance
+        .collection('ShiftOffer')
+        .doc(shiftOfferID)
+        .get();
+
+    if (!docSnapshot.exists) {
+      return false;
+    }
+
+    Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
+    return data['ShiftOfferAcceptedId'] != null;
+  }
 }

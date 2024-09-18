@@ -98,7 +98,7 @@ class _MyAppState extends State<MyApp> {
     }
 
     final uuid = await AppTrackingTransparency.getAdvertisingIdentifier();
-    print("UUID: $uuid");
+    // print("UUID: $uuid");
     // }
   }
 

@@ -75,7 +75,6 @@ Future<void> scheduleNotification(String shiftId, String shiftName,
       int.parse(endTime.split(":")[0]),
       int.parse(endTime.split(":")[1]),
     );
-
     // Schedule notifications at different intervals
     await _scheduleSingleNotification(
         shiftId + '_1day',
