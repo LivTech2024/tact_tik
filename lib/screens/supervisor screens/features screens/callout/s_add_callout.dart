@@ -41,11 +41,12 @@ class _SAddCalloutState extends State<SAddCallout> {
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _focusNode = FocusNode(); // Focus node for TextField
   bool _showSuggestions = false;
-  List _selectedEmployees = [];
-  // List _selectedEmployeesDetails = [];
+  List _selectedEmployees = []; //Stores Selected employees
   List selectedEmployeeIds = [];
   List<String> results = [];
   List<Map<String, dynamic>> foundEmp = [];
+
+  //Stores Selected Location
   String? LocDropDownvalue;
 
   List<String> dbLocation = [];
@@ -55,7 +56,7 @@ class _SAddCalloutState extends State<SAddCallout> {
   List selectedEmployeeNames = [];
 
   late final Timestamp endTimeTimeStamp;
-  Timestamp? calloutDateTimestamp;
+  Timestamp? calloutDateTimestamp; //Store Callout Time
   DateTime? dateTime;
 
   late GeoPoint calloutLocation;
@@ -82,9 +83,11 @@ class _SAddCalloutState extends State<SAddCallout> {
 
   Future<void> searchEmp(String query) async {
     if (query.isEmpty) {
-      setState(() {
-        foundEmp.clear();
-      });
+      if (mounted) {
+        setState(() {
+          foundEmp.clear();
+        });
+      }
       return;
     }
 
@@ -107,9 +110,11 @@ class _SAddCalloutState extends State<SAddCallout> {
 
     try {
       final result = await queryRef.get();
-      setState(() {
-        foundEmp = result.docs.map((doc) => doc.data()).toList();
-      });
+      if (mounted) {
+        setState(() {
+          foundEmp = result.docs.map((doc) => doc.data()).toList();
+        });
+      }
       print(foundEmp); // Check if results are fetched
     } catch (e) {
       print('Error searching employees: $e');
@@ -126,9 +131,11 @@ class _SAddCalloutState extends State<SAddCallout> {
           .toSet()
           .toList();
 
-      setState(() {
-        dbLocation = location;
-      });
+      if (mounted) {
+        setState(() {
+          dbLocation = location;
+        });
+      }
       return dbLocation;
     } catch (e) {
       print("Error fetching report titles: $e");
@@ -167,11 +174,6 @@ class _SAddCalloutState extends State<SAddCallout> {
   }
 
   Future<void> addCallout() async {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return Center(child: CircularProgressIndicator());
-        });
     try {
       // Generate a new document reference with a unique ID
       DocumentReference calloutRef =
@@ -194,22 +196,45 @@ class _SAddCalloutState extends State<SAddCallout> {
           }
       ];
 
-      await calloutRef.set({
-        'CalloutId': calloutId, // Store the same calloutId
-        'CalloutLocation': calloutLocation,
-        'CalloutLocationId': calloutLocationId,
-        'CalloutLocationName': calloutLocationName,
-        'CalloutLocationAddress': calloutLocationAddress,
-        'CalloutDateTime': calloutDateTimestamp,
-        'CalloutAssignedEmpsId': assignedEmpsMap,
-        'CalloutStatus': calloutStatusList,
-        'CalloutCreatedAt': DateTime.now(),
-        'CalloutModifiedAt': DateTime.now(),
-      });
+      if (_selectedEmployees != null &&
+          _selectedEmployees.isNotEmpty &&
+          LocDropDownvalue != null &&
+          calloutDateTimestamp != null) {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return Center(child: CircularProgressIndicator());
+            });
+        await calloutRef.set({
+          'CalloutId': calloutId, // Store the same calloutId
+          'CalloutLocation': calloutLocation,
+          'CalloutLocationId': calloutLocationId,
+          'CalloutLocationName': calloutLocationName,
+          'CalloutLocationAddress': calloutLocationAddress,
+          'CalloutDateTime': calloutDateTimestamp,
+          'CalloutAssignedEmpsId': assignedEmpsMap,
+          'CalloutStatus': calloutStatusList,
+          'CalloutCreatedAt': DateTime.now(),
+          'CalloutModifiedAt': DateTime.now(),
+        });
 
-      print('Callout added successfully with ID: $calloutId');
-      Navigator.of(context).pop();
-      Navigator.pop(context);
+        print('Callout added successfully with ID: $calloutId');
+        Navigator.of(context).pop();
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+            'Callout Created',
+          ),
+          backgroundColor: Colors.green,
+        ));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+            'Please ensure all fields are filled.',
+          ),
+          backgroundColor: Colors.red,
+        ));
+      }
     } catch (e) {
       // Handle the error by printing it or taking other actions
       print('Error adding callout: $e');
@@ -256,17 +281,6 @@ class _SAddCalloutState extends State<SAddCallout> {
           }
         },
         theme: ThemeData(
-            // canvasColor: Colors.black,
-            // // cardColor: Colors.amber,
-            // // dialogBackgroundColor: Colors.black, //Background Card Color
-            // primaryColorDark: DarkColor.Primarycolor,
-            // focusColor: DarkColor.Primarycolor,
-            // highlightColor: Colors.blue, //On hover or long press
-            // hintColor: DarkColor.Primarycolor,
-            // // hoverColor: Colors.blue,
-            // indicatorColor:DarkColor.Primarycolor,
-            // shadowColor: Colors.blueAccent
-
             colorScheme: ColorScheme(
           brightness: isDark ? Brightness.dark : Brightness.light,
           primary: isDark
@@ -344,12 +358,14 @@ class _SAddCalloutState extends State<SAddCallout> {
                     child: IconButton(
                         icon: Icon(Icons.close),
                         onPressed: () {
-                          setState(() {
-                            _selectedEmployees.remove(name);
-                            selectedEmployeeIds.remove(employeeId);
-                            // _selectedEmployeesDetails.remove(name);
-                            // _selectedEmployeesDetails.remove(employeeId);
-                          });
+                          if (mounted) {
+                            setState(() {
+                              _selectedEmployees.remove(name);
+                              selectedEmployeeIds.remove(employeeId);
+                              // _selectedEmployeesDetails.remove(name);
+                              // _selectedEmployeesDetails.remove(employeeId);
+                            });
+                          }
                           print(selectedEmployeeIds);
                           // print(_selectedEmployeesDetails);
                         },
@@ -370,9 +386,11 @@ class _SAddCalloutState extends State<SAddCallout> {
     getAllLocation();
     _focusNode.addListener(() {
       if (!_focusNode.hasFocus) {
-        setState(() {
-          _showSuggestions = false;
-        });
+        if (mounted) {
+          setState(() {
+            _showSuggestions = false;
+          });
+        }
       }
     });
     super.initState();
@@ -401,11 +419,13 @@ class _SAddCalloutState extends State<SAddCallout> {
           ),
           leading: IconButton(
               onPressed: () {
-                setState(() {
-                  if (_selectedEmployees.isNotEmpty) {
-                    _selectedEmployees = [];
-                  }
-                });
+                if (mounted) {
+                  setState(() {
+                    if (_selectedEmployees.isNotEmpty) {
+                      _selectedEmployees = [];
+                    }
+                  });
+                }
                 Navigator.pop(context);
               },
               icon: Icon(Icons.arrow_back_ios_new_sharp)),
@@ -496,10 +516,12 @@ class _SAddCalloutState extends State<SAddCallout> {
                                     );
                                   }).toList(),
                                   onChanged: (String? newValue) {
-                                    setState(() {
-                                      LocDropDownvalue = newValue;
-                                      getLocationDetail();
-                                    });
+                                    if (mounted) {
+                                      setState(() {
+                                        LocDropDownvalue = newValue;
+                                        getLocationDetail();
+                                      });
+                                    }
                                   },
                                 ),
                               ),
@@ -580,26 +602,30 @@ class _SAddCalloutState extends State<SAddCallout> {
                           return ListTile(
                             title: InterLight(text: Emp['EmployeeName']),
                             onTap: () {
-                              setState(() {
-                                // _searchController.text = guard;
-                                _selectedEmployees.add(Emp['EmployeeName']);
-                                selectedEmployeeID = Emp['EmployeeId'];
-                                selectedEmployeeName = Emp['EmployeeName'];
-                                print(_selectedEmployees);
+                              if (mounted) {
+                                setState(() {
+                                  // _searchController.text = guard;
+                                  _selectedEmployees.add(Emp['EmployeeName']);
+                                  selectedEmployeeID = Emp['EmployeeId'];
+                                  selectedEmployeeName = Emp['EmployeeName'];
+                                  print(_selectedEmployees);
 
-                                // _selectedEmployeesDetails.add({
-                                //   'CalloutAssignedEmpsId': selectedEmployeeID,
-                                //   'SelectedEmployeeName': selectedEmployeeName,
-                                // });
-                                selectedEmployeeNames.add(selectedEmployeeName);
-                                selectedEmployeeIds.add(selectedEmployeeID);
-                                print("Selected Emp IDs: $selectedEmployeeIds");
-                                // print(
-                                //     "Selected Emp $_selectedEmployeesDetails");
+                                  // _selectedEmployeesDetails.add({
+                                  //   'CalloutAssignedEmpsId': selectedEmployeeID,
+                                  //   'SelectedEmployeeName': selectedEmployeeName,
+                                  // });
+                                  selectedEmployeeNames
+                                      .add(selectedEmployeeName);
+                                  selectedEmployeeIds.add(selectedEmployeeID);
+                                  print(
+                                      "Selected Emp IDs: $selectedEmployeeIds");
+                                  // print(
+                                  //     "Selected Emp $_selectedEmployeesDetails");
 
-                                _searchController.clear();
-                                foundEmp.clear();
-                              });
+                                  _searchController.clear();
+                                  foundEmp.clear();
+                                });
+                              }
                             },
                           );
                         },
@@ -659,9 +685,11 @@ class _SAddCalloutState extends State<SAddCallout> {
                                     "${dateTime!.year}-${dateTime!.month.toString().padLeft(2, '0')}-${dateTime!.day.toString().padLeft(2, '0')} - "
                                     "${dateTime!.hour.toString().padLeft(2, '0')}:${dateTime!.minute.toString().padLeft(2, '0')}";
 
-                                setState(() {
-                                  calloutTimeInput.text = formattedDateTime;
-                                });
+                                if (mounted) {
+                                  setState(() {
+                                    calloutTimeInput.text = formattedDateTime;
+                                  });
+                                }
 
                                 print("Picked DateTime: $formattedDateTime");
 

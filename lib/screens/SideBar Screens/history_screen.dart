@@ -54,6 +54,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
   int patrolStatusCompleted = 0;
   int hours = 0;
   int minutes = 0;
+  String shiftStartTime = '';
+  String shiftEndTime = '';
 
   @override
   void initState() {
@@ -67,9 +69,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
   void fetchShiftHistoryDetails() async {
     print("Emp ID ${widget.empID}");
     var shifthistory = await fireStoreService.getShiftHistory(widget.empID);
-    setState(() {
-      shiftHistory = shifthistory;
-    });
+    if (mounted) {
+      setState(() {
+        shiftHistory = shifthistory;
+      });
+    }
     print('Shift History :  ${shifthistory}');
   }
 
@@ -99,6 +103,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
     shiftLocation = '';
     shiftStartTimeStr = '';
     shiftEndTimeStr = '';
+    shiftStartTime = '';
+    shiftEndTime = '';
     totalWorkHours = null;
     breakDuration = null;
     totalWorkHoursAfterBreak = null;
@@ -112,6 +118,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
     int hour = int.parse(format[0]);
     int minute = int.parse(format[1]);
     return TimeOfDay(hour: hour, minute: minute);
+  }
+
+  TimeOfDay timestampToTimeOfDay(Timestamp timestamp) {
+    DateTime dateTime = timestamp.toDate(); // Convert Timestamp to DateTime
+    return TimeOfDay(
+        hour: dateTime.hour, minute: dateTime.minute); // Create TimeOfDay
   }
 
   _getTimeDifference(TimeOfDay startTime, TimeOfDay endTime) async {
@@ -170,12 +182,18 @@ class _HistoryScreenState extends State<HistoryScreen> {
         }
 
         List<dynamic> firstArray = documentData['ShiftCurrentStatus'];
-        print('First Array: $firstArray');
 
         if (firstArray.isNotEmpty) {
           // Access the map inside the array, assuming it's the first element
           Map<String, dynamic> map = firstArray[0];
-          print('First Map in First Array: $map');
+          Timestamp shiftStartTimeTimestamp = map['StatusStartedTime'];
+          Timestamp shiftEndTimeTimestamp = map['StatusReportedTime'];
+
+          DateTime shiftStartTimeDateTime = shiftStartTimeTimestamp.toDate();
+          DateTime shiftEndTimeDateTime = shiftEndTimeTimestamp.toDate();
+
+          shiftStartTime = DateFormat('HH:mm').format(shiftStartTimeDateTime);
+          shiftEndTime = DateFormat('HH:mm').format(shiftEndTimeDateTime);
 
           // Check if the 'StatusBreak' array exists in the map
           if (map.containsKey('StatusBreak')) {
@@ -245,8 +263,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
     //Basic Details:
     shiftActualDate = shiftData['ShiftDate'];
     DateTime shiftDateTime = shiftActualDate.toDate();
-    //Formats below few lines (inside SetState)
 
+    shiftActualId = shiftData['ShiftId'];
+    print('shiftActualId');
     // shiftDateTime.format
 
     shiftStartTimeStr = shiftData['ShiftStartTime'];
@@ -255,10 +274,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
     TimeOfDay shiftStartTime = _stringToTimeOfDay(shiftStartTimeStr);
     TimeOfDay shiftEndTime = _stringToTimeOfDay(shiftEndTimeStr);
 
-    shiftActualId = shiftData['ShiftId'];
-    print('shiftActualId');
+    // TimeOfDay shiftActualStartTime = _stringToTimeOfDay(shiftStartTime);
+    // TimeOfDay shiftActualEndTime = _stringToTimeOfDay(shiftEndTime);
 
     await _getTimeDifference(shiftStartTime, shiftEndTime);
+    // await _getTimeDifference(shiftActualStartTime, shiftActualEndTime);
     await fetchBreakTimes();
 
     //Shift Details:
@@ -268,15 +288,17 @@ class _HistoryScreenState extends State<HistoryScreen> {
     //For Client Name:
     shiftClientId = shiftData['ShiftClientId'];
 
-    setState(() {
-      shiftDateStr = DateFormat('dd/MM/yyyy').format(shiftDateTime);
+    if (mounted) {
+      setState(() {
+        shiftDateStr = DateFormat('dd/MM/yyyy').format(shiftDateTime);
 
-      totalWorkHoursString = totalWorkHoursAfterBreak != null
-          ? formatDuration(totalWorkHoursAfterBreak!)
-          : '0h 0m';
-      breakDurationString =
-          breakDuration != null ? formatDuration(breakDuration!) : '0h 0m';
-    });
+        totalWorkHoursString = totalWorkHoursAfterBreak != null
+            ? formatDuration(totalWorkHoursAfterBreak!)
+            : '0h 0m';
+        breakDurationString =
+            breakDuration != null ? formatDuration(breakDuration!) : '0h 0m';
+      });
+    }
 
     QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore
         .instance
@@ -286,9 +308,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
     if (querySnapshot.docs.isNotEmpty) {
       Map<String, dynamic> clientData = querySnapshot.docs.first.data();
-      setState(() {
-        shiftClientName = clientData['ClientName'];
-      });
+      if (mounted) {
+        setState(() {
+          shiftClientName = clientData['ClientName'];
+        });
+      }
 
       print('Client Name: $shiftClientName');
     } else {
@@ -302,9 +326,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
     if (patrolLogQuery.docs.isNotEmpty) {
       Map<String, dynamic> patrolLogData = patrolLogQuery.docs.first.data();
-      setState(() {
-        patrolStatusCompleted = patrolLogData['PatrolLogPatrolCount'];
-      });
+      if (mounted) {
+        setState(() {
+          patrolStatusCompleted = patrolLogData['PatrolLogPatrolCount'];
+        });
+      }
     }
     print("GetData done");
 
@@ -346,6 +372,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+        }
+
+        img{
+          width: 400;
+          height: 400;
         }
 
         .logo-container {
@@ -400,9 +431,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
     <section>
         <h3>Basic Details</h3>
         <p><b>Date:</b> ${shiftDateStr}</p>
-        <p><b>Time: </b>Time</p>
-        <p><b>Shift Start:</b> ${shiftStartTimeStr}</p>
-        <p><b>Shift End:</b> ${shiftEndTimeStr}</p>
+        <p><b>Time: </b>${shiftStartTimeStr} - ${shiftEndTimeStr}</p>
+        <p><b>Shift Start:</b> ${shiftStartTime}</p>                                          
+        <p><b>Shift End:</b> ${shiftEndTime}</p>
     </section>
     <section>
         <h3>Shift Details</h3>
