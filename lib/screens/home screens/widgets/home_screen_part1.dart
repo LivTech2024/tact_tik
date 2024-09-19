@@ -237,7 +237,9 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => AdminNotificationScreen(
-                                      employeeId: widget.empId),
+                                    employeeId: widget.empId,
+                                    companyId: widget.shiftCompanyId,
+                                  ),
                                 ),
                               );
                             } else {
