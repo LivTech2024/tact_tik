@@ -206,18 +206,28 @@ class _GuardAlertWidgetState extends State<SupervisorAlertWidget> {
                                 showErrorToast(context, "Already accepted");
                               }
                             : () async {
-                                // var id = ShiftExchangeData
-                                await fireStoreService.UpdateExchangeNotiStatus(
-                                    widget.notiId, "completed");
                                 if (ShiftExchangeData != null) {
+                                  // var id = ShiftExchangeData
+                                  await fireStoreService
+                                      .UpdateExchangeNotiStatus(
+                                          widget.notiId, "completed");
+
                                   await fireStoreService.UpdateExchangeStatus(
                                       exchangeData!.exchangeShiftRequestedId,
                                       "completed");
+
+                                  print("Id ${widget.notiId}");
+                                  showSuccessToast(context, "${widget.notiId}");
+                                  showSuccessToast(context,
+                                      "${exchangeData!.exchangeShiftRequestedId}");
                                 }
-                                print("Id ${widget.notiId}");
-                                showSuccessToast(context, "${widget.notiId}");
-                                showSuccessToast(context,
-                                    "${exchangeData!.exchangeShiftRequestedId}");
+                                if (ShiftOfferData != null) {
+                                  await fireStoreService
+                                      .UpdateExchangeNotiStatus(
+                                          widget.notiId, "completed");
+                                  await fireStoreService.UpdateOfferSStatus(
+                                      offerData!.offerShiftId, "completed");
+                                }
                               },
                       )
                     : SizedBox(),

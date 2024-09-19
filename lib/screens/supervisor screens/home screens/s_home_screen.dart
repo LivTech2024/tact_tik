@@ -723,7 +723,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                 branchId: '',
                 empEmail: _empEmail,
                 shiftClientId: '',
-                shiftCompanyId: '',
+                shiftCompanyId: _CompanyId ?? "",
                 shiftId: '',
                 shiftLocationId: '',
                 shiftLocationName: '',
@@ -1121,8 +1121,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    SAddCallout()
-                                                ));
+                                                    SAddCallout()));
                                         break;
                                       case 11:
                                         showDialog(

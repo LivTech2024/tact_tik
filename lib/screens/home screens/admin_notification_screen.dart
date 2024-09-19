@@ -12,7 +12,9 @@ import '../../fonts/inter_medium.dart';
 
 class AdminNotificationScreen extends StatefulWidget {
   final String employeeId;
-  const AdminNotificationScreen({super.key, required this.employeeId});
+  final String companyId;
+  const AdminNotificationScreen(
+      {super.key, required this.employeeId, required this.companyId});
 
   @override
   _GuardNotificationScreenState createState() =>
@@ -31,26 +33,52 @@ class _GuardNotificationScreenState extends State<AdminNotificationScreen> {
   Future<void> fetchNotifications() async {
     try {
       print("EmployeeiD ${_userService.employeeID}");
-      QuerySnapshot snapshot = await FirebaseFirestore.instance
+      print("CompanyId ${_userService.shiftCompanyId}");
+      print("CompanyId Emp ${widget.companyId}");
+
+      // Fetch notifications for SHIFTOFFER with status "started"
+      QuerySnapshot shiftOfferSnapshot = await FirebaseFirestore.instance
           .collection('Notification')
-          // .where('NotificationIds', arrayContains: widget.employeeId)
+          .where('NotificationCompanyId', isEqualTo: widget.companyId)
+          .where('NotificationType', isEqualTo: 'SHIFTOFFER')
+          .where('NotificationStatus', isEqualTo: 'started')
           .orderBy('NotificationCreatedAt', descending: true)
           .get();
 
-      print("Notification Snapshot:");
-      for (var doc in snapshot.docs) {
-        print("Document ID: ${doc.id}, Data: ${doc.data()}");
-      }
+      // Fetch notifications for SHIFTEXCHANGE with status "started"
+      QuerySnapshot shiftExchangeSnapshot = await FirebaseFirestore.instance
+          .collection('Notification')
+          .where('NotificationCompanyId', isEqualTo: widget.companyId)
+          .where('NotificationType', isEqualTo: 'SHIFTEXCHANGE')
+          .where('NotificationStatus', isEqualTo: 'started')
+          .orderBy('NotificationCreatedAt', descending: true)
+          .get();
 
-      if (snapshot.docs.isEmpty) {
-        print("No notifications found.");
-      }
+      // Fetch notifications for Message with only companyId condition
+      QuerySnapshot messageSnapshot = await FirebaseFirestore.instance
+          .collection('Notification')
+          .where('NotificationCompanyId', isEqualTo: widget.companyId)
+          .where('NotificationType', isEqualTo: 'Message')
+          .orderBy('NotificationCreatedAt', descending: true)
+          .get();
+
+      // Combine all results: SHIFTOFFER, SHIFTEXCHANGE, and Message
+      List<QueryDocumentSnapshot> allDocs = [
+        ...shiftOfferSnapshot.docs,
+        ...shiftExchangeSnapshot.docs,
+        ...messageSnapshot.docs,
+      ];
+
+      // Sort combined notifications by creation time (in descending order)
+      allDocs.sort((a, b) {
+        Timestamp timeA = a['NotificationCreatedAt'] ?? Timestamp.now();
+        Timestamp timeB = b['NotificationCreatedAt'] ?? Timestamp.now();
+        return timeB.compareTo(timeA); // Descending order
+      });
 
       setState(() {
-        notifications = snapshot.docs
-            // .where((doc) => doc['NotificationStatus'] != 'started')
-            .map((doc) => NotificationModel.fromFirestore(doc))
-            .toList();
+        notifications =
+            allDocs.map((doc) => NotificationModel.fromFirestore(doc)).toList();
       });
 
       print("Notifications:");
@@ -58,7 +86,6 @@ class _GuardNotificationScreenState extends State<AdminNotificationScreen> {
         print(
             "Message: ${notification.message}, Type: ${notification.type}, CreatedAt: ${notification.createdAt.toDate()}");
       }
-      //todo error for null values
     } catch (e) {
       print("Error fetching notifications: $e");
     }
@@ -89,17 +116,17 @@ class _GuardNotificationScreenState extends State<AdminNotificationScreen> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 SizedBox(height: 20.h),
-                TextButton(
-                  onPressed: () {
-                    // Implement Clear Notification functionality here
-                    print("Notification length ${notifications.length}");
-                  },
-                  child: InterMedium(
-                    text: 'Clear Notification',
-                    color: Theme.of(context).textTheme.bodyLarge?.color,
-                    fontsize: 14.sp,
-                  ),
-                ),
+                // TextButton(
+                //   onPressed: () {
+                //     // Implement Clear Notification functionality here
+                //     print("Notification length ${notifications.length}");
+                //   },
+                //   child: InterMedium(
+                //     text: 'Clear Notification',
+                //     color: Theme.of(context).textTheme.bodyLarge?.color,
+                //     fontsize: 14.sp,
+                //   ),
+                // ),
                 SizedBox(height: 20.h),
                 ListView.builder(
                   physics: NeverScrollableScrollPhysics(),
