@@ -24,6 +24,7 @@ import "package:tact_tik/fonts/inter_regular.dart";
 import "package:tact_tik/screens/home%20screens/calendar%20screen/utills/extensions.dart";
 import "package:tact_tik/screens/home%20screens/widgets/home_screen_part1.dart";
 import "package:tact_tik/screens/supervisor%20screens/home%20screens/widgets/set_details_widget.dart";
+import "package:tact_tik/services/firebaseFunctions/firebase_function.dart";
 import "package:tact_tik/test_screen.dart";
 import "../../../../fonts/inter_light.dart";
 import "../../../../utils/colors.dart";
@@ -48,6 +49,7 @@ class _SAddCalloutState extends State<SAddCallout> {
 
   //Stores Selected Location
   String? LocDropDownvalue;
+  String? CompanyId;
 
   List<String> dbLocation = [];
   String selectedLocation = '';
@@ -175,16 +177,26 @@ class _SAddCalloutState extends State<SAddCallout> {
 
   Future<void> addCallout() async {
     try {
+      FireStoreService fireStoreService = FireStoreService();
+      var userInfo = await fireStoreService.getUserInfoByCurrentUserEmail();
+      if (mounted) {
+        if (userInfo != null) {
+          CompanyId = userInfo['EmployeeCompanyId'];
+        }
+      }
+
       // Generate a new document reference with a unique ID
       DocumentReference calloutRef =
           FirebaseFirestore.instance.collection('Callouts').doc();
       String calloutId = calloutRef.id;
 
       // Convert the selectedEmployeeIds list to a map {0: id0, 1: id1, ...}
-      Map<String, String> assignedEmpsMap = {
-        for (int i = 0; i < selectedEmployeeIds.length; i++)
-          '$i': selectedEmployeeIds[i]
-      };
+      // Map<String, String> assignedEmpsMap = {
+      //   for (int i = 0; i < selectedEmployeeIds.length; i++)
+      //     '$i': selectedEmployeeIds[i]
+      // };
+
+      List assignedEmpsList = selectedEmployeeIds;
 
       // Create the CalloutStatus array of maps, repeating for each employee
       List<Map<String, dynamic>> calloutStatusList = [
@@ -212,11 +224,12 @@ class _SAddCalloutState extends State<SAddCallout> {
           'CalloutLocationName': calloutLocationName,
           'CalloutLocationAddress': calloutLocationAddress,
           'CalloutDateTime': calloutDateTimestamp,
-          'CalloutAssignedEmpsId': assignedEmpsMap,
+          'CalloutAssignedEmpsId': assignedEmpsList,
           'CalloutStatus': calloutStatusList,
           'CalloutCreatedAt': DateTime.now(),
           'CalloutModifiedAt': DateTime.now(),
           'CalloutStartTime': calloutDateTimestamp, //Added Now
+          'CalloutCompanyId': CompanyId,
         });
 
         print('Callout added successfully with ID: $calloutId');
