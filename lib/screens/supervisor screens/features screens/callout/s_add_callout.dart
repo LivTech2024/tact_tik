@@ -604,28 +604,30 @@ class _SAddCalloutState extends State<SAddCallout> {
                             title: InterLight(text: Emp['EmployeeName']),
                             onTap: () {
                               if (mounted) {
-                                setState(() {
-                                  // _searchController.text = guard;
-                                  _selectedEmployees.add(Emp['EmployeeName']);
-                                  selectedEmployeeID = Emp['EmployeeId'];
-                                  selectedEmployeeName = Emp['EmployeeName'];
-                                  print(_selectedEmployees);
+                                setState(
+                                  () {
+                                    // _searchController.text = guard;
+                                    _selectedEmployees.add(Emp['EmployeeName']);
+                                    selectedEmployeeID = Emp['EmployeeId'];
+                                    selectedEmployeeName = Emp['EmployeeName'];
+                                    print(_selectedEmployees);
 
-                                  // _selectedEmployeesDetails.add({
-                                  //   'CalloutAssignedEmpsId': selectedEmployeeID,
-                                  //   'SelectedEmployeeName': selectedEmployeeName,
-                                  // });
-                                  selectedEmployeeNames
-                                      .add(selectedEmployeeName);
-                                  selectedEmployeeIds.add(selectedEmployeeID);
-                                  print(
-                                      "Selected Emp IDs: $selectedEmployeeIds");
-                                  // print(
-                                  //     "Selected Emp $_selectedEmployeesDetails");
+                                    // _selectedEmployeesDetails.add({
+                                    //   'CalloutAssignedEmpsId': selectedEmployeeID,
+                                    //   'SelectedEmployeeName': selectedEmployeeName,
+                                    // });
+                                    selectedEmployeeNames
+                                        .add(selectedEmployeeName);
+                                    selectedEmployeeIds.add(selectedEmployeeID);
+                                    print(
+                                        "Selected Emp IDs: $selectedEmployeeIds");
+                                    // print(
+                                    //     "Selected Emp $_selectedEmployeesDetails");
 
-                                  _searchController.clear();
-                                  foundEmp.clear();
-                                });
+                                    _searchController.clear();
+                                    foundEmp.clear();
+                                  },
+                                );
                               }
                             },
                           );
