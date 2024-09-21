@@ -78,7 +78,6 @@ class _SelectGuardsScreenState extends State<SelectClientGuardsScreen> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     final bool isDark =

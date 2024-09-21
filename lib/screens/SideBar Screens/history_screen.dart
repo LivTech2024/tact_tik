@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
-import 'package:open_filex/open_filex.dart';
+// import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:tact_tik/common/sizes.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
@@ -473,7 +473,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
       Navigator.of(context).pop();
 
       // Open the PDF in an external viewer
-      await OpenFilex.open(pdfPath);
+      // await OpenFilex.open(pdfPath);
 
       return pdfBase64;
     } else {

@@ -74,7 +74,11 @@ dependencies:
   image: ^4.1.7
   image_picker: ^1.0.7
   intl: ^0.18.1
-  intl_phone_number_input: ^0.7.4
+  intl_phone_number_input:
+    git:
+      url: https://github.com/Shahidbangash/intl_phone_number_input.git
+      ref: develop
+  
   localstorage: ^4.0.0+1
   lottie: ^3.1.1
   mapbox_maps_flutter: ^2.0.0-rc.1
@@ -110,7 +114,6 @@ dependencies:
   animated_custom_dropdown: ^3.1.1
   workmanager: ^0.5.2
   flutter_native_timezone_updated_gradle: ^2.0.3
-  open_filex: ^4.5.0
 dev_dependencies:
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

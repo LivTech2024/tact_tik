@@ -82,16 +82,13 @@ class _HistoryScreenState extends State<SHistoryScreen> {
 
     return SafeArea(
       child: Scaffold(
-        
         body: CustomScrollView(
           // physics: const PageScrollPhysics(),
           slivers: [
             SliverAppBar(
-            
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back_ios,
-                 
                 ),
                 padding: EdgeInsets.only(left: 20.w),
                 onPressed: () {
@@ -101,7 +98,6 @@ class _HistoryScreenState extends State<SHistoryScreen> {
               ),
               title: InterMedium(
                 text: '${widget.empName} History',
-               
               ),
               centerTitle: true,
               floating: true, // Makes the app bar float above the content
@@ -113,237 +109,248 @@ class _HistoryScreenState extends State<SHistoryScreen> {
             ),
             shiftHistory.isEmpty
                 ? SliverFillRemaining(
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: 300.h,
-                      child: SvgPicture.asset(isDark ? 'assets/images/no_data_dark.svg' :'assets/images/no_data.svg'),
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: 300.h,
+                            child: SvgPicture.asset(isDark
+                                ? 'assets/images/no_data_dark.svg'
+                                : 'assets/images/no_data.svg'),
+                          ),
+                          InterSemibold(
+                            text: 'Nothing to preview',
+                            fontsize: 16.sp,
+                            color: Theme.of(context).textTheme.bodyLarge!.color,
+                          )
+                        ],
+                      ),
                     ),
-                    InterSemibold(
-                      text: 'Nothing to preview',
-                      fontsize: 16.sp,
-                      color: Theme.of(context).textTheme.bodyLarge!.color,
-                    )
-                  ],
-                ),
-              ),
-            ) :
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  var shift = shiftHistory[index];
-                  DateTime shiftDate =
-                      (shift['ShiftDate'] as Timestamp).toDate();
-                  String date =
-                      '${shiftDate.day}/${shiftDate.month}/${shiftDate.year}';
-                  String dayOfWeek = _getDayOfWeek(shiftDate.weekday);
-                  return Padding(
-                    padding: EdgeInsets.only(
-                        left: 30.w,
-                        right: 30.w,
-                        bottom: 40.h),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        InterBold(
-                          text: "${date}  ${dayOfWeek}",
-                          fontsize: 18.sp,
-                          color: Theme.of(context)
+                  )
+                : SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        var shift = shiftHistory[index];
+                        DateTime shiftDate =
+                            (shift['ShiftDate'] as Timestamp).toDate();
+                        String date =
+                            '${shiftDate.day}/${shiftDate.month}/${shiftDate.year}';
+                        String dayOfWeek = _getDayOfWeek(shiftDate.weekday);
+                        return Padding(
+                          padding: EdgeInsets.only(
+                              left: 30.w, right: 30.w, bottom: 40.h),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              InterBold(
+                                text: "${date}  ${dayOfWeek}",
+                                fontsize: 18.sp,
+                                color: Theme.of(context)
                                     .textTheme
                                     .bodyMedium!
                                     .color,
-                        ),
-                        SizedBox(height: 20.h),
-                        Container(
-                          height: 340.h,
-                          padding: EdgeInsets.only(
-                            top: 20.h,
-                          ),
-                          width: double.maxFinite,
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.circular(10.r),
-                            color: Theme.of(context).cardColor,
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 20.w),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    InterSemibold(
-                                      text: 'Shift Name',
-                                      fontsize: 16.w,
-                                      color:  Theme.of(context)
-                                                .textTheme
-                                                .bodyMedium!
-                                                .color,
-                                    ),
-                                    SizedBox(width: 40.w),
-                                    Flexible(
-                                      child: InterSemibold(
-                                        text: shift['ShiftName'],
-                                        fontsize: 16.w,
-                                        color: Theme.of(context).textTheme.bodyMedium!.color,
-                                      ),
-                                    ),
-                                  ],
-                                ),
                               ),
-                              SizedBox(
-                                height: 10.h,
-                              ),
+                              SizedBox(height: 20.h),
                               Container(
-                                height: 100.h,
-                                color: Theme.of(context).brightness == Brightness.dark
-                                    ? DarkColor.colorRed
-                                    : LightColor.colorRed,
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 20.w),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    InterSemibold(
-                                      text: 'Location',
-                                      fontsize: 16.sp,
-                                      color:  Theme.of(context)
-                                                .textTheme
-                                                .bodyMedium!
-                                                .color,
-                                    ),
-                                    SizedBox(width: 40.w),
-                                    Flexible(
-                                      child: InterSemibold(
-                                        text: shift['ShiftLocationAddress'],
-                                        fontsize: 16.w,
-                                        color:  Theme.of(context)
-                                                  .textTheme
-                                                  .bodyMedium!
-                                                  .color,
-                                      ),
-                                    ),
-                                  ],
+                                height: 340.h,
+                                padding: EdgeInsets.only(
+                                  top: 20.h,
                                 ),
-                              ),
-                              SizedBox(height: 30.w),
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 20.w),
                                 width: double.maxFinite,
-                                child: Row(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10.r),
+                                  color: Theme.of(context).cardColor,
+                                ),
+                                child: Column(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        InterSemibold(
-                                          text: 'Shift Timimg',
-                                          fontsize: 16.sp,
-                                          color: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyMedium!
-                                                    .color,
-                                        ),
-                                        SizedBox(
-                                          height: 20.h,
-                                        ),
-                                        InterSemibold(
-                                          text:
-                                              '${shift['ShiftStartTime']} to ${shift['ShiftEndTime']}',
-                                          fontsize: 16.sp,
-                                          color:  Theme.of(context)
-                                                    .textTheme
-                                                    .bodyMedium!
-                                                    .color,
-                                        ),
-                                      ],
-                                    ),
-                                    // SizedBox(height: height / height20),
-                                    SizedBox(
-                                      child: Column(
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 20.w),
+                                      child: Row(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                            CrossAxisAlignment.center,
                                         children: [
                                           InterSemibold(
-                                            text: 'Total',
-                                            fontsize: 16.sp,
+                                            text: 'Shift Name',
+                                            fontsize: 16.w,
                                             color: Theme.of(context)
-                                                      .textTheme
-                                                      .bodyMedium!
-                                                      .color,
+                                                .textTheme
+                                                .bodyMedium!
+                                                .color,
                                           ),
-                                          SizedBox(
-                                            height: 20.h,
-                                          ),
-                                          InterSemibold(
-                                            text: _formatShiftDuration(shift['ShiftStartTime'], shift['ShiftEndTime']),
-                                            fontsize: 16.sp,
-                                            color: Theme.of(context)
-                                                      .textTheme
-                                                      .bodyMedium!
-                                                      .color,
+                                          SizedBox(width: 40.w),
+                                          Flexible(
+                                            child: InterSemibold(
+                                              text: shift['ShiftName'],
+                                              fontsize: 16.w,
+                                              color: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium!
+                                                  .color,
+                                            ),
                                           ),
                                         ],
                                       ),
                                     ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                height: 20.h,
-                              ),
-                              Button1(
-                                text: 'text',
-                                useWidget: true,
-                                MyWidget: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.download_for_offline,
-                                      color:  Theme.of(context)
+                                    SizedBox(
+                                      height: 10.h,
+                                    ),
+                                    Container(
+                                      height: 100.h,
+                                      color: Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? DarkColor.colorRed
+                                          : LightColor.colorRed,
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 20.w),
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          InterSemibold(
+                                            text: 'Location',
+                                            fontsize: 16.sp,
+                                            color: Theme.of(context)
                                                 .textTheme
                                                 .bodyMedium!
                                                 .color,
-                                      size: 24.w,
+                                          ),
+                                          SizedBox(width: 40.w),
+                                          Flexible(
+                                            child: InterSemibold(
+                                              text:
+                                                  shift['ShiftLocationAddress'],
+                                              fontsize: 16.w,
+                                              color: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium!
+                                                  .color,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(height: 30.w),
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 20.w),
+                                      width: double.maxFinite,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              InterSemibold(
+                                                text: 'Shift Timimg',
+                                                fontsize: 16.sp,
+                                                color: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyMedium!
+                                                    .color,
+                                              ),
+                                              SizedBox(
+                                                height: 20.h,
+                                              ),
+                                              InterSemibold(
+                                                text:
+                                                    '${shift['ShiftStartTime']} to ${shift['ShiftEndTime']}',
+                                                fontsize: 16.sp,
+                                                color: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyMedium!
+                                                    .color,
+                                              ),
+                                            ],
+                                          ),
+                                          // SizedBox(height: height / height20),
+                                          SizedBox(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                InterSemibold(
+                                                  text: 'Total',
+                                                  fontsize: 16.sp,
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyMedium!
+                                                      .color,
+                                                ),
+                                                SizedBox(
+                                                  height: 20.h,
+                                                ),
+                                                InterSemibold(
+                                                  text: _formatShiftDuration(
+                                                      shift['ShiftStartTime'],
+                                                      shift['ShiftEndTime']),
+                                                  fontsize: 16.sp,
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyMedium!
+                                                      .color,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                     SizedBox(
-                                      width: 10.w,
+                                      height: 20.h,
                                     ),
-                                    InterSemibold(
-                                      text: 'Download',
-                                      color: Theme.of(context)
+                                    Button1(
+                                      text: 'text',
+                                      useWidget: true,
+                                      MyWidget: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.download_for_offline,
+                                            color: Theme.of(context)
                                                 .textTheme
                                                 .bodyMedium!
                                                 .color,
-                                      fontsize: 16.sp,
-                                    )
+                                            size: 24.w,
+                                          ),
+                                          SizedBox(
+                                            width: 10.w,
+                                          ),
+                                          InterSemibold(
+                                            text: 'Download',
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium!
+                                                .color,
+                                            fontsize: 16.sp,
+                                          )
+                                        ],
+                                      ),
+                                      onPressed: () {},
+                                      backgroundcolor:
+                                          Theme.of(context).primaryColorLight,
+                                      useBorderRadius: true,
+                                      MyBorderRadius: BorderRadius.only(
+                                        bottomLeft: Radius.circular(12.r),
+                                        bottomRight: Radius.circular(12.r),
+                                      ),
+                                    ),
                                   ],
-                                ),
-                                onPressed: () {},
-                                backgroundcolor: Theme.of(context).primaryColorLight,
-                                useBorderRadius: true,
-                                MyBorderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(12.r),
-                                  bottomRight: Radius.circular(12.r),
                                 ),
                               ),
                             ],
                           ),
-                        ),
-                      ],
+                        );
+                      },
+                      childCount: 4,
                     ),
-                  );
-                },
-                childCount: 4,
-              ),
-            ),
+                  ),
           ],
         ),
       ),
