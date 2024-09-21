@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:tact_tik/common/sizes.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
@@ -126,29 +127,34 @@ class _HistoryScreenState extends State<HistoryScreen> {
         hour: dateTime.hour, minute: dateTime.minute); // Create TimeOfDay
   }
 
-  _getTimeDifference(TimeOfDay startTime, TimeOfDay endTime) async {
-    final now = DateTime.now();
-    final startDateTime = DateTime(
-        now.year, now.month, now.day, startTime.hour, startTime.minute);
-    final endDateTime =
-        DateTime(now.year, now.month, now.day, endTime.hour, endTime.minute);
+  _getTimeDifference(DateTime startTime, DateTime endTime) async {
+    Duration difference = endTime.difference(startTime);
+    totalWorkHours = difference;
 
-    // Calculate difference
-    totalWorkHours = endDateTime.difference(startDateTime);
-    print("Total Work hours before break $totalWorkHours");
+    // Get the difference in days, hours, and minutes
+    int totalHours = difference.inHours;
+    int totalMinutes = difference.inMinutes % 60;
 
-    // If the end time is before the start time, assume it’s the next day
-    if (totalWorkHours!.isNegative) {
-      final nextDayEndDateTime = endDateTime.add(Duration(days: 1));
-      totalWorkHours = nextDayEndDateTime.difference(startDateTime);
-    }
+    // Format the result into a readable format
+    String formattedDifference = '$totalHours H $totalMinutes M';
+
+    return formattedDifference;
   }
 
   String formatDuration(Duration duration) {
     final hours = duration.inHours;
     final minutes = duration.inMinutes % 60;
+    final seconds = duration.inSeconds % 60;
     print('Formatted Duration: ${hours}h ${minutes}m');
     return '${hours}h ${minutes}m';
+  }
+
+  String formatDurationBreak(Duration duration) {
+    final hours = duration.inHours;
+    final minutes = duration.inMinutes % 60;
+    final seconds = duration.inSeconds % 60;
+    print('Formatted Duration: ${hours}h ${minutes}m ${seconds}s');
+    return '${hours}h ${minutes}m ${seconds}s';
   }
 
   fetchBreakTimes() async {
@@ -192,8 +198,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
           DateTime shiftStartTimeDateTime = shiftStartTimeTimestamp.toDate();
           DateTime shiftEndTimeDateTime = shiftEndTimeTimestamp.toDate();
 
-          shiftStartTime = DateFormat('HH:mm').format(shiftStartTimeDateTime);
-          shiftEndTime = DateFormat('HH:mm').format(shiftEndTimeDateTime);
+          await _getTimeDifference(
+              shiftStartTimeDateTime, shiftEndTimeDateTime);
+
+          DateFormat formatter = DateFormat('dd/MM/yy - HH:mm');
+          shiftStartTime = formatter.format(shiftStartTimeDateTime);
+          shiftEndTime = formatter.format(shiftEndTimeDateTime);
 
           // Check if the 'StatusBreak' array exists in the map
           if (map.containsKey('StatusBreak')) {
@@ -246,7 +256,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
     // Make sure totalWorkHours is initialized before subtraction
     if (breakDuration == null ||
         breakDuration!.inSeconds == 0 ||
-        breakDuration!.inMinutes == 0) {
+        breakDuration!.inMinutes == 0 ||
+        breakDuration!.inSeconds == 0) {
       print('No break or zero duration break detected');
       totalWorkHoursAfterBreak = totalWorkHours; // No break deduction
       breakDurationString = 'No Breaks';
@@ -271,13 +282,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
     shiftStartTimeStr = shiftData['ShiftStartTime'];
     shiftEndTimeStr = shiftData['ShiftEndTime'];
 
-    TimeOfDay shiftStartTime = _stringToTimeOfDay(shiftStartTimeStr);
-    TimeOfDay shiftEndTime = _stringToTimeOfDay(shiftEndTimeStr);
-
-    // TimeOfDay shiftActualStartTime = _stringToTimeOfDay(shiftStartTime);
-    // TimeOfDay shiftActualEndTime = _stringToTimeOfDay(shiftEndTime);
-
-    await _getTimeDifference(shiftStartTime, shiftEndTime);
     // await _getTimeDifference(shiftActualStartTime, shiftActualEndTime);
     await fetchBreakTimes();
 
@@ -295,8 +299,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
         totalWorkHoursString = totalWorkHoursAfterBreak != null
             ? formatDuration(totalWorkHoursAfterBreak!)
             : '0h 0m';
-        breakDurationString =
-            breakDuration != null ? formatDuration(breakDuration!) : '0h 0m';
+        breakDurationString = breakDuration != null
+            ? formatDurationBreak(breakDuration!)
+            : '0h 0m';
       });
     }
 
@@ -345,7 +350,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
     print('inside shiftReport');
     print(
         'Shift Data: $shiftDateStr, $totalWorkHoursString, $breakDurationString, $patrolStatusCompleted, $totalPatrolStatus');
+
     showDialog(
+        barrierDismissible: false,
         context: context,
         builder: (context) {
           return Center(child: CircularProgressIndicator());
@@ -353,105 +360,94 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
     final dateFormat = DateFormat('HH:mm'); // Define the format for time
 
-    print('Formating Time');
+    print('Formatting Time');
 
     print("now html");
     final htmlcontent = """
-    <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shift Report</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Shift Report</title>
+      <style>
+          body {
+              font-family: Arial, sans-serif;
+              margin: 0;
+              padding: 0;
+              box-sizing: border-box;
+              display: flex;
+              flex-direction: column;
+              min-height: 100vh;
+          }
 
-        img{
-          width: 400;
-          height: 400;
-        }
+          .logo{
+            width: 720;
+            height: 720;
+          }
 
-        .logo-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
+          h1 {
+              margin: 0;
+              font-size: 24px;
+              flex-grow: 1; /* Allow the <h1> to grow and fill the space */
+          }
 
-        .logo-container img {
-            max-height: 50px; /* Set the max-height for the logos */
-        }
+          h3 {
+            color: #7137CD
+          }
 
-        h1 {
-            margin: 0;
-            font-size: 24px;
-            flex-grow: 1; /* Allow the <h1> to grow and fill the space */
-        }
+          section {
+              padding-top: 5px;
+              padding-bottom: 5px;
+              padding-left:25px;
+          }
+          .location {
+              width: 50%;
+              max-width: 50%;
+              word-wrap: break-word;
+          }
 
-        h3 {
-          color: #7137CD
-        }
+          footer {
+              background-color: #333;
+              color: white;
+              text-align: center;
+              padding: 10px 0;
+              margin-top: auto; /* Push the footer to the bottom of the page */
+          }
+      </style>
+  </head>
+  <body>
+      <header>
+      </header>
 
-        section {
-            padding-top: 5px;
-            padding-bottom: 5px;
-            padding-left:25px;
-        }
-        .location {
-            width: 50%;
-            max-width: 50%;
-            word-wrap: break-word;
-        }
+      <section>
+        <img class='logo' src="assets/images/Companylogo.jpg" alt="Tactical Protection">
+      </section>
 
-        footer {
-            background-color: #333;
-            color: white;
-            text-align: center;
-            padding: 10px 0;
-            margin-top: auto; /* Push the footer to the bottom of the page */
-        }
-    </style>
-</head>
-<body>
-    <header>
-    </header>
-
+      <section>
+          <h3>Basic Details</h3>
+          <p><b>Date:</b> ${shiftDateStr}</p>
+          <p><b>Time: </b>${shiftStartTimeStr} - ${shiftEndTimeStr}</p>
+          <p><b>Shift Start:</b> ${shiftStartTime}</p>                                          
+          <p><b>Shift End:</b> ${shiftEndTime}</p>
+      </section>
+      <section>
+          <h3>Shift Details</h3>
+          <p><b>Shift Name:</b> ${shiftName}</p>
+          <p><b>Client:</b> ${shiftClientName}</p>
+          <p class="location"><b>Location:</b> ${shiftLocation}</p>
+      </section>
     <section>
-      <img src="assets/images/Companylogo.jpg" alt="Tactical Protection">
-    </section>
-
-    <section>
-        <h3>Basic Details</h3>
-        <p><b>Date:</b> ${shiftDateStr}</p>
-        <p><b>Time: </b>${shiftStartTimeStr} - ${shiftEndTimeStr}</p>
-        <p><b>Shift Start:</b> ${shiftStartTime}</p>                                          
-        <p><b>Shift End:</b> ${shiftEndTime}</p>
-    </section>
-    <section>
-        <h3>Shift Details</h3>
-        <p><b>Shift Name:</b> ${shiftName}</p>
-        <p><b>Client:</b> ${shiftClientName}</p>
-        <p class="location"><b>Locaiton:</b> ${shiftLocation}</p>
-    </section>
-   <section>
-    <h3>Work Details</h3>
-    <p><b>Total Work Hours: </b>${totalWorkHoursString}</p>
-    <p><b>Breaks Taken: </b>${breakDurationString}</p>
-</section>
-    <section>
-        <h3>Status</h3>
-        <p><b>Patrol Status:</b> ${patrolStatusCompleted} out of ${totalPatrolStatus}</p>
-    </section>
-</body>
-</html>
+      <h3>Work Details</h3>
+      <p><b>Total Work Hours: </b>${totalWorkHoursString}</p>
+      <p><b>Breaks Taken: </b>${breakDurationString}</p>
+  </section>
+      <section>
+          <h3>Status</h3>
+          <p><b>Patrol Status:</b> ${patrolStatusCompleted} out of ${totalPatrolStatus}</p>
+      </section>
+  </body>
+  </html>
   """;
 
     // Generate the PDF
@@ -466,34 +462,25 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
     if (pdfResponse.statusCode == 200) {
       print('PDF generated successfully');
-      final pdfBase64 = await base64Encode(pdfResponse.bodyBytes);
-      savePdfLocally(pdfBase64, '${shiftName}-shift_report.pdf');
+      final pdfBase64 = base64Encode(pdfResponse.bodyBytes);
+
+      // Save PDF locally
+      final Directory tempDir = await getTemporaryDirectory();
+      final String pdfPath = '${tempDir.path}/${shiftName}-shift_report.pdf';
+      final File pdfFile = File(pdfPath);
+      await pdfFile.writeAsBytes(base64Decode(pdfBase64));
+
       Navigator.of(context).pop();
-      print('PDF Saved');
+
+      // Open the PDF in an external viewer
+      await OpenFilex.open(pdfPath);
+
       return pdfBase64;
     } else {
       Navigator.of(context).pop();
       print('Failed to generate PDF. Status code: ${pdfResponse.statusCode}');
       throw Exception('Failed to generate PDF');
     }
-  }
-
-  Future<File> savePdfLocally(String pdfBase64, String fileName) async {
-    final pdfBytes = base64Decode(pdfBase64);
-    Directory? directory;
-    if (Platform.isIOS) {
-      directory = await getApplicationDocumentsDirectory();
-    } else {
-      directory = Directory('/storage/emulated/0/Download');
-      if (!await directory.exists()) {
-        directory = await getExternalStorageDirectory();
-      }
-    }
-
-    final file = File('${directory?.path}/$fileName');
-    
-    await file.writeAsBytes(pdfBytes);
-    return file;
   }
 
   @override

@@ -110,6 +110,7 @@ dependencies:
   animated_custom_dropdown: ^3.1.1
   workmanager: ^0.5.2
   flutter_native_timezone_updated_gradle: ^2.0.3
+  open_filex: ^4.5.0
 dev_dependencies:
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
