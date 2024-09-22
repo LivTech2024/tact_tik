@@ -9,6 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tact_tik/common/widgets/customErrorToast.dart';
+import 'package:tact_tik/common/widgets/customToast.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
 import 'package:tact_tik/screens/home%20screens/controller/home_screen_controller.dart';
@@ -39,8 +40,7 @@ void callbackDispatcher() {
         if (elapsedSeconds >= 1800 &&
             (elapsedSeconds - lastEmailSentAt >= 3600 ||
                 lastEmailSentAt == 0)) {
-          //TODO Call sendDAREmail function
-          // await sendDAREmail();
+          //TODO: Generate dar tiles
           await prefs.setInt('lastEmailSentAt_$callOutId', elapsedSeconds);
         }
       }
@@ -59,7 +59,7 @@ class CallOutScreen extends StatefulWidget {
   final String callOutAddressName;
   final String callOutCompanyId;
   final VoidCallback onRefresh;
-
+  final String callOutLocationId;
   CallOutScreen({
     super.key,
     required this.callOutDate,
@@ -70,7 +70,8 @@ class CallOutScreen extends StatefulWidget {
     required this.callOutStatus,
     required this.callOutCompanyId,
     required this.EmployeeName,
-    required this.onRefresh, //refresh the homescreen
+    required this.onRefresh,
+    required this.callOutLocationId, //refresh the homescreen
   });
 
   @override
@@ -132,9 +133,27 @@ class _CallOutScreenState extends State<CallOutScreen> {
       setState(() {
         elapsedSeconds++;
       });
+
       checkAndSendEmail();
       saveTimerState();
+
+      // Generate a DAR tile at 30 minutes (1800 seconds) and 60 minutes (3600 seconds)
+      // if (elapsedSeconds == 1800 || elapsedSeconds == 3600) {
+      //   String startTime = formatTime(
+      //       elapsedSeconds - 1800); // Example: start time for the tile
+      //   String endTime =
+      //       formatTime(elapsedSeconds); // Example: end time for the tile
+
+      //   fireStoreService.addDarTile(
+      //     empDarShiftId: widget.callOutId,
+      //     tileContent: '',
+      //     tileDate: Timestamp.now(),
+      //     tileLocation: '',
+      //     tileTime: '$startTime - $endTime', // Format like 01:00 - 02:00
+      //   );
+      // }
     });
+
     Workmanager().registerOneOffTask(
       "timerTask_${widget.callOutId}",
       "timerTask",
@@ -337,6 +356,103 @@ class _CallOutScreenState extends State<CallOutScreen> {
     });
   }
 
+  void showTileTimeInputDialog(BuildContext context) {
+    TimeOfDay? startTime;
+    TimeOfDay? endTime;
+    TextEditingController tileTimeController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Enter Tile Time"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ElevatedButton(
+                onPressed: () async {
+                  startTime = await showTimePicker(
+                    context: context,
+                    initialTime: TimeOfDay.now(),
+                  );
+                  if (startTime != null && endTime != null) {
+                    // Update the TextField when both times are selected
+                    tileTimeController.text =
+                        '${startTime!.format(context)} - ${endTime!.format(context)}';
+                  } else if (startTime != null) {
+                    tileTimeController.text =
+                        '${startTime!.format(context)} - ';
+                  }
+                },
+                child: Text("Select Start Time"),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  endTime = await showTimePicker(
+                    context: context,
+                    initialTime: TimeOfDay.now(),
+                  );
+                  if (endTime != null && startTime != null) {
+                    // Update the TextField when both times are selected
+                    tileTimeController.text =
+                        '${startTime!.format(context)} - ${endTime!.format(context)}';
+                  } else if (endTime != null) {
+                    tileTimeController.text = ' - ${endTime!.format(context)}';
+                  }
+                },
+                child: Text("Select End Time"),
+              ),
+              SizedBox(height: 10),
+              TextField(
+                controller: tileTimeController,
+                decoration: InputDecoration(
+                  hintText: 'Selected time will appear here',
+                ),
+                readOnly: true, // Make it read-only to prevent user edits
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () async {
+                if (startTime == null || endTime == null) {
+                  showErrorToast(
+                      context, "Please select both start and end times.");
+                  return;
+                }
+
+                // Format the selected times into hh:mm - hh:mm format
+                String formattedTileTime =
+                    '${startTime!.format(context)} - ${endTime!.format(context)}';
+
+                try {
+                  await fireStoreService.addDarTile(
+                    empDarShiftId: widget.callOutId,
+                    tileContent: '',
+                    tileDate: Timestamp.now(),
+                    tileLocation: '',
+                    tileTime: formattedTileTime, // Using the selected time
+                  );
+                  Navigator.of(context).pop(); // Close the dialog
+                  showSuccessToast(context, "DAR tile added successfully");
+                } catch (e) {
+                  showErrorToast(context, "Error adding DAR tile. Try again.");
+                }
+              },
+              child: Text("Submit"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
@@ -494,6 +610,18 @@ class _CallOutScreenState extends State<CallOutScreen> {
                             widget.onRefresh();
                             startTimer();
                           }
+                          await fireStoreService.createNewDar(
+                              empDarEmpId: widget.EmployeeId,
+                              empDarEmpName: widget.EmployeeName,
+                              empDarClientId: "",
+                              empDarCompanyBranchId: "",
+                              empDarCompanyId: widget.callOutCompanyId,
+                              empDarCreatedAt: Timestamp.now(),
+                              empDarDate: Timestamp.now(),
+                              empDarLocationId: widget.callOutLocationId,
+                              empDarLocationName: widget.callOutAddressName,
+                              empDarShiftId: widget.callOutId,
+                              empDarShiftName: "Callout");
                         } else {
                           showErrorToast(context, "Callout not found");
                         }
@@ -521,6 +649,44 @@ class _CallOutScreenState extends State<CallOutScreen> {
                               : (Theme.of(context).brightness == Brightness.dark
                                   ? DarkColor.color5
                                   : LightColor.color3),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(width: 10.w),
+              Expanded(
+                child: IgnorePointer(
+                  ignoring: widget.callOutStatus != 'started',
+                  child: Bounce(
+                    onTap: () async {
+                      try {
+                        showTileTimeInputDialog(context);
+                      } catch (e) {
+                        showErrorToast(context,
+                            "Error updating callout status. Try again");
+                      }
+                    },
+                    child: Container(
+                      color: widget.callOutStatus == 'started'
+                          ? (Theme.of(context).brightness == Brightness.dark
+                              ? DarkColor.WidgetColor
+                              : LightColor.WidgetColor)
+                          : (Theme.of(context).brightness == Brightness.dark
+                              ? DarkColor.WidgetColorLigth
+                              : LightColor.WidgetColorLigth),
+                      child: Center(
+                        child: InterBold(
+                          text: 'Add to DAR',
+                          fontsize: 18.sp,
+                          color: widget.callOutStatus == 'started'
+                              ? (Theme.of(context).brightness == Brightness.dark
+                                  ? DarkColor.color5
+                                  : LightColor.color3)
+                              : (Theme.of(context).brightness == Brightness.dark
+                                  ? DarkColor.textLigth
+                                  : LightColor.color2),
                         ),
                       ),
                     ),

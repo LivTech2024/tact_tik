@@ -201,34 +201,28 @@ class _GuardAlertWidgetState extends State<SupervisorAlertWidget> {
                         borderRadius: 5.r,
                         backgroundcolor: Theme.of(context).primaryColor,
                         text: 'Accept',
-                        onPressed: widget.status != "pending"
-                            ? () {
-                                showErrorToast(context, "Already accepted");
-                              }
-                            : () async {
-                                if (ShiftExchangeData != null) {
-                                  // var id = ShiftExchangeData
-                                  await fireStoreService
-                                      .UpdateExchangeNotiStatus(
-                                          widget.notiId, "completed");
+                        onPressed: () async {
+                          if (widget.shiftExchangeData != null) {
+                            // var id = ShiftExchangeData
+                            await fireStoreService.UpdateExchangeNotiStatus(
+                                widget.notiId, "completed");
 
-                                  await fireStoreService.UpdateExchangeStatus(
-                                      exchangeData!.exchangeShiftRequestedId,
-                                      "completed");
+                            await fireStoreService.UpdateExchangeStatus(
+                                exchangeData!.exchangeShiftRequestedId,
+                                "completed");
 
-                                  print("Id ${widget.notiId}");
-                                  showSuccessToast(context, "${widget.notiId}");
-                                  showSuccessToast(context,
-                                      "${exchangeData!.exchangeShiftRequestedId}");
-                                }
-                                if (ShiftOfferData != null) {
-                                  await fireStoreService
-                                      .UpdateExchangeNotiStatus(
-                                          widget.notiId, "completed");
-                                  await fireStoreService.UpdateOfferSStatus(
-                                      offerData!.offerShiftId, "completed");
-                                }
-                              },
+                            print("Id ${widget.notiId}");
+                            showSuccessToast(context, "${widget.notiId}");
+                            showSuccessToast(context,
+                                "${exchangeData!.exchangeShiftRequestedId}");
+                          }
+                          if (widget.shiftOfferData != null) {
+                            await fireStoreService.UpdateExchangeNotiStatus(
+                                widget.notiId, "completed");
+                            await fireStoreService.UpdateOfferSStatus(
+                                offerData!.offerShiftId, "completed");
+                          }
+                        },
                       )
                     : SizedBox(),
               ],

@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tact_tik/common/widgets/customErrorToast.dart';
 import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/feature%20screens/widgets/custome_textfield.dart';
+import 'package:tact_tik/screens/new%20guard/personel_details.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:toastification/toastification.dart';
 import 'package:image/image.dart' as img;
@@ -52,6 +53,7 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
     super.initState();
     _loadShiftStartedState();
     fetchImages();
+    fetchCommnet();
     // // Initialize expand state for each category
     // _expandCategoryMap = Map.fromIterable(widget.p.categories,
     //     key: (category) => category.title, value: (_) => false);
@@ -62,6 +64,17 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
     setState(() {
       _expand = prefs.getBool('expand') ?? false;
     });
+  }
+
+  void fetchCommnet() async {
+    try {
+      var comment = await fireStoreService.getCheckpointComments(
+          widget.PatrolID, widget.CheckpointID, widget.empId, widget.ShiftId);
+      print("Comment ${comment}");
+      setState(() {
+        Controller.text = comment[0];
+      });
+    } catch (e) {}
   }
 
   void fetchImages() async {

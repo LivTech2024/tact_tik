@@ -260,7 +260,7 @@ class ShiftOfferData {
       offerShiftTime: map['ShiftOfferTime'] ?? '',
       offerShiftDate: map['ShiftOfferDate'] ?? Timestamp.now(),
       offerShiftLocation: map['ShiftOfferLocation'] ?? '',
-      offerShiftRequestedId: map['ShiftOfferId'] ?? '',
+      offerShiftRequestedId: map['ShiftOfferShiftId'] ?? '',
       offerShiftRequestedName: map['ShiftOfferShiftName'] ?? '',
       offerShiftName: map['ShiftOfferShiftName'] ?? '',
       // offerShiftID: '',

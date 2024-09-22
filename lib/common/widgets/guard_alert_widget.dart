@@ -221,7 +221,8 @@ class _GuardAlertWidgetState extends State<GuardAlertWidget> {
                           //TODO The cloud fucntion is creating another doc for notification need to handle this docs
                           bool status = await fireStoreService
                               .checkOfferAcceptedId(offerData!.offerShiftId);
-                          if (status) {
+                          print("OFFERSTATUS${status}");
+                          if (!status) {
                             await fireStoreService.checkAndUpdateOfferStatus(
                                 widget.shiftOfferData!.offerShiftId,
                                 widget.currentEmpid);

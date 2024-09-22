@@ -28,17 +28,16 @@ class DarDisplayScreen extends StatefulWidget {
   final String EmpDarCompanyBranchId;
   final String EmpDarShiftID;
   final String EmpDarClientID;
-
-  DarDisplayScreen(
-      {Key? key,
-      required this.EmpEmail,
-      required this.EmpID,
-      required this.EmpDarCompanyId,
-      required this.EmpDarCompanyBranchId,
-      required this.EmpDarShiftID,
-      required this.EmpDarClientID,
-      required this.Username})
-      : super(key: key);
+  DarDisplayScreen({
+    Key? key,
+    required this.EmpEmail,
+    required this.EmpID,
+    required this.EmpDarCompanyId,
+    required this.EmpDarCompanyBranchId,
+    required this.EmpDarShiftID,
+    required this.EmpDarClientID,
+    required this.Username,
+  }) : super(key: key);
 
   @override
   State<DarDisplayScreen> createState() => _DarDisplayScreenState();

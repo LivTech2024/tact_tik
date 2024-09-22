@@ -1577,6 +1577,55 @@ class FireStoreService {
     }
   }
 
+  Future<List<String>> getCheckpointComments(String patrolId,
+      String checkpointId, String reportedById, String shiftId) async {
+    final CollectionReference patrolsCollection =
+        FirebaseFirestore.instance.collection('Patrols');
+
+    try {
+      final patrolDocument = await patrolsCollection.doc(patrolId).get();
+      if (patrolDocument.exists) {
+        final patrolData = patrolDocument.data();
+
+        // Check if PatrolCheckPoints is a map
+        if (patrolData is Map && patrolData.containsKey('PatrolCheckPoints')) {
+          final checkpoints = patrolData['PatrolCheckPoints'] as List;
+
+          // Find the checkpoint with matching ID
+          final checkpoint = checkpoints.firstWhere(
+              (checkpoint) => checkpoint['CheckPointId'] == checkpointId,
+              orElse: () => null);
+
+          if (checkpoint != null) {
+            // Extract StatusComment from checkpoint status with reportedById and shiftId check
+            final statusArray = checkpoint['CheckPointStatus'] as List;
+            final comments = statusArray
+                .where((status) =>
+                    status['StatusReportedById'] == reportedById &&
+                    status['StatusShiftId'] == shiftId)
+                .map((status) => status['StatusComment'] as String)
+                .toList();
+
+            return comments;
+          } else {
+            // Checkpoint not found in patrol
+            return [];
+          }
+        } else {
+          // Patrol doesn't have PatrolCheckPoints data
+          return [];
+        }
+      } else {
+        // Patrol document not found
+        return [];
+      }
+    } catch (error) {
+      // Handle errors
+      print('Error fetching checkpoint comments: $error');
+      return [];
+    }
+  }
+
 // fetch the patrol checkpoints that are unchecked
 //using the patrol id, empid and shiftid
   Future<void> uncheckedCheckpointsFetch(
@@ -6015,6 +6064,96 @@ class FireStoreService {
     }
 
     Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
+    print("ShiftOFFerStatus ${data}");
     return data['ShiftOfferAcceptedId'] != null;
+  }
+
+  Future<void> createNewDar({
+    required String empDarEmpId,
+    required String empDarEmpName,
+    required String empDarClientId,
+    required String empDarCompanyBranchId,
+    required String empDarCompanyId,
+    required Timestamp empDarCreatedAt,
+    required Timestamp empDarDate,
+    required String empDarLocationId,
+    required String empDarLocationName,
+    required String empDarShiftId,
+    required String empDarShiftName,
+  }) async {
+    try {
+      // Generate a new document reference without specifying an ID
+      DocumentReference docRef =
+          FirebaseFirestore.instance.collection('EmployeesDAR').doc();
+
+      // Use the generated document ID as EmpDarId
+      String empDarId = docRef.id;
+
+      // Set the document with the generated ID
+      await docRef.set({
+        'EmpDarId': empDarId,
+        'EmpDarEmpId': empDarEmpId,
+        'EmpDarEmpName': empDarEmpName,
+        'EmpDarClientId': empDarClientId,
+        'EmpDarCompanyBranchId': empDarCompanyBranchId,
+        'EmpDarCompanyId': empDarCompanyId,
+        'EmpDarCreatedAt': empDarCreatedAt,
+        'EmpDarDate': empDarDate,
+        'EmpDarLocationId': empDarLocationId,
+        'EmpDarLocationName': empDarLocationName,
+        'EmpDarShiftId': empDarShiftId,
+        'EmpDarShiftName': empDarShiftName,
+        'EmpDarTile': [], // Start with an empty array for DAR tiles
+      });
+    } catch (e) {
+      print('Error creating DAR: $e');
+    }
+  }
+
+  // Function to add a DAR Tile to the existing DAR document
+  Future<void> addDarTile({
+    required String empDarShiftId,
+    required String tileContent,
+    required Timestamp tileDate,
+    required String tileLocation,
+    required String tileTime,
+    List<String> tileImages = const [],
+  }) async {
+    try {
+      // Define the DAR tile format
+      Map<String, dynamic> darTile = {
+        'TileContent': tileContent,
+        'TileDate': tileDate,
+        'TileImages': tileImages, // empty by default, can be updated if needed
+        'TileLocation': tileLocation,
+        'TileTime': tileTime,
+      };
+
+      // Query the EmployeesDAR collection for a document with the given EmpDarShiftId
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('EmployeesDAR')
+          .where('EmpDarShiftId', isEqualTo: empDarShiftId)
+          .limit(1) // Assuming there's only one document per shift
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        // Get the document ID of the first (and presumably only) document that matches
+        String docId = querySnapshot.docs.first.id;
+
+        // Update the EmpDarTile array in the matching document
+        await FirebaseFirestore.instance
+            .collection('EmployeesDAR')
+            .doc(docId)
+            .update({
+          'EmpDarTile': FieldValue.arrayUnion([darTile])
+        });
+
+        print('DAR tile added successfully.');
+      } else {
+        print('No document found with the given EmpDarShiftId.');
+      }
+    } catch (e) {
+      print('Error adding DAR tile: $e');
+    }
   }
 }

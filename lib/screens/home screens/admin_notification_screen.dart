@@ -41,7 +41,7 @@ class _GuardNotificationScreenState extends State<AdminNotificationScreen> {
           .collection('Notification')
           .where('NotificationCompanyId', isEqualTo: widget.companyId)
           .where('NotificationType', isEqualTo: 'SHIFTOFFER')
-          .where('NotificationStatus', isEqualTo: 'started')
+          .where('NotificationStatus', isEqualTo: 'pending')
           .orderBy('NotificationCreatedAt', descending: true)
           .get();
 
@@ -50,7 +50,7 @@ class _GuardNotificationScreenState extends State<AdminNotificationScreen> {
           .collection('Notification')
           .where('NotificationCompanyId', isEqualTo: widget.companyId)
           .where('NotificationType', isEqualTo: 'SHIFTEXCHANGE')
-          .where('NotificationStatus', isEqualTo: 'started')
+          .where('NotificationStatus', isEqualTo: 'pending')
           .orderBy('NotificationCreatedAt', descending: true)
           .get();
 

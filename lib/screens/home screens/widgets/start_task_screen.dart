@@ -1097,6 +1097,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                     ]);
                               });*/
                           // <<<<<<<<<<<<<<<<<<< Dialog code
+
                           Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -1117,35 +1118,6 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                           print('Current time is before shift end time');
                         }
                       } else {
-                        // Current time i
-                        //s after or equal to shift end time
-                        // QuerySnapshot routeSnapshot = await FirebaseFirestore
-                        //     .instance
-                        //     .collection('EmployeeRoutes')
-                        //     .where('EmpRouteEmpId', isEqualTo: widget.EmployeId)
-                        //     .where('EmpRouteShiftStatus', isEqualTo: 'started')
-                        //     .get();
-
-                        // if (routeSnapshot.docs.isNotEmpty) {
-                        //   // Assuming you only get one active route document per employee
-                        //   DocumentReference routeDocRef =
-                        //       routeSnapshot.docs.first.reference;
-
-                        //   // Update the EmpRouteShiftStatus to "completed"
-                        //   await routeDocRef.update({
-                        //     'EmpRouteShiftStatus': 'completed',s
-                        //     'EmpRouteCompletedAt': Timestamp.now(),
-                        //   });
-                        //   print(s
-                        //       'Shift ended for employee: ${widget.EmployeId}');
-                        // } else {
-                        //   print(
-                        //       'No active route found for employee:  ${widget.EmployeId}');
-                        // }
-                        // print(
-                        //     'Current time is after or equal to shift end time');
-                        // await homeScreenController.stopBgLocationService();
-                        // //Check for the Current time if it is early then the shiftEndTime or more thant the shift endtime return alterbox or else not
                         SharedPreferences prefs =
                             await SharedPreferences.getInstance();
 

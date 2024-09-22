@@ -131,6 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String callOutDate = '';
   String callOutTime = '';
   String callOutLocation = '';
+  String callOutLocationId = '';
   String callOutId = '';
   String callOutStatus = '';
   String callOutCompanyId = '';
@@ -237,6 +238,8 @@ class _HomeScreenState extends State<HomeScreen> {
             callOutId = document['CalloutId'];
             callOutLocation = document['CalloutLocationAddress'];
             callOutCompanyId = document['CalloutCompanyId'];
+            callOutLocationId = document['CalloutLocationId'];
+
             print(
                 "CALLOUT DATA: $callOutTime, $callOutDate. $callOutId, $callOutLocation, $callOutCompanyId, $callOutStatus");
           });
@@ -975,7 +978,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         // );
                         // customEmail();
                         // await fireStoreService.copyAndCreateDocument(
-                        //     "PatrolLogs", "5KtTxxDnr4qqp04Y95PI");
+                        //     "PatrolLogs", "j404vKliyi5K47iCGccJ");
                         // await darFunctions
                         //     .fetchShiftDetailstemplateAndSubmitDAR(
                         //         "19:00",
@@ -1199,6 +1202,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             callOutStatus: callOutStatus,
                                             callOutCompanyId: callOutCompanyId,
                                             EmployeeName: _userName,
+                                            callOutLocationId: '',
                                           )
                                         : Center(
                                             child: InterMedium(
@@ -1322,7 +1326,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         _ShiftCompanyId ?? "",
                                                     EmpDarCompanyBranchId:
                                                         _branchId,
-                                                    EmpDarShiftID: _shiftId,
+                                                    EmpDarShiftID:
+                                                        _shiftId.isEmpty
+                                                            ? callOutId
+                                                            : _shiftId,
                                                     EmpDarClientID:
                                                         _shiftCLientId,
                                                     Username: _userName,
