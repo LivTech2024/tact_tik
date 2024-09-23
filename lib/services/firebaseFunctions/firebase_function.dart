@@ -6156,4 +6156,52 @@ class FireStoreService {
       print('Error adding DAR tile: $e');
     }
   }
+
+  //check end shift logs
+  Future<bool> checkShiftStatus(String shiftId, String employeeId) async {
+    try {
+      if (shiftId.isEmpty || employeeId.isEmpty) {
+        return false;
+      }
+
+      // Query the Firestore collection to find the specific shift by its ID
+      DocumentSnapshot shiftSnapshot = await FirebaseFirestore.instance
+          .collection('Shifts')
+          .doc(shiftId)
+          .get();
+
+      if (shiftSnapshot.exists) {
+        // Retrieve the data for the shift
+        Map<String, dynamic> shiftData =
+            shiftSnapshot.data() as Map<String, dynamic>;
+
+        // Check if 'ShiftCurrentStatus' exists and is in the required format
+        if (shiftData.containsKey('ShiftCurrentStatus') &&
+            shiftData['ShiftCurrentStatus'] is List) {
+          List<dynamic> shiftCurrentStatus = shiftData['ShiftCurrentStatus'];
+
+          // Assuming the last status in the array is the current status
+          Map<String, dynamic> currentStatus = shiftCurrentStatus.isNotEmpty
+              ? shiftCurrentStatus.last as Map<String, dynamic>
+              : {};
+
+          // Check the status value
+          print("CurrentStatus ${currentStatus}");
+          String status = currentStatus['Status'] ?? '';
+
+          if (status == 'completed') {
+            return true;
+          } else {
+            return false; // For both 'started' and other statuses
+          }
+        }
+      }
+
+      print('Shift not found.');
+      return false;
+    } catch (e) {
+      print('Error checking shift status: $e');
+      return false;
+    }
+  }
 }
