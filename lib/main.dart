@@ -42,7 +42,7 @@ Future<void> main() async {
   // await Hive.openBox('notifications');
   await FirebaseAppCheck.instance.activate(
     // webProvider: ReCaptchaV3Provider('recaptcha-v3-site-key'),
-    androidProvider: AndroidProvider.playIntegrity,
+    // androidProvider: AndroidProvider.playIntegrity,
     appleProvider: AppleProvider.appAttest,
   );
 
@@ -177,4 +177,4 @@ class _MyAppState extends State<MyApp> {
   }
 }
 // "default": "livtech-dbcf2"
-// "default": "security-app-3b156" 
+// "default": "security-app-3b156"

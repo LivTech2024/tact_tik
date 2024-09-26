@@ -6043,8 +6043,9 @@ class FireStoreService {
       print("Shift IDs for local Notification $shiftId");
       // await testNotification();
       // Schedule notifications for this shift
-      await scheduleNotification(
-          shiftId, shiftName, shiftStartTime, shiftEndTime, shiftDate);
+      //TODO: Handling the issue in android
+      // await scheduleNotification(
+      //     shiftId, shiftName, shiftStartTime, shiftEndTime, shiftDate);
     }
   }
 
