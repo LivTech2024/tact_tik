@@ -252,9 +252,8 @@ class _LeaveRequestScreenState extends State<LeaveRequestScreen> {
                                                       color: Colors.white,
                                                     ),
                                                     InterSemibold(
-                                                      text: employeeSnapshot
-                                                              .data ??
-                                                          'Unknown',
+                                                      text:
+                                                          doc['LeaveReqReason'],
                                                       fontsize: 20.sp,
                                                       color: Theme.of(context)
                                                           .textTheme
