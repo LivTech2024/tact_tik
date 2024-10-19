@@ -143,7 +143,9 @@ class _KeysScreenState extends State<KeysScreen> {
                         children: [
                           SizedBox(
                             height: 300.h,
-                            child: SvgPicture.asset(isDark ? 'assets/images/no_data_dark.svg' :'assets/images/no_data.svg'),
+                            child: SvgPicture.asset(isDark
+                                ? 'assets/images/no_data_dark.svg'
+                                : 'assets/images/no_data.svg'),
                           ),
                           InterSemibold(
                             text: 'Nothing to preview',

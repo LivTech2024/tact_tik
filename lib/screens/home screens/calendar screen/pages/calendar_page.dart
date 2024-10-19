@@ -144,19 +144,27 @@ class _CalendarPageState extends State<CalendarPage> {
                     firstDayOfWeek: WeekDay.monday,
                     eventsTopPadding: 30.h,
                     initialDate: _currentDate,
-                    maxEventLines: 3,
+                    maxEventLines: 6,
                     controller: _calendarController,
                     forceSixWeek: true,
                     dayItemBuilder: (builderArgument) =>
                         DayItemWidget(properties: builderArgument),
                     weekDaysBuilder: (day) => WeekDaysWidget(day: day),
                     eventBuilder: (drawer) {
-                      print("Event Color: ${drawer.backgroundColor}");
-                      if (drawer.backgroundColor == Colors.red) {
-                        print("Filtered out a red event");
-                        return const SizedBox.shrink();
+                      if (drawer.backgroundColor != null) {
+                        print("Event Color: ${drawer.backgroundColor}");
+
+                        // Ensure that the event is only filtered if it's red.
+                        if (drawer.backgroundColor == Colors.red) {
+                          print("Filtered out a red event");
+                          return Container(); // Hide red events.
+                        }
+                        // Display all other events (including green).
+                        return EventWidget(drawer: drawer);
+                      } else {
+                        print("No background color provided");
+                        return Container(); // Handle null background color.
                       }
-                      return EventWidget(drawer: drawer);
                     },
                     onDayClicked: _showDayEventsInModalSheet,
                     minDate:

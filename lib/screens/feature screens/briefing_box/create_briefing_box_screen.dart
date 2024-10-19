@@ -11,7 +11,8 @@ import 'package:tact_tik/common/widgets/customErrorToast.dart';
 class CreateBriefingBoxScreen extends StatefulWidget {
   final String locationId;
   final String shiftName;
-  const CreateBriefingBoxScreen({super.key, required this.locationId, required this.shiftName});
+  const CreateBriefingBoxScreen(
+      {super.key, required this.locationId, required this.shiftName});
 
   @override
   State<CreateBriefingBoxScreen> createState() =>
@@ -28,7 +29,8 @@ class _CreateBriefingBoxScreenState extends State<CreateBriefingBoxScreen> {
       _isLoading = true;
     });
 
-    final briefingId = FirebaseFirestore.instance.collection('BriefingBox').doc().id;
+    final briefingId =
+        FirebaseFirestore.instance.collection('BriefingBox').doc().id;
     final briefingData = {
       'BriefingId': briefingId,
       'BriefingDescription': _explainController.text,
@@ -109,15 +111,13 @@ class _CreateBriefingBoxScreenState extends State<CreateBriefingBoxScreen> {
                     Button1(
                       text: 'Done',
                       color: Colors.white,
-                      onPressed: (){
+                      onPressed: () {
                         if (_titleController.text.isEmpty) {
-                          showErrorToast(context,
-                              'Add some title');
+                          showErrorToast(context, 'Add some title');
                           return;
                         }
                         if (_explainController.text.isEmpty) {
-                          showErrorToast(context,
-                              'Add some description');
+                          showErrorToast(context, 'Add some description');
                           return;
                         }
                         createBriefing();

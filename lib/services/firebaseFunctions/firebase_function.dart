@@ -4,6 +4,7 @@ import 'dart:ffi';
 import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
 import 'dart:ui' as ui;
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -16,6 +17,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
@@ -6011,6 +6013,12 @@ class FireStoreService {
   }
 
   Future<void> fetchAndScheduleShift(String empId) async {
+    if (Platform.isAndroid) {
+      // await requestExactAlarmPermission();
+      await Permission.scheduleExactAlarm.request();
+    }
+    await clearAllNotifications();
+
     FirebaseFirestore firestore = FirebaseFirestore.instance;
 
     // Get the current date (with the time set to 00:00:00)
@@ -6042,10 +6050,34 @@ class FireStoreService {
 
       print("Shift IDs for local Notification $shiftId");
       // await testNotification();
+      await clearAllNotifications();
+      await printAllScheduledNotifications();
       // Schedule notifications for this shift
       //TODO: Handling the issue in android
       // await scheduleNotification(
       //     shiftId, shiftName, shiftStartTime, shiftEndTime, shiftDate);
+    }
+  }
+
+  Future<void> clearAllNotifications() async {
+    await flutterLocalNotificationsPlugin.cancelAll();
+    print("All pending notifications cleared.");
+  }
+
+  Future<void> printAllScheduledNotifications() async {
+    // Retrieve all pending notifications
+    List<PendingNotificationRequest> pendingNotifications =
+        await flutterLocalNotificationsPlugin.pendingNotificationRequests();
+
+    // Print all scheduled notifications
+    if (pendingNotifications.isNotEmpty) {
+      print("Scheduled Notifications:");
+      for (var notification in pendingNotifications) {
+        print(
+            'ID: ${notification.id}, Title: ${notification.title}, Body: ${notification.body}, Payload: ${notification.payload}');
+      }
+    } else {
+      print("No scheduled notifications.");
     }
   }
 
@@ -6059,7 +6091,6 @@ class FireStoreService {
         .collection('ShiftOffer')
         .doc(shiftOfferID)
         .get();
-
     if (!docSnapshot.exists) {
       return false;
     }

@@ -32,6 +32,7 @@ import 'package:tact_tik/screens/feature%20screens/Report/report_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/briefing_box/briefing_box_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/dar/dar_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/keys/view_keys_screen.dart';
+import 'package:tact_tik/screens/feature%20screens/leave_request/leave_request.dart';
 import 'package:tact_tik/screens/feature%20screens/site_tours/site_tour_screen.dart';
 import 'package:tact_tik/screens/get%20started/getstarted_screen.dart';
 import 'package:tact_tik/screens/home%20screens/select_message_guards.dart';
@@ -750,6 +751,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ['assets/images/visitors.png', 'Visitors'],
       ['assets/images/assets.png', 'Assets'],
       ['assets/images/keys.png', 'Key'],
+      ['assets/images/leave_request.png', 'Leave Request'],
     ];
 
     final double height = MediaQuery.of(context).size.height;
@@ -978,7 +980,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         // );
                         // customEmail();
                         // await fireStoreService.copyAndCreateDocument(
-                        //     "EmployeesDAR", "UPHaISbjHoC2tO6CqSsm");
+                        //     "PatrolLogs", "RBvFii2ONIZTQXQFw8Tl");
                         // await darFunctions
                         //     .fetchShiftDetailstemplateAndSubmitDAR(
                         //         "19:00",
@@ -1419,6 +1421,27 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     branchId: _branchId,
                                                     companyid: _ShiftCompanyId
                                                         as String,
+                                                  )
+                                              // AssetsScreen(
+                                              //     assetEmpId:
+                                              //         _employeeId)
+
+                                              ));
+                                      break;
+                                    case 10:
+                                      // AssetsScreen
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  LeaveRequestScreen(
+                                                    LeaveReqCompanyId:
+                                                        _employeeCompanyID,
+                                                    LeaveReqCompanyBranchId:
+                                                        _employeeCompanyBranchID,
+                                                    LeaveReqEmpId: _employeeId,
+                                                    LeaveReqEmpName:
+                                                        _userName ?? "",
                                                   )
                                               // AssetsScreen(
                                               //     assetEmpId:

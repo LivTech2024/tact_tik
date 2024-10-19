@@ -38,7 +38,7 @@ Future<void> initializeTimezone() async {
 
 Future<void> testNotification() async {
   DateTime now = DateTime.now();
-  DateTime scheduledTime = now.add(Duration(minutes: 1));
+  DateTime scheduledTime = now.add(Duration(seconds: 1));
 
   await _scheduleSingleNotification(
     'test_notification_1min', // Unique ID for the test notification
@@ -57,7 +57,9 @@ Future<void> scheduleNotification(String shiftId, String shiftName,
 
   // Check if notifications for this shift have already been scheduled
   bool isScheduled = prefs.getBool(shiftId) ?? false;
-
+  // prefs.setBool("Xq0Akus2AXq0j1l8HwuO", false);
+  print("isScheduled: $isScheduled ${shiftId}");
+  // await testNotification();
   if (!isScheduled) {
     // Convert start and end time strings ("HH:mm") into DateTime objects
     DateTime shiftStartDateTime = DateTime(
@@ -93,7 +95,13 @@ Future<void> scheduleNotification(String shiftId, String shiftName,
         'Shift Reminder',
         'Your shift: $shiftName ends in 1 hour at $endTime',
         shiftEndDateTime.subtract(const Duration(hours: 1)));
-
+    print('Shift start: $shiftStartDateTime, Shift end: $shiftEndDateTime');
+    print(
+        '1 day before start: ${shiftStartDateTime.subtract(Duration(days: 1))}');
+    print(
+        '1 hour before start: ${shiftStartDateTime.subtract(Duration(hours: 1))}');
+    print(
+        '1 hour before end: ${shiftEndDateTime.subtract(Duration(hours: 1))}');
     // Mark the shift as scheduled in SharedPreferences
     await prefs.setBool(shiftId, true);
   }
@@ -121,12 +129,11 @@ Future<void> _scheduleSingleNotification(
   // Schedule the notification if the time is in the future
   if (scheduledTime.isAfter(DateTime.now())) {
     await flutterLocalNotificationsPlugin.zonedSchedule(
-      id.hashCode, // Unique ID for the notification
+      id.hashCode,
       title,
       body,
-      tzScheduledTime, // Use TZDateTime for the scheduled time
+      tzScheduledTime,
       platformChannelSpecifics,
-      androidAllowWhileIdle: true,
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.time,

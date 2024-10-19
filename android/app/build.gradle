@@ -29,8 +29,9 @@ if (flutterVersionName == null) {
 android {
     namespace "com.avocadotech.tacttik.tact_tik"
     compileSdkVersion 34
-    ndkVersion flutter.ndkVersion
-
+    // ndkVersion flutter.ndkVersion
+    // buildDir ="/Volumes/VaibhavT7/Vaibhav/"
+    ndkVersion "25.1.8937393"
     compileOptions {
          coreLibraryDesugaringEnabled true
         sourceCompatibility JavaVersion.VERSION_17 // Set to Java 17
